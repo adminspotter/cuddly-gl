@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 08:11:22 tquirk
+ *   last updated 08 Mar 2016, 16:57:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -39,16 +39,6 @@
 
 namespace ui
 {
-    namespace element
-    {
-        const GLuint border = 3, margin = 4;
-    }
-
-    namespace side
-    {
-        const GLuint top = 1, left = 2, right = 4, bottom = 8, all = 15;
-    }
-
     class panel
     {
       protected:
@@ -58,9 +48,14 @@ namespace ui
         GLuint margin[4], border[4];
         glm::vec4 foreground, background;
 
-        void set_size(GLuint, GLuint);
-        void set_border(GLuint, GLuint);
-        void set_margin(GLuint, GLuint);
+        int get_size(GLuint, void *);
+        void set_size(GLuint, void *);
+        int get_border(GLuint, void *);
+        void set_border(GLuint, void *);
+        int get_margin(GLuint, void *);
+        void set_margin(GLuint, void *);
+        int get_color(GLuint, void *);
+        void set_color(GLuint, void *);
 
         virtual void populate_buffers(void);
 
@@ -68,9 +63,9 @@ namespace ui
         panel(context *, GLuint, GLuint);
         virtual ~panel();
 
-        virtual GLuint get(GLuint, GLuint);
-        virtual void set(GLuint, GLuint, GLuint);
-        void set_va(GLuint, GLuint, GLuint, ...);
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
+        void set_va(GLuint, GLuint, void *, ...);
 
         virtual void draw(void);
 

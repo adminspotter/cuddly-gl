@@ -1,6 +1,6 @@
 /* rounded_panel.h                                         -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 08:13:01 tquirk
+ *   last updated 08 Mar 2016, 16:17:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,25 +33,14 @@
 
 namespace ui
 {
-    namespace element
-    {
-        const GLuint radius = 5;
-    }
-
-    namespace corner
-    {
-        const GLuint top_left = 1, top_right = 2,
-            bottom_left = 4, bottom_right = 8,
-            top = 3, left = 5, right = 10, bottom = 12, all = 15;
-    }
-
     class rounded_panel : public panel
     {
       protected:
         GLuint radius_val, elem_count;
         bool radius[4];
 
-        void set_radius(GLuint, GLuint);
+        int get_radius(GLuint, void *);
+        void set_radius(GLuint, void *);
 
         virtual void populate_buffers(void);
 
@@ -59,8 +48,8 @@ namespace ui
         rounded_panel(context *, GLuint, GLuint);
         virtual ~rounded_panel();
 
-        virtual GLuint get(GLuint, GLuint);
-        virtual void set(GLuint, GLuint, GLuint);
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
     };
 }
 

@@ -1,6 +1,6 @@
 /* rounded_panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 08:18:01 tquirk
+ *   last updated 08 Mar 2016, 17:07:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,20 +29,53 @@
 
 #include "rounded_panel.h"
 
-void ui::rounded_panel::set_radius(GLuint c, GLuint v)
+#include <glm/gtc/type_ptr.hpp>
+
+int ui::rounded_panel::get_radius(GLuint t, void *v)
 {
-    if (v <= min(this->width / 2, this->height / 2))
+    int ret = 0;
+
+    switch (t)
     {
-        if (c & ui::corner::top_left)
-            this->radius[0] = (v == 0 ? false : true);
-        if (c & ui::corner::top_right)
-            this->radius[1] = (v == 0 ? false : true);
-        if (c & ui::corner::bottom_left)
-            this->radius[2] = (v == 0 ? false : true);
-        if (c & ui::corner::bottom_right)
-            this->radius[3] = (v == 0 ? false : true);
-        if (c == ui::corner::all || v != 0)
-            this->radius_val = v;
+      case ui::corner::top_left:
+        *((GLuint *)v) = (this->radius[0] ? this->radius_val : 0);
+        break;
+
+      case ui::corner::top_right:
+        *((GLuint *)v) = (this->radius[1] ? this->radius_val : 0);
+        break;
+
+      case ui::corner::bottom_left:
+        *((GLuint *)v) = (this->radius[2] ? this->radius_val : 0);
+        break;
+
+      case ui::corner::bottom_right:
+        *((GLuint *)v) = (this->radius[3] ? this->radius_val : 0);
+        break;
+
+      default:
+        ret = 1;
+        break;
+    }
+    return ret;
+}
+
+void ui::rounded_panel::set_radius(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    if (new_v <= std::min(this->width / 2, this->height / 2))
+    {
+        if (t & ui::corner::top_left)
+            this->radius[0] = (new_v == 0 ? false : true);
+        if (t & ui::corner::top_right)
+            this->radius[1] = (new_v == 0 ? false : true);
+        if (t & ui::corner::bottom_left)
+            this->radius[2] = (new_v == 0 ? false : true);
+        if (t & ui::corner::bottom_right)
+            this->radius[3] = (new_v == 0 ? false : true);
+        if (t == ui::corner::all || new_v != 0)
+            this->radius_val = new_v;
     }
 }
 
@@ -51,35 +84,39 @@ void ui::rounded_panel::populate_buffers(void)
     float vertex[96];
     float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
     float rad = this->radius_val;
-    float vw = this->parent->get(ui::element::size, ui::size::width);
-    float vh = this->parent->get(ui::element::size, ui::size::height);
-    GLuint element[34];
+    float vw, vh;
+    GLuint element[34], temp;
     GLuint vert_count = 0, vert_index = 0, elem_index = 0;
+
+    this->parent->get(ui::element::size, ui::size::width, &temp);
+    vw = (float)temp;
+    this->parent->get(ui::element::size, ui::size::height, &temp);
+    vh = (float)temp;
 
     /* The main part of the panel */
     /* Upper left */
     vertex[0] = (x + (this->radius[0] || this->radius[2] ? rad : 0)) / vw;
     vertex[1] = (y + (this->radius[0] || this->radius[1] ? rad : 0)) / vh;
     vertex[2] = vertex[3] = 0.0f;     /* no normal */
-    memcpy(&vertex[4], glm::value_ptr(ui::background), sizeof(float) * 4);
+    memcpy(&vertex[4], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Upper right */
     vertex[8] = (x + w - (this->radius[1] || this->radius[3] ? rad : 0)) / vw;
     vertex[9] = vertex[1];
     vertex[10] = vertex[11] = 0.0f;  /* no normal */
-    memcpy(&vertex[12], glm::value_ptr(ui::background), sizeof(float) * 4);
+    memcpy(&vertex[12], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Lower left */
     vertex[16] = vertex[0];
     vertex[17] = (y + h - (this->radius[2] || this->radius[3] ? rad : 0)) / vh;
     vertex[18] = vertex[19] = 0.0f;  /* no normal */
-    memcpy(&vertex[20], glm::value_ptr(ui::background), sizeof(float) * 4);
+    memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Lower right */
     vertex[24] = vertex[8];
     vertex[25] = vertex[17];
     vertex[26] = vertex[27] = 0.0f;  /* no normal */
-    memcpy(&vertex[28], glm::value_ptr(ui::background), sizeof(float) * 4);
+    memcpy(&vertex[28], glm::value_ptr(this->background), sizeof(float) * 4);
     vert_count += 4;
     vert_index = 32;
 
@@ -100,14 +137,14 @@ void ui::rounded_panel::populate_buffers(void)
         vertex[vert_index + 2] = 0.0f;
         vertex[vert_index + 3] = 1.0f;
         memcpy(&vertex[vert_index + 4],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vertex[vert_index + 8] = vertex[8];
         vertex[vert_index + 9] = vertex[vert_index + 1];
         vertex[vert_index + 10] = 0.0f;
         vertex[vert_index + 11] = 1.0f;
         memcpy(&vertex[vert_index + 12],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
         vert_index += 16;
@@ -128,14 +165,14 @@ void ui::rounded_panel::populate_buffers(void)
         vertex[vert_index + 2] = -1.0f;
         vertex[vert_index + 3] = 0.0f;
         memcpy(&vertex[vert_index + 4],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vertex[vert_index + 8] = vertex[vert_index];
         vertex[vert_index + 9] = vertex[13];
         vertex[vert_index + 10] = -1.0f;
         vertex[vert_index + 11] = 0.0f;
         memcpy(&vertex[vert_index + 12],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
         vert_index += 16;
@@ -164,14 +201,14 @@ void ui::rounded_panel::populate_buffers(void)
         vertex[vert_index + 2] = 1.0f;
         vertex[vert_index + 3] = 0.0f;
         memcpy(&vertex[vert_index + 4],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vertex[vert_index + 8] = vertex[vert_index];
         vertex[vert_index + 9] = vertex[13];
         vertex[vert_index + 10] = 1.0f;
         vertex[vert_index + 11] = 0.0f;
         memcpy(&vertex[vert_index + 12],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
         vert_index += 16;
@@ -200,14 +237,14 @@ void ui::rounded_panel::populate_buffers(void)
         vertex[vert_index + 2] = 0.0f;
         vertex[vert_index + 3] = -1.0f;
         memcpy(&vertex[vert_index + 4],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vertex[vert_index + 8] = vertex[8];
         vertex[vert_index + 9] = vertex[vert_index + 1];
         vertex[vert_index + 10] = 0.0f;
         vertex[vert_index + 11] = -1.0f;
         memcpy(&vertex[vert_index + 12],
-               glm::value_ptr(ui::background),
+               glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
         vert_index += 16;
@@ -258,26 +295,16 @@ ui::rounded_panel::~rounded_panel()
 {
 }
 
-GLuint ui::rounded_panel::get(GLuint e, GLuint t)
+int ui::rounded_panel::get(GLuint e, GLuint t, void *v)
 {
+    int ret = 0;
+
     if (e == ui::element::radius)
-        switch (t)
-        {
-          case ui::corner::top_left:
-            return (this->radius[0] ? this->radius_val : 0);
-          case ui::corner::top_right:
-            return (this->radius[1] ? this->radius_val : 0);
-          case ui::corner::bottom_left:
-            return (this->radius[2] ? this->radius_val : 0);
-          case ui::corner::bottom_right:
-            return (this->radius[3] ? this->radius_val : 0);
-          default:
-            return -1;
-        }
-    return ui::panel::get(e, t);
+        return this->get_radius(t, v);
+    return ui::panel::get(e, t, v);
 }
 
-void ui::rounded_panel::set(GLuint s, GLuint m, GLuint v)
+void ui::rounded_panel::set(GLuint s, GLuint m, void *v)
 {
     if (s == ui::element::radius)
         this->set_radius(m, v);

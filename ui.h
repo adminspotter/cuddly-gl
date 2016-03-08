@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 07:56:56 tquirk
+ *   last updated 08 Mar 2016, 16:50:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,23 +34,10 @@
 
 #include <list>
 
+#include "ui_defs.h"
+
 namespace ui
 {
-    namespace element
-    {
-        const GLuint size = 1, attribute = 2;
-    }
-
-    namespace size
-    {
-        const GLuint width = 1, height = 2;
-    }
-
-    namespace attribute
-    {
-        const GLuint position = 1, normal = 2, color = 3;
-    }
-
     /* Forward declaration for our child list */
     class panel;
 
@@ -64,11 +51,14 @@ namespace ui
       protected:
         GLuint width, height;
 
+        int get_size(GLuint, void *);
+        int get_attribute(GLuint, void *);
+
       public:
         context(GLuint, GLuint);
         ~context();
 
-        GLuint get(GLuint, GLuint);
+        int get(GLuint, GLuint, void *);
 
         void draw(void);
 
