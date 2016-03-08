@@ -1,6 +1,6 @@
-/* panel.h                                                 -*- C++ -*-
+/* rounded_panel.h                                         -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 08:11:22 tquirk
+ *   last updated 08 Mar 2016, 08:13:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,62 +20,48 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic panel object declaration and some
- * utility namespace definitions for the R9 UI widget set.
+ * This file contains the definition for a panel with rounded corners.
  *
  * Things to do
  *
  */
 
-#ifndef __INC_R9_PANEL_H__
-#define __INC_R9_PANEL_H__
+#ifndef __INC_R9_ROUNDED_PANEL_H__
+#define __INC_R9_ROUNDED_PANEL_H__
 
-#include <GL/gl.h>
-#include <GL/glext.h>
-
-#include <glm/vec4.hpp>
-
-#include "ui.h"
+#include "panel.h"
 
 namespace ui
 {
     namespace element
     {
-        const GLuint border = 3, margin = 4;
+        const GLuint radius = 5;
     }
 
-    namespace side
+    namespace corner
     {
-        const GLuint top = 1, left = 2, right = 4, bottom = 8, all = 15;
+        const GLuint top_left = 1, top_right = 2,
+            bottom_left = 4, bottom_right = 8,
+            top = 3, left = 5, right = 10, bottom = 12, all = 15;
     }
 
-    class panel
+    class rounded_panel : public panel
     {
       protected:
-        context *parent;
-        GLuint vao, vbo, ebo, element_count;
-        GLuint width, height, xpos, ypos;
-        GLuint margin[4], border[4];
-        glm::vec4 foreground, background;
+        GLuint radius_val, elem_count;
+        bool radius[4];
 
-        void set_size(GLuint, GLuint);
-        void set_border(GLuint, GLuint);
-        void set_margin(GLuint, GLuint);
+        void set_radius(GLuint, GLuint);
 
         virtual void populate_buffers(void);
 
       public:
-        panel(context *, GLuint, GLuint);
-        virtual ~panel();
+        rounded_panel(context *, GLuint, GLuint);
+        virtual ~rounded_panel();
 
         virtual GLuint get(GLuint, GLuint);
         virtual void set(GLuint, GLuint, GLuint);
-        void set_va(GLuint, GLuint, GLuint, ...);
-
-        virtual void draw(void);
-
-        void close(void);
     };
 }
 
-#endif /* __INC_R9_PANEL_H__ */
+#endif /* __INC_R9_ROUNDED_PANEL_H__ */
