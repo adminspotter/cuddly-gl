@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 22:28:32 tquirk
+ *   last updated 09 Mar 2016, 07:32:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -111,7 +111,7 @@ void ui::context::draw(void)
         (*i)->draw();
 }
 
-ui::context& ui::context::operator+=(ui::panel *p)
+ui::context& ui::context::add_child(ui::panel *p)
 {
     auto found = std::find(this->children.begin(), this->children.end(), p);
     if (found == this->children.end())
@@ -119,7 +119,7 @@ ui::context& ui::context::operator+=(ui::panel *p)
     return *this;
 }
 
-ui::context& ui::context::operator-=(ui::panel *p)
+ui::context& ui::context::remove_child(ui::panel *p)
 {
     this->children.remove(p);
     return *this;

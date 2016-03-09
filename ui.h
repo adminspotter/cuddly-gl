@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 16:50:50 tquirk
+ *   last updated 09 Mar 2016, 07:26:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -62,8 +62,8 @@ namespace ui
 
         void draw(void);
 
-        context& operator+=(panel *);
-        context& operator-=(panel *);
+        context& add_child(panel *);
+        context& remove_child(panel *);
     };
 }
 

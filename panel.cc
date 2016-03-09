@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 17:05:56 tquirk
+ *   last updated 09 Mar 2016, 08:44:09 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -223,13 +223,23 @@ void ui::panel::populate_buffers(void)
 }
 
 ui::panel::panel(ui::context *c, GLuint w, GLuint h)
+    : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
-    GLuint pos_attr, norm_attr, color_attr, zero = 0;
+    GLuint pos_attr, norm_attr, color_attr, temp;
 
-    this->set_size(ui::size::width, &w);
-    this->set_size(ui::size::height, &h);
-    this->set_border(ui::side::all, &zero);
-    this->set_margin(ui::side::all, &zero);
+    this->parent = c;
+    this->parent->add_child(this);
+
+    this->width = w;
+    this->height = h;
+    for (int i = 0; i < 4; ++i)
+    {
+        this->border[i] = 0;
+        this->margin[i] = 0;
+    }
+    /* Maybe make these the middle of the screen? */
+    this->xpos = 10;
+    this->ypos = 10;
 
     c->get(ui::element::attribute, ui::attribute::position, &pos_attr);
     c->get(ui::element::attribute, ui::attribute::normal, &norm_attr);
@@ -249,14 +259,11 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     glGenBuffers(1, &this->vbo);
     glGenBuffers(1, &this->ebo);
     this->populate_buffers();
-
-    this->parent = c;
-    *this->parent += this;
 }
 
 ui::panel::~panel()
 {
-    *this->parent -= this;
+    this->parent->remove_child(this);
     glDeleteBuffers(1, &this->ebo);
     glDeleteBuffers(1, &this->vbo);
     glDeleteVertexArrays(1, &this->vao);
