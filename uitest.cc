@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #define GLFW_INCLUDE_GL_3
 #include <GLFW/glfw3.h>
@@ -7,13 +8,16 @@
 #include "panel.h"
 
 void error_callback(int, const char *);
-void key_callback(GLFWwindow*, int, int, int, int);
+void window_size_callback(GLFWwindow *w, int, int);
+void key_callback(GLFWwindow *, int, int, int, int);
+void mouse_button_callback(GLFWwindow *, int, int, int);
+
+ui::context *ctx;
+ui::panel *p;
 
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    ui::context *ctx;
-    ui::panel *p;
 
     if (glfwInit() == GL_FALSE)
     {
@@ -35,7 +39,9 @@ int main(int argc, char **argv)
         return -1;
     }
     glfwMakeContextCurrent(w);
+    glfwSetWindowSizeCallback(w, window_size_callback);
     glfwSetKeyCallback(w, key_callback);
+    glfwSetMouseButtonCallback(w, mouse_button_callback);
 
     ctx = new ui::context(800, 600);
     p = new ui::panel(ctx, 40, 40);
@@ -58,8 +64,33 @@ void error_callback(int err, const char *desc)
     std::cout << "glfw error: " << desc << " (" << err << ')' << std::endl;
 }
 
+void window_size_callback(GLFWwindow *w, int width, int height)
+{
+    GLuint temp;
+
+    temp = width;
+    ctx->set(ui::element::size, ui::size::width, &temp);
+    temp = height;
+    ctx->set(ui::element::size, ui::size::height, &temp);
+}
+
 void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(w, GL_TRUE);
+}
+
+void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        GLuint temp;
+
+        p->get(ui::element::size, ui::size::width, &temp);
+        temp = std::max((temp + 10) % 100, (GLuint)40);
+        p->set(ui::element::size, ui::size::width, &temp);
+        p->get(ui::element::size, ui::size::height, &temp);
+        temp = std::max((temp + 10) % 80, (GLuint)40);
+        p->set(ui::element::size, ui::size::height, &temp);
+    }
 }

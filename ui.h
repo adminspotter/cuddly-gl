@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Mar 2016, 07:26:55 tquirk
+ *   last updated 11 Mar 2016, 09:48:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -52,6 +52,7 @@ namespace ui
         GLuint width, height;
 
         int get_size(GLuint, void *);
+        void set_size(GLuint, void *);
         int get_attribute(GLuint, void *);
 
       public:
@@ -59,6 +60,7 @@ namespace ui
         ~context();
 
         int get(GLuint, GLuint, void *);
+        void set(GLuint, GLuint, void *);
 
         void draw(void);
 

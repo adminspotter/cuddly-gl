@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 16:57:50 tquirk
+ *   last updated 11 Mar 2016, 09:54:23 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -70,6 +70,11 @@ namespace ui
         virtual void draw(void);
 
         void close(void);
+
+        /* The context may change sizes, so it needs to be able to
+         * call populate_buffers() in the event of a window resize.
+         */
+        friend class context;
     };
 }
 

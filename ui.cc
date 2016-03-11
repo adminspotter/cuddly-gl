@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Mar 2016, 08:22:38 tquirk
+ *   last updated 11 Mar 2016, 09:52:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,6 +45,17 @@ int ui::context::get_size(GLuint t, void *v)
       default:                ret = 1;                       break;
     }
     return ret;
+}
+
+void ui::context::set_size(GLuint d, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    switch (d)
+    {
+      case ui::size::width:  this->width = new_v;  break;
+      case ui::size::height: this->height = new_v; break;
+    }
 }
 
 int ui::context::get_attribute(GLuint t, void *v)
@@ -103,6 +114,16 @@ int ui::context::get(GLuint e, GLuint t, void *v)
       default:                      ret = 1;                         break;
     }
     return ret;
+}
+
+void ui::context::set(GLuint e, GLuint t, void *v)
+{
+    switch (e)
+    {
+      case ui::element::size: this->set_size(t, v); break;
+    }
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        (*i)->populate_buffers();
 }
 
 void ui::context::draw(void)
