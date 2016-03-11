@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Mar 2016, 07:32:02 tquirk
+ *   last updated 11 Mar 2016, 08:22:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -78,6 +78,7 @@ ui::context::context(GLuint w, GLuint h)
     this->frag_shader = load_shader(GL_FRAGMENT_SHADER,
                                     SHADER_SRC_PATH "/ui_fragment.glsl");
     this->shader_pgm = create_program(vert_shader, 0, frag_shader, "fcolor");
+    glUseProgram(this->shader_pgm);
     this->pos_attr = glGetAttribLocation(shader_pgm, "position");
     this->norm_attr = glGetAttribLocation(shader_pgm, "normal");
     this->color_attr = glGetAttribLocation(shader_pgm, "color");

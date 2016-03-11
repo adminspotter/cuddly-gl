@@ -7,7 +7,7 @@ shaderdir = @datadir@/$(PACKAGE)/shaders
 uitest_SOURCES = uitest.cc
 uitest_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES)
 uitest_LDFLAGS = $(CLIENT_LDFLAGS)
-uitest_LDADD = libr9_client_ui.la -lglfw
+uitest_LDADD = libr9_client_ui.la $(CLIENT_LDLIBS)
 
 libr9_client_ui_la_SOURCES = ui_defs.h shader.cc \
 	ui.cc ui.h \

@@ -39,9 +39,12 @@ int main(int argc, char **argv)
 
     ctx = new ui::context(800, 600);
     p = new ui::panel(ctx, 40, 40);
-    
+
     while (!glfwWindowShouldClose(w))
     {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ctx->draw();
         glfwSwapBuffers(w);
         glfwPollEvents();
     }

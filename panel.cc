@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Mar 2016, 08:44:09 tquirk
+ *   last updated 11 Mar 2016, 08:20:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -184,34 +184,39 @@ void ui::panel::populate_buffers(void)
     GLuint element[6], temp;
 
     this->parent->get(ui::element::size, ui::size::width, &temp);
-    vw = (float)temp;
+    vw = (float)temp / 2.0f;
     this->parent->get(ui::element::size, ui::size::height, &temp);
-    vh = (float)temp;
+    vh = (float)temp / -2.0f;
 
-    vertex[0] = x / vw;
-    vertex[1] = y / vh;
-    vertex[2] = vertex[3] = 0.0f;     /* no normal */
+    vertex[0] = x / vw - 1.0f;
+    vertex[1] = y / vh + 1.0f;
+    vertex[2] = vertex[3] = 0.0f;
     memcpy(&vertex[4], glm::value_ptr(this->background), sizeof(float) * 4);
+
     vertex[8] = vertex[0] + (w / vw);
     vertex[9] = vertex[1];
-    vertex[10] = vertex[11] = 0.0f;  /* no normal */
+    vertex[10] = vertex[11] = 0.0f;
     memcpy(&vertex[12], glm::value_ptr(this->background), sizeof(float) * 4);
+
     vertex[16] = vertex[0];
     vertex[17] = vertex[1] + (h / vh);
-    vertex[18] = vertex[19] = 0.0f;  /* no normal */
+    vertex[18] = vertex[19] = 0.0f;
     memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
+
     vertex[24] = vertex[8];
     vertex[25] = vertex[17];
-    vertex[26] = vertex[27] = 0.0f;  /* no normal */
+    vertex[26] = vertex[27] = 0.0f;
     memcpy(&vertex[28], glm::value_ptr(this->background), sizeof(float) * 4);
+
     element[0] = 0;
     element[1] = 2;
     element[2] = 1;
     element[3] = 2;
     element[4] = 3;
     element[5] = 1;
-    this->element_count = 2;
+    this->element_count = 6;
 
+    glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  sizeof(float) * 32, vertex,
@@ -247,6 +252,10 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
 
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
+    glGenBuffers(1, &this->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glGenBuffers(1, &this->ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glEnableVertexAttribArray(pos_attr);
     glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void *)0);
@@ -256,8 +265,6 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     glEnableVertexAttribArray(color_attr);
     glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void *)(sizeof(float) * 4));
-    glGenBuffers(1, &this->vbo);
-    glGenBuffers(1, &this->ebo);
     this->populate_buffers();
 }
 
