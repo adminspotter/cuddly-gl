@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Mar 2016, 08:20:58 tquirk
+ *   last updated 12 Mar 2016, 06:59:23 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -311,7 +311,7 @@ void ui::panel::set_va(GLuint s, GLuint m, void *v, ...)
 
     this->set(s, m, v);
     va_start(args, v);
-    if ((item[0] = va_arg(args, GLuint)) != 0)
+    while ((item[0] = va_arg(args, GLuint)) != 0)
     {
         item[1] = va_arg(args, GLuint);
         ptr = va_arg(args, void *);

@@ -4,6 +4,9 @@
 #define GLFW_INCLUDE_GL_3
 #include <GLFW/glfw3.h>
 
+#include <glm/vec4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "ui.h"
 #include "panel.h"
 
@@ -84,13 +87,22 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
 {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
-        GLuint temp;
+        GLuint new_w, new_h;
+        glm::vec4 new_color;
 
-        p->get(ui::element::size, ui::size::width, &temp);
-        temp = std::max((temp + 10) % 100, (GLuint)40);
-        p->set(ui::element::size, ui::size::width, &temp);
-        p->get(ui::element::size, ui::size::height, &temp);
-        temp = std::max((temp + 10) % 80, (GLuint)40);
-        p->set(ui::element::size, ui::size::height, &temp);
+        p->get(ui::element::size, ui::size::width, &new_w);
+        new_w = std::max((new_w + 10) % 100, (GLuint)40);
+        p->get(ui::element::size, ui::size::height, &new_h);
+        new_h = std::max((new_h + 10) % 80, (GLuint)40);
+        p->get(ui::element::color, ui::color::background,
+               glm::value_ptr(new_color));
+        new_color[2] += 0.1;
+        if (new_color[2] > 1.0)
+            new_color[2] = 0.0;
+        std::cout << "<" << new_color[0] << ", " << new_color[1] << ", "
+                  << new_color[2] << ", " << new_color[3] << ">" << std::endl;
+        p->set_va(ui::element::size, ui::size::width, &new_w,
+                  ui::element::size, ui::size::height, &new_h,
+                  ui::element::color, ui::color::background, glm::value_ptr(new_color), 0);
     }
 }
