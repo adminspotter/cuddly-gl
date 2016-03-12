@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Mar 2016, 06:59:23 tquirk
+ *   last updated 12 Mar 2016, 09:14:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,30 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "panel.h"
+
+int ui::panel::get_position(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::position::x: *((GLuint *)v) = this->xpos; break;
+      case ui::position::y: *((GLuint *)v) = this->ypos; break;
+      default:              ret = 1;                     break;
+    }
+    return ret;
+}
+
+void ui::panel::set_position(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    switch (t)
+    {
+      case ui::position::x: this->xpos = new_v; break;
+      case ui::position::y: this->ypos = new_v; break;
+    }
+}
 
 int ui::panel::get_size(GLuint t, void *v)
 {
@@ -230,7 +254,7 @@ void ui::panel::populate_buffers(void)
 ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
-    GLuint pos_attr, norm_attr, color_attr, temp;
+    GLuint pos_attr, norm_attr, color_attr, temp, x, y;
 
     this->parent = c;
     this->parent->add_child(this);
@@ -242,9 +266,12 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
         this->border[i] = 0;
         this->margin[i] = 0;
     }
-    /* Maybe make these the middle of the screen? */
-    this->xpos = 10;
-    this->ypos = 10;
+
+    /* Put the panel in the middle of the screen to start */
+    c->get(ui::element::size, ui::size::width, &x);
+    c->get(ui::element::size, ui::size::height, &y);
+    this->xpos = x / 2 - (w / 2);
+    this->ypos = y / 2 - (h / 2);
 
     c->get(ui::element::attribute, ui::attribute::position, &pos_attr);
     c->get(ui::element::attribute, ui::attribute::normal, &norm_attr);
@@ -282,11 +309,12 @@ int ui::panel::get(GLuint e, GLuint t, void *v)
 
     switch (e)
     {
-      case ui::element::size:    ret = this->get_size(t, v);   break;
-      case ui::element::border:  ret = this->get_border(t, v); break;
-      case ui::element::margin:  ret = this->get_margin(t, v); break;
-      case ui::element::color:   ret = this->get_color(t, v);  break;
-      default:                   ret = 1;                      break;
+      case ui::element::size:      ret = this->get_size(t, v);      break;
+      case ui::element::border:    ret = this->get_border(t, v);    break;
+      case ui::element::margin:    ret = this->get_margin(t, v);    break;
+      case ui::element::color:     ret = this->get_color(t, v);     break;
+      case ui::element::position:  ret = this->get_position(t, v);  break;
+      default:                     ret = 1;                         break;
     }
     return ret;
 }
@@ -295,10 +323,11 @@ void ui::panel::set(GLuint s, GLuint m, void *v)
 {
     switch (s)
     {
-      case ui::element::size:    this->set_size(m, v);   break;
-      case ui::element::border:  this->set_border(m, v); break;
-      case ui::element::margin:  this->set_margin(m, v); break;
-      case ui::element::color:   this->set_color(m, v);  break;
+      case ui::element::size:      this->set_size(m, v);      break;
+      case ui::element::border:    this->set_border(m, v);    break;
+      case ui::element::margin:    this->set_margin(m, v);    break;
+      case ui::element::color:     this->set_color(m, v);     break;
+      case ui::element::position:  this->set_position(m, v);  break;
     }
     this->populate_buffers();
 }

@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Mar 2016, 09:54:23 tquirk
+ *   last updated 12 Mar 2016, 08:06:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -48,6 +48,8 @@ namespace ui
         GLuint margin[4], border[4];
         glm::vec4 foreground, background;
 
+        int get_position(GLuint, void *);
+        void set_position(GLuint, void *);
         int get_size(GLuint, void *);
         void set_size(GLuint, void *);
         int get_border(GLuint, void *);
