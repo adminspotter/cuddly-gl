@@ -1,6 +1,6 @@
 /* rounded_panel.h                                         -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Mar 2016, 16:17:03 tquirk
+ *   last updated 12 Mar 2016, 09:52:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -36,7 +36,7 @@ namespace ui
     class rounded_panel : public panel
     {
       protected:
-        GLuint radius_val, elem_count;
+        GLuint radius_val;
         bool radius[4];
 
         int get_radius(GLuint, void *);
