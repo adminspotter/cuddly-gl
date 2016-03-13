@@ -9,7 +9,6 @@
 
 #include "ui.h"
 #include "panel.h"
-#include "rounded_panel.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -17,12 +16,12 @@ void key_callback(GLFWwindow *, int, int, int, int);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 
 ui::context *ctx;
-ui::panel *p, *rp;
+ui::panel *p;
 
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint tb, m, x, y, rad;
+    GLuint tb, m;
 
     if (glfwInit() == GL_FALSE)
     {
@@ -54,13 +53,6 @@ int main(int argc, char **argv)
     m = 0;
     p->set_va(ui::element::border, ui::side::all, &tb,
               ui::element::margin, ui::side::all, &m, 0);
-    rp = new ui::rounded_panel(ctx, 100, 100);
-    x = 200;
-    y = 50;
-    rad = 10;
-    rp->set_va(ui::element::position, ui::position::x, &x,
-               ui::element::position, ui::position::y, &y,
-               ui::element::radius,   ui::corner::all, &rad, 0);
 
     while (!glfwWindowShouldClose(w))
     {
