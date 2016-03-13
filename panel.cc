@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Mar 2016, 09:14:55 tquirk
+ *   last updated 13 Mar 2016, 06:23:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -202,7 +202,7 @@ void ui::panel::populate_buffers(void)
      * points.  This will come in very handy in some of the
      * subclasses, which may have tons of duplicated points.
      */
-    float vertex[32];
+    float vertex[24];
     float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
     float vw, vh;
     GLuint element[6], temp;
@@ -214,23 +214,19 @@ void ui::panel::populate_buffers(void)
 
     vertex[0] = x / vw - 1.0f;
     vertex[1] = y / vh + 1.0f;
-    vertex[2] = vertex[3] = 0.0f;
-    memcpy(&vertex[4], glm::value_ptr(this->background), sizeof(float) * 4);
+    memcpy(&vertex[2], glm::value_ptr(this->background), sizeof(float) * 4);
 
-    vertex[8] = vertex[0] + (w / vw);
-    vertex[9] = vertex[1];
-    vertex[10] = vertex[11] = 0.0f;
-    memcpy(&vertex[12], glm::value_ptr(this->background), sizeof(float) * 4);
+    vertex[6] = vertex[0] + (w / vw);
+    vertex[7] = vertex[1];
+    memcpy(&vertex[8], glm::value_ptr(this->background), sizeof(float) * 4);
 
-    vertex[16] = vertex[0];
-    vertex[17] = vertex[1] + (h / vh);
-    vertex[18] = vertex[19] = 0.0f;
+    vertex[12] = vertex[0];
+    vertex[13] = vertex[1] + (h / vh);
+    memcpy(&vertex[14], glm::value_ptr(this->background), sizeof(float) * 4);
+
+    vertex[18] = vertex[6];
+    vertex[19] = vertex[13];
     memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
-
-    vertex[24] = vertex[8];
-    vertex[25] = vertex[17];
-    vertex[26] = vertex[27] = 0.0f;
-    memcpy(&vertex[28], glm::value_ptr(this->background), sizeof(float) * 4);
 
     element[0] = 0;
     element[1] = 2;
@@ -243,7 +239,7 @@ void ui::panel::populate_buffers(void)
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(float) * 32, vertex,
+                 sizeof(float) * 24, vertex,
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -254,7 +250,7 @@ void ui::panel::populate_buffers(void)
 ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
-    GLuint pos_attr, norm_attr, color_attr, temp, x, y;
+    GLuint pos_attr, color_attr, temp, x, y;
 
     this->parent = c;
     this->parent->add_child(this);
@@ -274,7 +270,6 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     this->ypos = y / 2 - (h / 2);
 
     c->get(ui::element::attribute, ui::attribute::position, &pos_attr);
-    c->get(ui::element::attribute, ui::attribute::normal, &norm_attr);
     c->get(ui::element::attribute, ui::attribute::color, &color_attr);
 
     glGenVertexArrays(1, &this->vao);
@@ -285,13 +280,10 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glEnableVertexAttribArray(pos_attr);
     glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)0);
-    glEnableVertexAttribArray(norm_attr);
-    glVertexAttribPointer(norm_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
+                          sizeof(float) * 6, (void *)0);
     glEnableVertexAttribArray(color_attr);
     glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 4));
+                          sizeof(float) * 6, (void *)(sizeof(float) * 2));
     this->populate_buffers();
 }
 

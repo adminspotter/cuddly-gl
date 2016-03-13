@@ -9,6 +9,7 @@
 
 #include "ui.h"
 #include "panel.h"
+#include "rounded_panel.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -16,11 +17,12 @@ void key_callback(GLFWwindow *, int, int, int, int);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 
 ui::context *ctx;
-ui::panel *p;
+ui::panel *p, *rp;
 
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
+    GLuint x, y, rad;
 
     if (glfwInit() == GL_FALSE)
     {
@@ -48,6 +50,13 @@ int main(int argc, char **argv)
 
     ctx = new ui::context(800, 600);
     p = new ui::panel(ctx, 40, 40);
+    rp = new ui::rounded_panel(ctx, 100, 100);
+    x = 200;
+    y = 50;
+    rad = 10;
+    rp->set_va(ui::element::position, ui::position::x, &x,
+               ui::element::position, ui::position::y, &y,
+               ui::element::radius,   ui::corner::all, &rad, 0);
 
     while (!glfwWindowShouldClose(w))
     {
@@ -99,8 +108,6 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
         new_color[2] += 0.1;
         if (new_color[2] > 1.0)
             new_color[2] = 0.0;
-        std::cout << "<" << new_color[0] << ", " << new_color[1] << ", "
-                  << new_color[2] << ", " << new_color[3] << ">" << std::endl;
         p->set_va(ui::element::size, ui::size::width, &new_w,
                   ui::element::size, ui::size::height, &new_h,
                   ui::element::color, ui::color::background, glm::value_ptr(new_color), 0);

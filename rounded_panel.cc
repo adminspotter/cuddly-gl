@@ -1,6 +1,6 @@
 /* rounded_panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Mar 2016, 11:03:46 tquirk
+ *   last updated 13 Mar 2016, 06:21:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -26,8 +26,6 @@
  * Things to do
  *
  */
-
-#include <iostream>
 
 #include "rounded_panel.h"
 
@@ -83,7 +81,7 @@ void ui::rounded_panel::set_radius(GLuint t, void *v)
 
 void ui::rounded_panel::populate_buffers(void)
 {
-    float vertex[12 * 8];
+    float vertex[12 * 6];
     float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
     float rad = this->radius_val;
     float vw, vh;
@@ -101,30 +99,26 @@ void ui::rounded_panel::populate_buffers(void)
         = (x + (this->radius[0] || this->radius[2] ? rad : 0)) / vw - 1.0f;
     vertex[1]
         = (y + (this->radius[0] || this->radius[1] ? rad : 0)) / vh + 1.0f;
-    vertex[2] = vertex[3] = 0.0f;     /* no normal */
-    memcpy(&vertex[4], glm::value_ptr(this->background), sizeof(float) * 4);
+    memcpy(&vertex[2], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Upper right */
-    vertex[8]
+    vertex[6]
         = (x + w - (this->radius[1] || this->radius[3] ? rad : 0)) / vw - 1.0f;
-    vertex[9] = vertex[1];
-    vertex[10] = vertex[11] = 0.0f;  /* no normal */
-    memcpy(&vertex[12], glm::value_ptr(this->background), sizeof(float) * 4);
+    vertex[7] = vertex[1];
+    memcpy(&vertex[8], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Lower left */
-    vertex[16] = vertex[0];
-    vertex[17]
+    vertex[12] = vertex[0];
+    vertex[13]
         = (y + h - (this->radius[2] || this->radius[3] ? rad : 0)) / vh + 1.0f;
-    vertex[18] = vertex[19] = 0.0f;  /* no normal */
-    memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
+    memcpy(&vertex[14], glm::value_ptr(this->background), sizeof(float) * 4);
 
     /* Lower right */
-    vertex[24] = vertex[8];
-    vertex[25] = vertex[17];
-    vertex[26] = vertex[27] = 0.0f;  /* no normal */
-    memcpy(&vertex[28], glm::value_ptr(this->background), sizeof(float) * 4);
+    vertex[18] = vertex[6];
+    vertex[19] = vertex[13];
+    memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
     vert_count += 4;
-    vert_index = 32;
+    vert_index = 24;
 
     element[0] = 0;
     element[1] = 1;
@@ -139,20 +133,16 @@ void ui::rounded_panel::populate_buffers(void)
         /* Top */
         vertex[vert_index] = vertex[0];
         vertex[vert_index + 1] = y / vh + 1.0f;
-        vertex[vert_index + 2] = 0.0f;
-        vertex[vert_index + 3] = 1.0f;
-        memcpy(&vertex[vert_index + 4],
+        memcpy(&vertex[vert_index + 2],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
-        vertex[vert_index + 8] = vertex[8];
-        vertex[vert_index + 9] = vertex[vert_index + 1];
-        vertex[vert_index + 10] = 0.0f;
-        vertex[vert_index + 11] = 1.0f;
-        memcpy(&vertex[vert_index + 12],
+        vertex[vert_index + 6] = vertex[6];
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
-        vert_index += 16;
+        vert_index += 12;
         element[this->element_count] = vert_count - 2;
         element[this->element_count + 1] = 0;
         element[this->element_count + 2] = vert_count - 1;
@@ -166,20 +156,16 @@ void ui::rounded_panel::populate_buffers(void)
         /* Left */
         vertex[vert_index] = x / vw - 1.0f;
         vertex[vert_index + 1] = vertex[1];
-        vertex[vert_index + 2] = -1.0f;
-        vertex[vert_index + 3] = 0.0f;
-        memcpy(&vertex[vert_index + 4],
+        memcpy(&vertex[vert_index + 2],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
-        vertex[vert_index + 8] = vertex[vert_index];
-        vertex[vert_index + 9] = vertex[17];
-        vertex[vert_index + 10] = -1.0f;
-        vertex[vert_index + 11] = 0.0f;
-        memcpy(&vertex[vert_index + 12],
+        vertex[vert_index + 6] = vertex[vert_index];
+        vertex[vert_index + 7] = vertex[13];
+        memcpy(&vertex[vert_index + 8],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
-        vert_index += 16;
+        vert_index += 12;
         element[this->element_count] = vert_count - 2;
         element[this->element_count + 1] = vert_count - 1;
         element[this->element_count + 2] = 0;
@@ -200,20 +186,16 @@ void ui::rounded_panel::populate_buffers(void)
         /* Right */
         vertex[vert_index] = (x + w) / vw - 1.0f;
         vertex[vert_index + 1] = vertex[1];
-        vertex[vert_index + 2] = 1.0f;
-        vertex[vert_index + 3] = 0.0f;
-        memcpy(&vertex[vert_index + 4],
+        memcpy(&vertex[vert_index + 2],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
-        vertex[vert_index + 8] = vertex[vert_index];
-        vertex[vert_index + 9] = vertex[17];
-        vertex[vert_index + 10] = 1.0f;
-        vertex[vert_index + 11] = 0.0f;
-        memcpy(&vertex[vert_index + 12],
+        vertex[vert_index + 6] = vertex[vert_index];
+        vertex[vert_index + 7] = vertex[13];
+        memcpy(&vertex[vert_index + 8],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
-        vert_index += 16;
+        vert_index += 12;
         element[this->element_count] = 1;
         element[this->element_count + 1] = 3;
         element[this->element_count + 2] = vert_count - 2;
@@ -234,20 +216,16 @@ void ui::rounded_panel::populate_buffers(void)
         /* Bottom */
         vertex[vert_index] = vertex[0];
         vertex[vert_index + 1] = (y + h) / vh + 1.0f;
-        vertex[vert_index + 2] = 0.0f;
-        vertex[vert_index + 3] = -1.0f;
-        memcpy(&vertex[vert_index + 4],
+        memcpy(&vertex[vert_index + 2],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
-        vertex[vert_index + 8] = vertex[8];
-        vertex[vert_index + 9] = vertex[vert_index + 1];
-        vertex[vert_index + 10] = 0.0f;
-        vertex[vert_index + 11] = -1.0f;
-        memcpy(&vertex[vert_index + 12],
+        vertex[vert_index + 6] = vertex[6];
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
         vert_count += 2;
-        vert_index += 16;
+        vert_index += 12;
         element[this->element_count] = 2;
         element[this->element_count + 1] = vert_count - 2;
         element[this->element_count + 2] = 3;
