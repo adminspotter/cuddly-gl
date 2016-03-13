@@ -202,15 +202,20 @@ void ui::panel::populate_buffers(void)
      * points.  This will come in very handy in some of the
      * subclasses, which may have tons of duplicated points.
      */
-    float vertex[24];
+    float vertex[120];
     float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
-    float vw, vh;
-    GLuint element[6], temp;
+    float vw, vh, m[4], b[4];
+    GLuint element[60], vert_count = 0, vert_index = 0, temp;
 
     this->parent->get(ui::element::size, ui::size::width, &temp);
     vw = (float)temp / 2.0f;
     this->parent->get(ui::element::size, ui::size::height, &temp);
     vh = (float)temp / -2.0f;
+    for (int i = 0; i < 4 ; ++i)
+    {
+        m[i] = this->margin[i];
+        b[i] = this->border[i];
+    }
 
     vertex[0] = x / vw - 1.0f;
     vertex[1] = y / vh + 1.0f;
@@ -227,6 +232,8 @@ void ui::panel::populate_buffers(void)
     vertex[18] = vertex[6];
     vertex[19] = vertex[13];
     memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
+    vert_index = 24;
+    vert_count = 4;
 
     element[0] = 0;
     element[1] = 2;
@@ -236,14 +243,150 @@ void ui::panel::populate_buffers(void)
     element[5] = 1;
     this->element_count = 6;
 
+    /* Top border */
+    if (this->border[0] != 0)
+    {
+        vertex[vert_index] = vertex[0] + (m[1] / vw);
+        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[vert_index + 2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 6] = vertex[6] - (m[2] / vw);
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 12] = vertex[vert_index];
+        vertex[vert_index + 13] = vertex[1] + ((m[0] + b[0]) / vh);
+        memcpy(&vertex[vert_index + 14],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 18] = vertex[vert_index + 6];
+        vertex[vert_index + 19] = vertex[vert_index + 13];
+        memcpy(&vertex[vert_index + 20],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vert_index += 24;
+        vert_count += 4;
+
+        element[this->element_count] = vert_count - 4;
+        element[this->element_count + 1] = vert_count - 2;
+        element[this->element_count + 2] = vert_count - 3;
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = vert_count - 1;
+        element[this->element_count + 5] = vert_count - 3;
+        this->element_count += 6;
+    }
+
+    /* Left border */
+    if (this->border[1] != 0)
+    {
+        vertex[vert_index] = vertex[0] + (m[1] / vw);
+        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[vert_index + 2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 6] = vertex[vert_index] + (b[1] / vw);
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 12] = vertex[vert_index];
+        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[vert_index + 14],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 18] = vertex[vert_index + 6];
+        vertex[vert_index + 19] = vertex[vert_index + 13];
+        memcpy(&vertex[vert_index + 20],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vert_index += 24;
+        vert_count += 4;
+
+        element[this->element_count] = vert_count - 4;
+        element[this->element_count + 1] = vert_count - 2;
+        element[this->element_count + 2] = vert_count - 3;
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = vert_count - 1;
+        element[this->element_count + 5] = vert_count - 3;
+        this->element_count += 6;
+    }
+
+    /* Right border */
+    if (this->border[2] != 0)
+    {
+        vertex[vert_index] = vertex[6] - ((m[2] + b[2]) / vw);
+        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[vert_index + 2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 6] = vertex[vert_index] + (b[2] / vw);
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 12] = vertex[vert_index];
+        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[vert_index + 14],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 18] = vertex[vert_index + 6];
+        vertex[vert_index + 19] = vertex[vert_index + 13];
+        memcpy(&vertex[vert_index + 20],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vert_index += 24;
+        vert_count += 4;
+
+        element[this->element_count] = vert_count - 4;
+        element[this->element_count + 1] = vert_count - 2;
+        element[this->element_count + 2] = vert_count - 3;
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = vert_count - 1;
+        element[this->element_count + 5] = vert_count - 3;
+        this->element_count += 6;
+    }
+
+    /* Bottom border */
+    if (this->border[3] != 0)
+    {
+        vertex[vert_index] = vertex[0] + (m[1] / vw);
+        vertex[vert_index + 1] = vertex[13] - ((m[3] + b[3]) / vh);
+        memcpy(&vertex[vert_index + 2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 6] = vertex[6] - (m[2] / vw);
+        vertex[vert_index + 7] = vertex[vert_index + 1];
+        memcpy(&vertex[vert_index + 8],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 12] = vertex[vert_index];
+        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[vert_index + 14],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[vert_index + 18] = vertex[vert_index + 6];
+        vertex[vert_index + 19] = vertex[vert_index + 13];
+        memcpy(&vertex[vert_index + 20],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vert_index += 24;
+        vert_count += 4;
+
+        element[this->element_count] = vert_count - 4;
+        element[this->element_count + 1] = vert_count - 2;
+        element[this->element_count + 2] = vert_count - 3;
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = vert_count - 1;
+        element[this->element_count + 5] = vert_count - 3;
+        this->element_count += 6;
+    }
+
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(float) * 24, vertex,
+                 sizeof(float) * vert_index, vertex,
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 sizeof(GLuint) * 6, element,
+                 sizeof(GLuint) * this->element_count, element,
                  GL_DYNAMIC_DRAW);
 }
 

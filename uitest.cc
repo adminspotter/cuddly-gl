@@ -22,7 +22,7 @@ ui::panel *p, *rp;
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint x, y, rad;
+    GLuint tb, m, x, y, rad;
 
     if (glfwInit() == GL_FALSE)
     {
@@ -50,6 +50,10 @@ int main(int argc, char **argv)
 
     ctx = new ui::context(800, 600);
     p = new ui::panel(ctx, 40, 40);
+    tb = 1;
+    m = 0;
+    p->set_va(ui::element::border, ui::side::all, &tb,
+              ui::element::margin, ui::side::all, &m, 0);
     rp = new ui::rounded_panel(ctx, 100, 100);
     x = 200;
     y = 50;
