@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Mar 2016, 06:23:53 tquirk
+ *   last updated 13 Mar 2016, 09:32:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -109,7 +109,7 @@ void ui::panel::set_border(GLuint s, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
-    if (s & ui::side::top & ui::side::bottom)
+    if (s & ui::side::top || s & ui::side::bottom)
         if (this->margin[0] + this->margin[3]
             + (s & ui::side::top ? new_v : this->border[0])
             + (s & ui::side::bottom ? new_v : this->border[3]) <= this->height)
@@ -118,7 +118,7 @@ void ui::panel::set_border(GLuint s, void *v)
             if (s & ui::side::bottom)  this->border[3] = new_v;
         }
 
-    if (s & ui::side::left & ui::side::right)
+    if (s & ui::side::left || s & ui::side::right)
         if (this->margin[1] + this->margin[2]
             + (s & ui::side::left ? new_v : this->border[1])
             + (s & ui::side::right ? new_v : this->border[2]) <= this->width)
@@ -147,7 +147,7 @@ void ui::panel::set_margin(GLuint s, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
-    if (s & ui::side::top & ui::side::bottom)
+    if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
             + (s & ui::side::top ? new_v : this->margin[0])
             + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->height)
@@ -156,7 +156,7 @@ void ui::panel::set_margin(GLuint s, void *v)
             if (s & ui::side::bottom)  this->margin[3] = new_v;
         }
 
-    if (s & ui::side::left & ui::side::right)
+    if (s & ui::side::left || s & ui::side::right)
         if (this->border[1] + this->border[2]
             + (s & ui::side::left ? new_v : this->margin[1])
             + (s & ui::side::right ? new_v : this->margin[2]) <= this->width)
