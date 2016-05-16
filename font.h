@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Mar 2016, 10:08:18 tquirk
+ *   last updated 16 May 2016, 08:03:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -65,11 +65,25 @@ struct Glyph
 class Font
 {
   private:
+    static struct glyph_cleanup
+    {
+        void operator()(struct Glyph& g)
+            {
+                if (g.bitmap != NULL)
+                    delete[] g.bitmap;
+            }
+    };
+
     FT_Face face;
-    BasicCache<struct Glyph> glyphs;
+    BasicCache<struct Glyph, glyph_cleanup> glyphs;
+
+    std::string search_path(std::string&);
+
+    void load_glyph(FT_ULong);
+    void cleanup_glyph(FL_ULong);
 
   public:
-    Font(FT_Library *, std::string&, int);
+    Font(std::string&, int);
     ~Font();
 
     struct Glyph& operator[](FT_ULong);
