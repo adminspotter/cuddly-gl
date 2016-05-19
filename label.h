@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Mar 2016, 08:59:52 tquirk
+ *   last updated 26 Mar 2016, 17:21:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,8 @@
 #ifndef __INC_R9_LABEL_H__
 #define __INC_R9_LABEL_H__
 
+#include <string>
+
 #include "panel.h"
 
 namespace ui
@@ -39,10 +41,16 @@ namespace ui
     class label : public panel
     {
       protected:
+        bool use_text;
+        std::string str;
+        unsigned char *image;
+        Font *font;
         GLuint tex;
 
         int get_font(GLuint, void *);
         void set_font(GLuint, void *);
+        int get_string(GLuint, void *);
+        void set_string(GLuint, void *);
         int get_bgimage(GLuint, void *);
         void set_bgimage(GLuint, void *);
 
