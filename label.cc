@@ -1,24 +1,60 @@
+/* label.cc
+ *   by Trinity Quirk <tquirk@ymb.net>
+ *   last updated 21 May 2016, 08:20:52 tquirk
+ *
+ * Revision IX game client
+ * Copyright (C) 2016  Trinity Annabelle Quirk
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ *
+ * This file contains the basic label object definitions.  We derive
+ * from the panel, which will take care of the box part.  In this
+ * class, we'll add font handling via freetype, and we'll get our text
+ * on the screen via a 2D GL texture.  We will handle either text
+ * rendering, or image rendering.
+ *
+ * Things to do
+ *
+ */
+
 #include <stdexcept>
 
 #include "label.h"
 
+/* ARGSUSED */
 int ui::label::get_font(GLuint t, void *v)
 {
     v = (void *)this->font;
     return 0;
 }
 
+/* ARGSUSED */
 void ui::label::set_font(GLuint t, void *v)
 {
     this->font = (Font *)v;
 }
 
+/* ARGSUSED */
 int ui::label::get_string(GLuint t, void *v)
 {
     *((std::string *)v) = this->str;
     return 0;
 }
 
+/* ARGSUSED */
 void ui::label::set_string(GLuint t, void *v)
 {
     this->use_text = true;
@@ -30,11 +66,13 @@ void ui::label::set_string(GLuint t, void *v)
     this->str = *((std::string *)v);
 }
 
+/* ARGSUSED */
 int ui::label::get_bgimage(GLuint t, void *v)
 {
     v = (void *)this->image;
 }
 
+/* ARGSUSED */
 void ui::label::set_bgimage(GLuint t, void *v)
 {
     if (this->width == 0 || this->height == 0)
