@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2016, 08:03:34 tquirk
+ *   last updated 21 May 2016, 12:26:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -75,12 +75,11 @@ class Font
     };
 
     FT_Face face;
-    BasicCache<struct Glyph, glyph_cleanup> glyphs;
+    BasicCache<struct Glyph, glyph_cleanup, FT_ULong> glyphs;
 
     std::string search_path(std::string&);
 
     void load_glyph(FT_ULong);
-    void cleanup_glyph(FL_ULong);
 
   public:
     Font(std::string&, int);

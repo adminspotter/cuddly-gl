@@ -81,11 +81,6 @@ void Font::load_glyph(FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
-void Font::cleanup_glyph(FT_ULong code)
-{
-    delete[] this->glyphs[code].bitmap;
-}
-
 Font::Font(std::string& font_name, int pixel_size)
     : glyphs(font_name + " glyphs");
 {
@@ -105,5 +100,9 @@ Font::~Font()
 
 struct Glyph& Font::operator[](FT_ULong code)
 {
-    return this->glyphs[code];
+    Glyph& g = this->glyphs[code];
+
+    if (g.bitmap == NULL)
+        this->load_glyph(code);
+    return g;
 }
