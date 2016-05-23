@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2016, 08:20:52 tquirk
+ *   last updated 23 May 2016, 06:30:22 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,7 +32,11 @@
 
 #include <stdexcept>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "label.h"
+
+#include "../l10n.h"
 
 /* ARGSUSED */
 int ui::label::get_font(GLuint t, void *v)
@@ -70,6 +74,7 @@ void ui::label::set_string(GLuint t, void *v)
 int ui::label::get_bgimage(GLuint t, void *v)
 {
     v = (void *)this->image;
+    return 0;
 }
 
 /* ARGSUSED */

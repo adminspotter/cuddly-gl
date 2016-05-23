@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2016, 12:26:41 tquirk
+ *   last updated 23 May 2016, 06:15:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,13 +59,14 @@ struct Glyph
     int x_min, x_max, x_advance, x_offset, width;
     int y_min, y_max, y_advance, y_offset, height;
     int top, left;
+    int pitch;
     unsigned char *bitmap;
-}
+};
 
 class Font
 {
   private:
-    static struct glyph_cleanup
+    struct glyph_cleanup
     {
         void operator()(struct Glyph& g)
             {

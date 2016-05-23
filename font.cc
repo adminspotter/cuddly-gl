@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 May 2016, 09:18:29 tquirk
+ *   last updated 22 May 2016, 17:53:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,6 +37,8 @@
 #include <unistd.h>
 
 #include <stdexcept>
+
+#include "font.h"
 
 #include "../configdata.h"
 #include "../l10n.h"
@@ -75,11 +77,12 @@ std::string Font::search_path(std::string& font_name)
     for (i = config.font_paths.begin(); i != config.font_paths.end(); ++i)
     {
         std::string path = *i;
+        std::string::size_type pos;
 
         /* Make sure the path doesn't have a ~, which stat won't
          * understand
          */
-        if ((std::string::size_type pos = path.find('~')) != std::string::npos)
+        if ((pos = path.find('~')) != std::string::npos)
         {
             std::string home = getenv("HOME");
 
@@ -115,12 +118,12 @@ void Font::load_glyph(FT_ULong code)
 }
 
 Font::Font(std::string& font_name, int pixel_size)
-    : glyphs(font_name + " glyphs");
+    : glyphs(font_name + " glyphs")
 {
     FT_Library *lib = init_freetype();
     std::string font_path = this->search_path(font_name);
 
-    if (FT_New_Face(*lib, font_path.c_str(), 0, this->face))
+    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
         throw std::runtime_error(_("Could not load font ") + font_name);
     FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
 }
