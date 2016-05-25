@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 May 2016, 17:53:26 tquirk
+ *   last updated 25 May 2016, 08:48:17 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -47,26 +47,21 @@
  * be handled within the same thread, so no multi-thread weirdness
  * should intrude.
  */
-static FT_Library *ft_lib = NULL;
+static FT_Library ft_lib;
 static int ft_lib_count = 0;
 
 static FT_Library *init_freetype(void)
 {
-    if (ft_lib == NULL)
-        FT_Init_FreeType(ft_lib);
+    if (ft_lib_count++ == 0)
+        FT_Init_FreeType(&ft_lib);
 
-    ++ft_lib_count;
-    return ft_lib;
+    return &ft_lib;
 }
 
 static void cleanup_freetype(void)
 {
-    if (ft_lib != NULL)
-        if (--ft_lib_count == 0)
-        {
-            FT_Done_FreeType(*ft_lib);
-            ft_lib = NULL;
-        }
+    if (--ft_lib_count == 0)
+        FT_Done_FreeType(ft_lib);
 }
 
 std::string Font::search_path(std::string& font_name)
