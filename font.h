@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2016, 06:15:21 tquirk
+ *   last updated 29 May 2016, 10:24:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -56,8 +56,7 @@
 
 struct Glyph
 {
-    int x_min, x_max, x_advance, x_offset, width;
-    int y_min, y_max, y_advance, y_offset, height;
+    int x_advance, y_advance, width, height;
     int top, left;
     int pitch;
     unsigned char *bitmap;
