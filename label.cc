@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 Jun 2016, 10:19:26 tquirk
+ *   last updated 02 Jun 2016, 17:08:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -84,7 +84,7 @@ void ui::label::set_bgimage(GLuint t, void *v)
         throw std::runtime_error(_("Width and height must be set before assigning a background image"));
 
     this->use_text = false;
-    this->str = "";
+    this->str.clear();
     if (this->image != NULL)
         delete[] this->image;
     this->image = new unsigned char[this->width * this->height];
@@ -99,10 +99,10 @@ void ui::label::set_bgimage(GLuint t, void *v)
  * Ref: http://www.cprogramming.com/tutorial/unicode.html
  */
 
-std::u32string& ui::label::utf8tou32str(const std::string& str)
+std::u32string ui::label::utf8tou32str(const std::string& str)
 {
-    std::string::iterator i = str.begin();
-    std::u32string newstr();
+    std::string::const_iterator i = str.begin();
+    std::u32string newstr;
     uint32_t ch;
 
     while (i != str.end())
@@ -134,9 +134,9 @@ std::u32string& ui::label::utf8tou32str(const std::string& str)
     return newstr;
 }
 
-std::string& ui::label::u32strtoutf8(const std::u32string& str)
+std::string ui::label::u32strtoutf8(const std::u32string& str)
 {
-    std::u32string::iterator i = str.begin();
+    std::u32string::const_iterator i = str.begin();
     std::string newstr;
 
     while (i != str.end())
