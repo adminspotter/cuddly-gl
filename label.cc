@@ -219,13 +219,29 @@ void ui::label::set_string_size(void)
 
 void ui::label::populate_buffers(void)
 {
+    glBindTexture(GL_TEXTURE_2D, this->tex);
     if (this->use_text)
     {
+        std::u32string::iterator i;
+
+        if (this->image != NULL)
+            delete[] this->image;
+        this->set_string_size();
+        this->image = new uint8_t[this->width * this->height];
+        for (i = this->str.begin(); i != this->str.end(); ++i)
+        {
+            /* Insert the glyphs into the buffer */
+        }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA,
+                     this->width, this->height, 0, GL_ALPHA,
+                     GL_UNSIGNED_BYTE, this->image);
     }
-    glBindTexture(GL_TEXTURE_2D, this->tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA,
-                 this->width, this->height, 0, GL_ALPHA,
-                 GL_UNSIGNED_BYTE, this->image);
+    else
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                     this->width, this->height, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, this->image);
+    }
 }
 
 ui::label::label(ui::context *c, GLuint w, GLuint h)
