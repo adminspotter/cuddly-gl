@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 07:48:09 tquirk
+ *   last updated 03 Jun 2016, 07:55:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -180,12 +180,9 @@ void ui::label::populate_buffers(void)
 
         if (this->image != NULL)
             delete[] this->image;
-        this->font->get_string_size(this->str, this->width, this->height);
-        this->image = new uint8_t[this->width * this->height];
-        for (i = this->str.begin(); i != this->str.end(); ++i)
-        {
-            /* Insert the glyphs into the buffer */
-        }
+        this->image = this->font->render_string(this->str,
+                                                this->width,
+                                                this->height);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA,
                      this->width, this->height, 0, GL_ALPHA,
                      GL_UNSIGNED_BYTE, this->image);

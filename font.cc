@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 07:48:04 tquirk
+ *   last updated 03 Jun 2016, 08:12:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -114,32 +114,6 @@ void Font::load_glyph(FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
-Font::Font(std::string& font_name, int pixel_size)
-    : glyphs(font_name + " glyphs")
-{
-    FT_Library *lib = init_freetype();
-    std::string font_path = this->search_path(font_name);
-
-    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
-        throw std::runtime_error(_("Could not load font ") + font_name);
-    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
-}
-
-Font::~Font()
-{
-    FT_Done_Face(this->face);
-    cleanup_freetype();
-}
-
-struct Glyph& Font::operator[](FT_ULong code)
-{
-    Glyph& g = this->glyphs[code];
-
-    if (g.bitmap == NULL)
-        this->load_glyph(code);
-    return g;
-}
-
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -183,4 +157,40 @@ void Font::get_string_size(const std::u32string& str,
                           });
     w = reqd_size[0] + reqd_size[1];
     h = reqd_size[2] + reqd_size[3];
+}
+
+Font::Font(std::string& font_name, int pixel_size)
+    : glyphs(font_name + " glyphs")
+{
+    FT_Library *lib = init_freetype();
+    std::string font_path = this->search_path(font_name);
+
+    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
+        throw std::runtime_error(_("Could not load font ") + font_name);
+    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
+}
+
+Font::~Font()
+{
+    FT_Done_Face(this->face);
+    cleanup_freetype();
+}
+
+struct Glyph& Font::operator[](FT_ULong code)
+{
+    Glyph& g = this->glyphs[code];
+
+    if (g.bitmap == NULL)
+        this->load_glyph(code);
+    return g;
+}
+
+unsigned char *Font::render_string(const std::u32string& str,
+                                   unsigned int& w,
+                                   unsigned int& h)]
+{
+    unsigned char *img = NULL;
+
+    this->get_string_size(str, w, h);
+    return img;
 }
