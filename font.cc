@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 May 2016, 08:48:17 tquirk
+ *   last updated 03 Jun 2016, 07:48:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,6 +37,8 @@
 #include <unistd.h>
 
 #include <stdexcept>
+#include <algorithm>
+#include <numeric>
 
 #include "font.h"
 
@@ -136,4 +138,49 @@ struct Glyph& Font::operator[](FT_ULong code)
     if (g.bitmap == NULL)
         this->load_glyph(code);
     return g;
+}
+
+/* This gets a little complicated, because a glyph which has no
+ * descender could have an overall height that is equal to a shorter
+ * glyph that has a descender.  They would evaluate as equal, but the
+ * descender would expand the line height, and we wouldn't be able to
+ * account for that with a single value.  So it sounds like we need
+ * two values for each axis; one of the values for horizontal size
+ * with horizontal text should be zero, and the values for vertical
+ * size are the ascender and descender respectively.
+ *
+ * Vertical text may have similar problems with the vertical baseline,
+ * which we'll have to account for.  We'll make this as fully general
+ * as possible, so we never have to change it.
+ */
+void Font::get_string_size(const std::u32string& str,
+                           unsigned int& w,
+                           unsigned int& h)
+{
+    std::vector<int> reqd_size
+        = std::accumulate(str.begin(),
+                          str.end(),
+                          std::vector<int>{0, 0, 0, 0},
+                          [&](std::vector<int>& a, uint32_t b)
+                          {
+                              Glyph& g = this->glyphs[b];
+                              if (g.y_advance == 0)
+                              {
+                                  /* Horizontal text */
+                                  a[0] += abs(g.x_advance) + g.left;
+                                  /* TODO:  handle kerning data, if available */
+                                  a[2] = std::max(a[1], g.top);
+                                  a[3] = std::min(a[2], g.top - g.height);
+                              }
+                              else if (g.x_advance == 0)
+                              {
+                                  /* Vertical text */
+                                  a[0] = std::max(a[0], g.left);
+                                  a[1] = std::min(a[1], g.left - g.width);
+                                  a[2] += abs(g.y_advance) + g.top;
+                              }
+                              return a;
+                          });
+    w = reqd_size[0] + reqd_size[1];
+    h = reqd_size[2] + reqd_size[3];
 }

@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jun 2016, 17:16:08 tquirk
+ *   last updated 03 Jun 2016, 07:40:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,8 +57,6 @@ namespace ui
 
         static std::u32string utf8tou32str(const std::string&);
         static std::string u32strtoutf8(const std::u32string&);
-
-        void set_string_size(void);
 
         virtual void populate_buffers(void);
 
