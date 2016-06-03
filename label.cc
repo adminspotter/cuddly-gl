@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jun 2016, 17:08:07 tquirk
+ *   last updated 02 Jun 2016, 18:24:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -111,20 +111,20 @@ std::u32string ui::label::utf8tou32str(const std::string& str)
 
     while (i != str.end())
     {
-        if (*i & 0xf0 == 0xf0)
+        if ((*i & 0xf0) == 0xf0)
         {
             ch = (*i & 0x07) << 18;
             ch += (*(++i) & 0x3f) << 12;
             ch += (*(++i) & 0x3f) << 6;
             ch += (*(++i) & 0x3f);
         }
-        else if (*i & 0xe0 == 0xe0)
+        else if ((*i & 0xe0) == 0xe0)
         {
             ch = (*i & 0x0f) << 12;
             ch += (*(++i) & 0x3f) << 6;
             ch += (*(++i) & 0x3f);
         }
-        else if (*i & 0xc0 == 0xc0)
+        else if ((*i & 0xc0) == 0xc0)
         {
             ch = (*i & 0x1f) << 6;
             ch += (*(++i) & 0x3f);
@@ -145,20 +145,20 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
     while (i != str.end())
     {
-        if (*i >= 0x10000)
+        if (*i & 0x1f0000)
         {
             newstr.push_back(0xf0 & ((*i & 0x1c0000) >> 18));
             newstr.push_back(0x80 & ((*i & 0x3f000) >> 12));
             newstr.push_back(0x80 & ((*i & 0xfc0) >> 6));
             newstr.push_back(0x80 & (*i & 0x3f));
         }
-        else if (*i >= 0x800)
+        else if (*i & 0xf800)
         {
             newstr.push_back(0xe0 & ((*i & 0x1f000) >> 12));
             newstr.push_back(0x80 & ((*i & 0xfc0) >> 6));
             newstr.push_back(0x80 & (*i & 0x3f));
         }
-        else if (*i >= 0x80)
+        else if (*i & 0x780)
         {
             newstr.push_back(0xc0 & ((*i & 0x7c0) >> 6));
             newstr.push_back(0x80 & (*i & 0x3f));
