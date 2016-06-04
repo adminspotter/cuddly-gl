@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 08:12:59 tquirk
+ *   last updated 04 Jun 2016, 08:26:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -52,6 +52,9 @@
 #include FT_FREETYPE_H
 #include FT_TYPES_H
 
+#include <string>
+#include <vector>
+
 #include "../cache.h"
 
 struct Glyph
@@ -81,7 +84,7 @@ class Font
 
     void load_glyph(FT_ULong);
 
-    void get_string_size(const std::u32string&, unsigned int&, unsigned int&);
+    void get_string_size(const std::u32string&, std::vector<int>&);
 
   public:
     Font(std::string&, int);

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jun 2016, 08:03:03 tquirk
+ *   last updated 04 Jun 2016, 08:26:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -139,10 +139,8 @@ void Font::load_glyph(FT_ULong code)
  * as possible, so we never have to change it.
  */
 void Font::get_string_size(const std::u32string& str,
-                           unsigned int& w,
-                           unsigned int& h)
+                           std::vector<int>& req_size)
 {
-    std::vector<int> req_size = {0, 0, 0, 0};
     std::u32string::const_iterator i;
     FT_Vector kern;
 
@@ -161,19 +159,17 @@ void Font::get_string_size(const std::u32string& str,
                                   &kern) == 0)
                 req_size[1] += kern.x;
             req_size[2] = std::max(req_size[1], g.top);
-            req_size[3] = std::min(req_size[2], g.top - g.height);
+            req_size[3] = std::max(req_size[2], g.height - g.top);
         }
         else if (g.x_advance == 0)
         {
             /* Vertical text */
             req_size[0] = std::max(req_size[0], g.left);
-            req_size[1] = std::min(req_size[1], g.left - g.width);
+            req_size[1] = std::max(req_size[1], g.width - g.left);
             req_size[2] += abs(g.y_advance) + g.top;
             /* FT doesn't supply kerning info for vertical layouts */
         }
     }
-    w = req_size[0] + req_size[1];
-    h = req_size[2] + req_size[3];
 }
 
 Font::Font(std::string& font_name, int pixel_size)
@@ -206,9 +202,12 @@ unsigned char *Font::render_string(const std::u32string& str,
                                    unsigned int& w,
                                    unsigned int& h)
 {
+    std::vector<int> req_size = {0, 0, 0, 0};
     unsigned char *img = NULL;
 
-    this->get_string_size(str, w, h);
+    this->get_string_size(str, req_size);
+    w = req_size[0] + req_size[1];
+    h = req_size[2] + req_size[3];
     img = new unsigned char[w * h];
     return img;
 }
