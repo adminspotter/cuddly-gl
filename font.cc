@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 08:12:57 tquirk
+ *   last updated 04 Jun 2016, 08:03:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,6 +27,18 @@
  * counting in here, so that we don't have to think about the library
  * anywhere else.
  *
+ * Since we have kerning data available to us in the font, and it
+ * would be difficult to represent that to an external caller, we'll
+ * go ahead and render strings here.
+ *
+ * We want to seamlessly handle L-to-R, R-to-L, T-to-B, and B-to-T, so
+ * when trying to decide what the order is, we'll key off the first
+ * character in the string.  I'm not sure whether there are any fonts
+ * which render vertically by default, but it's possible - traditional
+ * Japanese renders T-to-B, R-to-L.  It's not clear how (or even
+ * whether) the line-by-line flow is represented.  Are there any
+ * languages or scripts out there which render lines B-to-T?
+ *
  * Things to do
  *
  */
@@ -38,7 +50,6 @@
 
 #include <stdexcept>
 #include <algorithm>
-#include <numeric>
 
 #include "font.h"
 
@@ -131,32 +142,38 @@ void Font::get_string_size(const std::u32string& str,
                            unsigned int& w,
                            unsigned int& h)
 {
-    std::vector<int> reqd_size
-        = std::accumulate(str.begin(),
-                          str.end(),
-                          std::vector<int>{0, 0, 0, 0},
-                          [&](std::vector<int>& a, uint32_t b)
-                          {
-                              Glyph& g = this->glyphs[b];
-                              if (g.y_advance == 0)
-                              {
-                                  /* Horizontal text */
-                                  a[0] += abs(g.x_advance) + g.left;
-                                  /* TODO:  handle kerning data, if available */
-                                  a[2] = std::max(a[1], g.top);
-                                  a[3] = std::min(a[2], g.top - g.height);
-                              }
-                              else if (g.x_advance == 0)
-                              {
-                                  /* Vertical text */
-                                  a[0] = std::max(a[0], g.left);
-                                  a[1] = std::min(a[1], g.left - g.width);
-                                  a[2] += abs(g.y_advance) + g.top;
-                              }
-                              return a;
-                          });
-    w = reqd_size[0] + reqd_size[1];
-    h = reqd_size[2] + reqd_size[3];
+    std::vector<int> req_size = {0, 0, 0, 0};
+    std::u32string::const_iterator i;
+    FT_Vector kern;
+
+    for (i = str.begin(); i != str.end(); ++i)
+    {
+        Glyph& g = this->glyphs[*i];
+        if (g.y_advance == 0)
+        {
+            /* Horizontal text */
+            req_size[0] += abs(g.x_advance) + g.left;
+            if (i + 1 != str.end()
+                && FT_Get_Kerning(this->face,
+                                  *i,
+                                  *(i + 1),
+                                  FT_KERNING_DEFAULT,
+                                  &kern) == 0)
+                req_size[1] += kern.x;
+            req_size[2] = std::max(req_size[1], g.top);
+            req_size[3] = std::min(req_size[2], g.top - g.height);
+        }
+        else if (g.x_advance == 0)
+        {
+            /* Vertical text */
+            req_size[0] = std::max(req_size[0], g.left);
+            req_size[1] = std::min(req_size[1], g.left - g.width);
+            req_size[2] += abs(g.y_advance) + g.top;
+            /* FT doesn't supply kerning info for vertical layouts */
+        }
+    }
+    w = req_size[0] + req_size[1];
+    h = req_size[2] + req_size[3];
 }
 
 Font::Font(std::string& font_name, int pixel_size)
@@ -187,10 +204,11 @@ struct Glyph& Font::operator[](FT_ULong code)
 
 unsigned char *Font::render_string(const std::u32string& str,
                                    unsigned int& w,
-                                   unsigned int& h)]
+                                   unsigned int& h)
 {
     unsigned char *img = NULL;
 
     this->get_string_size(str, w, h);
+    img = new unsigned char[w * h];
     return img;
 }
