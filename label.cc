@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 07:55:55 tquirk
+ *   last updated 05 Jun 2016, 09:58:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -99,6 +99,7 @@ void ui::label::set_bgimage(GLuint t, void *v)
  * in whatever native font the user needs.
  *
  * Ref: http://www.cprogramming.com/tutorial/unicode.html
+ * Ref: https://www.cl.cam.ac.uk/~mgk25/unicode.html
  */
 
 std::u32string ui::label::utf8tou32str(const std::string& str)
@@ -109,26 +110,45 @@ std::u32string ui::label::utf8tou32str(const std::string& str)
 
     while (i != str.end())
     {
-        if ((*i & 0xf0) == 0xf0)
+        if ((*i & 0xfe) == 0xfc)
+        {
+            ch = (*i & 0x01) << 30;
+            ch |= (*(++i) & 0x3f) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xfc) == 0xf8)
+        {
+            ch = (*i & 0x03) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xf8) == 0xf0)
         {
             ch = (*i & 0x07) << 18;
-            ch += (*(++i) & 0x3f) << 12;
-            ch += (*(++i) & 0x3f) << 6;
-            ch += (*(++i) & 0x3f);
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
         }
-        else if ((*i & 0xe0) == 0xe0)
+        else if ((*i & 0xf0) == 0xe0)
         {
             ch = (*i & 0x0f) << 12;
-            ch += (*(++i) & 0x3f) << 6;
-            ch += (*(++i) & 0x3f);
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
         }
-        else if ((*i & 0xc0) == 0xc0)
+        else if ((*i & 0xe0) == 0xc0)
         {
             ch = (*i & 0x1f) << 6;
-            ch += (*(++i) & 0x3f);
+            ch |= (*(++i) & 0x3f);
         }
-        else
+        else if ((*i & 0x80) == 0x00)
             ch = *i;
+        else
+            ch = '.';
 
         newstr.push_back(ch);
         ++i;
@@ -143,23 +163,40 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
     while (i != str.end())
     {
-        if (*i & 0x1f0000)
+        if (*i & 0x7c000000)
         {
-            newstr.push_back(0xf0 & ((*i & 0x1c0000) >> 18));
-            newstr.push_back(0x80 & ((*i & 0x3f000) >> 12));
-            newstr.push_back(0x80 & ((*i & 0xfc0) >> 6));
-            newstr.push_back(0x80 & (*i & 0x3f));
+            newstr.push_back(0xfc | ((*i & 0x40000000) >> 30));
+            newstr.push_back(0x80 | ((*i & 0x3f000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x3e00000)
+        {
+            newstr.push_back(0xf8 | ((*i & 0x3000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x1f0000)
+        {
+            newstr.push_back(0xf0 | ((*i & 0x1c0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
         }
         else if (*i & 0xf800)
         {
-            newstr.push_back(0xe0 & ((*i & 0x1f000) >> 12));
-            newstr.push_back(0x80 & ((*i & 0xfc0) >> 6));
-            newstr.push_back(0x80 & (*i & 0x3f));
+            newstr.push_back(0xe0 | ((*i & 0x1f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
         }
         else if (*i & 0x780)
         {
-            newstr.push_back(0xc0 & ((*i & 0x7c0) >> 6));
-            newstr.push_back(0x80 & (*i & 0x3f));
+            newstr.push_back(0xc0 | ((*i & 0x7c0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
         }
         else
         {
