@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jun 2016, 08:26:45 tquirk
+ *   last updated 05 Jun 2016, 20:05:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -31,13 +31,21 @@
  * would be difficult to represent that to an external caller, we'll
  * go ahead and render strings here.
  *
- * We want to seamlessly handle L-to-R, R-to-L, T-to-B, and B-to-T, so
- * when trying to decide what the order is, we'll key off the first
- * character in the string.  I'm not sure whether there are any fonts
- * which render vertically by default, but it's possible - traditional
- * Japanese renders T-to-B, R-to-L.  It's not clear how (or even
- * whether) the line-by-line flow is represented.  Are there any
- * languages or scripts out there which render lines B-to-T?
+ * We want to seamlessly handle L-to-R, R-to-L, T-to-B, and B-to-T.
+ * There may be cases in an L-to-R language, in which R-to-L text is
+ * included, or vice versa, so we'll want to handle those as well.
+ * This may involve chopping things into substrings and rendering them
+ * in parts.
+ *
+ * FT does not appear to supply any movement direction between lines,
+ * so we may either have to guess, or have hardcoded settings.  There
+ * do not appear to be any horizontal scripts which flow their lines
+ * B-to-T, so we can at least be safe in that assumption.  There are
+ * some live languages with vertical scripts which flow R-to-L, and
+ * some which flow L-to-R.  Many of the vertical languages have
+ * horizontal forms, so this may be a moot point.
+ *
+ * Ref: http://www.omniglot.com/writing/direction.htm
  *
  * Things to do
  *
@@ -204,10 +212,15 @@ unsigned char *Font::render_string(const std::u32string& str,
 {
     std::vector<int> req_size = {0, 0, 0, 0};
     unsigned char *img = NULL;
+    std::u32string::const_iterator i;
 
     this->get_string_size(str, req_size);
     w = req_size[0] + req_size[1];
     h = req_size[2] + req_size[3];
     img = new unsigned char[w * h];
+    memset(img, 0, w * h);
+    for (i = str.begin(); i != str.end(); ++i)
+    {
+    }
     return img;
 }
