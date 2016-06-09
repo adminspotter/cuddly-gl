@@ -31,19 +31,17 @@
  * would be difficult to represent that to an external caller, we'll
  * go ahead and render strings here.
  *
- * We want to seamlessly handle L-to-R, R-to-L, T-to-B, and B-to-T.
- * There may be cases in an L-to-R language, in which R-to-L text is
- * included, or vice versa, so we'll want to handle those as well.
- * This may involve chopping things into substrings and rendering them
- * in parts.
+ * We want to seamlessly handle mixed L-to-R and R-to-L text.  There
+ * may be cases in an L-to-R language, in which R-to-L text is
+ * included, or vice versa, that we want to handle.  It seems like
+ * most of the vertical languages have horizontal forms, so we're
+ * going to make a command decision and render everything in
+ * horizontal mode.  It would be nice to handle verticals natively,
+ * but it's going to be a nightmare to implement in a reasonable way.
  *
- * FT does not appear to supply any movement direction between lines,
- * so we may either have to guess, or have hardcoded settings.  There
- * do not appear to be any horizontal scripts which flow their lines
- * B-to-T, so we can at least be safe in that assumption.  There are
- * some live languages with vertical scripts which flow R-to-L, and
- * some which flow L-to-R.  Many of the vertical languages have
- * horizontal forms, so this may be a moot point.
+ * There do not appear to be any horizontal scripts which flow their
+ * lines B-to-T, so we can at least be safe with a T-to-B line flow
+ * assumption.
  *
  * Ref: http://www.omniglot.com/writing/direction.htm
  *
@@ -143,9 +141,9 @@ void Font::load_glyph(FT_ULong code)
  * with horizontal text should be zero, and the values for vertical
  * size are the ascender and descender respectively.
  *
- * Vertical text may have similar problems with the vertical baseline,
- * which we'll have to account for.  We'll make this as fully general
- * as possible, so we never have to change it.
+ * It would be nice if we could support vertical lines, but it's going
+ * to be way too difficult, and most of the currently-used vertical
+ * languages have horizontal usage nowadays.
  */
 void Font::get_string_size(const std::u32string& str,
                            std::vector<int>& req_size)
@@ -156,28 +154,18 @@ void Font::get_string_size(const std::u32string& str,
     for (i = str.begin(); i != str.end(); ++i)
     {
         Glyph& g = this->glyphs[*i];
-        if (g.y_advance == 0)
-        {
-            /* Horizontal text */
-            req_size[0] += abs(g.x_advance) + g.left;
-            if (i + 1 != str.end()
-                && FT_Get_Kerning(this->face,
-                                  *i,
-                                  *(i + 1),
-                                  FT_KERNING_DEFAULT,
-                                  &kern) == 0)
-                req_size[1] += kern.x;
-            req_size[2] = std::max(req_size[1], g.top);
-            req_size[3] = std::max(req_size[2], g.height - g.top);
-        }
-        else if (g.x_advance == 0)
-        {
-            /* Vertical text */
-            req_size[0] = std::max(req_size[0], g.left);
-            req_size[1] = std::max(req_size[1], g.width - g.left);
-            req_size[2] += abs(g.y_advance) + g.top;
-            /* FT doesn't supply kerning info for vertical layouts */
-        }
+        if (g.x_advance == 0 && g.y_advance != 0)
+            throw std::runtime_error(_("This font is not supported."));
+
+        /* We're only going to do horizontal text */
+        req_size[0] += abs(g.x_advance) + g.left;
+        if (i + 1 != str.end()
+            && FT_Get_Kerning(this->face, *i, *(i + 1),
+                              FT_KERNING_DEFAULT,
+                              &kern) == 0)
+            req_size[1] += kern.x;
+        req_size[2] = std::max(req_size[1], g.top);
+        req_size[3] = std::max(req_size[2], g.height - g.top);
     }
 }
 
