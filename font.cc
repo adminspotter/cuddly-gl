@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jun 2016, 20:05:56 tquirk
+ *   last updated 08 Jun 2016, 19:35:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,6 +51,7 @@
  *
  */
 
+#include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -212,15 +213,38 @@ unsigned char *Font::render_string(const std::u32string& str,
 {
     std::vector<int> req_size = {0, 0, 0, 0};
     unsigned char *img = NULL;
-    std::u32string::const_iterator i;
+    std::u32string::const_iterator i = str.begin();
+    bool l_to_r = (this->glyphs[*i].x_advance > 0);
+    int pos = (l_to_r ? 0 : w - 1);
 
     this->get_string_size(str, req_size);
     w = req_size[0] + req_size[1];
     h = req_size[2] + req_size[3];
     img = new unsigned char[w * h];
     memset(img, 0, w * h);
-    for (i = str.begin(); i != str.end(); ++i)
+
+    /* GL does positive y as up, so it makes more sense to just draw
+     * the buffer upside-down.  All the glyphs are already
+     * upside-down.
+     */
+    while (i != str.end())
     {
+        Glyph& g = this->glyphs[*i];
+        int j, bottom_row = req_size[3] + g.top - g.height;
+
+        /* TODO:
+         *   handle kerning
+         *   handle opposite-direction text substrings
+         */
+        if (!l_to_r)
+            pos += g.x_advance;
+        for (j = 0; j < g.height; ++j)
+            memcpy(&img[((bottom_row + j) * w) + pos],
+                   &g.bitmap[j * g.width],
+                   g.width);
+        if (l_to_r)
+            pos += g.x_advance;
+        ++i;
     }
     return img;
 }
