@@ -224,16 +224,7 @@ unsigned char *Font::render_string(const std::u32string& str,
         int row_offset, glyph_offset;
         FT_Vector kern;
 
-        /* TODO:
-         *   handle opposite-direction text substrings
-         */
-        /* Kerning, if available */
-        if (i + 1 != str.end() && FT_Get_Kerning(this->face,
-                                                 *i,
-                                                 *(i + 1),
-                                                 FT_KERNING_DEFAULT,
-                                                 &kern) == 0)
-            pos += kern.x;
+        /* TODO handle opposite-direction text substrings */
 
         if (!l_to_r)
             pos += g.x_advance;
@@ -246,6 +237,13 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         if (l_to_r)
             pos += g.x_advance;
+
+        /* Kerning, if available */
+        if (i + 1 != str.end() && FT_Get_Kerning(this->face, *i, *(i + 1),
+                                                 FT_KERNING_DEFAULT,
+                                                 &kern) == 0)
+            pos += kern.x;
+
         ++i;
     }
     return img;
