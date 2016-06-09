@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Jun 2016, 14:14:08 tquirk
+ *   last updated 09 Jun 2016, 15:00:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -89,6 +89,8 @@ class Font
   public:
     Font(std::string&, int, std::vector<std::string>&);
     ~Font();
+
+    bool is_l_to_r(FT_ULong);
 
     struct Glyph& operator[](FT_ULong);
 
