@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jun 2016, 08:26:42 tquirk
+ *   last updated 09 Jun 2016, 14:14:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -80,14 +80,14 @@ class Font
     FT_Face face;
     BasicCache<struct Glyph, glyph_cleanup, FT_ULong> glyphs;
 
-    std::string search_path(std::string&);
+    std::string search_path(std::string&, std::vector<std::string>&);
 
     void load_glyph(FT_ULong);
 
     void get_string_size(const std::u32string&, std::vector<int>&);
 
   public:
-    Font(std::string&, int);
+    Font(std::string&, int, std::vector<std::string>&);
     ~Font();
 
     struct Glyph& operator[](FT_ULong);

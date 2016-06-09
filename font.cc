@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Jun 2016, 10:16:34 tquirk
+ *   last updated 09 Jun 2016, 14:19:29 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,12 +85,13 @@ static void cleanup_freetype(void)
         FT_Done_FreeType(ft_lib);
 }
 
-std::string Font::search_path(std::string& font_name)
+std::string Font::search_path(std::string& font_name,
+                              std::vector<std::string>& paths)
 {
     std::vector<std::string>::iterator i;
     struct stat st;
 
-    for (i = config.font_paths.begin(); i != config.font_paths.end(); ++i)
+    for (i = paths.begin(); i != paths.end(); ++i)
     {
         std::string path = *i;
         std::string::size_type pos;
@@ -180,11 +181,13 @@ void Font::get_string_size(const std::u32string& str,
     }
 }
 
-Font::Font(std::string& font_name, int pixel_size)
+Font::Font(std::string& font_name,
+           int pixel_size,
+           std::vector<std::string>& paths)
     : glyphs(font_name + " glyphs")
 {
     FT_Library *lib = init_freetype();
-    std::string font_path = this->search_path(font_name);
+    std::string font_path = this->search_path(font_name, paths);
 
     if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
         throw std::runtime_error(_("Could not load font ") + font_name);
