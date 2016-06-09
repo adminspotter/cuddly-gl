@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Jun 2016, 08:41:52 tquirk
+ *   last updated 09 Jun 2016, 10:16:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -231,11 +231,19 @@ unsigned char *Font::render_string(const std::u32string& str,
         Glyph& g = this->glyphs[*i];
         int j, k, bottom_row = req_size[3] + g.top - g.height;
         int row_offset, glyph_offset;
+        FT_Vector kern;
 
         /* TODO:
-         *   handle kerning
          *   handle opposite-direction text substrings
          */
+        /* Kerning, if available */
+        if (i + 1 != str.end() && FT_Get_Kerning(this->face,
+                                                 *i,
+                                                 *(i + 1),
+                                                 FT_KERNING_DEFAULT,
+                                                 &kern) == 0)
+            pos += kern.x;
+
         if (!l_to_r)
             pos += g.x_advance;
         for (j = 0; j < g.height; ++j)
