@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Jun 2016, 19:35:00 tquirk
+ *   last updated 09 Jun 2016, 08:41:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,7 +51,6 @@
  *
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -230,7 +229,8 @@ unsigned char *Font::render_string(const std::u32string& str,
     while (i != str.end())
     {
         Glyph& g = this->glyphs[*i];
-        int j, bottom_row = req_size[3] + g.top - g.height;
+        int j, k, bottom_row = req_size[3] + g.top - g.height;
+        int row_offset, glyph_offset;
 
         /* TODO:
          *   handle kerning
@@ -239,9 +239,12 @@ unsigned char *Font::render_string(const std::u32string& str,
         if (!l_to_r)
             pos += g.x_advance;
         for (j = 0; j < g.height; ++j)
-            memcpy(&img[((bottom_row + j) * w) + pos],
-                   &g.bitmap[j * g.width],
-                   g.width);
+        {
+            row_offset = (bottom_row + j) * w + pos;
+            glyph_offset = j * g.width;
+            for (k = 0; k < g.width; ++k)
+                img[row_offset + k] |= g.bitmap[glyph_offset + k];
+        }
         if (l_to_r)
             pos += g.x_advance;
         ++i;
