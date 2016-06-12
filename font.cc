@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 11:18:06 tquirk
+ *   last updated 12 Jun 2016, 11:30:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -132,6 +132,12 @@ void Font::load_glyph(FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
+void Font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
+{
+    if (FT_Get_Kerning(this->face, a, b, FT_KERNING_DEFAULT, k))
+        k->x = k->y = 0;
+}
+
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -149,7 +155,7 @@ void Font::get_string_size(const std::u32string& str,
                            std::vector<int>& req_size)
 {
     std::u32string::const_iterator i;
-    FT_Vector kern;
+    FT_Vector kerning;
 
     for (i = str.begin(); i != str.end(); ++i)
     {
@@ -159,11 +165,9 @@ void Font::get_string_size(const std::u32string& str,
 
         /* We're only going to do horizontal text */
         req_size[0] += abs(g.x_advance) + g.left;
-        if (i + 1 != str.end()
-            && FT_Get_Kerning(this->face, *i, *(i + 1),
-                              FT_KERNING_DEFAULT,
-                              &kern) == 0)
-            req_size[1] += kern.x;
+        if (i + 1 != str.end())
+            this->kern(*i, *(i + 1), &kerning);
+        req_size[1] += kerning.x;
         req_size[2] = std::max(req_size[1], g.top);
         req_size[3] = std::max(req_size[2], g.height - g.top);
     }
