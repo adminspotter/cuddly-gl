@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 12:48:16 tquirk
+ *   last updated 12 Jun 2016, 12:55:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -251,9 +251,13 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         if (!l_to_r)
         {
-            pos += g.x_advance + kerning.x;
             if (same_dir)
+            {
+                pos += g.x_advance + kerning.x;
                 save_pos = pos;
+            }
+            else
+                pos -= g.x_advance + kerning.x;
         }
         for (j = 0; j < g.height; ++j)
         {
@@ -264,9 +268,13 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         if (l_to_r)
         {
-            pos += g.x_advance + kerning.x;
             if (same_dir)
+            {
+                pos += g.x_advance + kerning.x;
                 save_pos = pos;
+            }
+            else
+                pos -= g.x_advance + kerning.x;
         }
 
         ++i;
