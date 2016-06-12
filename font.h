@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Jun 2016, 15:00:59 tquirk
+ *   last updated 12 Jun 2016, 11:11:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -63,6 +63,11 @@ struct Glyph
     int top, left;
     int pitch;
     unsigned char *bitmap;
+
+    bool is_l_to_r(void)
+        {
+            return (x_advance > 0);
+        };
 };
 
 class Font
@@ -89,8 +94,6 @@ class Font
   public:
     Font(std::string&, int, std::vector<std::string>&);
     ~Font();
-
-    bool is_l_to_r(FT_ULong);
 
     struct Glyph& operator[](FT_ULong);
 

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Jun 2016, 15:00:50 tquirk
+ *   last updated 12 Jun 2016, 11:18:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -188,12 +188,6 @@ Font::~Font()
     cleanup_freetype();
 }
 
-bool Font::is_l_to_r(FT_ULong code)
-{
-    Glyph& g = this->glyphs[code];
-    return (g.x_advance > 0);
-}
-
 struct Glyph& Font::operator[](FT_ULong code)
 {
     Glyph& g = this->glyphs[code];
@@ -210,7 +204,7 @@ unsigned char *Font::render_string(const std::u32string& str,
     std::vector<int> req_size = {0, 0, 0, 0};
     unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
-    bool l_to_r = this->is_l_to_r(*i);
+    bool l_to_r = this->glyphs[*i].is_l_to_r();
     int pos = (l_to_r ? 0 : w - 1);
 
     this->get_string_size(str, req_size);
