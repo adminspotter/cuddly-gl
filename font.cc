@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 12:55:08 tquirk
+ *   last updated 12 Jun 2016, 16:35:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -243,12 +243,14 @@ unsigned char *Font::render_string(const std::u32string& str,
             for (j = 0; j < h; ++j)
             {
                 row_offset = (w * j) + start;
-                memmove(&img[row_offset + x_distance],
+                memmove(&img[row_offset - x_distance],
                         &img[row_offset],
                         x_move);
                 memset(&img[start], 0, x_distance);
             }
         }
+        else
+            save_pos = pos;
         if (!l_to_r)
         {
             if (same_dir)
@@ -261,7 +263,8 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         for (j = 0; j < g.height; ++j)
         {
-            row_offset = (bottom_row + j + kerning.y) * w + pos;
+            row_offset = (bottom_row + j + kerning.y) * w + save_pos
+                - (!l_to_r && !same_dir ? g.x_advance : 0);
             glyph_offset = j * g.width;
             for (k = 0; k < g.width; ++k)
                 img[row_offset + k] |= g.bitmap[glyph_offset + k];
