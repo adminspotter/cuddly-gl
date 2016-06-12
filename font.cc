@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 11:30:06 tquirk
+ *   last updated 12 Jun 2016, 12:48:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -49,6 +49,7 @@
  *
  */
 
+#include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -209,7 +210,7 @@ unsigned char *Font::render_string(const std::u32string& str,
     unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
     bool l_to_r = this->glyphs[*i].is_l_to_r();
-    int pos = (l_to_r ? 0 : w - 1);
+    int pos = (l_to_r ? 0 : w - 1), save_pos = pos;
 
     this->get_string_size(str, req_size);
     w = req_size[0] + req_size[1];
@@ -226,27 +227,47 @@ unsigned char *Font::render_string(const std::u32string& str,
         Glyph& g = this->glyphs[*i];
         int j, k, bottom_row = req_size[3] + g.top - g.height;
         int row_offset, glyph_offset;
-        FT_Vector kern;
+        FT_Vector kerning;
+        bool same_dir = (l_to_r == g.is_l_to_r());
 
-        /* TODO handle opposite-direction text substrings */
+        /* Kerning, if available */
+        if (i != str.begin())
+            this->kern(*(i - 1), *i, &kerning);
 
+        /* If we're dealing with wrong-direction text, scoot things over */
+        if (!same_dir && pos != save_pos)
+        {
+            int x_move = abs(pos - save_pos);
+            int x_distance = g.x_advance + kerning.x;
+            int start = std::min(pos, save_pos);
+            for (j = 0; j < h; ++j)
+            {
+                row_offset = (w * j) + start;
+                memmove(&img[row_offset + x_distance],
+                        &img[row_offset],
+                        x_move);
+                memset(&img[start], 0, x_distance);
+            }
+        }
         if (!l_to_r)
-            pos += g.x_advance;
+        {
+            pos += g.x_advance + kerning.x;
+            if (same_dir)
+                save_pos = pos;
+        }
         for (j = 0; j < g.height; ++j)
         {
-            row_offset = (bottom_row + j) * w + pos;
+            row_offset = (bottom_row + j + kerning.y) * w + pos;
             glyph_offset = j * g.width;
             for (k = 0; k < g.width; ++k)
                 img[row_offset + k] |= g.bitmap[glyph_offset + k];
         }
         if (l_to_r)
-            pos += g.x_advance;
-
-        /* Kerning, if available */
-        if (i + 1 != str.end() && FT_Get_Kerning(this->face, *i, *(i + 1),
-                                                 FT_KERNING_DEFAULT,
-                                                 &kern) == 0)
-            pos += kern.x;
+        {
+            pos += g.x_advance + kerning.x;
+            if (same_dir)
+                save_pos = pos;
+        }
 
         ++i;
     }
