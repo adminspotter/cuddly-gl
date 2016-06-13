@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jun 2016, 09:58:03 tquirk
+ *   last updated 12 Jun 2016, 22:32:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -210,25 +210,36 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
 void ui::label::populate_buffers(void)
 {
+    GLuint text;
+
     glBindTexture(GL_TEXTURE_2D, this->tex);
     if (this->use_text)
     {
-        std::u32string::iterator i;
-
         if (this->image != NULL)
             delete[] this->image;
-        this->image = this->font->render_string(this->str,
-                                                this->width,
-                                                this->height);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA,
-                     this->width, this->height, 0, GL_ALPHA,
-                     GL_UNSIGNED_BYTE, this->image);
+        if (this->font != NULL)
+        {
+            this->image = this->font->render_string(this->str,
+                                                    this->width,
+                                                    this->height);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+                         this->width, this->height, 0, GL_RED,
+                         GL_UNSIGNED_BYTE, this->image);
+            glUniform1i(this->parent->get(ui::element::attribute,
+                                          ui::attribute::use_text,
+                                          &text),
+                        1);
+        }
     }
     else
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                      this->width, this->height, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, this->image);
+        glUniform1i(this->parent->get(ui::element::attribute,
+                                      ui::attribute::use_text,
+                                      &text),
+                    0);
     }
 }
 
