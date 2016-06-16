@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 11:30:20 tquirk
+ *   last updated 16 Jun 2016, 18:00:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -66,7 +66,9 @@ struct Glyph
 
     bool is_l_to_r(void)
         {
-            return (x_advance > 0);
+            if (x_advance > 0)
+                return true;
+            return false;
         };
 };
 

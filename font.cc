@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 16:35:33 tquirk
+ *   last updated 16 Jun 2016, 18:00:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -160,17 +160,17 @@ void Font::get_string_size(const std::u32string& str,
 
     for (i = str.begin(); i != str.end(); ++i)
     {
-        Glyph& g = this->glyphs[*i];
+        Glyph& g = (*this)[*i];
         if (g.x_advance == 0 && g.y_advance != 0)
             throw std::runtime_error(_("This font is not supported."));
 
         /* We're only going to do horizontal text */
-        req_size[0] += abs(g.x_advance) + g.left;
+        req_size[0] += g.x_advance + g.left;
         if (i + 1 != str.end())
             this->kern(*i, *(i + 1), &kerning);
         req_size[1] += kerning.x;
-        req_size[2] = std::max(req_size[1], g.top);
-        req_size[3] = std::max(req_size[2], g.height - g.top);
+        req_size[2] = std::max(req_size[2], g.top);
+        req_size[3] = std::max(req_size[3], g.height - g.top);
     }
 }
 
@@ -209,7 +209,7 @@ unsigned char *Font::render_string(const std::u32string& str,
     std::vector<int> req_size = {0, 0, 0, 0};
     unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
-    bool l_to_r = this->glyphs[*i].is_l_to_r();
+    bool l_to_r = (*this)[*i].is_l_to_r();
     int pos = (l_to_r ? 0 : w - 1), save_pos = pos;
 
     this->get_string_size(str, req_size);
@@ -224,7 +224,7 @@ unsigned char *Font::render_string(const std::u32string& str,
      */
     while (i != str.end())
     {
-        Glyph& g = this->glyphs[*i];
+        Glyph& g = (*this)[*i];
         int j, k, bottom_row = req_size[3] + g.top - g.height;
         int row_offset, glyph_offset;
         FT_Vector kerning;
@@ -265,7 +265,7 @@ unsigned char *Font::render_string(const std::u32string& str,
         {
             row_offset = (bottom_row + j + kerning.y) * w + save_pos
                 - (!l_to_r && !same_dir ? g.x_advance : 0);
-            glyph_offset = j * g.width;
+            glyph_offset = (g.height - 1 - j) * g.width;
             for (k = 0; k < g.width; ++k)
                 img[row_offset + k] |= g.bitmap[glyph_offset + k];
         }
