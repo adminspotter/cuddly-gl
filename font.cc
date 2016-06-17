@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jun 2016, 08:32:39 tquirk
+ *   last updated 17 Jun 2016, 14:29:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -229,7 +229,7 @@ unsigned char *Font::render_string(const std::u32string& str,
         Glyph& g = (*this)[*i];
         int j, k, bottom_row = req_size[3] + g.top - g.height;
         int row_offset, glyph_offset;
-        FT_Vector kerning;
+        FT_Vector kerning = {0, 0};
         bool same_dir = (l_to_r == g.is_l_to_r());
 
         /* Kerning, if available */
