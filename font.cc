@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Jun 2016, 18:18:57 tquirk
+ *   last updated 18 Jun 2016, 18:30:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -143,10 +143,12 @@ void Font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
  * descender would expand the line height, and we wouldn't be able to
- * account for that with a single value.  So it sounds like we need
- * two values for each axis; one of the values for horizontal size
- * with horizontal text should be zero, and the values for vertical
- * size are the ascender and descender respectively.
+ * account for that with a single value.  So we need two values for
+ * the vertical axis; the values for vertical size are the ascender
+ * and descender respectively.
+ *
+ * Return values come back in the req_size argument.  First element is
+ * width, second is ascender, third is descender.
  *
  * It would be nice if we could support vertical lines, but it's going
  * to be way too difficult, and most of the currently-used vertical
@@ -169,11 +171,13 @@ void Font::get_string_size(const std::u32string& str,
             this->kern(*(i - 1), *i, &kerning);
 
         /* We're only going to do horizontal text */
-        req_size[0] += g.x_advance + kerning.x;
+        req_size[0] += kerning.x;
         if (i != str.begin())
             req_size[0] += g.left;
         if (i + 1 == str.end())
-            req_size[0] += g.width - g.x_advance;
+            req_size[0] += g.width;
+        else
+            req_size[0] += g.x_advance;
         req_size[1] = std::max(req_size[1], g.top);
         req_size[2] = std::max(req_size[2], g.height - g.top);
     }
