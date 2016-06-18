@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jun 2016, 14:29:12 tquirk
+ *   last updated 18 Jun 2016, 18:18:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -156,23 +156,26 @@ void Font::get_string_size(const std::u32string& str,
                            std::vector<int>& req_size)
 {
     std::u32string::const_iterator i;
-    FT_Vector kerning;
 
+    req_size[0] = req_size[1] = req_size[2] = 0;
     for (i = str.begin(); i != str.end(); ++i)
     {
+        FT_Vector kerning = {0, 0};
         Glyph& g = (*this)[*i];
+
         if (g.x_advance == 0 && g.y_advance != 0)
             throw std::runtime_error(_("This font is not supported."));
+        if (i != str.begin())
+            this->kern(*(i - 1), *i, &kerning);
 
         /* We're only going to do horizontal text */
-        req_size[0] += g.x_advance + g.left;
-        if (i + 1 != str.end())
-            this->kern(*i, *(i + 1), &kerning);
-        else if (g.x_advance < g.width)
+        req_size[0] += g.x_advance + kerning.x;
+        if (i != str.begin())
+            req_size[0] += g.left;
+        if (i + 1 == str.end())
             req_size[0] += g.width - g.x_advance;
-        req_size[1] += kerning.x;
-        req_size[2] = std::max(req_size[2], g.top);
-        req_size[3] = std::max(req_size[3], g.height - g.top);
+        req_size[1] = std::max(req_size[1], g.top);
+        req_size[2] = std::max(req_size[2], g.height - g.top);
     }
 }
 
@@ -208,15 +211,15 @@ unsigned char *Font::render_string(const std::u32string& str,
                                    unsigned int& w,
                                    unsigned int& h)
 {
-    std::vector<int> req_size = {0, 0, 0, 0};
+    std::vector<int> req_size = {0, 0, 0};
     unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
     bool l_to_r = (*this)[*i].is_l_to_r();
     int pos = (l_to_r ? 0 : w - 1), save_pos = pos;
 
     this->get_string_size(str, req_size);
-    w = req_size[0] + req_size[1];
-    h = req_size[2] + req_size[3];
+    w = req_size[0];
+    h = req_size[1] + req_size[2];
     img = new unsigned char[w * h];
     memset(img, 0, w * h);
 
@@ -227,7 +230,7 @@ unsigned char *Font::render_string(const std::u32string& str,
     while (i != str.end())
     {
         Glyph& g = (*this)[*i];
-        int j, k, bottom_row = req_size[3] + g.top - g.height;
+        int j, k, bottom_row = req_size[2] + g.top - g.height;
         int row_offset, glyph_offset;
         FT_Vector kerning = {0, 0};
         bool same_dir = (l_to_r == g.is_l_to_r());
@@ -265,8 +268,10 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         for (j = 0; j < g.height; ++j)
         {
-            row_offset = (bottom_row + j + kerning.y) * w + save_pos
+            row_offset = (bottom_row + j + kerning.y) * w + save_pos + kerning.x
                 - (!l_to_r && !same_dir ? g.x_advance : 0);
+            if (i != str.begin())
+                row_offset += g.left;
             glyph_offset = (g.height - 1 - j) * g.width;
             for (k = 0; k < g.width; ++k)
                 img[row_offset + k] |= g.bitmap[glyph_offset + k];
