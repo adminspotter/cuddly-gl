@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Mar 2016, 08:06:36 tquirk
+ *   last updated 18 Jun 2016, 19:03:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -43,7 +43,7 @@ namespace ui
     {
       protected:
         context *parent;
-        GLuint vao, vbo, ebo, element_count;
+        GLuint vao, vbo, ebo, vertex_count, element_count;
         GLuint width, height, xpos, ypos;
         GLuint margin[4], border[4];
         glm::vec4 foreground, background;
@@ -59,6 +59,7 @@ namespace ui
         int get_color(GLuint, void *);
         void set_color(GLuint, void *);
 
+        virtual void generate_points(float *, GLuint *);
         virtual void populate_buffers(void);
 
       public:

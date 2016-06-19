@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Mar 2016, 09:32:16 tquirk
+ *   last updated 18 Jun 2016, 19:07:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -196,16 +196,15 @@ void ui::panel::set_color(GLuint s, void *v)
         memcpy(glm::value_ptr(this->background), v, sizeof(float) * 4);
 }
 
-void ui::panel::populate_buffers(void)
+void ui::panel::generate_points(float *vertex, GLuint *element)
 {
     /* We'll use an element buffer, so we can get away with fewer
      * points.  This will come in very handy in some of the
      * subclasses, which may have tons of duplicated points.
      */
-    float vertex[120];
     float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
     float vw, vh, m[4], b[4];
-    GLuint element[60], vert_count = 0, vert_index = 0, temp;
+    GLuint vert_count = 0, temp;
 
     this->parent->get(ui::element::size, ui::size::width, &temp);
     vw = (float)temp / 2.0f;
@@ -232,7 +231,7 @@ void ui::panel::populate_buffers(void)
     vertex[18] = vertex[6];
     vertex[19] = vertex[13];
     memcpy(&vertex[20], glm::value_ptr(this->background), sizeof(float) * 4);
-    vert_index = 24;
+    this->vertex_count = 24;
     vert_count = 4;
 
     element[0] = 0;
@@ -246,26 +245,26 @@ void ui::panel::populate_buffers(void)
     /* Top border */
     if (this->border[0] != 0)
     {
-        vertex[vert_index] = vertex[0] + (m[1] / vw);
-        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
-        memcpy(&vertex[vert_index + 2],
+        vertex[this->vertex_count] = vertex[0] + (m[1] / vw);
+        vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 6] = vertex[6] - (m[2] / vw);
-        vertex[vert_index + 7] = vertex[vert_index + 1];
-        memcpy(&vertex[vert_index + 8],
+        vertex[this->vertex_count + 6] = vertex[6] - (m[2] / vw);
+        vertex[this->vertex_count + 7] = vertex[this->vertex_count + 1];
+        memcpy(&vertex[this->vertex_count + 8],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 12] = vertex[vert_index];
-        vertex[vert_index + 13] = vertex[1] + ((m[0] + b[0]) / vh);
-        memcpy(&vertex[vert_index + 14],
+        vertex[this->vertex_count + 12] = vertex[this->vertex_count];
+        vertex[this->vertex_count + 13] = vertex[1] + ((m[0] + b[0]) / vh);
+        memcpy(&vertex[this->vertex_count + 14],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 18] = vertex[vert_index + 6];
-        vertex[vert_index + 19] = vertex[vert_index + 13];
-        memcpy(&vertex[vert_index + 20],
+        vertex[this->vertex_count + 18] = vertex[this->vertex_count + 6];
+        vertex[this->vertex_count + 19] = vertex[this->vertex_count + 13];
+        memcpy(&vertex[this->vertex_count + 20],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vert_index += 24;
+        this->vertex_count += 24;
         vert_count += 4;
 
         element[this->element_count] = vert_count - 4;
@@ -280,26 +279,27 @@ void ui::panel::populate_buffers(void)
     /* Left border */
     if (this->border[1] != 0)
     {
-        vertex[vert_index] = vertex[0] + (m[1] / vw);
-        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
-        memcpy(&vertex[vert_index + 2],
+        vertex[this->vertex_count] = vertex[0] + (m[1] / vw);
+        vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 6] = vertex[vert_index] + (b[1] / vw);
-        vertex[vert_index + 7] = vertex[vert_index + 1];
-        memcpy(&vertex[vert_index + 8],
+        vertex[this->vertex_count + 6]
+            = vertex[this->vertex_count] + (b[1] / vw);
+        vertex[this->vertex_count + 7] = vertex[this->vertex_count + 1];
+        memcpy(&vertex[this->vertex_count + 8],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 12] = vertex[vert_index];
-        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
-        memcpy(&vertex[vert_index + 14],
+        vertex[this->vertex_count + 12] = vertex[this->vertex_count];
+        vertex[this->vertex_count + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[this->vertex_count + 14],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 18] = vertex[vert_index + 6];
-        vertex[vert_index + 19] = vertex[vert_index + 13];
-        memcpy(&vertex[vert_index + 20],
+        vertex[this->vertex_count + 18] = vertex[this->vertex_count + 6];
+        vertex[this->vertex_count + 19] = vertex[this->vertex_count + 13];
+        memcpy(&vertex[this->vertex_count + 20],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vert_index += 24;
+        this->vertex_count += 24;
         vert_count += 4;
 
         element[this->element_count] = vert_count - 4;
@@ -314,26 +314,27 @@ void ui::panel::populate_buffers(void)
     /* Right border */
     if (this->border[2] != 0)
     {
-        vertex[vert_index] = vertex[6] - ((m[2] + b[2]) / vw);
-        vertex[vert_index + 1] = vertex[1] + (m[0] / vh);
-        memcpy(&vertex[vert_index + 2],
+        vertex[this->vertex_count] = vertex[6] - ((m[2] + b[2]) / vw);
+        vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
+        memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 6] = vertex[vert_index] + (b[2] / vw);
-        vertex[vert_index + 7] = vertex[vert_index + 1];
-        memcpy(&vertex[vert_index + 8],
+        vertex[this->vertex_count + 6]
+            = vertex[this->vertex_count] + (b[2] / vw);
+        vertex[this->vertex_count + 7] = vertex[this->vertex_count + 1];
+        memcpy(&vertex[this->vertex_count + 8],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 12] = vertex[vert_index];
-        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
-        memcpy(&vertex[vert_index + 14],
+        vertex[this->vertex_count + 12] = vertex[this->vertex_count];
+        vertex[this->vertex_count + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[this->vertex_count + 14],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 18] = vertex[vert_index + 6];
-        vertex[vert_index + 19] = vertex[vert_index + 13];
-        memcpy(&vertex[vert_index + 20],
+        vertex[this->vertex_count + 18] = vertex[this->vertex_count + 6];
+        vertex[this->vertex_count + 19] = vertex[this->vertex_count + 13];
+        memcpy(&vertex[this->vertex_count + 20],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vert_index += 24;
+        this->vertex_count += 24;
         vert_count += 4;
 
         element[this->element_count] = vert_count - 4;
@@ -348,26 +349,26 @@ void ui::panel::populate_buffers(void)
     /* Bottom border */
     if (this->border[3] != 0)
     {
-        vertex[vert_index] = vertex[0] + (m[1] / vw);
-        vertex[vert_index + 1] = vertex[13] - ((m[3] + b[3]) / vh);
-        memcpy(&vertex[vert_index + 2],
+        vertex[this->vertex_count] = vertex[0] + (m[1] / vw);
+        vertex[this->vertex_count + 1] = vertex[13] - ((m[3] + b[3]) / vh);
+        memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 6] = vertex[6] - (m[2] / vw);
-        vertex[vert_index + 7] = vertex[vert_index + 1];
-        memcpy(&vertex[vert_index + 8],
+        vertex[this->vertex_count + 6] = vertex[6] - (m[2] / vw);
+        vertex[this->vertex_count + 7] = vertex[this->vertex_count + 1];
+        memcpy(&vertex[this->vertex_count + 8],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 12] = vertex[vert_index];
-        vertex[vert_index + 13] = vertex[13] - (m[3] / vh);
-        memcpy(&vertex[vert_index + 14],
+        vertex[this->vertex_count + 12] = vertex[this->vertex_count];
+        vertex[this->vertex_count + 13] = vertex[13] - (m[3] / vh);
+        memcpy(&vertex[this->vertex_count + 14],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
 
-        vertex[vert_index + 18] = vertex[vert_index + 6];
-        vertex[vert_index + 19] = vertex[vert_index + 13];
-        memcpy(&vertex[vert_index + 20],
+        vertex[this->vertex_count + 18] = vertex[this->vertex_count + 6];
+        vertex[this->vertex_count + 19] = vertex[this->vertex_count + 13];
+        memcpy(&vertex[this->vertex_count + 20],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vert_index += 24;
+        this->vertex_count += 24;
         vert_count += 4;
 
         element[this->element_count] = vert_count - 4;
@@ -378,11 +379,18 @@ void ui::panel::populate_buffers(void)
         element[this->element_count + 5] = vert_count - 3;
         this->element_count += 6;
     }
+}
 
+void ui::panel::populate_buffers(void)
+{
+    float vertex[120];
+    GLuint element[60];
+
+    this->generate_points(vertex, element);
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(float) * vert_index, vertex,
+                 sizeof(float) * this->vertex_count, vertex,
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
