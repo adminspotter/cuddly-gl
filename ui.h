@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 20:47:30 tquirk
+ *   last updated 18 Jun 2016, 20:47:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,7 +45,7 @@ namespace ui
     {
       private:
         GLuint vert_shader, frag_shader, shader_pgm;
-        GLuint pos_attr, norm_attr, color_attr, text_attr;
+        GLuint pos_attr, norm_attr, color_attr, texture_attr, text_attr;
         std::list<panel *> children;
 
       protected:
