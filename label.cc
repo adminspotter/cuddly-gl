@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Jun 2016, 07:40:16 tquirk
+ *   last updated 20 Jun 2016, 17:01:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -93,8 +93,8 @@ void ui::label::set_bgimage(GLuint t, void *v)
     this->str.clear();
     if (this->image != NULL)
         delete[] this->image;
-    this->image = new unsigned char[this->width * this->height];
-    memcpy(this->image, v, this->width * this->height);
+    this->image = new unsigned char[this->width * this->height * 4];
+    memcpy(this->image, v, this->width * this->height * 4);
 }
 
 /* We need to be able to convert from UTF-8 representation to
@@ -220,10 +220,10 @@ void ui::label::populate_buffers(void)
     if (this->image != NULL)
     {
         this->panel::generate_points(vertex, element);
-        vertex[6]  = 0.0; vertex[7]  = 0.0;
-        vertex[14] = 1.0; vertex[15] = 0.0;
-        vertex[22] = 0.0; vertex[23] = 1.0;
-        vertex[30] = 1.0; vertex[31] = 1.0;
+        vertex[6]  = 0.0; vertex[7]  = 1.0;
+        vertex[14] = 1.0; vertex[15] = 1.0;
+        vertex[22] = 0.0; vertex[23] = 0.0;
+        vertex[30] = 1.0; vertex[31] = 0.0;
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glBufferData(GL_ARRAY_BUFFER,
@@ -240,6 +240,7 @@ void ui::label::populate_buffers(void)
 
         if (this->use_text)
         {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                          this->width, this->height, 0, GL_RED,
                          GL_UNSIGNED_BYTE, this->image);
@@ -247,6 +248,7 @@ void ui::label::populate_buffers(void)
         }
         else
         {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                          this->width, this->height, 0, GL_RGBA,
                          GL_UNSIGNED_BYTE, this->image);
@@ -268,6 +270,8 @@ ui::label::label(ui::context *c, GLuint w, GLuint h)
     glTexParameterfv(GL_TEXTURE_2D,
                      GL_TEXTURE_BORDER_COLOR,
                      glm::value_ptr(this->background));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     this->populate_buffers();
 }
 
