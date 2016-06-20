@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Jun 2016, 17:01:26 tquirk
+ *   last updated 20 Jun 2016, 18:17:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -215,7 +215,7 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 void ui::label::populate_buffers(void)
 {
     float vertex[160];
-    GLuint element[60], text;
+    GLuint element[60];
 
     if (this->image != NULL)
     {
@@ -224,6 +224,14 @@ void ui::label::populate_buffers(void)
         vertex[14] = 1.0; vertex[15] = 1.0;
         vertex[22] = 0.0; vertex[23] = 0.0;
         vertex[30] = 1.0; vertex[31] = 0.0;
+        memcpy(&vertex[2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[10],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[18],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[26],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glBufferData(GL_ARRAY_BUFFER,
@@ -234,9 +242,6 @@ void ui::label::populate_buffers(void)
                      sizeof(GLuint) * this->element_count, element,
                      GL_DYNAMIC_DRAW);
         glBindTexture(GL_TEXTURE_2D, this->tex);
-        this->parent->get(ui::element::attribute,
-                          ui::attribute::use_text,
-                          &text);
 
         if (this->use_text)
         {
@@ -244,7 +249,6 @@ void ui::label::populate_buffers(void)
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                          this->width, this->height, 0, GL_RED,
                          GL_UNSIGNED_BYTE, this->image);
-            glUniform1i(text, 1);
         }
         else
         {
@@ -252,7 +256,6 @@ void ui::label::populate_buffers(void)
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                          this->width, this->height, 0, GL_RGBA,
                          GL_UNSIGNED_BYTE, this->image);
-            glUniform1i(text, 0);
         }
     }
 }
@@ -323,8 +326,13 @@ void ui::label::set(GLuint e, GLuint t, void *v)
 
 void ui::label::draw(void)
 {
+    GLuint text, val = (this->use_text ? 1 : 0);
+
+    this->parent->get(ui::element::attribute, ui::attribute::use_text, &text);
+    glUniform1ui(text, val);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, this->tex);
     ui::panel::draw();
     glDisable(GL_TEXTURE_2D);
+    glUniform1ui(text, 0);
 }
