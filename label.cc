@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jun 2016, 22:32:14 tquirk
+ *   last updated 20 Jun 2016, 07:40:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -70,6 +70,10 @@ void ui::label::set_string(GLuint t, void *v)
         this->image = NULL;
     }
     this->str = utf8tou32str(*((std::string *)v));
+    if (this->font != NULL)
+        this->image = this->font->render_string(this->str,
+                                                this->width,
+                                                this->height);
 }
 
 /* ARGSUSED */
@@ -210,36 +214,44 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
 void ui::label::populate_buffers(void)
 {
-    GLuint text;
+    float vertex[160];
+    GLuint element[60], text;
 
-    glBindTexture(GL_TEXTURE_2D, this->tex);
-    if (this->use_text)
+    if (this->image != NULL)
     {
-        if (this->image != NULL)
-            delete[] this->image;
-        if (this->font != NULL)
+        this->panel::generate_points(vertex, element);
+        vertex[6]  = 0.0; vertex[7]  = 0.0;
+        vertex[14] = 1.0; vertex[15] = 0.0;
+        vertex[22] = 0.0; vertex[23] = 1.0;
+        vertex[30] = 1.0; vertex[31] = 1.0;
+        glBindVertexArray(this->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     sizeof(float) * this->vertex_count, vertex,
+                     GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     sizeof(GLuint) * this->element_count, element,
+                     GL_DYNAMIC_DRAW);
+        glBindTexture(GL_TEXTURE_2D, this->tex);
+        this->parent->get(ui::element::attribute,
+                          ui::attribute::use_text,
+                          &text);
+
+        if (this->use_text)
         {
-            this->image = this->font->render_string(this->str,
-                                                    this->width,
-                                                    this->height);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                          this->width, this->height, 0, GL_RED,
                          GL_UNSIGNED_BYTE, this->image);
-            glUniform1i(this->parent->get(ui::element::attribute,
-                                          ui::attribute::use_text,
-                                          &text),
-                        1);
+            glUniform1i(text, 1);
         }
-    }
-    else
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                     this->width, this->height, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, this->image);
-        glUniform1i(this->parent->get(ui::element::attribute,
-                                      ui::attribute::use_text,
-                                      &text),
-                    0);
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                         this->width, this->height, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, this->image);
+            glUniform1i(text, 0);
+        }
     }
 }
 
@@ -264,6 +276,8 @@ ui::label::~label()
     glDeleteTextures(1, &this->tex);
     if (this->image != NULL)
         delete[] this->image;
+    if (this->font != NULL)
+        delete this->font;
 }
 
 int ui::label::get(GLuint e, GLuint t, void *v)

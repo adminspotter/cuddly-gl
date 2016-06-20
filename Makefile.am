@@ -5,7 +5,8 @@ lib_LTLIBRARIES = libr9_client_ui.la
 shaderdir = @datadir@/$(PACKAGE)/shaders
 
 uitest_SOURCES = uitest.cc
-uitest_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES)
+uitest_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
+	-DSTORE_PREFIX=\".\"
 uitest_LDFLAGS = $(CLIENT_LDFLAGS)
 uitest_LDADD = libr9_client_ui.la $(CLIENT_LDLIBS)
 
