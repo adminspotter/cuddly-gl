@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Jun 2016, 16:04:37 tquirk
+ *   last updated 21 Jun 2016, 16:06:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -69,6 +69,8 @@ namespace ui
         cb_list_elem;
         std::list<cb_list_elem> enter_cb, leave_cb, down_cb, up_cb, motion_cb;
 
+        std::list<cb_list_elem>& which_cb_list(GLuint);
+
         context *parent;
         GLuint vao, vbo, ebo, vertex_count, element_count;
         GLuint width, height, xpos, ypos;
@@ -100,6 +102,10 @@ namespace ui
         virtual void draw(void);
 
         void close(void);
+
+        virtual void add_callback(GLuint, cb_fptr, void *);
+        virtual void remove_callback(GLuint, cb_fptr, void *);
+        virtual void call_callbacks(GLuint);
 
         /* The context may change sizes, so it needs to be able to
          * call populate_buffers() in the event of a window resize.

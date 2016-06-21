@@ -35,6 +35,19 @@
 
 #include "panel.h"
 
+std::list<ui::panel::cb_list_elem>& ui::panel::which_cb_list(GLuint which)
+{
+    switch (which)
+    {
+      case ui::callback::enter:   return this->enter_cb;
+      case ui::callback::leave:   return this->leave_cb;
+      default:
+      case ui::callback::down:    return this->down_cb;
+      case ui::callback::up:      return this->up_cb;
+      case ui::callback::motion:  return this->motion_cb;
+    }
+}
+
 int ui::panel::get_position(GLuint t, void *v)
 {
     int ret = 0;
@@ -548,4 +561,30 @@ void ui::panel::draw(void)
 void ui::panel::close(void)
 {
     delete this;
+}
+
+void ui::panel::add_callback(GLuint cb_list, ui::cb_fptr funcptr, void *client)
+{
+    std::list<ui::panel::cb_list_elem>& l = this->which_cb_list(cb_list);
+    cb_list_elem new_elem = {funcptr, client};
+
+    l.push_back(new_elem);
+}
+
+void ui::panel::remove_callback(GLuint cb_list, ui::cb_fptr funcptr, void *client)
+{
+    std::list<cb_list_elem>& l = this->which_cb_list(cb_list);
+    cb_list_elem old_elem = {funcptr, client};
+
+    l.remove(old_elem);
+}
+
+void ui::panel::call_callbacks(GLuint cb_list)
+{
+    std::list<cb_list_elem>& l = this->which_cb_list(cb_list);
+    std::list<cb_list_elem>::iterator i;
+    void *call_data = NULL;
+
+    for (i = l.begin(); i != l.end(); ++i)
+        (*i)(this, call_data);
 }
