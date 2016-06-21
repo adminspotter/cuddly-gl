@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Jun 2016, 00:17:18 tquirk
+ *   last updated 21 Jun 2016, 15:16:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -439,7 +439,8 @@ void ui::panel::populate_buffers(void)
 }
 
 ui::panel::panel(ui::context *c, GLuint w, GLuint h)
-    : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
+    : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
+      enter_cb(), leave_cb(), down_cb(), up_cb(), motion_cb()
 {
     GLuint pos_attr, color_attr, texture_attr, temp, x, y;
 
