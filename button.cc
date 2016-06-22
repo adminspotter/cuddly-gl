@@ -1,6 +1,6 @@
-/* button.h                                                -*- C++ -*-
+/* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Jun 2016, 17:01:39 tquirk
+ *   last updated 22 Jun 2016, 17:01:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,33 +20,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic button object declaration.  We derive
- * from the label, which will take care of the actual text/image.  In
- * this class, we'll actually implement some event callbacks.
+ * This file contains the basic button object definitions.  We derive
+ * from the label, which will take care of the box part.  In this
+ * class, we'll add some static activate/deactivate functions which
+ * show when the button is active.  The click action will still be
+ * filled in by the user.
  *
  * Things to do
  *
  */
 
-#ifndef __INC_R9_BUTTON_H__
-#define __INC_R9_BUTTON_H__
+#include "button.h"
 
-#include <list>
-
-#include "label.h"
-
-namespace ui
+ui::button::button(ui::context *c, GLuint w, GLuint h)
+    : ui::label::label(c, w, h)
 {
-    class button : public label
-    {
-      protected:
-        static void activate(panel *, void *, void *);
-        static void deactivate(panel *, void *, void *);
-
-      public:
-        button(context *, GLuint = 0, GLuint = 0);
-        virtual ~button();
-    };
 }
 
-#endif /* __INC_R9_BUTTON_H__ */
+ui::button::~button()
+{
+}
