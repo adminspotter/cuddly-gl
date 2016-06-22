@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Jun 2016, 17:01:20 tquirk
+ *   last updated 22 Jun 2016, 17:03:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,9 +32,37 @@
 
 #include "button.h"
 
+/* ARGSUSED */
+void ui::button::activate(ui::panel *p, void *call, void *client)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        GLuint border;
+
+        p->get(ui::element::border, i, &border);
+        ++border;
+        p->set(ui::element::border, i, &border);
+    }
+}
+
+/* ARGSUSED */
+void ui::button::deactivate(ui::panel *p, void *call, void *client)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        GLuint border;
+
+        p->get(ui::element::border, i, &border);
+        border = (border > 1 ? border - 1 : 0);
+        p->set(ui::element::border, i, &border);
+    }
+}
+
 ui::button::button(ui::context *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
+    this->add_callback(ui::callback::enter, ui::button::activate, NULL);
+    this->add_callback(ui::callback::leave, ui::button::deactivate, NULL);
 }
 
 ui::button::~button()
