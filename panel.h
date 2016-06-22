@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Jun 2016, 16:06:41 tquirk
+ *   last updated 22 Jun 2016, 18:54:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -56,7 +56,7 @@ namespace ui
             cb_fptr ptr;
             void *client_data;
 
-            bool operator==(const struct cb_list_tag& p)
+            bool operator==(const struct cb_list_tag& p) const
                 {
                     return (this->ptr == p.ptr
                             && this->client_data == p.client_data);
