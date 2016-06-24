@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Jun 2016, 18:05:08 tquirk
+ *   last updated 24 Jun 2016, 07:18:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -155,3 +155,10 @@ ui::context& ui::context::remove_child(ui::panel *p)
     return *this;
 }
 
+void ui::context::cursor_pos_callback(int x, int y)
+{
+}
+
+void ui::context::cursor_btn_callback(int btn, int state)
+{
+}
