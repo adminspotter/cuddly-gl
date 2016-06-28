@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jun 2016, 06:33:02 tquirk
+ *   last updated 28 Jun 2016, 06:35:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -26,6 +26,8 @@
  *
  */
 
+#include <algorithm>
+
 #include "quadtree.h"
 
 Quadtree::Quadtree(Quadtree *p,
@@ -33,10 +35,49 @@ Quadtree::Quadtree(Quadtree *p,
                    int max_depth, int cur_depth)
     : center(), min(), max(), contents()
 {
+    this->min.x = std::min(pt1.x, pt2.x);
+    this->min.y = std::min(pt1.y, pt2.y);
+    this->max.x = std::max(pt1.x, pt2.x);
+    this->max.y = std::max(pt1.y, pt2.y);
+    this->center = this->min + ((this->max - this->min) / 2);
+
+    this->parent = p;
+    if (cur_depth < max_depth)
+    {
+        glm::ivec2 tmp_pt;
+
+        this->quadrant[0] = new Quadtree(this,
+                                         this->center, this->min,
+                                         max_depth, ++cur_depth);
+        tmp_pt.x = this->max.x;
+        tmp_pt.y = this->min.y;
+        this->quadrant[1] = new Quadtree(this,
+                                         this->center, tmp_pt,
+                                         max_depth, cur_depth);
+        tmp_pt.x = this->min.x;
+        tmp_pt.y = this->max.y;
+        this->quadrant[2] = new Quadtree(this,
+                                         this->center, tmp_pt,
+                                         max_depth, cur_depth);
+        this->quadrant[3] = new Quadtree(this,
+                                         this->center, this->max,
+                                         max_depth, cur_depth);
+    }
+    else
+    {
+        this->quadrant[0] = NULL;
+        this->quadrant[1] = NULL;
+        this->quadrant[2] = NULL;
+        this->quadrant[3] = NULL;
+    }
 }
 
 Quadtree::~Quadtree()
 {
+    if (this->quadrant[0] != NULL) delete this->quadrant[0];
+    if (this->quadrant[1] != NULL) delete this->quadrant[1];
+    if (this->quadrant[2] != NULL) delete this->quadrant[2];
+    if (this->quadrant[3] != NULL) delete this->quadrant[3];
 }
 
 void Quadtree::insert(void *obj)
