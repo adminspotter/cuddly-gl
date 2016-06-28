@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jun 2016, 06:29:05 tquirk
+ *   last updated 28 Jun 2016, 06:51:51 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -50,6 +50,6 @@ class Quadtree
     void clear(void);
 
     void *search(const glm::ivec2&);
-}
+};
 
 #endif /* __INC_R9_QUADTREE_H__ */

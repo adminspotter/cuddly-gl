@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jun 2016, 06:35:08 tquirk
+ *   last updated 28 Jun 2016, 06:52:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -92,6 +92,7 @@ void Quadtree::clear(void)
 {
 }
 
-std::list<void *> Quadtree::search(const glm::ivec2& pt)
+void *Quadtree::search(const glm::ivec2& pt)
 {
+    return NULL;
 }
