@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jun 2016, 06:52:21 tquirk
+ *   last updated 29 Jun 2016, 06:50:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -80,11 +80,11 @@ Quadtree::~Quadtree()
     if (this->quadrant[3] != NULL) delete this->quadrant[3];
 }
 
-void Quadtree::insert(void *obj)
+void Quadtree::insert(ui::panel *obj)
 {
 }
 
-void Quadtree::remove(void *obj)
+void Quadtree::remove(ui::panel *obj)
 {
 }
 
@@ -92,7 +92,7 @@ void Quadtree::clear(void)
 {
 }
 
-void *Quadtree::search(const glm::ivec2& pt)
+ui::panel *Quadtree::search(const glm::ivec2& pt)
 {
     return NULL;
 }

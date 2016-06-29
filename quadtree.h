@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jun 2016, 06:51:51 tquirk
+ *   last updated 29 Jun 2016, 06:50:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,22 +34,26 @@
 
 #include <glm/vec2.hpp>
 
+#include "panel.h"
+
 class Quadtree
 {
   private:
     glm::ivec2 center, min, max;
-    std::list<void *>  contents;
+    std::list<ui::panel *>  contents;
     Quadtree *quadrant[4], *parent;
+
+    int classify(glm::ivec2&, ui::panel *);
 
   public:
     Quadtree(Quadtree *, glm::ivec2&, glm::ivec2&, int, int = 0);
     ~Quadtree();
 
-    void insert(void *);
-    void remove(void *);
+    void insert(ui::panel *);
+    void remove(ui::panel *);
     void clear(void);
 
-    void *search(const glm::ivec2&);
+    ui::panel *search(const glm::ivec2&);
 };
 
 #endif /* __INC_R9_QUADTREE_H__ */
