@@ -14,6 +14,8 @@
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
+void mouse_position_callback(GLFWwindow *, double, double);
+void mouse_button_callback(GLFWwindow *, int, int, int);
 void key_callback(GLFWwindow *, int, int, int, int);
 void create_image(int, int);
 
@@ -69,6 +71,8 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(w);
     glfwSetWindowSizeCallback(w, window_size_callback);
     glfwSetKeyCallback(w, key_callback);
+    glfwSetMouseButtonCallback(w, mouse_button_callback);
+    glfwSetCursorPosCallback(w, mouse_position_callback);
 
     create_image(wid, hei);
 
@@ -119,6 +123,40 @@ void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(w, GL_TRUE);
+}
+
+void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
+{
+    std::cout << "pos is <" << xpos << ", " << ypos << '>' << std::endl;
+    ctx->cursor_pos_callback((int)xpos, (int)ypos);
+}
+
+void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
+{
+    int btn, act;
+
+    switch (button)
+    {
+      default:
+      case GLFW_MOUSE_BUTTON_1:  btn = ui::cursor::button0;  break;
+      case GLFW_MOUSE_BUTTON_2:  btn = ui::cursor::button1;  break;
+      case GLFW_MOUSE_BUTTON_3:  btn = ui::cursor::button2;  break;
+      case GLFW_MOUSE_BUTTON_4:  btn = ui::cursor::button3;  break;
+      case GLFW_MOUSE_BUTTON_5:  btn = ui::cursor::button4;  break;
+      case GLFW_MOUSE_BUTTON_6:  btn = ui::cursor::button5;  break;
+      case GLFW_MOUSE_BUTTON_7:  btn = ui::cursor::button6;  break;
+      case GLFW_MOUSE_BUTTON_8:  btn = ui::cursor::button7;  break;
+    }
+
+    switch (action)
+    {
+      default:
+      case GLFW_PRESS:    act = ui::cursor::down;  break;
+      case GLFW_RELEASE:  act = ui::cursor::up;    break;
+    }
+
+    std::cout << "got " << btn << ", " << act << std::endl;
+    ctx->cursor_btn_callback(btn, act);
 }
 
 void create_image(int width, int height)
