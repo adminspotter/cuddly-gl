@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jun 2016, 06:50:13 tquirk
+ *   last updated 29 Jun 2016, 08:17:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -43,7 +43,9 @@ class Quadtree
     std::list<ui::panel *>  contents;
     Quadtree *quadrant[4], *parent;
 
-    int classify(glm::ivec2&, ui::panel *);
+    static const int quad0 = 1, quad1 = 2, quad2 = 4, quad3 = 8;
+
+    int classify(ui::panel *);
 
   public:
     Quadtree(Quadtree *, glm::ivec2&, glm::ivec2&, int, int = 0);

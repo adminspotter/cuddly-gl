@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jun 2016, 06:50:08 tquirk
+ *   last updated 29 Jun 2016, 08:17:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,10 @@
 #include <algorithm>
 
 #include "quadtree.h"
+
+int Quadtree::classify(ui::panel *p)
+{
+}
 
 Quadtree::Quadtree(Quadtree *p,
                    glm::ivec2& pt1, glm::ivec2& pt2,
