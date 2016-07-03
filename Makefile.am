@@ -27,3 +27,4 @@ libr9_client_ui_la_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
 	-DSTORE_PREFIX=\"@datadir@/$(PACKAGE)\" \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \
 	-DGL_GLEXT_PROTOTYPES
+libr9_client_ui_la_LIBADD = $(CLIENT_LDLIBS)
