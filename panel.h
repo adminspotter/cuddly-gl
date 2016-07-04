@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Jun 2016, 18:54:32 tquirk
+ *   last updated 04 Jul 2016, 08:00:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -97,6 +97,7 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
+        void get_va(GLuint, GLuint, void *, ...);
         void set_va(GLuint, GLuint, void *, ...);
 
         virtual void draw(void);
