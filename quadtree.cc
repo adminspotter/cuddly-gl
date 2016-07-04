@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jun 2016, 08:17:10 tquirk
+ *   last updated 04 Jul 2016, 08:50:22 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -22,6 +22,16 @@
  *
  * This file contains the quadtree method definitions.
  *
+ * +-----+-----+
+ * |     |     |
+ * |  0  |  1  |
+ * |     |     |
+ * +-----+-----+
+ * |     |     |
+ * |  2  |  3  |
+ * |     |     |
+ * +-----+-----+
+ *
  * Things to do
  *
  */
@@ -32,6 +42,20 @@
 
 int Quadtree::classify(ui::panel *p)
 {
+    glm::ivec2 ul, lr;
+    int retval = 0;
+
+    p->get_va(ui::element::position, ui::position::x,  &ul.x,
+              ui::element::position, ui::position::y,  &ul.y,
+              ui::element::size,     ui::size::width,  &lr.x,
+              ui::element::size,     ui::size::height, &lr.y, 0);
+    /* Width and height are not absolute screen coords */
+    lr += ul;
+    retval |= this->which_quad(ul);
+    retval |= this->which_quad(ul.x, lr.y);
+    retval |= this->which_quad(lr.x, ul.y);
+    retval |= this->which_quad(lr);
+    return retval;
 }
 
 Quadtree::Quadtree(Quadtree *p,
