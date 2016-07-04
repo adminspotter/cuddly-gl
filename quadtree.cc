@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 08:50:22 tquirk
+ *   last updated 04 Jul 2016, 13:00:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -22,15 +22,11 @@
  *
  * This file contains the quadtree method definitions.
  *
- * +-----+-----+
- * |     |     |
- * |  0  |  1  |
- * |     |     |
- * +-----+-----+
- * |     |     |
- * |  2  |  3  |
- * |     |     |
- * +-----+-----+
+ * +---+---+
+ * | 0 | 1 |
+ * +---+---+
+ * | 2 | 3 |
+ * +---+---+
  *
  * Things to do
  *
@@ -110,14 +106,37 @@ Quadtree::~Quadtree()
 
 void Quadtree::insert(ui::panel *obj)
 {
+    int which = this->classify(obj);
+
+    this->contents.push_back(obj);
+    if (which & 0x01 && this->quadrant[0] != NULL)
+        this->quadrant[0]->insert(obj);
+    if (which & 0x02 && this->quadrant[1] != NULL)
+        this->quadrant[1]->insert(obj);
+    if (which & 0x04 && this->quadrant[2] != NULL)
+        this->quadrant[2]->insert(obj);
+    if (which & 0x08 && this->quadrant[3] != NULL)
+        this->quadrant[3]->insert(obj);
 }
 
 void Quadtree::remove(ui::panel *obj)
 {
+    int which = this->classify(obj);
+
+    this->contents.remove(obj);
+    if (which & 0x01 && this->quadrant[0] != NULL)
+        this->quadrant[0]->remove(obj);
+    if (which & 0x02 && this->quadrant[1] != NULL)
+        this->quadrant[1]->remove(obj);
+    if (which & 0x04 && this->quadrant[2] != NULL)
+        this->quadrant[2]->remove(obj);
+    if (which & 0x08 && this->quadrant[3] != NULL)
+        this->quadrant[3]->remove(obj);
 }
 
 void Quadtree::clear(void)
 {
+    this->contents.clear();
 }
 
 ui::panel *Quadtree::search(const glm::ivec2& pt)
