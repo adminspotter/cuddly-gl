@@ -18,6 +18,7 @@ void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 void key_callback(GLFWwindow *, int, int, int, int);
 void create_image(int, int);
+void clicky_callback(ui::panel *, void *, void *);
 
 ui::context *ctx;
 ui::label *l1, *l2;
@@ -90,6 +91,7 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
+    l2->add_callback(ui::callback::down, clicky_callback, NULL);
 
     while (!glfwWindowShouldClose(w))
     {
@@ -127,7 +129,6 @@ void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
 
 void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
 {
-    std::cout << "pos is <" << xpos << ", " << ypos << '>' << std::endl;
     ctx->cursor_pos_callback((int)xpos, (int)ypos);
 }
 
@@ -155,7 +156,6 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
       case GLFW_RELEASE:  act = ui::cursor::up;    break;
     }
 
-    std::cout << "got " << btn << ", " << act << std::endl;
     ctx->cursor_btn_callback(btn, act);
 }
 
@@ -167,4 +167,10 @@ void create_image(int width, int height)
                 memcpy(&img[((height - 1 - (i * 8) - j) * width + k) * 4],
                        colors[i],
                        sizeof(unsigned char) * 4);
+}
+
+/* ARGSUSED */
+void clicky_callback(ui::panel *p, void *client, void *call)
+{
+    std::cout << "clicky clicky!" << std::endl;
 }
