@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 23:15:40 tquirk
+ *   last updated 04 Jul 2016, 23:18:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -108,7 +108,7 @@ void Quadtree::insert(ui::panel *obj)
 {
     int which = this->classify(obj);
 
-    this->contents.push_back(obj);
+    this->contents.push_front(obj);
     if (which & 0x01 && this->quadrant[0] != NULL)
         this->quadrant[0]->insert(obj);
     if (which & 0x02 && this->quadrant[1] != NULL)
