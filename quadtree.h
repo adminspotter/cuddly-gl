@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 13:38:44 tquirk
+ *   last updated 05 Jul 2016, 07:32:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -36,36 +36,42 @@
 
 #include "panel.h"
 
-class Quadtree
+namespace ui
 {
-  private:
-    glm::ivec2 center, min, max;
-    std::list<ui::panel *> contents;
-    Quadtree *quadrant[4], *parent;
+    /* Forward declaration for multi-include problems */
+    class panel;
 
-    static const int quad0 = 1, quad1 = 2, quad2 = 4, quad3 = 8;
+    class quadtree
+    {
+      private:
+        glm::ivec2 center, min, max;
+        std::list<ui::panel *> contents;
+        quadtree *quadrant[4], *parent;
 
-    inline int which_quad(const glm::ivec2& pt) const
-        {
-            return 1 << ((pt.x < this->center.x ? 0 : 1)
-                         + (pt.y > this->center.y ? 0 : 2));
-        };
-    inline int which_quad(int x, int y) const
-        {
-            return 1 << ((x < this->center.x ? 0 : 1)
-                         + (y > this->center.y ? 0 : 2));
-        };
-    int classify(ui::panel *);
+        static const int quad0 = 1, quad1 = 2, quad2 = 4, quad3 = 8;
 
-  public:
-    Quadtree(Quadtree *, glm::ivec2&, glm::ivec2&, int, int = 0);
-    ~Quadtree();
+        inline int which_quad(const glm::ivec2& pt) const
+            {
+                return 1 << ((pt.x < this->center.x ? 0 : 1)
+                             + (pt.y > this->center.y ? 0 : 2));
+            };
+        inline int which_quad(int x, int y) const
+            {
+                return 1 << ((x < this->center.x ? 0 : 1)
+                             + (y > this->center.y ? 0 : 2));
+            };
+        int classify(ui::panel *);
 
-    void insert(ui::panel *);
-    void remove(ui::panel *);
-    void clear(void);
+      public:
+        quadtree(quadtree *, glm::ivec2&, glm::ivec2&, int, int = 0);
+        ~quadtree();
 
-    ui::panel *search(const glm::ivec2&);
-};
+        void insert(ui::panel *);
+        void remove(ui::panel *);
+        void clear(void);
+
+        ui::panel *search(const glm::ivec2&);
+    };
+}
 
 #endif /* __INC_R9_QUADTREE_H__ */

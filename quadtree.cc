@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 23:18:19 tquirk
+ *   last updated 05 Jul 2016, 07:34:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -36,7 +36,7 @@
 
 #include "quadtree.h"
 
-int Quadtree::classify(ui::panel *p)
+int ui::quadtree::classify(ui::panel *p)
 {
     glm::ivec2 ul, lr;
     int retval = 0;
@@ -54,9 +54,9 @@ int Quadtree::classify(ui::panel *p)
     return retval;
 }
 
-Quadtree::Quadtree(Quadtree *p,
-                   glm::ivec2& pt1, glm::ivec2& pt2,
-                   int max_depth, int cur_depth)
+ui::quadtree::quadtree(ui::quadtree *p,
+                       glm::ivec2& pt1, glm::ivec2& pt2,
+                       int max_depth, int cur_depth)
     : center(), min(), max(), contents()
 {
     this->min.x = std::min(pt1.x, pt2.x);
@@ -70,20 +70,20 @@ Quadtree::Quadtree(Quadtree *p,
     {
         glm::ivec2 tmp_pt;
 
-        this->quadrant[0] = new Quadtree(this,
+        this->quadrant[0] = new quadtree(this,
                                          this->center, this->min,
                                          max_depth, ++cur_depth);
         tmp_pt.x = this->max.x;
         tmp_pt.y = this->min.y;
-        this->quadrant[1] = new Quadtree(this,
+        this->quadrant[1] = new quadtree(this,
                                          this->center, tmp_pt,
                                          max_depth, cur_depth);
         tmp_pt.x = this->min.x;
         tmp_pt.y = this->max.y;
-        this->quadrant[2] = new Quadtree(this,
+        this->quadrant[2] = new quadtree(this,
                                          this->center, tmp_pt,
                                          max_depth, cur_depth);
-        this->quadrant[3] = new Quadtree(this,
+        this->quadrant[3] = new quadtree(this,
                                          this->center, this->max,
                                          max_depth, cur_depth);
     }
@@ -96,7 +96,7 @@ Quadtree::Quadtree(Quadtree *p,
     }
 }
 
-Quadtree::~Quadtree()
+ui::quadtree::~quadtree()
 {
     if (this->quadrant[0] != NULL) delete this->quadrant[0];
     if (this->quadrant[1] != NULL) delete this->quadrant[1];
@@ -104,7 +104,7 @@ Quadtree::~Quadtree()
     if (this->quadrant[3] != NULL) delete this->quadrant[3];
 }
 
-void Quadtree::insert(ui::panel *obj)
+void ui::quadtree::insert(ui::panel *obj)
 {
     int which = this->classify(obj);
 
@@ -119,7 +119,7 @@ void Quadtree::insert(ui::panel *obj)
         this->quadrant[3]->insert(obj);
 }
 
-void Quadtree::remove(ui::panel *obj)
+void ui::quadtree::remove(ui::panel *obj)
 {
     int which = this->classify(obj);
 
@@ -134,12 +134,12 @@ void Quadtree::remove(ui::panel *obj)
         this->quadrant[3]->remove(obj);
 }
 
-void Quadtree::clear(void)
+void ui::quadtree::clear(void)
 {
     this->contents.clear();
 }
 
-ui::panel *Quadtree::search(const glm::ivec2& pt)
+ui::panel *ui::quadtree::search(const glm::ivec2& pt)
 {
     if (this->contents.empty())
         return NULL;
