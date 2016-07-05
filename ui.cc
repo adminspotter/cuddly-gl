@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 07:37:28 tquirk
+ *   last updated 05 Jul 2016, 08:27:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -54,12 +54,18 @@ void ui::context::set_size(GLuint d, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
-    /* TODO:  when we resize, regenerate this->tree and reinsert everything */
     switch (d)
     {
       case ui::size::width:  this->width = new_v;  break;
       case ui::size::height: this->height = new_v; break;
     }
+
+    /* Regenerate our search tree */
+    glm::ivec2 ul = {0, 0}, lr = {this->width, this->height};
+    delete this->tree;
+    this->tree = new ui::quadtree(NULL, ul, lr, ui::context::tree_max_depth);
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        this->tree->insert(*i);
 }
 
 int ui::context::get_attribute(GLuint t, void *v)
