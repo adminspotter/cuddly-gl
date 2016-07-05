@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Jun 2016, 15:16:34 tquirk
+ *   last updated 04 Jul 2016, 08:00:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -531,6 +531,23 @@ void ui::panel::set(GLuint s, GLuint m, void *v)
       case ui::element::position:  this->set_position(m, v);  break;
     }
     this->populate_buffers();
+}
+
+void ui::panel::get_va(GLuint s, GLuint m, void *v, ...)
+{
+    va_list args;
+    GLuint item[2];
+    void *ptr;
+
+    this->get(s, m, v);
+    va_start(args, v);
+    while ((item[0] = va_arg(args, GLuint)) != 0)
+    {
+        item[1] = va_arg(args, GLuint);
+        ptr = va_arg(args, void *);
+        this->get(item[0], item[1], ptr);
+    }
+    va_end(args);
 }
 
 void ui::panel::set_va(GLuint s, GLuint m, void *v, ...)

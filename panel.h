@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Jun 2016, 18:54:32 tquirk
+ *   last updated 05 Jul 2016, 07:29:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,6 +45,10 @@
 
 namespace ui
 {
+    /* Forward declarations for multi-include problems */
+    class context;
+    class panel;
+
     /* Callback function pointer */
     typedef void (*cb_fptr)(panel *, void *, void *);
 
@@ -97,6 +101,7 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
+        void get_va(GLuint, GLuint, void *, ...);
         void set_va(GLuint, GLuint, void *, ...);
 
         virtual void draw(void);
