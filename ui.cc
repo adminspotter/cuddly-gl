@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jun 2016, 07:18:52 tquirk
+ *   last updated 05 Jul 2016, 07:37:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,9 @@
 #include "panel.h"
 #include "shader.h"
 
+/* We'll use this for our quadtree default max depth */
+const int ui::context::tree_max_depth = 4;
+
 int ui::context::get_size(GLuint t, void *v)
 {
     int ret = 0;
@@ -51,6 +54,7 @@ void ui::context::set_size(GLuint d, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
+    /* TODO:  when we resize, regenerate this->tree and reinsert everything */
     switch (d)
     {
       case ui::size::width:  this->width = new_v;  break;
@@ -87,8 +91,12 @@ int ui::context::get_attribute(GLuint t, void *v)
 ui::context::context(GLuint w, GLuint h)
     : children()
 {
+    glm::ivec2 ul = {0, 0}, lr = {w, h};
+
     this->width = w;
     this->height = h;
+
+    this->tree = new quadtree(NULL, ul, lr, ui::context::tree_max_depth);
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -109,6 +117,8 @@ ui::context::~context()
     glDeleteShader(this->frag_shader);
     glUseProgram(0);
     glDeleteProgram(this->shader_pgm);
+
+    delete this->tree;
 }
 
 int ui::context::get(GLuint e, GLuint t, void *v)
@@ -145,13 +155,25 @@ ui::context& ui::context::add_child(ui::panel *p)
 {
     auto found = std::find(this->children.begin(), this->children.end(), p);
     if (found == this->children.end())
+    {
         this->children.push_back(p);
+        this->tree->insert(p);
+    }
     return *this;
 }
 
 ui::context& ui::context::remove_child(ui::panel *p)
 {
     this->children.remove(p);
+    this->tree->remove(p);
+    return *this;
+}
+
+ui::context& ui::context::move_child(ui::panel *p)
+{
+    /* This is pretty brute-force, but it's at least simple to understand */
+    this->tree->remove(p);
+    this->tree->insert(p);
     return *this;
 }
 

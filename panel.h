@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 08:00:42 tquirk
+ *   last updated 05 Jul 2016, 07:29:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,6 +45,10 @@
 
 namespace ui
 {
+    /* Forward declarations for multi-include problems */
+    class context;
+    class panel;
+
     /* Callback function pointer */
     typedef void (*cb_fptr)(panel *, void *, void *);
 
