@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 13:00:13 tquirk
+ *   last updated 04 Jul 2016, 23:15:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -141,5 +141,25 @@ void Quadtree::clear(void)
 
 ui::panel *Quadtree::search(const glm::ivec2& pt)
 {
+    if (this->contents.empty())
+        return NULL;
+
+    int which = this->which_quad(pt);
+    if (this->quadrant[which] != NULL)
+        return this->quadrant[which]->search(pt);
+
+    std::list<ui::panel *>::iterator i;
+    for (i = this->contents.begin(); i != this->contents.end(); ++i)
+    {
+        glm::ivec2 ul, lr;
+
+        (*i)->get_va(ui::element::position, ui::position::x,  &ul.x,
+                     ui::element::position, ui::position::y,  &ul.y,
+                     ui::element::size,     ui::size::width,  &lr.x,
+                     ui::element::size,     ui::size::height, &lr.y, 0);
+        lr += ul;
+        if (pt.x >= ul.x && pt.x < lr.x && pt.y >= ul.y && pt.y < lr.y)
+            return *i;
+    }
     return NULL;
 }
