@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 08:27:02 tquirk
+ *   last updated 05 Jul 2016, 18:48:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -95,7 +95,7 @@ int ui::context::get_attribute(GLuint t, void *v)
 }
 
 ui::context::context(GLuint w, GLuint h)
-    : children()
+    : children(), cursor(0, 0)
 {
     glm::ivec2 ul = {0, 0}, lr = {w, h};
 
@@ -185,8 +185,31 @@ ui::context& ui::context::move_child(ui::panel *p)
 
 void ui::context::cursor_pos_callback(int x, int y)
 {
+    glm::ivec2 pos = {x, y};
+    ui::panel *p = this->tree->search(pos);
+
+    if (p != NULL)
+    {
+        if (this->old_child == NULL)
+            p->call_callbacks(ui::callback::enter);
+        p->call_callbacks(ui::callback::motion);
+    }
+    else if (this->old_child != NULL)
+        this->old_child->call_callbacks(ui::callback::leave);
+
+    this->old_child = p;
+    this->cursor = pos;
 }
 
 void ui::context::cursor_btn_callback(int btn, int state)
 {
+    glm::ivec2 pos = this->cursor;
+    ui::panel *p = this->tree->search(pos);
+
+    if (p != NULL)
+        p->call_callbacks((state == ui::cursor::up
+                           ? ui::callback::up
+                           : ui::callback::down));
+
+    this->old_child = p;
 }

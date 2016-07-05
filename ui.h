@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 07:35:57 tquirk
+ *   last updated 05 Jul 2016, 18:48:29 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,8 @@
 
 #include <list>
 
+#include <glm/vec2.hpp>
+
 #include "ui_defs.h"
 #include "quadtree.h"
 
@@ -50,7 +52,11 @@ namespace ui
         GLuint pos_attr, norm_attr, color_attr, texture_attr;
         GLuint use_text_uniform;
         std::list<panel *> children;
+
         quadtree *tree;
+        /* Previous cursor position and pointed-to child */
+        glm::ivec2 cursor;
+        panel *old_child;
 
         const static int tree_max_depth;
 
