@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Jun 2016, 17:01:39 tquirk
+ *   last updated 07 Jul 2016, 08:02:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,12 +40,20 @@ namespace ui
     class button : public label
     {
       protected:
+        bool armed;
+
+        int get_arm_state(GLuint, void *);
+        void set_arm_state(GLuint, void *);
+
         static void activate(panel *, void *, void *);
         static void deactivate(panel *, void *, void *);
 
       public:
         button(context *, GLuint = 0, GLuint = 0);
         virtual ~button();
+
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
     };
 }
 
