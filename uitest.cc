@@ -18,14 +18,17 @@ void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 void key_callback(GLFWwindow *, int, int, int, int);
 void create_image(int, int);
+void enter_callback(ui::panel *, void *, void *);
+void leave_callback(ui::panel *, void *, void *);
 void clicky_callback(ui::panel *, void *, void *);
 
 ui::context *ctx;
 ui::label *l1, *l2;
 
-std::string font_name("Times New Roman.ttf"), greeting("Howdy!");
+std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
 {
+    "./test",
     "~/Library/Fonts",
     "/Library/Fonts",
     "/Network/Library/Fonts",
@@ -84,6 +87,9 @@ int main(int argc, char **argv)
                ui::element::bgimage, 0, img,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1, 0);
+    std::cout << "l1 is " << *l1 << std::endl;
+    l1->add_callback(ui::callback::enter, enter_callback, NULL);
+    l1->add_callback(ui::callback::leave, leave_callback, NULL);
     l2 = new ui::label(ctx, 0, 0);
     l2->set_va(ui::element::font, 0, new Font(font_name, 80, paths),
                ui::element::string, 0, &greeting,
@@ -91,6 +97,9 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "l2 is " << *l2 << std::endl;
+    l2->add_callback(ui::callback::enter, enter_callback, NULL);
+    l2->add_callback(ui::callback::leave, leave_callback, NULL);
     l2->add_callback(ui::callback::down, clicky_callback, NULL);
 
     while (!glfwWindowShouldClose(w))
@@ -167,6 +176,18 @@ void create_image(int width, int height)
                 memcpy(&img[((height - 1 - (i * 8) - j) * width + k) * 4],
                        colors[i],
                        sizeof(unsigned char) * 4);
+}
+
+/* ARGSUSED */
+void enter_callback(ui::panel *p, void *client, void *call)
+{
+    std::cout << "we're in!" << std::endl;
+}
+
+/* ARGSUSED */
+void leave_callback(ui::panel *p, void *client, void *call)
+{
+    std::cout << "out, baby!" << std::endl;
 }
 
 /* ARGSUSED */
