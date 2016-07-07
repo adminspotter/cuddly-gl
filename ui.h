@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 18:48:29 tquirk
+ *   last updated 07 Jul 2016, 06:46:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,7 +55,7 @@ namespace ui
 
         quadtree *tree;
         /* Previous cursor position and pointed-to child */
-        glm::ivec2 cursor;
+        glm::ivec2 old_cursor;
         panel *old_child;
 
         const static int tree_max_depth;

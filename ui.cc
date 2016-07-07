@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 18:48:38 tquirk
+ *   last updated 07 Jul 2016, 06:46:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -95,7 +95,7 @@ int ui::context::get_attribute(GLuint t, void *v)
 }
 
 ui::context::context(GLuint w, GLuint h)
-    : children(), cursor(0, 0)
+    : children(), old_cursor(0, 0)
 {
     glm::ivec2 ul = {0, 0}, lr = {w, h};
 
@@ -103,6 +103,7 @@ ui::context::context(GLuint w, GLuint h)
     this->height = h;
 
     this->tree = new quadtree(NULL, ul, lr, ui::context::tree_max_depth);
+    this->old_child = NULL;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -198,12 +199,12 @@ void ui::context::cursor_pos_callback(int x, int y)
         this->old_child->call_callbacks(ui::callback::leave);
 
     this->old_child = p;
-    this->cursor = pos;
+    this->old_cursor = pos;
 }
 
 void ui::context::cursor_btn_callback(int btn, int state)
 {
-    glm::ivec2 pos = this->cursor;
+    glm::ivec2 pos = this->old_cursor;
     ui::panel *p = this->tree->search(pos);
 
     if (p != NULL)
