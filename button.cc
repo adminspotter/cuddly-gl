@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 08:04:03 tquirk
+ *   last updated 07 Jul 2016, 08:22:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,8 +45,7 @@ void ui::button::set_arm_state(GLuint t, void *v)
     this->armed = *((bool *)v);
 }
 
-/* ARGSUSED */
-void ui::button::activate(ui::panel *p, void *call, void *client)
+void ui::button::grow_border(ui::panel *p)
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -58,8 +57,7 @@ void ui::button::activate(ui::panel *p, void *call, void *client)
     }
 }
 
-/* ARGSUSED */
-void ui::button::deactivate(ui::panel *p, void *call, void *client)
+void ui::button::shrink_border(ui::panel *p)
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -69,6 +67,18 @@ void ui::button::deactivate(ui::panel *p, void *call, void *client)
         border = (border > 1 ? border - 1 : 0);
         p->set(ui::element::border, i, &border);
     }
+}
+
+/* ARGSUSED */
+void ui::button::activate(ui::panel *p, void *call, void *client)
+{
+    ui::button::grow_border(p);
+}
+
+/* ARGSUSED */
+void ui::button::deactivate(ui::panel *p, void *call, void *client)
+{
+    ui::button::shrink_border(p);
 }
 
 ui::button::button(ui::context *c, GLuint w, GLuint h)
