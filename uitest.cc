@@ -87,7 +87,6 @@ int main(int argc, char **argv)
                ui::element::bgimage, 0, img,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1, 0);
-    std::cout << "l1 is " << *l1 << std::endl;
     l1->add_callback(ui::callback::enter, enter_callback, NULL);
     l1->add_callback(ui::callback::leave, leave_callback, NULL);
     l2 = new ui::label(ctx, 0, 0);
@@ -97,7 +96,6 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "l2 is " << *l2 << std::endl;
     l2->add_callback(ui::callback::enter, enter_callback, NULL);
     l2->add_callback(ui::callback::leave, leave_callback, NULL);
     l2->add_callback(ui::callback::down, clicky_callback, NULL);
