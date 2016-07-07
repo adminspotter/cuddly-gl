@@ -10,7 +10,7 @@
 
 #include "ui.h"
 #include "font.h"
-#include "label.h"
+#include "button.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -23,7 +23,7 @@ void leave_callback(ui::panel *, void *, void *);
 void clicky_callback(ui::panel *, void *, void *);
 
 ui::context *ctx;
-ui::label *l1, *l2;
+ui::button *b1, *b2;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
@@ -81,24 +81,24 @@ int main(int argc, char **argv)
     create_image(wid, hei);
 
     ctx = new ui::context(800, 600);
-    l1 = new ui::label(ctx, 0, 0);
-    l1->set_va(ui::element::size, ui::size::width, &wid,
+    b1 = new ui::button(ctx, 0, 0);
+    b1->set_va(ui::element::size, ui::size::width, &wid,
                ui::element::size, ui::size::height, &hei,
                ui::element::bgimage, 0, img,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1, 0);
-    l1->add_callback(ui::callback::enter, enter_callback, NULL);
-    l1->add_callback(ui::callback::leave, leave_callback, NULL);
-    l2 = new ui::label(ctx, 0, 0);
-    l2->set_va(ui::element::font, 0, new Font(font_name, 80, paths),
+    b1->add_callback(ui::callback::enter, enter_callback, NULL);
+    b1->add_callback(ui::callback::leave, leave_callback, NULL);
+    b2 = new ui::button(ctx, 0, 0);
+    b2->set_va(ui::element::font, 0, new Font(font_name, 80, paths),
                ui::element::string, 0, &greeting,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    l2->add_callback(ui::callback::enter, enter_callback, NULL);
-    l2->add_callback(ui::callback::leave, leave_callback, NULL);
-    l2->add_callback(ui::callback::down, clicky_callback, NULL);
+    b2->add_callback(ui::callback::enter, enter_callback, NULL);
+    b2->add_callback(ui::callback::leave, leave_callback, NULL);
+    b2->add_callback(ui::callback::down, clicky_callback, NULL);
 
     while (!glfwWindowShouldClose(w))
     {
