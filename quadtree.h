@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 07:32:34 tquirk
+ *   last updated 07 Jul 2016, 07:04:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -50,15 +50,23 @@ namespace ui
 
         static const int quad0 = 1, quad1 = 2, quad2 = 4, quad3 = 8;
 
-        inline int which_quad(const glm::ivec2& pt) const
+        inline int quad_mask(const glm::ivec2& pt) const
             {
-                return 1 << ((pt.x < this->center.x ? 0 : 1)
-                             + (pt.y > this->center.y ? 0 : 2));
+                return 1 << this->quad_index(pt);
             };
-        inline int which_quad(int x, int y) const
+        inline int quad_mask(int x, int y) const
             {
-                return 1 << ((x < this->center.x ? 0 : 1)
-                             + (y > this->center.y ? 0 : 2));
+                return 1 << this->quad_index(x, y);
+            };
+        inline int quad_index(const glm::ivec2& pt) const
+            {
+                return (pt.x < this->center.x ? 0 : 1)
+                    + (pt.y < this->center.y ? 0 : 2);
+            };
+        inline int quad_index(int x, int y) const
+            {
+                return (x < this->center.x ? 0 : 1)
+                    + (y < this->center.y ? 0 : 2);
             };
         int classify(ui::panel *);
 

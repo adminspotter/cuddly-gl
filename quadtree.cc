@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Jul 2016, 07:34:36 tquirk
+ *   last updated 07 Jul 2016, 07:08:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -47,10 +47,10 @@ int ui::quadtree::classify(ui::panel *p)
               ui::element::size,     ui::size::height, &lr.y, 0);
     /* Width and height are not absolute screen coords */
     lr += ul;
-    retval |= this->which_quad(ul);
-    retval |= this->which_quad(ul.x, lr.y);
-    retval |= this->which_quad(lr.x, ul.y);
-    retval |= this->which_quad(lr);
+    retval |= this->quad_mask(ul);
+    retval |= this->quad_mask(ul.x, lr.y);
+    retval |= this->quad_mask(lr.x, ul.y);
+    retval |= this->quad_mask(lr);
     return retval;
 }
 
@@ -108,6 +108,8 @@ void ui::quadtree::insert(ui::panel *obj)
 {
     int which = this->classify(obj);
 
+    if (which == 0)
+        return;
     this->contents.push_front(obj);
     if (which & 0x01 && this->quadrant[0] != NULL)
         this->quadrant[0]->insert(obj);
@@ -144,7 +146,7 @@ ui::panel *ui::quadtree::search(const glm::ivec2& pt)
     if (this->contents.empty())
         return NULL;
 
-    int which = this->which_quad(pt);
+    int which = this->quad_index(pt);
     if (this->quadrant[which] != NULL)
         return this->quadrant[which]->search(pt);
 
