@@ -49,6 +49,8 @@ namespace ui
         static void shrink_border(panel *);
         static void activate(panel *, void *, void *);
         static void deactivate(panel *, void *, void *);
+        static void arm(panel *, void *, void *);
+        static void disarm(panel *, void *, void *);
 
       public:
         button(context *, GLuint = 0, GLuint = 0);

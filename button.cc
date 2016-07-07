@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 08:22:55 tquirk
+ *   last updated 07 Jul 2016, 09:09:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -78,7 +78,33 @@ void ui::button::activate(ui::panel *p, void *call, void *client)
 /* ARGSUSED */
 void ui::button::deactivate(ui::panel *p, void *call, void *client)
 {
+    /* p knows whether it's armed or not, so this call will never be
+     * inappropriate.
+     */
+    ui::button::disarm(p, NULL, NULL);
+
     ui::button::shrink_border(p);
+}
+
+void ui::button::arm(ui::panel *p, void *call, void *client)
+{
+    bool armed = true;
+
+    p->set(ui::element::arm, 0, &armed);
+    ui::button::grow_border(p);
+}
+
+void ui::button::disarm(ui::panel *p, void *call, void *client)
+{
+    bool is_armed;
+
+    p->get(ui::element::arm, 0, &is_armed);
+    if (is_armed)
+    {
+        is_armed = false;
+        p->set(ui::element::arm, 0, &is_armed);
+        ui::button::shrink_border(p);
+    }
 }
 
 ui::button::button(ui::context *c, GLuint w, GLuint h)
@@ -88,6 +114,8 @@ ui::button::button(ui::context *c, GLuint w, GLuint h)
 
     this->add_callback(ui::callback::enter, ui::button::activate, NULL);
     this->add_callback(ui::callback::leave, ui::button::deactivate, NULL);
+    this->add_callback(ui::callback::down,  ui::button::arm, NULL);
+    this->add_callback(ui::callback::up,    ui::button::disarm, NULL);
 }
 
 ui::button::~button()
