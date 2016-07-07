@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jul 2016, 08:00:39 tquirk
+ *   last updated 07 Jul 2016, 07:15:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -70,6 +70,7 @@ void ui::panel::set_position(GLuint t, void *v)
       case ui::position::x: this->xpos = new_v; break;
       case ui::position::y: this->ypos = new_v; break;
     }
+    this->parent->move_child(this);
 }
 
 int ui::panel::get_size(GLuint t, void *v)
@@ -101,6 +102,7 @@ void ui::panel::set_size(GLuint d, void *v)
             + this->border[2] + this->margin[2] < new_v)
             this->width = new_v;
     }
+    this->parent->move_child(this);
 }
 
 int ui::panel::get_border(GLuint t, void *v)
@@ -458,7 +460,6 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     GLuint pos_attr, color_attr, texture_attr, temp, x, y;
 
     this->parent = c;
-    this->parent->add_child(this);
 
     this->width = w;
     this->height = h;
@@ -473,6 +474,8 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     c->get(ui::element::size, ui::size::height, &y);
     this->xpos = x / 2 - (w / 2);
     this->ypos = y / 2 - (h / 2);
+
+    this->parent->add_child(this);
 
     c->get(ui::element::attribute, ui::attribute::position, &pos_attr);
     c->get(ui::element::attribute, ui::attribute::color, &color_attr);
