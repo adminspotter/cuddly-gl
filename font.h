@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jun 2016, 18:00:54 tquirk
+ *   last updated 07 Jul 2016, 16:51:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,17 +59,13 @@
 
 struct Glyph
 {
+    uint32_t code_point;
     int x_advance, y_advance, width, height;
     int top, left;
     int pitch;
     unsigned char *bitmap;
 
-    bool is_l_to_r(void)
-        {
-            if (x_advance > 0)
-                return true;
-            return false;
-        };
+    bool is_l_to_r(void);
 };
 
 class Font

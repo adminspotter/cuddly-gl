@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Jun 2016, 18:30:53 tquirk
+ *   last updated 10 Jul 2016, 23:19:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -84,6 +84,48 @@ static void cleanup_freetype(void)
         FT_Done_FreeType(ft_lib);
 }
 
+/* The TTF format, or at least Freetype, doesn't distinguish between
+ * L-to-R and R-to-L characters.  Seems that they could provide a
+ * negative advance value for R-to-L, but whatever.  This table should
+ * provide the ranges which are R-to-L based on Unicode code point.
+ */
+bool Glyph::is_l_to_r(void)
+{
+    if (this->code_point == 0x05be || this->code_point == 0x05c0
+        || this->code_point == 0x05c3 || this->code_point == 0x05c6
+        || (this->code_point >= 0x05d0 && this->code_point <= 0x05f4)
+        || this->code_point == 0x0608 || this->code_point == 0x060b
+        || this->code_point == 0x060d
+        || (this->code_point >= 0x061b && this->code_point <= 0x064a)
+        || (this->code_point >= 0x066d && this->code_point <= 0x066f)
+        || (this->code_point >= 0x0671 && this->code_point <= 0x06d5)
+        || (this->code_point >= 0x06e5 && this->code_point <= 0x06e6)
+        || (this->code_point >= 0x06ee && this->code_point <= 0x06ef)
+        || (this->code_point >= 0x06fa && this->code_point <= 0x0710)
+        || (this->code_point >= 0x0712 && this->code_point <= 0x072f)
+        || (this->code_point >= 0x074d && this->code_point <= 0x07a5)
+        || (this->code_point >= 0x07b1 && this->code_point <= 0x07ea)
+        || (this->code_point >= 0x07f4 && this->code_point <= 0x07f5)
+        || (this->code_point >= 0x07fa && this->code_point <= 0x0815)
+        || this->code_point == 0x081a || this->code_point == 0x0824
+        || this->code_point == 0x0828
+        || (this->code_point >= 0x0830 && this->code_point <= 0x0858)
+        || (this->code_point >= 0x085e && this->code_point <= 0x08ac)
+        || this->code_point == 0x200f || this->code_point == 0xfb1d
+        || (this->code_point >= 0xfb1f && this->code_point <= 0xfb28)
+        || (this->code_point >= 0xfb2a && this->code_point <= 0xfd3d)
+        || (this->code_point >= 0xfd50 && this->code_point <= 0xfdfc)
+        || (this->code_point >= 0xfe70 && this->code_point <= 0xfefc)
+        || (this->code_point >= 0x10800 && this->code_point <= 0x1091b)
+        || (this->code_point >= 0x10920 && this->code_point <= 0x10a00)
+        || (this->code_point >= 0x10a10 && this->code_point <= 0x10a33)
+        || (this->code_point >= 0x10a40 && this->code_point <= 0x10b35)
+        || (this->code_point >= 0x10b40 && this->code_point <= 0x10c48)
+        || (this->code_point >= 0x1ee00 && this->code_point <= 0x1eebb))
+        return false;
+    return true;
+}
+
 std::string Font::search_path(std::string& font_name,
                               std::vector<std::string>& paths)
 {
@@ -119,6 +161,7 @@ void Font::load_glyph(FT_ULong code)
 
     FT_Load_Char(this->face, code, FT_LOAD_RENDER);
     Glyph& g = this->glyphs[code];
+    g.code_point = code;
     /* Advance is represented in 26.6 format, so throw away the
      * lowest-order 6 bits.
      */
@@ -219,13 +262,14 @@ unsigned char *Font::render_string(const std::u32string& str,
     unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
     bool l_to_r = (*this)[*i].is_l_to_r();
-    int pos = (l_to_r ? 0 : w - 1), save_pos = pos;
+    int pos, save_pos;
 
     this->get_string_size(str, req_size);
     w = req_size[0];
     h = req_size[1] + req_size[2];
     img = new unsigned char[w * h];
     memset(img, 0, w * h);
+    save_pos = pos = (l_to_r ? 0 : w - 1);
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -252,23 +296,22 @@ unsigned char *Font::render_string(const std::u32string& str,
             for (j = 0; j < h; ++j)
             {
                 row_offset = (w * j) + start;
-                memmove(&img[row_offset - x_distance],
+                memmove(&img[row_offset + (!l_to_r ? -x_distance : x_distance)],
                         &img[row_offset],
                         x_move);
-                memset(&img[start], 0, x_distance);
+                memset(&img[row_offset - start + save_pos
+                            - (!l_to_r ? x_distance : 0)],
+                       0,
+                       x_distance);
             }
         }
         else
             save_pos = pos;
         if (!l_to_r)
         {
+            pos -= g.x_advance + kerning.x;
             if (same_dir)
-            {
-                pos += g.x_advance + kerning.x;
                 save_pos = pos;
-            }
-            else
-                pos -= g.x_advance + kerning.x;
         }
         for (j = 0; j < g.height; ++j)
         {
@@ -282,13 +325,9 @@ unsigned char *Font::render_string(const std::u32string& str,
         }
         if (l_to_r)
         {
+            pos += g.x_advance + kerning.x;
             if (same_dir)
-            {
-                pos += g.x_advance + kerning.x;
                 save_pos = pos;
-            }
-            else
-                pos -= g.x_advance + kerning.x;
         }
 
         ++i;
