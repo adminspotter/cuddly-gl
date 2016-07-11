@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Jul 2016, 23:19:10 tquirk
+ *   last updated 11 Jul 2016, 07:20:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -89,7 +89,7 @@ static void cleanup_freetype(void)
  * negative advance value for R-to-L, but whatever.  This table should
  * provide the ranges which are R-to-L based on Unicode code point.
  */
-bool Glyph::is_l_to_r(void)
+bool ui::glyph::is_l_to_r(void)
 {
     if (this->code_point == 0x05be || this->code_point == 0x05c0
         || this->code_point == 0x05c3 || this->code_point == 0x05c6
@@ -126,7 +126,7 @@ bool Glyph::is_l_to_r(void)
     return true;
 }
 
-std::string Font::search_path(std::string& font_name,
+std::string ui::font::search_path(std::string& font_name,
                               std::vector<std::string>& paths)
 {
     std::vector<std::string>::iterator i;
@@ -155,12 +155,12 @@ std::string Font::search_path(std::string& font_name,
     throw std::runtime_error(_("Could not find font ") + font_name);
 }
 
-void Font::load_glyph(FT_ULong code)
+void ui::font::load_glyph(FT_ULong code)
 {
     FT_GlyphSlot slot = this->face->glyph;
 
     FT_Load_Char(this->face, code, FT_LOAD_RENDER);
-    Glyph& g = this->glyphs[code];
+    ui::glyph& g = this->glyphs[code];
     g.code_point = code;
     /* Advance is represented in 26.6 format, so throw away the
      * lowest-order 6 bits.
@@ -176,7 +176,7 @@ void Font::load_glyph(FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
-void Font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
+void ui::font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 {
     if (FT_Get_Kerning(this->face, a, b, FT_KERNING_DEFAULT, k))
         k->x = k->y = 0;
@@ -197,7 +197,7 @@ void Font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
  */
-void Font::get_string_size(const std::u32string& str,
+void ui::font::get_string_size(const std::u32string& str,
                            std::vector<int>& req_size)
 {
     std::u32string::const_iterator i;
@@ -206,7 +206,7 @@ void Font::get_string_size(const std::u32string& str,
     for (i = str.begin(); i != str.end(); ++i)
     {
         FT_Vector kerning = {0, 0};
-        Glyph& g = (*this)[*i];
+        ui::glyph& g = (*this)[*i];
 
         if (g.x_advance == 0 && g.y_advance != 0)
             throw std::runtime_error(_("This font is not supported."));
@@ -226,7 +226,7 @@ void Font::get_string_size(const std::u32string& str,
     }
 }
 
-Font::Font(std::string& font_name,
+ui::font::font(std::string& font_name,
            int pixel_size,
            std::vector<std::string>& paths)
     : glyphs(font_name + " glyphs")
@@ -239,22 +239,22 @@ Font::Font(std::string& font_name,
     FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
 }
 
-Font::~Font()
+ui::font::~font()
 {
     FT_Done_Face(this->face);
     cleanup_freetype();
 }
 
-struct Glyph& Font::operator[](FT_ULong code)
+struct ui::glyph& ui::font::operator[](FT_ULong code)
 {
-    Glyph& g = this->glyphs[code];
+    ui::glyph& g = this->glyphs[code];
 
     if (g.bitmap == NULL)
         this->load_glyph(code);
     return g;
 }
 
-unsigned char *Font::render_string(const std::u32string& str,
+unsigned char *ui::font::render_string(const std::u32string& str,
                                    unsigned int& w,
                                    unsigned int& h)
 {
@@ -277,7 +277,7 @@ unsigned char *Font::render_string(const std::u32string& str,
      */
     while (i != str.end())
     {
-        Glyph& g = (*this)[*i];
+        ui::glyph& g = (*this)[*i];
         int j, k, bottom_row = req_size[2] + g.top - g.height;
         int row_offset, glyph_offset;
         FT_Vector kerning = {0, 0};

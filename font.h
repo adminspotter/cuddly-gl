@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 16:51:56 tquirk
+ *   last updated 11 Jul 2016, 07:21:05 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,48 +57,51 @@
 
 #include "../cache.h"
 
-struct Glyph
+namespace ui
 {
-    uint32_t code_point;
-    int x_advance, y_advance, width, height;
-    int top, left;
-    int pitch;
-    unsigned char *bitmap;
-
-    bool is_l_to_r(void);
-};
-
-class Font
-{
-  private:
-    struct glyph_cleanup
+    struct glyph
     {
-        void operator()(struct Glyph& g)
-            {
-                if (g.bitmap != NULL)
-                    delete[] g.bitmap;
-            }
+        uint32_t code_point;
+        int x_advance, y_advance, width, height;
+        int top, left;
+        int pitch;
+        unsigned char *bitmap;
+
+        bool is_l_to_r(void);
     };
 
-    FT_Face face;
-    BasicCache<struct Glyph, glyph_cleanup, FT_ULong> glyphs;
+    class font
+    {
+      private:
+        struct glyph_cleanup
+        {
+            void operator()(struct glyph& g)
+                {
+                    if (g.bitmap != NULL)
+                        delete[] g.bitmap;
+                }
+        };
 
-    std::string search_path(std::string&, std::vector<std::string>&);
+        FT_Face face;
+        BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
 
-    void load_glyph(FT_ULong);
-    void kern(FT_ULong, FT_ULong, FT_Vector *);
+        std::string search_path(std::string&, std::vector<std::string>&);
 
-    void get_string_size(const std::u32string&, std::vector<int>&);
+        void load_glyph(FT_ULong);
+        void kern(FT_ULong, FT_ULong, FT_Vector *);
 
-  public:
-    Font(std::string&, int, std::vector<std::string>&);
-    ~Font();
+        void get_string_size(const std::u32string&, std::vector<int>&);
 
-    struct Glyph& operator[](FT_ULong);
+      public:
+        font(std::string&, int, std::vector<std::string>&);
+        ~font();
 
-    unsigned char *render_string(const std::u32string&,
-                                 unsigned int&,
-                                 unsigned int&);
-};
+        struct glyph& operator[](FT_ULong);
+
+        unsigned char *render_string(const std::u32string&,
+                                     unsigned int&,
+                                     unsigned int&);
+    };
+}
 
 #endif /* __INC_R9_FONT_H__ */

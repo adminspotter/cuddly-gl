@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Jun 2016, 18:17:48 tquirk
+ *   last updated 11 Jul 2016, 07:22:29 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -50,7 +50,7 @@ int ui::label::get_font(GLuint t, void *v)
 /* ARGSUSED */
 void ui::label::set_font(GLuint t, void *v)
 {
-    this->font = (Font *)v;
+    this->font = (ui::font *)v;
 }
 
 /* ARGSUSED */

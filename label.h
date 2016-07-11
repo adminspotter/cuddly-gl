@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Jun 2016, 07:40:57 tquirk
+ *   last updated 11 Jul 2016, 07:21:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,7 +45,7 @@ namespace ui
         bool use_text;
         std::u32string str;
         unsigned char *image;
-        Font *font;
+        ui::font *font;
         GLuint tex;
 
         int get_font(GLuint, void *);

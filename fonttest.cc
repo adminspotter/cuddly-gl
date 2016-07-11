@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
     int i, j;
     unsigned int w, h;
-    Font f(font_name, 20, paths);
+    ui::font f(font_name, 20, paths);
     std::string s("Howdy");
     std::u32string str(s.begin(), s.end());
     unsigned char *buf = f.render_string(str, w, h);

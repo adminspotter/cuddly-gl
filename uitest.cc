@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     b1->add_callback(ui::callback::enter, enter_callback, NULL);
     b1->add_callback(ui::callback::leave, leave_callback, NULL);
     b2 = new ui::button(ctx, 0, 0);
-    b2->set_va(ui::element::font, 0, new Font(font_name, 80, paths),
+    b2->set_va(ui::element::font, 0, new ui::font(font_name, 80, paths),
                ui::element::string, 0, &greeting,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg2,
