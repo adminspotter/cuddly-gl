@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Jul 2016, 07:22:29 tquirk
+ *   last updated 12 Jul 2016, 10:21:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -64,37 +64,31 @@ int ui::label::get_string(GLuint t, void *v)
 void ui::label::set_string(GLuint t, void *v)
 {
     this->use_text = true;
-    if (this->image != NULL)
+    if (this->img.data != NULL)
     {
-        delete[] this->image;
-        this->image = NULL;
+        delete[] this->img.data;
+        this->img.data = NULL;
     }
     this->str = utf8tou32str(*((std::string *)v));
     if (this->font != NULL)
-        this->image = this->font->render_string(this->str,
-                                                this->width,
-                                                this->height);
+        this->img.data = this->font->render_string(this->str,
+                                                   this->img.width,
+                                                   this->img.height);
 }
 
 /* ARGSUSED */
 int ui::label::get_bgimage(GLuint t, void *v)
 {
-    v = (void *)this->image;
+    v = (void *)&this->img;
     return 0;
 }
 
 /* ARGSUSED */
 void ui::label::set_bgimage(GLuint t, void *v)
 {
-    if (this->width == 0 || this->height == 0)
-        throw std::runtime_error(_("Width and height must be set before assigning a background image"));
-
     this->use_text = false;
     this->str.clear();
-    if (this->image != NULL)
-        delete[] this->image;
-    this->image = new unsigned char[this->width * this->height * 4];
-    memcpy(this->image, v, this->width * this->height * 4);
+    this->img = *(ui::image *)v;
 }
 
 /* We need to be able to convert from UTF-8 representation to
@@ -214,11 +208,22 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
 void ui::label::populate_buffers(void)
 {
-    float vertex[160];
-    GLuint element[60];
-
-    if (this->image != NULL)
+    if (this->img.data != NULL)
     {
+        float vertex[160], pw, ph, m[4], b[4];
+        GLuint element[60], temp;
+
+        /* If there is a border, we want an extra pixel of space
+         * between the string and the border.
+         */
+        this->width = this->img.width
+            + this->margin[1] + this->margin[2]
+            + (this->border[1] > 0 ? this->border[1] + 1 : 0)
+            + (this->border[2] > 0 ? this->border[2] + 1 : 0);
+        this->height = this->img.height
+            + this->margin[0] + this->margin[3]
+            + (this->border[0] > 0 ? this->border[0] + 1 : 0)
+            + (this->border[3] > 0 ? this->border[3] + 1 : 0);
         this->panel::generate_points(vertex, element);
         vertex[6]  = 0.0; vertex[7]  = 1.0;
         vertex[14] = 1.0; vertex[15] = 1.0;
@@ -247,15 +252,15 @@ void ui::label::populate_buffers(void)
         {
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
-                         this->width, this->height, 0, GL_RED,
-                         GL_UNSIGNED_BYTE, this->image);
+                         this->img.width, this->img.height, 0, GL_RED,
+                         GL_UNSIGNED_BYTE, this->img.data);
         }
         else
         {
             glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                         this->width, this->height, 0, GL_RGBA,
-                         GL_UNSIGNED_BYTE, this->image);
+                         this->img.width, this->img.height, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, this->img.data);
         }
     }
 }
@@ -264,7 +269,7 @@ ui::label::label(ui::context *c, GLuint w, GLuint h)
     : ui::panel::panel(c, w, h), str()
 {
     this->use_text = true;
-    this->image = NULL;
+    this->img.data = NULL;
     this->font = NULL;
     glGenTextures(1, &this->tex);
     glBindTexture(GL_TEXTURE_2D, this->tex);
@@ -281,8 +286,8 @@ ui::label::label(ui::context *c, GLuint w, GLuint h)
 ui::label::~label()
 {
     glDeleteTextures(1, &this->tex);
-    if (this->image != NULL)
-        delete[] this->image;
+    if (this->img.data != NULL)
+        delete[] this->img.data;
     if (this->font != NULL)
         delete this->font;
 }

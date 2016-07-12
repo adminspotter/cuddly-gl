@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Jul 2016, 07:21:48 tquirk
+ *   last updated 11 Jul 2016, 23:17:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,8 @@
 #ifndef __INC_R9_LABEL_H__
 #define __INC_R9_LABEL_H__
 
+#include <string.h>
+
 #include <string>
 
 #include "panel.h"
@@ -39,12 +41,32 @@
 
 namespace ui
 {
+    struct image
+    {
+        unsigned char *data;
+        GLuint width, height, per_pixel;
+
+        image& operator=(const image& i)
+            {
+                GLuint new_size = i.width * i.height * i.per_pixel;
+
+                if (this->data != NULL)
+                    delete[] this->data;
+                this->width = i.width;
+                this->height = i.height;
+                this->per_pixel = i.per_pixel;
+                this->data = new unsigned char[new_size];
+                memcpy(this->data, i.data, new_size);
+                return *this;
+            };
+    };
+
     class label : public panel
     {
       protected:
         bool use_text;
         std::u32string str;
-        unsigned char *image;
+        image img;
         ui::font *font;
         GLuint tex;
 
