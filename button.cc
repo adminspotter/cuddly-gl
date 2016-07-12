@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 09:09:21 tquirk
+ *   last updated 12 Jul 2016, 09:57:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -47,25 +47,31 @@ void ui::button::set_arm_state(GLuint t, void *v)
 
 void ui::button::grow_border(ui::panel *p)
 {
-    for (int i = 0; i < 4; ++i)
+    int i = 1;
+
+    while (i < 16)
     {
         GLuint border;
 
         p->get(ui::element::border, i, &border);
         ++border;
         p->set(ui::element::border, i, &border);
+        i <<= 1;
     }
 }
 
 void ui::button::shrink_border(ui::panel *p)
 {
-    for (int i = 0; i < 4; ++i)
+    int i = 1;
+
+    while (i < 16)
     {
         GLuint border;
 
         p->get(ui::element::border, i, &border);
         border = (border > 1 ? border - 1 : 0);
         p->set(ui::element::border, i, &border);
+        i <<= 1;
     }
 }
 
