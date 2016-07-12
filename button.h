@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 08:14:37 tquirk
+ *   last updated 12 Jul 2016, 10:35:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,6 +44,8 @@ namespace ui
 
         int get_arm_state(GLuint, void *);
         void set_arm_state(GLuint, void *);
+        int get_margin(GLuint, void *);
+        void set_margin(GLuint, void *);
 
         static void grow_border(panel *);
         static void shrink_border(panel *);
