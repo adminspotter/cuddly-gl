@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jul 2016, 10:33:51 tquirk
+ *   last updated 13 Jul 2016, 07:51:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,6 +55,8 @@ namespace ui
     class panel
     {
       protected:
+        const static float no_texture;
+
         typedef struct cb_list_tag
         {
             cb_fptr ptr;

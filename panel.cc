@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 07:15:33 tquirk
+ *   last updated 13 Jul 2016, 07:52:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "panel.h"
+
+const float ui::panel::no_texture = -1000.0;
 
 std::list<ui::panel::cb_list_elem>& ui::panel::which_cb_list(GLuint which)
 {
@@ -238,22 +240,22 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
     vertex[0] = x / vw - 1.0f;
     vertex[1] = y / vh + 1.0f;
     memcpy(&vertex[2], glm::value_ptr(this->background), sizeof(float) * 4);
-    vertex[6] = vertex[7] = -1.0;
+    vertex[6] = vertex[7] = ui::panel::no_texture;
 
     vertex[8] = vertex[0] + (w / vw);
     vertex[9] = vertex[1];
     memcpy(&vertex[10], glm::value_ptr(this->background), sizeof(float) * 4);
-    vertex[14] = vertex[15] = -1.0;
+    vertex[14] = vertex[15] = ui::panel::no_texture;
 
     vertex[16] = vertex[0];
     vertex[17] = vertex[1] + (h / vh);
     memcpy(&vertex[18], glm::value_ptr(this->background), sizeof(float) * 4);
-    vertex[22] = vertex[23] = -1.0;
+    vertex[22] = vertex[23] = ui::panel::no_texture;
 
     vertex[24] = vertex[8];
     vertex[25] = vertex[17];
     memcpy(&vertex[26], glm::value_ptr(this->background), sizeof(float) * 4);
-    vertex[30] = vertex[31] = -1.0;
+    vertex[30] = vertex[31] = ui::panel::no_texture;
     this->vertex_count = 32;
     vert_count = 4;
 
@@ -272,29 +274,29 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
         vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 6] = -1.0;
-        vertex[this->vertex_count + 7] = -1.0;
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 8] = vertex[8] - (m[2] / vw);
         vertex[this->vertex_count + 9] = vertex[this->vertex_count + 1];
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 14] = -1.0;
-        vertex[this->vertex_count + 15] = -1.0;
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 16] = vertex[this->vertex_count];
         vertex[this->vertex_count + 17] = vertex[1] + ((m[0] + b[0]) / vh);
         memcpy(&vertex[this->vertex_count + 18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 22] = -1.0;
-        vertex[this->vertex_count + 23] = -1.0;
+        vertex[this->vertex_count + 22] = ui::panel::no_texture;
+        vertex[this->vertex_count + 23] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 24] = vertex[this->vertex_count + 8];
         vertex[this->vertex_count + 25] = vertex[this->vertex_count + 17];
         memcpy(&vertex[this->vertex_count + 26],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 30] = -1.0;
-        vertex[this->vertex_count + 31] = -1.0;
+        vertex[this->vertex_count + 30] = ui::panel::no_texture;
+        vertex[this->vertex_count + 31] = ui::panel::no_texture;
         this->vertex_count += 32;
         vert_count += 4;
 
@@ -314,30 +316,30 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
         vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 6] = -1.0;
-        vertex[this->vertex_count + 7] = -1.0;
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 8]
             = vertex[this->vertex_count] + (b[1] / vw);
         vertex[this->vertex_count + 9] = vertex[this->vertex_count + 1];
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 14] = -1.0;
-        vertex[this->vertex_count + 15] = -1.0;
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 16] = vertex[this->vertex_count];
         vertex[this->vertex_count + 17] = vertex[17] - (m[3] / vh);
         memcpy(&vertex[this->vertex_count + 18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 22] = -1.0;
-        vertex[this->vertex_count + 23] = -1.0;
+        vertex[this->vertex_count + 22] = ui::panel::no_texture;
+        vertex[this->vertex_count + 23] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 24] = vertex[this->vertex_count + 8];
         vertex[this->vertex_count + 25] = vertex[this->vertex_count + 17];
         memcpy(&vertex[this->vertex_count + 26],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 30] = -1.0;
-        vertex[this->vertex_count + 31] = -1.0;
+        vertex[this->vertex_count + 30] = ui::panel::no_texture;
+        vertex[this->vertex_count + 31] = ui::panel::no_texture;
         this->vertex_count += 32;
         vert_count += 4;
 
@@ -357,30 +359,30 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
         vertex[this->vertex_count + 1] = vertex[1] + (m[0] / vh);
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 6] = -1.0;
-        vertex[this->vertex_count + 7] = -1.0;
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 8]
             = vertex[this->vertex_count] + (b[2] / vw);
         vertex[this->vertex_count + 9] = vertex[this->vertex_count + 1];
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 14] = -1.0;
-        vertex[this->vertex_count + 15] = -1.0;
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 16] = vertex[this->vertex_count];
         vertex[this->vertex_count + 17] = vertex[17] - (m[3] / vh);
         memcpy(&vertex[this->vertex_count + 18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 22] = -1.0;
-        vertex[this->vertex_count + 23] = -1.0;
+        vertex[this->vertex_count + 22] = ui::panel::no_texture;
+        vertex[this->vertex_count + 23] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 24] = vertex[this->vertex_count + 8];
         vertex[this->vertex_count + 25] = vertex[this->vertex_count + 17];
         memcpy(&vertex[this->vertex_count + 26],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 30] = -1.0;
-        vertex[this->vertex_count + 31] = -1.0;
+        vertex[this->vertex_count + 30] = ui::panel::no_texture;
+        vertex[this->vertex_count + 31] = ui::panel::no_texture;
         this->vertex_count += 32;
         vert_count += 4;
 
@@ -400,29 +402,29 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
         vertex[this->vertex_count + 1] = vertex[17] - ((m[3] + b[3]) / vh);
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 6] = -1.0;
-        vertex[this->vertex_count + 7] = -1.0;
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 8] = vertex[8] - (m[2] / vw);
         vertex[this->vertex_count + 9] = vertex[this->vertex_count + 1];
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 14] = -1.0;
-        vertex[this->vertex_count + 15] = -1.0;
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 16] = vertex[this->vertex_count];
         vertex[this->vertex_count + 17] = vertex[17] - (m[3] / vh);
         memcpy(&vertex[this->vertex_count + 18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 22] = -1.0;
-        vertex[this->vertex_count + 23] = -1.0;
+        vertex[this->vertex_count + 22] = ui::panel::no_texture;
+        vertex[this->vertex_count + 23] = ui::panel::no_texture;
 
         vertex[this->vertex_count + 24] = vertex[this->vertex_count + 8];
         vertex[this->vertex_count + 25] = vertex[this->vertex_count + 17];
         memcpy(&vertex[this->vertex_count + 26],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[this->vertex_count + 30] = -1.0;
-        vertex[this->vertex_count + 31] = -1.0;
+        vertex[this->vertex_count + 30] = ui::panel::no_texture;
+        vertex[this->vertex_count + 31] = ui::panel::no_texture;
         this->vertex_count += 32;
         vert_count += 4;
 
