@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Jul 2016, 23:40:43 tquirk
+ *   last updated 14 Jul 2016, 07:08:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -223,6 +223,7 @@ void ui::label::populate_buffers(void)
             + this->margin[0] + this->margin[3]
             + (this->border[0] > 0 ? this->border[0] + 1 : 0)
             + (this->border[3] > 0 ? this->border[3] + 1 : 0);
+        this->parent->move_child(this);
         this->panel::generate_points(vertex, element);
         pw = 1.0f / (float)this->img.width;
         ph = 1.0f / (float)this->img.height;
