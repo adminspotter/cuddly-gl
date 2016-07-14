@@ -10,6 +10,8 @@
 
 #include "ui.h"
 #include "font.h"
+#include "panel.h"
+#include "label.h"
 #include "button.h"
 
 void error_callback(int, const char *);
@@ -23,6 +25,8 @@ void leave_callback(ui::panel *, void *, void *);
 void clicky_callback(ui::panel *, void *, void *);
 
 ui::context *ctx;
+ui::panel *p1;
+ui::label *l1;
 ui::button *b1, *b2;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
@@ -45,12 +49,13 @@ unsigned char colors[6][4] =
     {0, 0, 255, 255},
     {128, 0, 128, 255},
 };
-unsigned char img[72 * 48 * 4];
+ui::image img;
+unsigned char img_data[72 * 48 * 4];
 
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint border = 1, wid = 72, hei = 48, xpos = 100, ypos = 100;
+    GLuint border = 1, wid = 72, hei = 48, xpos, ypos;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
 
     if (glfwInit() == GL_FALSE)
@@ -78,20 +83,50 @@ int main(int argc, char **argv)
     glfwSetMouseButtonCallback(w, mouse_button_callback);
     glfwSetCursorPosCallback(w, mouse_position_callback);
 
+    std::cout << "creating image" << std::endl;
     create_image(wid, hei);
 
+    std::cout << "creating context" << std::endl;
     ctx = new ui::context(800, 600);
+    p1 = new ui::panel(ctx, 50, 50);
+    xpos = 100;
+    ypos = 400;
+    border = 2;
+    p1->set_va(ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &fg2,
+               ui::element::border, ui::side::all, &border,
+               ui::element::margin, ui::side::all, &border,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    l1 = new ui::label(ctx, 0, 0);
+    xpos = 100;
+    ypos = 250;
+    border = 1;
+    l1->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
+               ui::element::string, 0, &greeting,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::border, ui::side::all, &border,
+               ui::element::margin, ui::side::all, &border,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "creating button 1" << std::endl;
     b1 = new ui::button(ctx, 0, 0);
-    b1->set_va(ui::element::size, ui::size::width, &wid,
-               ui::element::size, ui::size::height, &hei,
-               ui::element::bgimage, 0, img,
+    std::cout << "doing setting" << std::endl;
+    border = 5;
+    b1->set_va(ui::element::bgimage, 0, &img,
+               ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1, 0);
+    std::cout << "callbacks" << std::endl;
     b1->add_callback(ui::callback::enter, enter_callback, NULL);
     b1->add_callback(ui::callback::leave, leave_callback, NULL);
+    std::cout << "now for button 2" << std::endl;
     b2 = new ui::button(ctx, 0, 0);
+    xpos = 100;
+    ypos = 100;
     b2->set_va(ui::element::font, 0, new ui::font(font_name, 80, paths),
                ui::element::string, 0, &greeting,
+               ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
@@ -99,6 +134,7 @@ int main(int argc, char **argv)
     b2->add_callback(ui::callback::enter, enter_callback, NULL);
     b2->add_callback(ui::callback::leave, leave_callback, NULL);
     b2->add_callback(ui::callback::down, clicky_callback, NULL);
+    std::cout << "ok, buttons made" << std::endl;
 
     while (!glfwWindowShouldClose(w))
     {
@@ -171,9 +207,13 @@ void create_image(int width, int height)
     for (int i = 0; i < 6; ++i)
         for (int j = 0; j < 8; ++j)
             for (int k = 0; k < width; ++k)
-                memcpy(&img[((height - 1 - (i * 8) - j) * width + k) * 4],
+                memcpy(&img_data[((height - 1 - (i * 8) - j) * width + k) * 4],
                        colors[i],
                        sizeof(unsigned char) * 4);
+    img.data = img_data;
+    img.width = width;
+    img.height = height;
+    img.per_pixel = 4;
 }
 
 /* ARGSUSED */
