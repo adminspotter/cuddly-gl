@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 07:08:02 tquirk
+ *   last updated 15 Jul 2016, 08:20:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -139,6 +139,10 @@ void ui::quadtree::remove(ui::panel *obj)
 void ui::quadtree::clear(void)
 {
     this->contents.clear();
+    if (this->quadrant[0] != NULL) this->quadrant[0]->clear();
+    if (this->quadrant[1] != NULL) this->quadrant[1]->clear();
+    if (this->quadrant[2] != NULL) this->quadrant[2]->clear();
+    if (this->quadrant[3] != NULL) this->quadrant[3]->clear();
 }
 
 ui::panel *ui::quadtree::search(const glm::ivec2& pt)
