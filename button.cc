@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jul 2016, 10:36:59 tquirk
+ *   last updated 15 Jul 2016, 07:59:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -165,10 +165,10 @@ ui::button::button(ui::context *c, GLuint w, GLuint h)
     for (int i = 0; i < 4; ++i)
         this->margin[i] += 2;
 
-    this->add_callback(ui::callback::enter, ui::button::activate, NULL);
-    this->add_callback(ui::callback::leave, ui::button::deactivate, NULL);
-    this->add_callback(ui::callback::down,  ui::button::arm, NULL);
-    this->add_callback(ui::callback::up,    ui::button::disarm, NULL);
+    this->add_callback(ui::callback::enter,     ui::button::activate, NULL);
+    this->add_callback(ui::callback::leave,     ui::button::deactivate, NULL);
+    this->add_callback(ui::callback::btn_down,  ui::button::arm, NULL);
+    this->add_callback(ui::callback::btn_up,    ui::button::disarm, NULL);
 }
 
 ui::button::~button()

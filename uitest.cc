@@ -133,7 +133,7 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     b2->add_callback(ui::callback::enter, enter_callback, NULL);
     b2->add_callback(ui::callback::leave, leave_callback, NULL);
-    b2->add_callback(ui::callback::down, clicky_callback, NULL);
+    b2->add_callback(ui::callback::btn_down, clicky_callback, NULL);
     std::cout << "ok, buttons made" << std::endl;
 
     while (!glfwWindowShouldClose(w))

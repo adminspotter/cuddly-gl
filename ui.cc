@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 06:46:24 tquirk
+ *   last updated 15 Jul 2016, 07:58:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -209,8 +209,8 @@ void ui::context::cursor_btn_callback(int btn, int state)
 
     if (p != NULL)
         p->call_callbacks((state == ui::cursor::up
-                           ? ui::callback::up
-                           : ui::callback::down));
+                           ? ui::callback::btn_up
+                           : ui::callback::btn_down));
 
     this->old_child = p;
 }
