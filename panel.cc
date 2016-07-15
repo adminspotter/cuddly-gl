@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Jul 2016, 23:11:51 tquirk
+ *   last updated 14 Jul 2016, 19:20:23 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -41,12 +41,14 @@ std::list<ui::panel::cb_list_elem>& ui::panel::which_cb_list(GLuint which)
 {
     switch (which)
     {
-      case ui::callback::enter:   return this->enter_cb;
-      case ui::callback::leave:   return this->leave_cb;
+      case ui::callback::enter:     return this->enter_cb;
+      case ui::callback::leave:     return this->leave_cb;
       default:
-      case ui::callback::down:    return this->down_cb;
-      case ui::callback::up:      return this->up_cb;
-      case ui::callback::motion:  return this->motion_cb;
+      case ui::callback::btn_down:  return this->btn_down_cb;
+      case ui::callback::btn_up:    return this->btn_up_cb;
+      case ui::callback::motion:    return this->motion_cb;
+      case ui::callback::key_down:  return this->key_down_cb;
+      case ui::callback::key_up:    return this->key_up_cb;
     }
 }
 
@@ -454,7 +456,8 @@ void ui::panel::populate_buffers(void)
 
 ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
-      enter_cb(), leave_cb(), down_cb(), up_cb(), motion_cb()
+      enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
+      key_down_cb(), key_up_cb()
 {
     GLuint pos_attr, color_attr, texture_attr, temp, x, y;
 

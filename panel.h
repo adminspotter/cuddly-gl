@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Jul 2016, 07:51:15 tquirk
+ *   last updated 14 Jul 2016, 19:15:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -73,7 +73,9 @@ namespace ui
                 };
         }
         cb_list_elem;
-        std::list<cb_list_elem> enter_cb, leave_cb, down_cb, up_cb, motion_cb;
+        std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
+        std::list<cb_list_elem> btn_down_cb, btn_up_cb;
+        std::list<cb_list_elem> key_down_cb, key_up_cb;
 
         std::list<cb_list_elem>& which_cb_list(GLuint);
 
