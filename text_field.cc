@@ -1,6 +1,6 @@
-/* text_field.h                                            -*- C++ -*-
+/* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 18:15:44 tquirk
+ *   last updated 16 Jul 2016, 18:15:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,29 +20,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the text field declaration.  We're subclassing
- * the label, since it already has font handling built in.  We'll be
- * adding keyboard handling and a moving cursor.
+ * This file contains the text field method definitions for the R9 UI
+ * widget set.
  *
  * Things to do
- *   - Determine if we want to add a 'password' flag here, to display
- *     things as asterisks, or have that in a subclass.
  *
  */
 
-#ifndef __INC_R9_TEXT_FIELD_H__
-#define __INC_R9_TEXT_FIELD_H__
+#include "text_field.h"
 
-#include "label.h"
-
-namespace ui
+ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
+    : ui::label::label(c, w, h)
 {
-    class text_field : public label
-    {
-      public:
-        text_field(context *, GLuint = 0, GLuint = 0);
-        virtual ~text_field();
-    };
 }
 
-#endif /* __INC_R9_TEXT_FIELD_H__ */
+ui::text_field::~text_field()
+{
+}
