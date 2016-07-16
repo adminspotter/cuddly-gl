@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Jul 2016, 19:15:57 tquirk
+ *   last updated 16 Jul 2016, 16:51:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -114,7 +114,7 @@ namespace ui
 
         virtual void add_callback(GLuint, cb_fptr, void *);
         virtual void remove_callback(GLuint, cb_fptr, void *);
-        virtual void call_callbacks(GLuint);
+        virtual void call_callbacks(GLuint, void *);
 
         /* The context may change sizes, so it needs to be able to
          * call populate_buffers() in the event of a window resize.

@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Jul 2016, 07:58:41 tquirk
+ *   last updated 16 Jul 2016, 16:54:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -192,11 +192,11 @@ void ui::context::cursor_pos_callback(int x, int y)
     if (p != NULL)
     {
         if (this->old_child == NULL)
-            p->call_callbacks(ui::callback::enter);
-        p->call_callbacks(ui::callback::motion);
+            p->call_callbacks(ui::callback::enter, NULL);
+        p->call_callbacks(ui::callback::motion, NULL);
     }
     else if (this->old_child != NULL)
-        this->old_child->call_callbacks(ui::callback::leave);
+        this->old_child->call_callbacks(ui::callback::leave, NULL);
 
     this->old_child = p;
     this->old_cursor = pos;
@@ -210,7 +210,8 @@ void ui::context::cursor_btn_callback(int btn, int state)
     if (p != NULL)
         p->call_callbacks((state == ui::cursor::up
                            ? ui::callback::btn_up
-                           : ui::callback::btn_down));
+                           : ui::callback::btn_down),
+                          NULL);
 
     this->old_child = p;
 }

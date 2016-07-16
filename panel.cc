@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Jul 2016, 19:20:23 tquirk
+ *   last updated 16 Jul 2016, 16:52:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -601,11 +601,10 @@ void ui::panel::remove_callback(GLuint cb_list, ui::cb_fptr funcptr, void *clien
     l.remove(old_elem);
 }
 
-void ui::panel::call_callbacks(GLuint cb_list)
+void ui::panel::call_callbacks(GLuint cb_list, void *call_data)
 {
     std::list<cb_list_elem>& l = this->which_cb_list(cb_list);
     std::list<cb_list_elem>::iterator i;
-    void *call_data = NULL;
 
     for (i = l.begin(); i != l.end(); ++i)
         (*i)(this, call_data);
