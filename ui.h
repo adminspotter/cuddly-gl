@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 06:46:04 tquirk
+ *   last updated 16 Jul 2016, 17:08:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,6 +44,14 @@ namespace ui
     /* Forward declarations for multi-include problems */
     class quadtree;
     class panel;
+
+    /* Structure to pass into button press/release callback routines */
+    struct btn_callback_call
+    {
+        glm::ivec2 location;
+        GLuint button;
+        GLuint state;
+    };
 
     class context
     {

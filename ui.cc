@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 16:54:21 tquirk
+ *   last updated 16 Jul 2016, 17:07:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -208,10 +208,20 @@ void ui::context::cursor_btn_callback(int btn, int state)
     ui::panel *p = this->tree->search(pos);
 
     if (p != NULL)
-        p->call_callbacks((state == ui::cursor::up
+    {
+        GLuint x, y;
+        struct ui::btn_callback_call call_data;
+
+        p->get_va(ui::element::position, ui::position::x, &x,
+                  ui::element::position, ui::position::y, &y, 0);
+        call_data.location.x = pos.x - x;
+        call_data.location.y = pos.y - y;
+        call_data.button = btn;
+        call_data.state = (state == ui::cursor::up
                            ? ui::callback::btn_up
-                           : ui::callback::btn_down),
-                          NULL);
+                           : ui::callback::btn_down);
+        p->call_callbacks(call_data.state, &call_data);
+    }
 
     this->old_child = p;
 }
