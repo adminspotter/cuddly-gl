@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 18:15:14 tquirk
+ *   last updated 17 Jul 2016, 17:58:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,9 +29,25 @@
 
 #include "text_field.h"
 
+int ui::text_field::get_cursor_pos(GLuint t, void *v)
+{
+    *((GLuint *)v) = this->cursor_pos;
+    return 1;
+}
+
+void ui::text_field::set_cursor_pos(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    if (new_v > this->str.size())
+        new_v = this->str.size();
+    this->cursor_pos = new_v;
+}
+
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
+    this->cursor_pos = 0;
 }
 
 ui::text_field::~text_field()
