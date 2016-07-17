@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 18:03:34 tquirk
+ *   last updated 17 Jul 2016, 18:19:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,6 +42,20 @@ void ui::text_field::set_cursor_pos(GLuint t, void *v)
     if (new_v > this->str.size())
         new_v = this->str.size();
     this->cursor_pos = new_v;
+}
+
+/* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
+int ui::text_field::get_cursor_blink(GLuint t, void *v)
+{
+    *((GLuint *)v) = this->blink;
+    return 1;
+}
+
+void ui::text_field::set_cursor_blink(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    this->blink = new_v;
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)
