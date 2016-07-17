@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 17:58:42 tquirk
+ *   last updated 17 Jul 2016, 18:03:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,6 +42,11 @@ void ui::text_field::set_cursor_pos(GLuint t, void *v)
     if (new_v > this->str.size())
         new_v = this->str.size();
     this->cursor_pos = new_v;
+}
+
+void ui::text_field::set_bgimage(GLuint t, void *v)
+{
+    /* Don't do anything; this doesn't make sense in this widget. */
 }
 
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)

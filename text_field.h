@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 18:16:05 tquirk
+ *   last updated 17 Jul 2016, 18:03:31 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,6 +44,7 @@ namespace ui
 
         int get_cursor_pos(GLuint, void *);
         void set_cursor_pos(GLuint, void *);
+        void set_bgimage(GLuint, void *);
 
       public:
         text_field(context *, GLuint = 0, GLuint = 0);
