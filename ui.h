@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 17:08:00 tquirk
+ *   last updated 17 Jul 2016, 22:32:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -62,8 +62,8 @@ namespace ui
         std::list<panel *> children;
 
         quadtree *tree;
-        /* Previous cursor position and pointed-to child */
-        glm::ivec2 old_cursor;
+        /* Previous mouse position and pointed-to child */
+        glm::ivec2 old_mouse;
         panel *old_child;
 
         const static int tree_max_depth;
@@ -88,8 +88,8 @@ namespace ui
         context& remove_child(panel *);
         context& move_child(panel *);
 
-        void cursor_pos_callback(int, int);
-        void cursor_btn_callback(int, int);
+        void mouse_pos_callback(int, int);
+        void mouse_btn_callback(int, int);
     };
 }
 

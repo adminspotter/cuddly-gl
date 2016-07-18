@@ -172,7 +172,7 @@ void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
 
 void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
 {
-    ctx->cursor_pos_callback((int)xpos, (int)ypos);
+    ctx->mouse_pos_callback((int)xpos, (int)ypos);
 }
 
 void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
@@ -182,24 +182,24 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
     switch (button)
     {
       default:
-      case GLFW_MOUSE_BUTTON_1:  btn = ui::cursor::button0;  break;
-      case GLFW_MOUSE_BUTTON_2:  btn = ui::cursor::button1;  break;
-      case GLFW_MOUSE_BUTTON_3:  btn = ui::cursor::button2;  break;
-      case GLFW_MOUSE_BUTTON_4:  btn = ui::cursor::button3;  break;
-      case GLFW_MOUSE_BUTTON_5:  btn = ui::cursor::button4;  break;
-      case GLFW_MOUSE_BUTTON_6:  btn = ui::cursor::button5;  break;
-      case GLFW_MOUSE_BUTTON_7:  btn = ui::cursor::button6;  break;
-      case GLFW_MOUSE_BUTTON_8:  btn = ui::cursor::button7;  break;
+      case GLFW_MOUSE_BUTTON_1:  btn = ui::mouse::button0;  break;
+      case GLFW_MOUSE_BUTTON_2:  btn = ui::mouse::button1;  break;
+      case GLFW_MOUSE_BUTTON_3:  btn = ui::mouse::button2;  break;
+      case GLFW_MOUSE_BUTTON_4:  btn = ui::mouse::button3;  break;
+      case GLFW_MOUSE_BUTTON_5:  btn = ui::mouse::button4;  break;
+      case GLFW_MOUSE_BUTTON_6:  btn = ui::mouse::button5;  break;
+      case GLFW_MOUSE_BUTTON_7:  btn = ui::mouse::button6;  break;
+      case GLFW_MOUSE_BUTTON_8:  btn = ui::mouse::button7;  break;
     }
 
     switch (action)
     {
       default:
-      case GLFW_PRESS:    act = ui::cursor::down;  break;
-      case GLFW_RELEASE:  act = ui::cursor::up;    break;
+      case GLFW_PRESS:    act = ui::mouse::down;  break;
+      case GLFW_RELEASE:  act = ui::mouse::up;    break;
     }
 
-    ctx->cursor_btn_callback(btn, act);
+    ctx->mouse_btn_callback(btn, act);
 }
 
 void create_image(int width, int height)

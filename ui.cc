@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 17:07:53 tquirk
+ *   last updated 17 Jul 2016, 22:31:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -95,7 +95,7 @@ int ui::context::get_attribute(GLuint t, void *v)
 }
 
 ui::context::context(GLuint w, GLuint h)
-    : children(), old_cursor(0, 0)
+    : children(), old_mouse(0, 0)
 {
     glm::ivec2 ul = {0, 0}, lr = {w, h};
 
@@ -184,7 +184,7 @@ ui::context& ui::context::move_child(ui::panel *p)
     return *this;
 }
 
-void ui::context::cursor_pos_callback(int x, int y)
+void ui::context::mouse_pos_callback(int x, int y)
 {
     glm::ivec2 pos = {x, y};
     ui::panel *p = this->tree->search(pos);
@@ -199,12 +199,12 @@ void ui::context::cursor_pos_callback(int x, int y)
         this->old_child->call_callbacks(ui::callback::leave, NULL);
 
     this->old_child = p;
-    this->old_cursor = pos;
+    this->old_mouse = pos;
 }
 
-void ui::context::cursor_btn_callback(int btn, int state)
+void ui::context::mouse_btn_callback(int btn, int state)
 {
-    glm::ivec2 pos = this->old_cursor;
+    glm::ivec2 pos = this->old_mouse;
     ui::panel *p = this->tree->search(pos);
 
     if (p != NULL)
@@ -217,7 +217,7 @@ void ui::context::cursor_btn_callback(int btn, int state)
         call_data.location.x = pos.x - x;
         call_data.location.y = pos.y - y;
         call_data.button = btn;
-        call_data.state = (state == ui::cursor::up
+        call_data.state = (state == ui::mouse::up
                            ? ui::callback::btn_up
                            : ui::callback::btn_down);
         p->call_callbacks(call_data.state, &call_data);
