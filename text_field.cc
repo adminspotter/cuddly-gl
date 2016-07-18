@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 18:19:58 tquirk
+ *   last updated 17 Jul 2016, 22:49:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -67,8 +67,48 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
     this->cursor_pos = 0;
+    this->blink = 250;
 }
 
 ui::text_field::~text_field()
 {
+}
+
+int ui::text_field::get(GLuint e, GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (e)
+    {
+      case ui::element::cursor:
+        switch (t)
+        {
+          case ui::cursor::position:  return this->get_cursor_pos(t, v);
+          case ui::cursor::blink:     return this->get_cursor_blink(t, v);
+        }
+      default:                        return ui::label::get(e, t, v);
+    }
+}
+
+void ui::text_field::set(GLuint e, GLuint t, void *v)
+{
+    switch (e)
+    {
+      case ui::element::cursor:
+        switch (t)
+        {
+          case ui::cursor::position:  this->set_cursor_pos(t, v);   break;
+          case ui::cursor::blink:     this->set_cursor_blink(t, v); break;
+        }
+        break;
+
+      default:
+        ui::label::set(e, t, v);
+        break;
+    }
+}
+
+void ui::text_field::draw(void)
+{
+    ui::label::draw();
 }

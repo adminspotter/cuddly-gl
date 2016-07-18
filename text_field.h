@@ -51,6 +51,11 @@ namespace ui
       public:
         text_field(context *, GLuint = 0, GLuint = 0);
         virtual ~text_field();
+
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
+
+        virtual void draw(void);
     };
 }
 
