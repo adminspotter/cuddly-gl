@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Jul 2016, 07:20:26 tquirk
+ *   last updated 18 Jul 2016, 22:29:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,6 +59,7 @@
 #include <algorithm>
 
 #include "font.h"
+#include FT_GLYPH_H
 
 #include "../configdata.h"
 #include "../l10n.h"
@@ -182,6 +183,30 @@ void ui::font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
         k->x = k->y = 0;
 }
 
+void ui::font::get_max_glyph_box(void)
+{
+    FT_ULong code;
+    FT_UInt index;
+    FT_Glyph g;
+    FT_BBox bbox;
+    FT_Pos w = 0, a = 0, d = 0;
+
+    code = FT_Get_First_Char(this->face, &index);
+    while (index != 0)
+    {
+        FT_Load_Glyph(this->face, index, FT_LOAD_DEFAULT);
+        FT_Get_Glyph(this->face->glyph, &g);
+        FT_Glyph_Get_CBox(g, FT_GLYPH_BBOX_TRUNCATE, &bbox);
+        w = std::max(w, bbox.xMax - bbox.xMin);
+        a = std::max(a, bbox.yMax);
+        d = std::min(d, bbox.yMin);
+        FT_Done_Glyph(g);
+        code = FT_Get_Next_Char(this->face, code, &index);
+    }
+    this->bbox_w = (int)w;
+    this->bbox_h = (int)(a - d);
+}
+
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -237,12 +262,19 @@ ui::font::font(std::string& font_name,
     if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
         throw std::runtime_error(_("Could not load font ") + font_name);
     FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
+    this->get_max_glyph_box();
 }
 
 ui::font::~font()
 {
     FT_Done_Face(this->face);
     cleanup_freetype();
+}
+
+void ui::font::max_cell_size(int *w, int *h)
+{
+    *w = this->bbox_w;
+    *h = this->bbox_h;
 }
 
 struct ui::glyph& ui::font::operator[](FT_ULong code)
