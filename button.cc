@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jul 2016, 09:52:18 tquirk
+ *   last updated 24 Jul 2016, 10:02:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -103,7 +103,6 @@ void ui::button::grow_border(void)
         ++this->border[i];
         this->margin[i] = (this->margin[i] > 1 ? this->margin[i] - 1 : 0);
     }
-    this->populate_buffers();
 }
 
 void ui::button::shrink_border(void)
@@ -113,7 +112,6 @@ void ui::button::shrink_border(void)
         this->border[i] = (this->border[i] > 1 ? this->border[i] - 1 : 0);
         ++this->margin[i];
     }
-    this->populate_buffers();
 }
 
 /* ARGSUSED */
