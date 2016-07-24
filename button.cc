@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jul 2016, 09:48:55 tquirk
+ *   last updated 24 Jul 2016, 09:52:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,6 +45,10 @@ int ui::button::get_active_state(GLuint t, void *v)
 void ui::button::set_active_state(GLuint t, void *v)
 {
     this->active = *((bool *)v);
+    if (this->active)
+        this->grow_border();
+    else
+        this->shrink_border();
 }
 
 /* ARGSUSED */
@@ -58,42 +62,10 @@ int ui::button::get_arm_state(GLuint t, void *v)
 void ui::button::set_arm_state(GLuint t, void *v)
 {
     this->armed = *((bool *)v);
-}
-
-void ui::button::grow_border(ui::panel *p)
-{
-    int i = 1;
-
-    while (i < 16)
-    {
-        GLuint border, margin;
-
-        p->get_va(ui::element::border, i, &border,
-                  ui::element::margin, i, &margin, 0);
-        ++border;
-        margin = (margin > 1 ? margin - 1 : 0);
-        p->set_va(ui::element::border, i, &border,
-                  ui::element::margin, i, &margin, 0);
-        i <<= 1;
-    }
-}
-
-void ui::button::shrink_border(ui::panel *p)
-{
-    int i = 1;
-
-    while (i < 16)
-    {
-        GLuint border, margin;
-
-        p->get_va(ui::element::border, i, &border,
-                  ui::element::margin, i, &margin, 0);
-        border = (border > 1 ? border - 1 : 0);
-        ++margin;
-        p->set_va(ui::element::border, i, &border,
-                  ui::element::margin, i, &margin, 0);
-        i <<= 1;
-    }
+    if (this->armed)
+        this->grow_border();
+    else
+        this->shrink_border();
 }
 
 void ui::button::set_margin(GLuint s, void *v)
@@ -122,6 +94,26 @@ void ui::button::set_margin(GLuint s, void *v)
             if (s & ui::side::right)
                 this->margin[2] = std::max(new_v, min_val);
         }
+}
+
+void ui::button::grow_border(void)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        ++this->border[i];
+        this->margin[i] = (this->margin[i] > 1 ? this->margin[i] - 1 : 0);
+    }
+    this->populate_buffers();
+}
+
+void ui::button::shrink_border(void)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        this->border[i] = (this->border[i] > 1 ? this->border[i] - 1 : 0);
+        ++this->margin[i];
+    }
+    this->populate_buffers();
 }
 
 /* ARGSUSED */

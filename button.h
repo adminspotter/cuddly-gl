@@ -48,8 +48,9 @@ namespace ui
         void set_arm_state(GLuint, void *);
         void set_margin(GLuint, void *);
 
-        static void grow_border(panel *);
-        static void shrink_border(panel *);
+        void grow_border(void);
+        void shrink_border(void);
+
         static void activate(panel *, void *, void *);
         static void deactivate(panel *, void *, void *);
         static void arm(panel *, void *, void *);

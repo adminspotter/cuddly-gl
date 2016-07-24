@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     std::cout << "creating button 1" << std::endl;
     b1 = new ui::button(ctx, 0, 0);
     std::cout << "doing setting" << std::endl;
-    border = 5;
+    border = 0;
     b1->set_va(ui::element::bgimage, 0, &img,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
@@ -124,6 +124,7 @@ int main(int argc, char **argv)
     b2 = new ui::button(ctx, 0, 0);
     xpos = 100;
     ypos = 100;
+    border = 5;
     b2->set_va(ui::element::font, 0, new ui::font(font_name, 80, paths),
                ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
