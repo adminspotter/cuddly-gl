@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Jul 2016, 07:59:15 tquirk
+ *   last updated 24 Jul 2016, 09:48:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -30,7 +30,22 @@
  *
  */
 
+#include <algorithm>
+
 #include "button.h"
+
+/* ARGSUSED */
+int ui::button::get_active_state(GLuint t, void *v)
+{
+    *((bool *)v) = this->active;
+    return 0;
+}
+
+/* ARGSUSED */
+void ui::button::set_active_state(GLuint t, void *v)
+{
+    this->active = *((bool *)v);
+}
 
 /* ARGSUSED */
 int ui::button::get_arm_state(GLuint t, void *v)
@@ -81,32 +96,20 @@ void ui::button::shrink_border(ui::panel *p)
     }
 }
 
-int ui::button::get_margin(GLuint t, void *v)
-{
-    int ret = 0;
-
-    switch (t)
-    {
-      case ui::side::top:    *((GLuint *)v) = this->margin[0] - 2; break;
-      case ui::side::left:   *((GLuint *)v) = this->margin[1] - 2; break;
-      case ui::side::right:  *((GLuint *)v) = this->margin[2] - 2; break;
-      case ui::side::bottom: *((GLuint *)v) = this->margin[3] - 2; break;
-      default:               ret = 1;                              break;
-    }
-    return ret;
-}
-
 void ui::button::set_margin(GLuint s, void *v)
 {
     GLuint new_v = *((GLuint *)v);
+    GLuint min_val = (this->active ? 0 : 1) + (this->armed ? 0 : 1);
 
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
             + (s & ui::side::top ? new_v : this->margin[0])
             + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->height)
         {
-            if (s & ui::side::top)     this->margin[0] = new_v + 2;
-            if (s & ui::side::bottom)  this->margin[3] = new_v + 2;
+            if (s & ui::side::top)
+                this->margin[0] = std::max(new_v, min_val);
+            if (s & ui::side::bottom)
+                this->margin[3] = std::max(new_v, min_val);
         }
 
     if (s & ui::side::left || s & ui::side::right)
@@ -114,26 +117,27 @@ void ui::button::set_margin(GLuint s, void *v)
             + (s & ui::side::left ? new_v : this->margin[1])
             + (s & ui::side::right ? new_v : this->margin[2]) <= this->width)
         {
-            if (s & ui::side::left)    this->margin[1] = new_v + 2;
-            if (s & ui::side::right)   this->margin[2] = new_v + 2;
+            if (s & ui::side::left)
+                this->margin[1] = std::max(new_v, min_val);
+            if (s & ui::side::right)
+                this->margin[2] = std::max(new_v, min_val);
         }
 }
 
 /* ARGSUSED */
 void ui::button::activate(ui::panel *p, void *call, void *client)
 {
-    ui::button::grow_border(p);
+    bool active = true;
+
+    p->set(ui::element::active, 0, &active);
 }
 
 /* ARGSUSED */
 void ui::button::deactivate(ui::panel *p, void *call, void *client)
 {
-    /* p knows whether it's armed or not, so this call will never be
-     * inappropriate.
-     */
-    ui::button::disarm(p, NULL, NULL);
+    bool active = false;
 
-    ui::button::shrink_border(p);
+    p->set(ui::element::active, 0, &active);
 }
 
 void ui::button::arm(ui::panel *p, void *call, void *client)
@@ -141,20 +145,13 @@ void ui::button::arm(ui::panel *p, void *call, void *client)
     bool armed = true;
 
     p->set(ui::element::arm, 0, &armed);
-    ui::button::grow_border(p);
 }
 
 void ui::button::disarm(ui::panel *p, void *call, void *client)
 {
-    bool is_armed;
+    bool is_armed = false;
 
-    p->get(ui::element::arm, 0, &is_armed);
-    if (is_armed)
-    {
-        is_armed = false;
-        p->set(ui::element::arm, 0, &is_armed);
-        ui::button::shrink_border(p);
-    }
+    p->set(ui::element::arm, 0, &is_armed);
 }
 
 ui::button::button(ui::context *c, GLuint w, GLuint h)
@@ -163,7 +160,8 @@ ui::button::button(ui::context *c, GLuint w, GLuint h)
     this->armed = false;
 
     for (int i = 0; i < 4; ++i)
-        this->margin[i] += 2;
+        this->margin[i] = std::max(this->margin[i], 2u);
+    this->populate_buffers();
 
     this->add_callback(ui::callback::enter,     ui::button::activate, NULL);
     this->add_callback(ui::callback::leave,     ui::button::deactivate, NULL);
@@ -179,8 +177,9 @@ int ui::button::get(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
-      case ui::element::arm:  return this->get_arm_state(t, v);
-      default:                return ui::label::get(e, t, v);
+      case ui::element::active:  return this->get_active_state(t, v);
+      case ui::element::arm:     return this->get_arm_state(t, v);
+      default:                   return ui::label::get(e, t, v);
     }
 }
 
@@ -188,8 +187,14 @@ void ui::button::set(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
+      case ui::element::active:
+        this->set_active_state(t, v);
+        this->populate_buffers();
+        break;
+
       case ui::element::arm:
         this->set_arm_state(t, v);
+        this->populate_buffers();
         break;
 
       default:

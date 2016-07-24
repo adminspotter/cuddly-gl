@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Jul 2016, 10:35:58 tquirk
+ *   last updated 24 Jul 2016, 09:33:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,11 +40,12 @@ namespace ui
     class button : public label
     {
       protected:
-        bool armed;
+        bool active, armed;
 
+        int get_active_state(GLuint, void *);
+        void set_active_state(GLuint, void *);
         int get_arm_state(GLuint, void *);
         void set_arm_state(GLuint, void *);
-        int get_margin(GLuint, void *);
         void set_margin(GLuint, void *);
 
         static void grow_border(panel *);
