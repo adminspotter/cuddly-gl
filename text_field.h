@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 18:13:01 tquirk
+ *   last updated 25 Jul 2016, 07:24:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,12 +40,14 @@ namespace ui
     class text_field : public label
     {
       protected:
-        GLuint cursor_pos, blink;
+        GLuint cursor_pos, blink, max_length;
 
         int get_cursor_pos(GLuint, void *);
         void set_cursor_pos(GLuint, void *);
         int get_cursor_blink(GLuint, void *);
         void set_cursor_blink(GLuint, void *);
+        int get_max_size(GLuint, void *);
+        void set_max_size(GLuint, void *);
         void set_bgimage(GLuint, void *);
 
       public:

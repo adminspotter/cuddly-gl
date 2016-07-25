@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 22:49:27 tquirk
+ *   last updated 25 Jul 2016, 07:34:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,9 +53,36 @@ int ui::text_field::get_cursor_blink(GLuint t, void *v)
 
 void ui::text_field::set_cursor_blink(GLuint t, void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    this->blink = *((GLuint *)v);
+}
 
-    this->blink = new_v;
+int ui::text_field::get_max_size(GLuint t, void *v)
+{
+    int ret = 0;
+
+    if (t == ui::size::width)
+    {
+        *((GLuint *)v) = this->max_length;
+        ret = 1;
+    }
+    return ret;
+}
+
+void ui::text_field::set_max_size(GLuint t, void *v)
+{
+    if (this->font != NULL)
+    {
+        int mw, mh;
+
+        this->font->max_cell_size(&mw, &mh);
+
+        if (t == ui::size::width)
+        {
+            this->max_length = *(int *)v;
+            this->width = mw * this->max_length;
+            this->height = mh;
+        }
+    }
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)
@@ -68,6 +95,7 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
 {
     this->cursor_pos = 0;
     this->blink = 250;
+    this->max_length = 20;
 }
 
 ui::text_field::~text_field()
@@ -86,6 +114,7 @@ int ui::text_field::get(GLuint e, GLuint t, void *v)
           case ui::cursor::position:  return this->get_cursor_pos(t, v);
           case ui::cursor::blink:     return this->get_cursor_blink(t, v);
         }
+      case ui::element::max_size:     return this->get_max_size(t, v);
       default:                        return ui::label::get(e, t, v);
     }
 }
@@ -100,6 +129,10 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
           case ui::cursor::position:  this->set_cursor_pos(t, v);   break;
           case ui::cursor::blink:     this->set_cursor_blink(t, v); break;
         }
+        break;
+
+      case ui::element::max_size:
+        this->set_max_size(t, v);
         break;
 
       default:
