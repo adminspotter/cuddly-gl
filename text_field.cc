@@ -115,9 +115,16 @@ void ui::text_field::insert_char(uint32_t c)
     this->str.insert(this->cursor_pos++, 1, c);
 }
 
-void ui::text_field::remove_char(void)
+void ui::text_field::remove_previous_char(void)
 {
-    this->str.erase(this->cursor_pos--, 1);
+    if (this->cursor_pos > 0)
+        this->str.erase(--this->cursor_pos, 1);
+}
+
+void ui::text_field::remove_next_char(void)
+{
+    if (this->cursor_pos < this->str.size())
+        this->str.erase(this->cursor_pos, 1);
 }
 
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)

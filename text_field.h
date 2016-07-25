@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Jul 2016, 07:42:47 tquirk
+ *   last updated 25 Jul 2016, 07:49:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,7 +55,8 @@ namespace ui
         void next_char(void);
         void last_char(void);
         void insert_char(uint32_t);
-        void remove_char(void);
+        void remove_previous_char(void);
+        void remove_next_char(void);
 
       public:
         text_field(context *, GLuint = 0, GLuint = 0);
