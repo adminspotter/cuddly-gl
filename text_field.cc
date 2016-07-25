@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Jul 2016, 07:34:10 tquirk
+ *   last updated 25 Jul 2016, 07:55:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -88,6 +88,36 @@ void ui::text_field::set_max_size(GLuint t, void *v)
 void ui::text_field::set_bgimage(GLuint t, void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
+}
+
+void ui::text_field::first_char(void)
+{
+    this->cursor_pos = 0;
+}
+
+void ui::text_field::previous_char(void)
+{
+    this->cursor_pos = std::max(0u, this->cursor_pos - 1);
+}
+
+void ui::text_field::next_char(void)
+{
+    this->cursor_pos = std::min((GLuint)this->str.size(), this->cursor_pos + 1);
+}
+
+void ui::text_field::last_char(void)
+{
+    this->cursor_pos = this->str.size();
+}
+
+void ui::text_field::insert_char(uint32_t c)
+{
+    this->str.insert(this->cursor_pos++, 1, c);
+}
+
+void ui::text_field::remove_char(void)
+{
+    this->str.erase(this->cursor_pos--, 1);
 }
 
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
