@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Jul 2016, 22:26:45 tquirk
+ *   last updated 26 Jul 2016, 18:04:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -92,7 +92,6 @@ namespace ui
         void kern(FT_ULong, FT_ULong, FT_Vector *);
 
         void get_max_glyph_box(void);
-        void get_string_size(const std::u32string&, std::vector<int>&);
 
       public:
         font(std::string&, int, std::vector<std::string>&);
@@ -102,6 +101,7 @@ namespace ui
 
         struct glyph& operator[](FT_ULong);
 
+        void get_string_size(const std::u32string&, std::vector<int>&);
         unsigned char *render_string(const std::u32string&,
                                      unsigned int&,
                                      unsigned int&);

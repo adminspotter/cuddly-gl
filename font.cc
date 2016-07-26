@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Jul 2016, 22:29:46 tquirk
+ *   last updated 26 Jul 2016, 18:04:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -207,6 +207,41 @@ void ui::font::get_max_glyph_box(void)
     this->bbox_h = (int)(a - d);
 }
 
+ui::font::font(std::string& font_name,
+           int pixel_size,
+           std::vector<std::string>& paths)
+    : glyphs(font_name + " glyphs")
+{
+    FT_Library *lib = init_freetype();
+    std::string font_path = this->search_path(font_name, paths);
+
+    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
+        throw std::runtime_error(_("Could not load font ") + font_name);
+    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
+    this->get_max_glyph_box();
+}
+
+ui::font::~font()
+{
+    FT_Done_Face(this->face);
+    cleanup_freetype();
+}
+
+void ui::font::max_cell_size(int *w, int *h)
+{
+    *w = this->bbox_w;
+    *h = this->bbox_h;
+}
+
+struct ui::glyph& ui::font::operator[](FT_ULong code)
+{
+    ui::glyph& g = this->glyphs[code];
+
+    if (g.bitmap == NULL)
+        this->load_glyph(code);
+    return g;
+}
+
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -249,41 +284,6 @@ void ui::font::get_string_size(const std::u32string& str,
         req_size[1] = std::max(req_size[1], g.top);
         req_size[2] = std::max(req_size[2], g.height - g.top);
     }
-}
-
-ui::font::font(std::string& font_name,
-           int pixel_size,
-           std::vector<std::string>& paths)
-    : glyphs(font_name + " glyphs")
-{
-    FT_Library *lib = init_freetype();
-    std::string font_path = this->search_path(font_name, paths);
-
-    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
-        throw std::runtime_error(_("Could not load font ") + font_name);
-    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
-    this->get_max_glyph_box();
-}
-
-ui::font::~font()
-{
-    FT_Done_Face(this->face);
-    cleanup_freetype();
-}
-
-void ui::font::max_cell_size(int *w, int *h)
-{
-    *w = this->bbox_w;
-    *h = this->bbox_h;
-}
-
-struct ui::glyph& ui::font::operator[](FT_ULong code)
-{
-    ui::glyph& g = this->glyphs[code];
-
-    if (g.bitmap == NULL)
-        this->load_glyph(code);
-    return g;
 }
 
 unsigned char *ui::font::render_string(const std::u32string& str,
