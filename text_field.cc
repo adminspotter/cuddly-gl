@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Jul 2016, 07:55:58 tquirk
+ *   last updated 26 Jul 2016, 08:36:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -26,6 +26,8 @@
  * Things to do
  *
  */
+
+#include <ratio>
 
 #include "text_field.h"
 
@@ -133,6 +135,8 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     this->cursor_pos = 0;
     this->blink = 250;
     this->max_length = 20;
+    this->cursor_clock = std::chrono::high_resolution_clock::now();
+    this->cursor_visible = true;
 }
 
 ui::text_field::~text_field()
@@ -180,5 +184,16 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
 
 void ui::text_field::draw(void)
 {
+    std::chrono::high_resolution_clock::time_point now
+        = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<GLuint, std::milli> ms
+        = std::chrono::duration_cast<std::chrono::milliseconds>
+        (now - this->cursor_clock);
+
+    if (ms.count() >= this->blink)
+    {
+        this->cursor_visible = !this->cursor_visible;
+        this->cursor_clock = now;
+    }
     ui::label::draw();
 }

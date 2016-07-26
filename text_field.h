@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Jul 2016, 07:49:02 tquirk
+ *   last updated 26 Jul 2016, 07:49:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,6 +33,8 @@
 #ifndef __INC_R9_TEXT_FIELD_H__
 #define __INC_R9_TEXT_FIELD_H__
 
+#include <chrono>
+
 #include "label.h"
 
 namespace ui
@@ -41,6 +43,8 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
+        std::chrono::high_resolution_clock::time_point cursor_clock;
+        bool cursor_visible;
 
         int get_cursor_pos(GLuint, void *);
         void set_cursor_pos(GLuint, void *);
