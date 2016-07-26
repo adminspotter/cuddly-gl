@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jul 2016, 22:31:42 tquirk
+ *   last updated 26 Jul 2016, 18:50:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -220,6 +220,31 @@ void ui::context::mouse_btn_callback(int btn, int state)
         call_data.state = (state == ui::mouse::up
                            ? ui::callback::btn_up
                            : ui::callback::btn_down);
+        p->call_callbacks(call_data.state, &call_data);
+    }
+
+    this->old_child = p;
+}
+
+void ui::context::key_callback(int key, int state, int mods)
+{
+    glm::ivec2 pos = this->old_mouse;
+    ui::panel *p = this->tree->search(pos);
+
+    if (p != NULL)
+    {
+        GLuint x, y;
+        struct ui::key_callback_call call_data;
+
+        p->get_va(ui::element::position, ui::position::x, &x,
+                  ui::element::position, ui::position::y, &y, 0);
+        call_data.location.x = pos.x - x;
+        call_data.location.y = pos.y - y;
+        call_data.key = key;
+        call_data.state = (state == ui::key::up
+                           ? ui::callback::key_up
+                           : ui::callback::key_down);
+        call_data.mods = mods;
         p->call_callbacks(call_data.state, &call_data);
     }
 

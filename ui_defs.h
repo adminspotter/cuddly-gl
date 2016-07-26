@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Jul 2016, 07:30:50 tquirk
+ *   last updated 26 Jul 2016, 18:53:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -84,6 +84,11 @@ namespace ui
     {
         const int button0 = 0, button1 = 1, button2 = 2, button3 = 3;
         const int button4 = 4, button5 = 5, button6 = 6, button7 = 7;
+        const int down = 254, up = 255;
+    }
+
+    namespace key
+    {
         const int down = 254, up = 255;
     }
 
