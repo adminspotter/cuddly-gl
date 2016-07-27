@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 07:49:03 tquirk
+ *   last updated 27 Jul 2016, 07:13:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -43,6 +43,7 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
+        GLuint cursor_vao, cursor_vbo;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible;
 
