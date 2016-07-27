@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 18:50:24 tquirk
+ *   last updated 27 Jul 2016, 07:17:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -186,17 +186,27 @@ ui::context& ui::context::move_child(ui::panel *p)
 
 void ui::context::mouse_pos_callback(int x, int y)
 {
-    glm::ivec2 pos = {x, y};
+    glm::ivec2 pos = {x, y}, obj;
+    ui::mouse_call_data call_data;
     ui::panel *p = this->tree->search(pos);
 
     if (p != NULL)
     {
+        p->get_va(ui::element::position, ui::position::x, &obj.x,
+                  ui::element::position, ui::position::y, &obj.y, 0);
+        call_data.location = pos - obj;
         if (this->old_child == NULL)
-            p->call_callbacks(ui::callback::enter, NULL);
-        p->call_callbacks(ui::callback::motion, NULL);
+            p->call_callbacks(ui::callback::enter, &call_data);
+        p->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
-        this->old_child->call_callbacks(ui::callback::leave, NULL);
+    {
+        this->old_child->get_va(ui::element::position, ui::position::x, &obj.x,
+                                ui::element::position, ui::position::y, &obj.y,
+                                0);
+        call_data.location = pos - obj;
+        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+    }
 
     this->old_child = p;
     this->old_mouse = pos;
@@ -204,18 +214,16 @@ void ui::context::mouse_pos_callback(int x, int y)
 
 void ui::context::mouse_btn_callback(int btn, int state)
 {
-    glm::ivec2 pos = this->old_mouse;
-    ui::panel *p = this->tree->search(pos);
+    ui::panel *p = this->tree->search(this->old_mouse);
 
     if (p != NULL)
     {
-        GLuint x, y;
-        struct ui::btn_callback_call call_data;
+        glm::ivec2 obj;
+        ui::btn_call_data call_data;
 
-        p->get_va(ui::element::position, ui::position::x, &x,
-                  ui::element::position, ui::position::y, &y, 0);
-        call_data.location.x = pos.x - x;
-        call_data.location.y = pos.y - y;
+        p->get_va(ui::element::position, ui::position::x, &obj.x,
+                  ui::element::position, ui::position::y, &obj.y, 0);
+        call_data.location = this->old_mouse - obj;
         call_data.button = btn;
         call_data.state = (state == ui::mouse::up
                            ? ui::callback::btn_up
@@ -228,18 +236,16 @@ void ui::context::mouse_btn_callback(int btn, int state)
 
 void ui::context::key_callback(int key, int state, int mods)
 {
-    glm::ivec2 pos = this->old_mouse;
-    ui::panel *p = this->tree->search(pos);
+    ui::panel *p = this->tree->search(this->old_mouse);
 
     if (p != NULL)
     {
-        GLuint x, y;
-        struct ui::key_callback_call call_data;
+        glm::ivec2 obj;
+        ui::key_call_data call_data;
 
-        p->get_va(ui::element::position, ui::position::x, &x,
-                  ui::element::position, ui::position::y, &y, 0);
-        call_data.location.x = pos.x - x;
-        call_data.location.y = pos.y - y;
+        p->get_va(ui::element::position, ui::position::x, &obj.x,
+                  ui::element::position, ui::position::y, &obj.y, 0);
+        call_data.location = this->old_mouse - obj;
         call_data.key = key;
         call_data.state = (state == ui::key::up
                            ? ui::callback::key_up

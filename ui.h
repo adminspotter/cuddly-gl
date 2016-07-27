@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 18:46:26 tquirk
+ *   last updated 26 Jul 2016, 23:49:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,21 +45,31 @@ namespace ui
     class quadtree;
     class panel;
 
-    /* Structure to pass into button press/release callback routines */
-    struct btn_callback_call
+    /* Mouse motion callback routines */
+    typedef struct mouse_callback_call
+    {
+        glm::ivec2 location;
+    }
+    mouse_call_data;
+
+    /* Button press/release callback routines */
+    typedef struct btn_callback_call
     {
         glm::ivec2 location;
         GLuint button;
         GLuint state;
-    };
+    }
+    btn_call_data;
 
-    struct key_callback_call
+    /* Key press/release callback routines */
+    typedef struct key_callback_call
     {
         glm::ivec2 location;
         GLuint key;
         GLuint state;
         GLuint mods;
-    };
+    }
+    key_call_data;
 
     class context
     {
