@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2016, 07:10:10 tquirk
+ *   last updated 28 Jul 2016, 07:51:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -72,19 +72,8 @@ int ui::text_field::get_max_size(GLuint t, void *v)
 
 void ui::text_field::set_max_size(GLuint t, void *v)
 {
-    if (this->font != NULL)
-    {
-        int mw, mh;
-
-        this->font->max_cell_size(&mw, &mh);
-
-        if (t == ui::size::width)
-        {
-            this->max_length = *(int *)v;
-            this->width = mw * this->max_length;
-            this->height = mh;
-        }
-    }
+    if (t == ui::size::width)
+        this->max_length = *(int *)v;
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)
@@ -164,6 +153,22 @@ void ui::text_field::generate_cursor(void)
 
 void ui::text_field::generate_string(void)
 {
+    if (this->font != NULL && this->img.data != NULL)
+    {
+        float vertex[160];
+        GLuint element[60];
+        int mw, mh;
+
+        this->font->max_cell_size(&mw, &mh);
+
+        this->width = (mw * this->max_length)
+            + this->margin[1] + this->margin[2]
+            + this->border[1] + this->border[2] + 2;
+        this->height = mh
+            + this->margin[0] + this->margin[3]
+            + this->border[0] + this->border[3] + 2;
+        this->panel::generate_points(vertex, element);
+    }
 }
 
 void ui::text_field::populate_buffers(void)
