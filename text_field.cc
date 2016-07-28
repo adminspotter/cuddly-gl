@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Jul 2016, 07:14:51 tquirk
+ *   last updated 28 Jul 2016, 07:06:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -92,6 +92,24 @@ void ui::text_field::set_bgimage(GLuint t, void *v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
+void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+    ui::key_call_data *c = (ui::key_call_data *)call;
+
+    if (t == NULL)
+        return;
+    switch (c->key)
+    {
+      case ui::key::l_arrow:  t->previous_char();         break;
+      case ui::key::r_arrow:  t->next_char();             break;
+      case ui::key::home:     t->first_char();            break;
+      case ui::key::end:      t->last_char();             break;
+      case ui::key::bkspc:    t->remove_previous_char();  break;
+      case ui::key::del:      t->remove_next_char();      break;
+    }
+}
+
 void ui::text_field::first_char(void)
 {
     this->cursor_pos = 0;
@@ -139,6 +157,9 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     this->max_length = 20;
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
+    this->add_callback(ui::callback::key_down,
+                       ui::text_field::key_callback,
+                       NULL);
 
     this->parent->get(ui::element::attribute,
                       ui::attribute::position,
