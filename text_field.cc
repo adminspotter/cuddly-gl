@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2016, 07:06:41 tquirk
+ *   last updated 28 Jul 2016, 07:10:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -113,38 +113,63 @@ void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
 void ui::text_field::first_char(void)
 {
     this->cursor_pos = 0;
+    this->generate_cursor();
 }
 
 void ui::text_field::previous_char(void)
 {
     this->cursor_pos = std::max(0u, this->cursor_pos - 1);
+    this->generate_cursor();
 }
 
 void ui::text_field::next_char(void)
 {
     this->cursor_pos = std::min((GLuint)this->str.size(), this->cursor_pos + 1);
+    this->generate_cursor();
 }
 
 void ui::text_field::last_char(void)
 {
     this->cursor_pos = this->str.size();
+    this->generate_cursor();
 }
 
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->populate_buffers();
 }
 
 void ui::text_field::remove_previous_char(void)
 {
     if (this->cursor_pos > 0)
+    {
         this->str.erase(--this->cursor_pos, 1);
+        this->populate_buffers();
+    }
 }
 
 void ui::text_field::remove_next_char(void)
 {
     if (this->cursor_pos < this->str.size())
+    {
         this->str.erase(this->cursor_pos, 1);
+        this->generate_string();
+    }
+}
+
+void ui::text_field::generate_cursor(void)
+{
+}
+
+void ui::text_field::generate_string(void)
+{
+}
+
+void ui::text_field::populate_buffers(void)
+{
+    this->generate_string();
+    this->generate_cursor();
 }
 
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
@@ -178,6 +203,8 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     glEnableVertexAttribArray(color_attr);
     glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 6, (void *)(sizeof(float) * 2));
+
+    this->populate_buffers();
 }
 
 ui::text_field::~text_field()
@@ -213,10 +240,12 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
           case ui::cursor::position:  this->set_cursor_pos(t, v);   break;
           case ui::cursor::blink:     this->set_cursor_blink(t, v); break;
         }
+        this->generate_cursor();
         break;
 
       case ui::element::max_size:
         this->set_max_size(t, v);
+        this->populate_buffers();
         break;
 
       default:

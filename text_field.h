@@ -65,6 +65,10 @@ namespace ui
         void remove_previous_char(void);
         void remove_next_char(void);
 
+        void generate_cursor(void);
+        void generate_string(void);
+        virtual void populate_buffers(void);
+
       public:
         text_field(context *, GLuint = 0, GLuint = 0);
         virtual ~text_field();
