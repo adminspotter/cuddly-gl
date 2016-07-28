@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2016, 07:51:04 tquirk
+ *   last updated 28 Jul 2016, 08:09:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -28,6 +28,8 @@
  */
 
 #include <ratio>
+
+#include <glm/gtc/type_ptr.hpp>
 
 #include "text_field.h"
 
@@ -155,19 +157,73 @@ void ui::text_field::generate_string(void)
 {
     if (this->font != NULL && this->img.data != NULL)
     {
-        float vertex[160];
+        float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60];
         int mw, mh;
 
         this->font->max_cell_size(&mw, &mh);
+        mw *= this->max_length;
 
-        this->width = (mw * this->max_length)
+        /* The literal 2s are to provide an extra pixel of space
+         * between the edges of the border/margin/widget and the
+         * actual string.
+         */
+        this->width = mw
             + this->margin[1] + this->margin[2]
             + this->border[1] + this->border[2] + 2;
         this->height = mh
             + this->margin[0] + this->margin[3]
             + this->border[0] + this->border[3] + 2;
         this->panel::generate_points(vertex, element);
+
+        pw = 1.0f / (float)this->img.width;
+        ph = 1.0f / (float)this->img.height;
+        m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
+        m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
+        m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
+        m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
+
+        /* TODO:  the displayed string may be too long to fit in the
+         * panel that we have available.  We'll need to check for that
+         * and take a sub-image for display.
+         */
+
+        vertex[6]  = 0.0f - m[1] - b[1] - pw;
+        vertex[7]  = 1.0f + m[0] + b[0] + ph;
+
+        vertex[14] = 1.0f
+            + ((mw - this->img.width) * pw)
+            + m[2] + b[2] + pw;
+        vertex[15] = vertex[7];
+
+        vertex[22] = vertex[6];
+        vertex[23] = 0.0f - m[3] - b[3] - ph;
+
+        vertex[30] = vertex[14];
+        vertex[31] = vertex[23];
+
+        memcpy(&vertex[2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[10],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[18],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        memcpy(&vertex[26],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        glBindVertexArray(this->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     sizeof(float) * this->vertex_count, vertex,
+                     GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     sizeof(GLuint) * this->element_count, element,
+                     GL_DYNAMIC_DRAW);
+        glBindTexture(GL_TEXTURE_2D, this->tex);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+                     this->img.width, this->img.height, 0, GL_RED,
+                     GL_UNSIGNED_BYTE, this->img.data);
     }
 }
 
