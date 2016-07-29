@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2016, 08:09:45 tquirk
+ *   last updated 29 Jul 2016, 07:04:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -76,6 +76,12 @@ void ui::text_field::set_max_size(GLuint t, void *v)
 {
     if (t == ui::size::width)
         this->max_length = *(int *)v;
+}
+
+void ui::text_field::set_string(GLuint t, void *v)
+{
+    this->label::set_string(t, v);
+    this->cursor_pos = this->str.size();
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)

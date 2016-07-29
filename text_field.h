@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2016, 07:04:29 tquirk
+ *   last updated 29 Jul 2016, 07:02:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,6 +53,7 @@ namespace ui
         void set_cursor_blink(GLuint, void *);
         int get_max_size(GLuint, void *);
         void set_max_size(GLuint, void *);
+        void set_string(GLuint, void *);
         void set_bgimage(GLuint, void *);
 
         static void key_callback(ui::panel *, void *, void *);
