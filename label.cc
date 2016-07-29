@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jul 2016, 08:21:16 tquirk
+ *   last updated 29 Jul 2016, 06:38:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -87,6 +87,11 @@ int ui::label::get_bgimage(GLuint t, void *v)
 void ui::label::set_bgimage(GLuint t, void *v)
 {
     this->use_text = false;
+    if (this->img.data != NULL)
+    {
+        delete[] this->img.data;
+        this->img.data = NULL;
+    }
     this->str.clear();
     this->img = *(ui::image *)v;
 }
