@@ -151,6 +151,61 @@ void ui::text_field::remove_next_char(void)
 
 void ui::text_field::generate_cursor(void)
 {
+    if (this->font != NULL)
+    {
+        float vertex[36];
+        float x = this->xpos, y = this->ypos;
+        float w = this->width, h = this->height;
+        float pw, ph, sw, m[4], b[4];
+        GLuint temp;
+        std::vector<int> req_size = {0, 0, 0};
+
+        this->font->get_string_size(this->str.substr(0, this->cursor_pos),
+                                    req_size);
+        this->parent->get(ui::element::size, ui::size::width, &temp);
+        pw = 2.0f / (float)temp;
+        this->parent->get(ui::element::size, ui::size::height, &temp);
+        ph = -2.0f / (float)temp;
+        sw = pw * (float)req_size[0];
+        m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
+        m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
+        m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
+        m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
+
+        vertex[0] = x * pw - 1.0f + m[1] + b[1] + sw + pw;
+        vertex[1] = y * ph + 1.0f + m[0] + b[0] + ph;
+        memcpy(&vertex[2],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[6] = vertex[0] + pw;
+        vertex[7] = vertex[1];
+        memcpy(&vertex[8],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[12] = vertex[0];
+        vertex[13] = vertex[1] + (h * ph) - m[3] - b[3] - ph;
+        memcpy(&vertex[14],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[18] = vertex[6];
+        vertex[19] = vertex[7];
+        memcpy(&vertex[20],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[24] = vertex[6];
+        vertex[25] = vertex[13];
+        memcpy(&vertex[26],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        vertex[30] = vertex[0];
+        vertex[31] = vertex[13];
+        memcpy(&vertex[32],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+        glBindVertexArray(this->cursor_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
+    }
 }
 
 void ui::text_field::generate_string(void)
@@ -327,6 +382,9 @@ void ui::text_field::draw(void)
     {
         this->cursor_visible = !this->cursor_visible;
         this->cursor_clock = now;
+        glBindVertexArray(this->cursor_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     ui::label::draw();
 }
