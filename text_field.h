@@ -45,7 +45,7 @@ namespace ui
         GLuint cursor_pos, blink, max_length;
         GLuint cursor_vao, cursor_vbo;
         std::chrono::high_resolution_clock::time_point cursor_clock;
-        bool cursor_visible;
+        bool cursor_visible, cursor_active;
 
         int get_cursor_pos(GLuint, void *);
         void set_cursor_pos(GLuint, void *);
@@ -56,8 +56,12 @@ namespace ui
         void set_string(GLuint, void *);
         void set_bgimage(GLuint, void *);
 
+        static void enter_callback(ui::panel *, void *, void *);
+        static void leave_callback(ui::panel *, void *, void *);
         static void key_callback(ui::panel *, void *, void *);
 
+        void activate_cursor(void);
+        void deactivate_cursor(void);
         void first_char(void);
         void previous_char(void);
         void next_char(void);

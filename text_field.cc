@@ -89,6 +89,24 @@ void ui::text_field::set_bgimage(GLuint t, void *v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
+void ui::text_field::enter_callback(ui::panel *p, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+
+    if (t == NULL)
+        return;
+    t->activate_cursor();
+}
+
+void ui::text_field::leave_callback(ui::panel *p, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+
+    if (t == NULL)
+        return;
+    t->deactivate_cursor();
+}
+
 void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
@@ -105,6 +123,17 @@ void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
       case ui::key::bkspc:    t->remove_previous_char();  break;
       case ui::key::del:      t->remove_next_char();      break;
     }
+}
+
+void ui::text_field::activate_cursor(void)
+{
+    this->cursor_active = true;
+    this->cursor_clock = std::chrono::high_resolution_clock::now();
+}
+
+void ui::text_field::deactivate_cursor(void)
+{
+    this->cursor_active = false;
 }
 
 void ui::text_field::first_char(void)
@@ -304,6 +333,14 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     this->max_length = 20;
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
+    this->cursor_active = false;
+
+    this->add_callback(ui::callback::enter,
+                       ui::text_field::enter_callback,
+                       NULL);
+    this->add_callback(ui::callback::leave,
+                       ui::text_field::leave_callback,
+                       NULL);
     this->add_callback(ui::callback::key_down,
                        ui::text_field::key_callback,
                        NULL);
@@ -378,19 +415,22 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
 
 void ui::text_field::draw(void)
 {
-    std::chrono::high_resolution_clock::time_point now
-        = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<GLuint, std::milli> ms
-        = std::chrono::duration_cast<std::chrono::milliseconds>
-        (now - this->cursor_clock);
-
-    if (ms.count() >= this->blink)
+    this->label::draw();
+    if (this->cursor_active)
     {
-        this->cursor_visible = !this->cursor_visible;
-        this->cursor_clock = now;
-        glBindVertexArray(this->cursor_vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        std::chrono::high_resolution_clock::time_point now
+            = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<GLuint, std::milli> ms
+            = std::chrono::duration_cast<std::chrono::milliseconds>
+            (now - this->cursor_clock);
+
+        if (ms.count() >= this->blink)
+        {
+            this->cursor_visible = !this->cursor_visible;
+            this->cursor_clock = now;
+            glBindVertexArray(this->cursor_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
     }
-    ui::label::draw();
 }
