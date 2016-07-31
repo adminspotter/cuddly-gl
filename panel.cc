@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jul 2016, 16:52:20 tquirk
+ *   last updated 31 Jul 2016, 11:26:05 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -213,6 +213,35 @@ void ui::panel::set_color(GLuint s, void *v)
 
     if (s & ui::color::background)
         memcpy(glm::value_ptr(this->background), v, sizeof(float) * 4);
+}
+
+void ui::panel::prep_vao_vbo(GLuint *vao, GLuint *vbo)
+{
+    GLuint pos_attr, color_attr, texture_attr;
+
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::position,
+                      &pos_attr);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::color,
+                      &color_attr);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::texture,
+                      &texture_attr);
+
+    glGenVertexArrays(1, vao);
+    glBindVertexArray(*vao);
+    glGenBuffers(1, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+    glEnableVertexAttribArray(pos_attr);
+    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)0);
+    glEnableVertexAttribArray(color_attr);
+    glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
+    glEnableVertexAttribArray(texture_attr);
+    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
 }
 
 /* The input parameters for this method should be at least 160
@@ -459,7 +488,7 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
       key_down_cb(), key_up_cb()
 {
-    GLuint pos_attr, color_attr, texture_attr, temp, x, y;
+    GLuint temp, x, y;
 
     this->parent = c;
 
@@ -479,25 +508,9 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
 
     this->parent->add_child(this);
 
-    c->get(ui::element::attribute, ui::attribute::position, &pos_attr);
-    c->get(ui::element::attribute, ui::attribute::color, &color_attr);
-    c->get(ui::element::attribute, ui::attribute::texture, &texture_attr);
-
-    glGenVertexArrays(1, &this->vao);
-    glBindVertexArray(this->vao);
-    glGenBuffers(1, &this->vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    this->prep_vao_vbo(&this->vao, &this->vbo);
     glGenBuffers(1, &this->ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-    glEnableVertexAttribArray(pos_attr);
-    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)0);
-    glEnableVertexAttribArray(color_attr);
-    glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
-    glEnableVertexAttribArray(texture_attr);
-    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
     this->populate_buffers();
 }
 

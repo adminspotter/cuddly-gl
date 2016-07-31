@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Jul 2016, 07:06:06 tquirk
+ *   last updated 31 Jul 2016, 11:22:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -96,6 +96,7 @@ namespace ui
         int get_color(GLuint, void *);
         void set_color(GLuint, void *);
 
+        void prep_vao_vbo(GLuint *, GLuint *);
         virtual void generate_points(float *, GLuint *);
         virtual void populate_buffers(void);
 
