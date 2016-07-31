@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 11:28:42 tquirk
+ *   last updated 31 Jul 2016, 13:22:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -172,6 +172,7 @@ void ui::text_field::last_char(void)
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->generate_string_image();
     this->populate_buffers();
 }
 
@@ -180,6 +181,7 @@ void ui::text_field::remove_previous_char(void)
     if (this->cursor_pos > 0)
     {
         this->str.erase(--this->cursor_pos, 1);
+        this->generate_string_image();
         this->populate_buffers();
     }
 }
@@ -189,6 +191,7 @@ void ui::text_field::remove_next_char(void)
     if (this->cursor_pos < this->str.size())
     {
         this->str.erase(this->cursor_pos, 1);
+        this->generate_string_image();
         this->generate_string();
     }
 }
