@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 08:00:51 tquirk
+ *   last updated 31 Jul 2016, 09:17:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,7 @@ void ui::text_field::set_cursor_pos(GLuint t, void *v)
     if (new_v > this->str.size())
         new_v = this->str.size();
     this->cursor_pos = new_v;
+    this->activate_cursor();
 }
 
 /* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
@@ -58,6 +59,7 @@ int ui::text_field::get_cursor_blink(GLuint t, void *v)
 void ui::text_field::set_cursor_blink(GLuint t, void *v)
 {
     this->blink = *((GLuint *)v);
+    this->activate_cursor();
 }
 
 int ui::text_field::get_max_size(GLuint t, void *v)
@@ -82,6 +84,7 @@ void ui::text_field::set_string(GLuint t, void *v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->activate_cursor();
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)
@@ -423,16 +426,22 @@ void ui::text_field::draw(void)
     this->label::draw();
     if (this->cursor_active)
     {
-        std::chrono::high_resolution_clock::time_point now
-            = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<GLuint, std::milli> ms
-            = std::chrono::duration_cast<std::chrono::milliseconds>
-            (now - this->cursor_clock);
-
-        if (ms.count() >= this->blink)
+        if (this->blink > 0)
         {
-            this->cursor_visible = !this->cursor_visible;
-            this->cursor_clock = now;
+            std::chrono::high_resolution_clock::time_point now
+                = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<GLuint, std::milli> ms
+                = std::chrono::duration_cast<std::chrono::milliseconds>
+                (now - this->cursor_clock);
+
+            if (ms.count() >= this->blink)
+            {
+                this->cursor_visible = !this->cursor_visible;
+                this->cursor_clock = now;
+            }
+        }
+        if (this->cursor_visible)
+        {
             glBindVertexArray(this->cursor_vao);
             glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
             glDrawArrays(GL_TRIANGLES, 0, 6);
