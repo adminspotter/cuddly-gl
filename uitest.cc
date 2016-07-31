@@ -13,6 +13,7 @@
 #include "panel.h"
 #include "label.h"
 #include "button.h"
+#include "text_field.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -28,6 +29,7 @@ ui::context *ctx;
 ui::panel *p1;
 ui::label *l1;
 ui::button *b1, *b2;
+ui::text_field *t1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
@@ -55,8 +57,9 @@ unsigned char img_data[72 * 48 * 4];
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint border = 1, wid = 72, hei = 48, xpos, ypos;
+    GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
+    glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0};
 
     if (glfwInit() == GL_FALSE)
     {
@@ -117,9 +120,6 @@ int main(int argc, char **argv)
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1, 0);
-    std::cout << "callbacks" << std::endl;
-    b1->add_callback(ui::callback::enter, enter_callback, NULL);
-    b1->add_callback(ui::callback::leave, leave_callback, NULL);
     std::cout << "now for button 2" << std::endl;
     b2 = new ui::button(ctx, 0, 0);
     xpos = 100;
@@ -132,10 +132,25 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    b2->add_callback(ui::callback::enter, enter_callback, NULL);
-    b2->add_callback(ui::callback::leave, leave_callback, NULL);
-    b2->add_callback(ui::callback::btn_down, clicky_callback, NULL);
     std::cout << "ok, buttons made" << std::endl;
+    t1 = new ui::text_field(ctx, 0, 0);
+    xpos = 400;
+    ypos = 100;
+    border = 1;
+    max_len = 10;
+    t1->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+               ui::element::string, 0, &greeting,
+               ui::element::max_size, 0, &max_len,
+               ui::element::border, ui::side::all, &border,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg1,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    t1->add_callback(ui::callback::enter, enter_callback, NULL);
+    t1->add_callback(ui::callback::leave, leave_callback, NULL);
+    t1->get_va(ui::element::size, ui::size::width, &xpos,
+               ui::element::size, ui::size::height, &ypos, 0);
+    std::cout << "t1 size is " << xpos << ", " << ypos << std::endl;
 
     while (!glfwWindowShouldClose(w))
     {
