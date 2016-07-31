@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 10:39:38 tquirk
+ *   last updated 31 Jul 2016, 11:28:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -346,8 +346,6 @@ void ui::text_field::populate_buffers(void)
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
-    GLuint pos_attr, color_attr, texture_attr;
-
     this->cursor_pos = 0;
     this->blink = 250;
     this->max_length = 20;
@@ -365,30 +363,7 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
                        ui::text_field::key_callback,
                        NULL);
 
-    this->parent->get(ui::element::attribute,
-                      ui::attribute::position,
-                      &pos_attr);
-    this->parent->get(ui::element::attribute,
-                      ui::attribute::color,
-                      &color_attr);
-    this->parent->get(ui::element::attribute,
-                      ui::attribute::texture,
-                      &texture_attr);
-
-    glGenVertexArrays(1, &this->cursor_vao);
-    glBindVertexArray(this->cursor_vao);
-    glGenBuffers(1, &this->cursor_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
-    glEnableVertexAttribArray(pos_attr);
-    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)0);
-    glEnableVertexAttribArray(color_attr);
-    glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
-    glEnableVertexAttribArray(texture_attr);
-    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
-
+    this->prep_vao_vbo(&this->cursor_vao, &this->cursor_vbo);
     this->populate_buffers();
 }
 
