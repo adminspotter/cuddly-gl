@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Jul 2016, 07:33:14 tquirk
+ *   last updated 31 Jul 2016, 15:34:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -89,6 +89,7 @@ namespace ui
 
     namespace key
     {
+        const int no_key = 0;
         const int l_arrow = 1, r_arrow = 2, u_arrow = 3, d_arrow = 4;
         const int pg_up = 5, pg_down = 6, home = 7, end = 8;
         const int bkspc = 9, del = 10;

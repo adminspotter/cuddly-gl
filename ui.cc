@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Jul 2016, 07:17:36 tquirk
+ *   last updated 31 Jul 2016, 15:40:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -234,7 +234,7 @@ void ui::context::mouse_btn_callback(int btn, int state)
     this->old_child = p;
 }
 
-void ui::context::key_callback(int key, int state, int mods)
+void ui::context::key_callback(int key, uint32_t c, int state, int mods)
 {
     ui::panel *p = this->tree->search(this->old_mouse);
 
@@ -247,6 +247,7 @@ void ui::context::key_callback(int key, int state, int mods)
                   ui::element::position, ui::position::y, &obj.y, 0);
         call_data.location = this->old_mouse - obj;
         call_data.key = key;
+        call_data.character = c;
         call_data.state = (state == ui::key::up
                            ? ui::callback::key_up
                            : ui::callback::key_down);

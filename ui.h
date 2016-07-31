@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 23:49:04 tquirk
+ *   last updated 31 Jul 2016, 15:42:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -65,6 +65,7 @@ namespace ui
     typedef struct key_callback_call
     {
         glm::ivec2 location;
+        uint32_t character;
         GLuint key;
         GLuint state;
         GLuint mods;
@@ -108,7 +109,7 @@ namespace ui
 
         void mouse_pos_callback(int, int);
         void mouse_btn_callback(int, int);
-        void key_callback(int, int, int);
+        void key_callback(int, uint32_t, int, int);
     };
 }
 
