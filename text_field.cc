@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 13:22:38 tquirk
+ *   last updated 31 Jul 2016, 15:41:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -117,15 +117,18 @@ void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
 
     if (t == NULL)
         return;
-    switch (c->key)
-    {
-      case ui::key::l_arrow:  t->previous_char();         break;
-      case ui::key::r_arrow:  t->next_char();             break;
-      case ui::key::home:     t->first_char();            break;
-      case ui::key::end:      t->last_char();             break;
-      case ui::key::bkspc:    t->remove_previous_char();  break;
-      case ui::key::del:      t->remove_next_char();      break;
-    }
+    if (c->key == ui::key::no_key && c->character != 0)
+        t->insert_char(c->character);
+    else
+        switch (c->key)
+        {
+          case ui::key::l_arrow:  t->previous_char();         break;
+          case ui::key::r_arrow:  t->next_char();             break;
+          case ui::key::home:     t->first_char();            break;
+          case ui::key::end:      t->last_char();             break;
+          case ui::key::bkspc:    t->remove_previous_char();  break;
+          case ui::key::del:      t->remove_next_char();      break;
+        }
 }
 
 void ui::text_field::reset_cursor(void)
