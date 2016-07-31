@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 10:36:46 tquirk
+ *   last updated 31 Jul 2016, 10:39:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -197,7 +197,7 @@ void ui::text_field::generate_cursor(void)
 {
     if (this->font != NULL)
     {
-        float vertex[36];
+        float vertex[48];
         float x = this->xpos, y = this->ypos;
         float w = this->width, h = this->height;
         float pw, ph, sw, m[4], b[4];
@@ -220,31 +220,37 @@ void ui::text_field::generate_cursor(void)
         vertex[1] = y * ph + 1.0f + m[0] + b[0] + ph;
         memcpy(&vertex[2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[6] = vertex[7] = ui::panel::no_texture;
 
-        vertex[6] = vertex[0] + pw;
-        vertex[7] = vertex[1];
-        memcpy(&vertex[8],
+        vertex[8] = vertex[0];
+        vertex[9] = vertex[1] + (h * ph) - m[0] - b[0] - m[3] - b[3] - ph - ph;
+        memcpy(&vertex[10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[14] = vertex[15] = ui::panel::no_texture;
 
-        vertex[12] = vertex[0];
-        vertex[13] = vertex[1] + (h * ph) - m[3] - b[3] - ph;
-        memcpy(&vertex[14],
+        vertex[16] = vertex[0] + pw;
+        vertex[17] = vertex[1];
+        memcpy(&vertex[18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[22] = vertex[23] = ui::panel::no_texture;
 
-        vertex[18] = vertex[6];
-        vertex[19] = vertex[7];
-        memcpy(&vertex[20],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-
-        vertex[24] = vertex[6];
-        vertex[25] = vertex[13];
+        vertex[24] = vertex[0];
+        vertex[25] = vertex[9];
         memcpy(&vertex[26],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[30] = vertex[31] = ui::panel::no_texture;
 
-        vertex[30] = vertex[0];
-        vertex[31] = vertex[13];
-        memcpy(&vertex[32],
+        vertex[32] = vertex[16];
+        vertex[33] = vertex[9];
+        memcpy(&vertex[34],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[38] = vertex[39] = ui::panel::no_texture;
+
+        vertex[40] = vertex[16];
+        vertex[41] = vertex[1];
+        memcpy(&vertex[42],
+               glm::value_ptr(this->foreground), sizeof(float) * 4);
+        vertex[46] = vertex[47] = ui::panel::no_texture;
 
         glBindVertexArray(this->cursor_vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
@@ -340,7 +346,7 @@ void ui::text_field::populate_buffers(void)
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
-    GLuint pos_attr, color_attr;
+    GLuint pos_attr, color_attr, texture_attr;
 
     this->cursor_pos = 0;
     this->blink = 250;
@@ -365,6 +371,9 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     this->parent->get(ui::element::attribute,
                       ui::attribute::color,
                       &color_attr);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::texture,
+                      &texture_attr);
 
     glGenVertexArrays(1, &this->cursor_vao);
     glBindVertexArray(this->cursor_vao);
@@ -372,10 +381,13 @@ ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
     glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
     glEnableVertexAttribArray(pos_attr);
     glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 6, (void *)0);
+                          sizeof(float) * 8, (void *)0);
     glEnableVertexAttribArray(color_attr);
     glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(float) * 6, (void *)(sizeof(float) * 2));
+                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
+    glEnableVertexAttribArray(texture_attr);
+    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
 
     this->populate_buffers();
 }
