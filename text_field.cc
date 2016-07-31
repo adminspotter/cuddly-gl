@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 09:17:02 tquirk
+ *   last updated 31 Jul 2016, 10:36:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,7 +46,7 @@ void ui::text_field::set_cursor_pos(GLuint t, void *v)
     if (new_v > this->str.size())
         new_v = this->str.size();
     this->cursor_pos = new_v;
-    this->activate_cursor();
+    this->reset_cursor();
 }
 
 /* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
@@ -59,7 +59,7 @@ int ui::text_field::get_cursor_blink(GLuint t, void *v)
 void ui::text_field::set_cursor_blink(GLuint t, void *v)
 {
     this->blink = *((GLuint *)v);
-    this->activate_cursor();
+    this->reset_cursor();
 }
 
 int ui::text_field::get_max_size(GLuint t, void *v)
@@ -84,7 +84,7 @@ void ui::text_field::set_string(GLuint t, void *v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
-    this->activate_cursor();
+    this->reset_cursor();
 }
 
 void ui::text_field::set_bgimage(GLuint t, void *v)
@@ -128,10 +128,16 @@ void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
     }
 }
 
+void ui::text_field::reset_cursor(void)
+{
+    this->cursor_visible = true;
+    this->cursor_clock = std::chrono::high_resolution_clock::now();
+}
+
 void ui::text_field::activate_cursor(void)
 {
     this->cursor_active = true;
-    this->cursor_clock = std::chrono::high_resolution_clock::now();
+    this->reset_cursor();
 }
 
 void ui::text_field::deactivate_cursor(void)

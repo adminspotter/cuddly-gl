@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2016, 07:02:01 tquirk
+ *   last updated 31 Jul 2016, 10:09:17 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -60,6 +60,7 @@ namespace ui
         static void leave_callback(ui::panel *, void *, void *);
         static void key_callback(ui::panel *, void *, void *);
 
+        void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);
         void first_char(void);
