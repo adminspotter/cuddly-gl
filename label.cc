@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2016, 06:38:50 tquirk
+ *   last updated 31 Jul 2016, 13:21:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -64,16 +64,8 @@ int ui::label::get_string(GLuint t, void *v)
 void ui::label::set_string(GLuint t, void *v)
 {
     this->use_text = true;
-    if (this->img.data != NULL)
-    {
-        delete[] this->img.data;
-        this->img.data = NULL;
-    }
     this->str = utf8tou32str(*((std::string *)v));
-    if (this->font != NULL)
-        this->img.data = this->font->render_string(this->str,
-                                                   this->img.width,
-                                                   this->img.height);
+    this->generate_string_image();
 }
 
 /* ARGSUSED */
@@ -208,6 +200,18 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
     }
 
     return newstr;
+}
+
+void ui::label::generate_string_image(void)
+{
+    if (this->use_text == true && this->font != NULL)
+    {
+        if (this->img.data != NULL)
+            delete[] this->img.data;
+        this->img.data = this->font->render_string(this->str,
+                                                   this->img.width,
+                                                   this->img.height);
+    }
 }
 
 void ui::label::populate_buffers(void)
