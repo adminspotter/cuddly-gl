@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 18:04:24 tquirk
+ *   last updated 01 Aug 2016, 08:07:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -277,7 +277,7 @@ void ui::font::get_string_size(const std::u32string& str,
         req_size[0] += kerning.x;
         if (i != str.begin())
             req_size[0] += g.left;
-        if (i + 1 == str.end())
+        if (i + 1 == str.end() && g.width != 0)
             req_size[0] += g.width;
         else
             req_size[0] += g.x_advance;
