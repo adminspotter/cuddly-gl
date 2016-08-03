@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 Aug 2016, 08:07:30 tquirk
+ *   last updated 02 Aug 2016, 23:14:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -181,6 +181,9 @@ void ui::font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 {
     if (FT_Get_Kerning(this->face, a, b, FT_KERNING_DEFAULT, k))
         k->x = k->y = 0;
+    /* Kerning in default mode is 26.6 format */
+    k->x >>= 6;
+    k->y >>= 6;
 }
 
 void ui::font::get_max_glyph_box(void)
