@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Jul 2016, 18:04:08 tquirk
+ *   last updated 02 Aug 2016, 23:37:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -84,7 +84,7 @@ namespace ui
 
         FT_Face face;
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
-        int bbox_w, bbox_h;
+        int bbox_w, bbox_a, bbox_d;
 
         std::string search_path(std::string&, std::vector<std::string>&);
 
@@ -97,7 +97,7 @@ namespace ui
         font(std::string&, int, std::vector<std::string>&);
         ~font();
 
-        void max_cell_size(int *, int *);
+        void max_cell_size(std::vector<int>&);
 
         struct glyph& operator[](FT_ULong);
 

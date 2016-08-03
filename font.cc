@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Aug 2016, 23:14:13 tquirk
+ *   last updated 02 Aug 2016, 23:38:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -207,7 +207,8 @@ void ui::font::get_max_glyph_box(void)
         code = FT_Get_Next_Char(this->face, code, &index);
     }
     this->bbox_w = (int)w;
-    this->bbox_h = (int)(a - d);
+    this->bbox_a = (int)a;
+    this->bbox_d = (int)d;
 }
 
 ui::font::font(std::string& font_name,
@@ -230,10 +231,11 @@ ui::font::~font()
     cleanup_freetype();
 }
 
-void ui::font::max_cell_size(int *w, int *h)
+void ui::font::max_cell_size(std::vector<int>& v)
 {
-    *w = this->bbox_w;
-    *h = this->bbox_h;
+    v[0] = this->bbox_w;
+    v[1] = this->bbox_a;
+    v[2] = this->bbox_d;
 }
 
 struct ui::glyph& ui::font::operator[](FT_ULong code)

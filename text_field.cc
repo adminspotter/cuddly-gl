@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 15:41:38 tquirk
+ *   last updated 02 Aug 2016, 23:41:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -270,19 +270,19 @@ void ui::text_field::generate_string(void)
     {
         float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60];
-        int mw, mh;
+        std::vector<int> font_max = {0, 0, 0};
 
-        this->font->max_cell_size(&mw, &mh);
-        mw *= this->max_length;
+        this->font->max_cell_size(font_max);
+        font_max[0] *= this->max_length;
 
         /* The literal 2s are to provide an extra pixel of space
          * between the edges of the border/margin/widget and the
          * actual string.
          */
-        this->width = mw
+        this->width = font_max[0]
             + this->margin[1] + this->margin[2]
             + this->border[1] + this->border[2] + 2;
-        this->height = mh
+        this->height = font_max[1] + font_max[2]
             + this->margin[0] + this->margin[3]
             + this->border[0] + this->border[3] + 2;
         this->parent->move_child(this);
@@ -306,7 +306,7 @@ void ui::text_field::generate_string(void)
             vertex[7]  = 1.0f + m[0] + b[0] + ph;
 
             vertex[14] = 1.0f
-                + ((mw - this->img.width) * pw)
+                + ((font_max[0] - this->img.width) * pw)
                 + m[2] + b[2] + pw;
             vertex[15] = vertex[7];
 
