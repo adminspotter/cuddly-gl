@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Aug 2016, 23:38:06 tquirk
+ *   last updated 03 Aug 2016, 19:24:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -208,7 +208,7 @@ void ui::font::get_max_glyph_box(void)
     }
     this->bbox_w = (int)w;
     this->bbox_a = (int)a;
-    this->bbox_d = (int)d;
+    this->bbox_d = -((int)d);
 }
 
 ui::font::font(std::string& font_name,

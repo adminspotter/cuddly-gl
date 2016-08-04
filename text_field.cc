@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Aug 2016, 23:41:46 tquirk
+ *   last updated 03 Aug 2016, 23:44:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -270,7 +270,7 @@ void ui::text_field::generate_string(void)
     {
         float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60];
-        std::vector<int> font_max = {0, 0, 0};
+        std::vector<int> font_max = {0, 0, 0}, string_max = {0, 0, 0};
 
         this->font->max_cell_size(font_max);
         font_max[0] *= this->max_length;
@@ -297,21 +297,25 @@ void ui::text_field::generate_string(void)
             m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
             m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
 
+            this->font->get_string_size(this->str, string_max);
+
             /* TODO:  the displayed string may be too long to fit in the
              * panel that we have available.  We'll need to check for that
              * and take a sub-image for display.
              */
 
             vertex[6]  = 0.0f - m[1] - b[1] - pw;
-            vertex[7]  = 1.0f + m[0] + b[0] + ph;
+            vertex[7]  = 1.0f + m[0] + b[0] + ph
+                + ((font_max[1] - string_max[1]) * ph);
 
             vertex[14] = 1.0f
-                + ((font_max[0] - this->img.width) * pw)
+                + ((font_max[0] - string_max[0]) * pw)
                 + m[2] + b[2] + pw;
             vertex[15] = vertex[7];
 
             vertex[22] = vertex[6];
-            vertex[23] = 0.0f - m[3] - b[3] - ph;
+            vertex[23] = 0.0f - m[3] - b[3] - ph
+                - ((font_max[2] - string_max[2]) * ph);
 
             vertex[30] = vertex[14];
             vertex[31] = vertex[23];
