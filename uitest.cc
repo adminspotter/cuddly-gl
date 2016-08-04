@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     max_len = 10;
     t1->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
                ui::element::string, 0, &greeting,
-               ui::element::max_size, 0, &max_len,
+               ui::element::max_size, ui::size::width, &max_len,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::color, ui::color::background, &bg1,
