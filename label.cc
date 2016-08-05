@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 13:21:11 tquirk
+ *   last updated 05 Aug 2016, 08:34:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -291,6 +291,8 @@ void ui::label::populate_buffers(void)
 ui::label::label(ui::context *c, GLuint w, GLuint h)
     : ui::panel::panel(c, w, h), str()
 {
+    float black[4] = {0.0, 0.0, 0.0, 0.0};
+
     this->use_text = true;
     this->img.data = NULL;
     this->font = NULL;
@@ -298,9 +300,7 @@ ui::label::label(ui::context *c, GLuint w, GLuint h)
     glBindTexture(GL_TEXTURE_2D, this->tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameterfv(GL_TEXTURE_2D,
-                     GL_TEXTURE_BORDER_COLOR,
-                     glm::value_ptr(this->background));
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, black);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     this->populate_buffers();
@@ -354,10 +354,14 @@ void ui::label::set(GLuint e, GLuint t, void *v)
 
 void ui::label::draw(void)
 {
-    GLuint text, val = (this->use_text ? 1 : 0);
+    GLuint text, bgnd, val = (this->use_text ? 1 : 0);
 
     this->parent->get(ui::element::attribute, ui::attribute::use_text, &text);
+    this->parent->get(ui::element::attribute, ui::attribute::text_bgnd, &bgnd);
     glUniform1ui(text, val);
+    glUniform4f(bgnd,
+                this->background.x, this->background.y,
+                this->background.z, this->background.a);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, this->tex);
     ui::panel::draw();

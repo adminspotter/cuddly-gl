@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 15:40:14 tquirk
+ *   last updated 05 Aug 2016, 08:22:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -89,6 +89,9 @@ int ui::context::get_attribute(GLuint t, void *v)
       case ui::attribute::use_text:
         *((GLuint *)v) = this->use_text_uniform;
         break;
+      case ui::attribute::text_bgnd:
+        *((GLuint *)v) = this->text_bgnd_uniform;
+        break;
       default: ret = 1; break;
     }
     return ret;
@@ -116,6 +119,7 @@ ui::context::context(GLuint w, GLuint h)
     this->color_attr = glGetAttribLocation(shader_pgm, "color");
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
     this->use_text_uniform = glGetUniformLocation(shader_pgm, "use_text");
+    this->text_bgnd_uniform = glGetUniformLocation(shader_pgm, "text_bgnd");
 }
 
 ui::context::~context()
