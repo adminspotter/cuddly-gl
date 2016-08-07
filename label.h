@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 08:27:54 tquirk
+ *   last updated 07 Aug 2016, 11:37:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -41,26 +41,6 @@
 
 namespace ui
 {
-    struct image
-    {
-        unsigned char *data;
-        GLuint width, height, per_pixel;
-
-        image& operator=(const image& i)
-            {
-                GLuint new_size = i.width * i.height * i.per_pixel;
-
-                if (this->data != NULL)
-                    delete[] this->data;
-                this->width = i.width;
-                this->height = i.height;
-                this->per_pixel = i.per_pixel;
-                this->data = new unsigned char[new_size];
-                memcpy(this->data, i.data, new_size);
-                return *this;
-            };
-    };
-
     class label : public panel
     {
       protected:
@@ -81,7 +61,7 @@ namespace ui
         static std::string u32strtoutf8(const std::u32string&);
 
         void generate_string_image(void);
-        void set_string_size(int, int);
+        void calculate_widget_size(int, int);
         virtual void populate_buffers(void);
 
       public:

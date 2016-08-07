@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 08:28:48 tquirk
+ *   last updated 07 Aug 2016, 11:40:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -79,11 +79,6 @@ int ui::label::get_bgimage(GLuint t, void *v)
 void ui::label::set_bgimage(GLuint t, void *v)
 {
     this->use_text = false;
-    if (this->img.data != NULL)
-    {
-        delete[] this->img.data;
-        this->img.data = NULL;
-    }
     this->str.clear();
     this->img = *(ui::image *)v;
 }
@@ -205,16 +200,10 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 void ui::label::generate_string_image(void)
 {
     if (this->use_text == true && this->font != NULL)
-    {
-        if (this->img.data != NULL)
-            delete[] this->img.data;
-        this->img.data = this->font->render_string(this->str,
-                                                   this->img.width,
-                                                   this->img.height);
-    }
+        this->font->render_string(this->str, this->img);
 }
 
-void ui::label::set_string_size(int w, int h)
+void ui::label::calculate_widget_size(int w, int h)
 {
     /* We want an extra pixel of space between the string and each
      * side, even if there is no border or margin, thus the
@@ -236,7 +225,7 @@ void ui::label::populate_buffers(void)
         float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60], temp;
 
-        this->set_string_size(this->img.width, this->img.height);
+        this->calculate_widget_size(this->img.width, this->img.height);
         this->panel::generate_points(vertex, element);
         pw = 1.0f / (float)this->img.width;
         ph = 1.0f / (float)this->img.height;
@@ -294,12 +283,11 @@ void ui::label::populate_buffers(void)
 }
 
 ui::label::label(ui::context *c, GLuint w, GLuint h)
-    : ui::panel::panel(c, w, h), str()
+    : ui::panel::panel(c, w, h), str(), img()
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
     this->use_text = true;
-    this->img.data = NULL;
     this->font = NULL;
     glGenTextures(1, &this->tex);
     glBindTexture(GL_TEXTURE_2D, this->tex);
@@ -314,8 +302,6 @@ ui::label::label(ui::context *c, GLuint w, GLuint h)
 ui::label::~label()
 {
     glDeleteTextures(1, &this->tex);
-    if (this->img.data != NULL)
-        delete[] this->img.data;
     if (this->font != NULL)
         delete this->font;
 }
