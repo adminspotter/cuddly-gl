@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2016, 08:22:53 tquirk
+ *   last updated 07 Aug 2016, 12:34:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -130,6 +130,9 @@ ui::context::~context()
     glDeleteProgram(this->shader_pgm);
 
     delete this->tree;
+
+    while (!this->children.empty())
+        delete this->children.front();
 }
 
 int ui::context::get(GLuint e, GLuint t, void *v)
