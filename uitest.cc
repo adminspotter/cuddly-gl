@@ -53,7 +53,6 @@ unsigned char colors[6][4] =
     {128, 0, 128, 255},
 };
 ui::image img;
-unsigned char img_data[72 * 48 * 4];
 
 int main(int argc, char **argv)
 {
@@ -261,16 +260,16 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
 
 void create_image(int width, int height)
 {
-    for (int i = 0; i < 6; ++i)
-        for (int j = 0; j < 8; ++j)
-            for (int k = 0; k < width; ++k)
-                memcpy(&img_data[((height - 1 - (i * 8) - j) * width + k) * 4],
-                       colors[i],
-                       sizeof(unsigned char) * 4);
-    img.data = img_data;
     img.width = width;
     img.height = height;
     img.per_pixel = 4;
+    img.data = new unsigned char[width * height * img.per_pixel];
+    for (int i = 0; i < 6; ++i)
+        for (int j = 0; j < 8; ++j)
+            for (int k = 0; k < width; ++k)
+                memcpy(&img.data[((height - 1 - (i * 8) - j) * width + k) * 4],
+                       colors[i],
+                       sizeof(unsigned char) * 4);
 }
 
 /* ARGSUSED */
