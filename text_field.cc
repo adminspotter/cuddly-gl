@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 12:58:55 tquirk
+ *   last updated 08 Aug 2016, 07:45:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,6 +27,7 @@
  *
  */
 
+#include <algorithm>
 #include <ratio>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -289,6 +290,34 @@ void ui::text_field::generate_string(void)
         this->font->max_cell_size(font_max);
         font_max[0] *= this->max_length;
         this->font->get_string_size(this->str, string_max);
+        if (string_max[0] > font_max[0])
+        {
+            int factor = 2, which, chunk, start, pixel_pos;
+
+            /* See if the string needs to be chopped in 1/2, 1/3, etc. */
+            while (string_max[0] / factor > font_max[0])
+                ++factor;
+            chunk = string_max[0] / factor;
+
+            /* See which part needs to be displayed */
+            pixel_pos = this->get_cursor_pixel_pos();
+            which = factor - 1;
+            while (chunk * which > pixel_pos)
+                --which;
+            start = chunk * which;
+
+            /* Take that portion of the string image */
+            tmp_img.width = std::min(font_max[0], string_max[0] - start);
+            delete[] tmp_img.data;
+            tmp_img.data = new unsigned char[tmp_img.width * tmp_img.height * tmp_img.per_pixel];
+            for (int r = 0; r < tmp_img.height; ++r)
+                memcpy(&tmp_img.data[r * tmp_img.width],
+                       &this->img.data[r * this->img.width + start],
+                       tmp_img.width);
+
+            /* Fix the cursor's position (lots of refactor above) */
+        }
+
         this->calculate_widget_size(font_max[0], font_max[1] + font_max[2]);
         this->panel::generate_points(vertex, element);
 
@@ -306,7 +335,7 @@ void ui::text_field::generate_string(void)
                 + ((font_max[1] - string_max[1]) * ph);
 
             vertex[14] = 1.0f
-                + ((font_max[0] - string_max[0]) * pw)
+                + ((font_max[0] - tmp_img.width) * pw)
                 + m[2] + b[2] + pw;
             vertex[15] = vertex[7];
 
@@ -339,7 +368,7 @@ void ui::text_field::generate_string(void)
         glBindTexture(GL_TEXTURE_2D, this->tex);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
-                     this->img.width, this->img.height, 0, GL_RED,
+                     tmp_img.width, tmp_img.height, 0, GL_RED,
                      GL_UNSIGNED_BYTE, tmp_img.data);
     }
 }
