@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Aug 2016, 23:44:53 tquirk
+ *   last updated 07 Aug 2016, 08:32:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -274,18 +274,8 @@ void ui::text_field::generate_string(void)
 
         this->font->max_cell_size(font_max);
         font_max[0] *= this->max_length;
-
-        /* The literal 2s are to provide an extra pixel of space
-         * between the edges of the border/margin/widget and the
-         * actual string.
-         */
-        this->width = font_max[0]
-            + this->margin[1] + this->margin[2]
-            + this->border[1] + this->border[2] + 2;
-        this->height = font_max[1] + font_max[2]
-            + this->margin[0] + this->margin[3]
-            + this->border[0] + this->border[3] + 2;
-        this->parent->move_child(this);
+        this->font->get_string_size(this->str, string_max);
+        this->set_string_size(font_max[0], font_max[1] + font_max[2]);
         this->panel::generate_points(vertex, element);
 
         if (this->img.data != NULL)

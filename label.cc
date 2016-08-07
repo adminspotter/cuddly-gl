@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2016, 08:34:56 tquirk
+ *   last updated 07 Aug 2016, 08:28:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -214,6 +214,21 @@ void ui::label::generate_string_image(void)
     }
 }
 
+void ui::label::set_string_size(int w, int h)
+{
+    /* We want an extra pixel of space between the string and each
+     * side, even if there is no border or margin, thus the
+     * literal 2s.
+     */
+    this->width = w
+        + this->margin[1] + this->margin[2]
+        + this->border[1] + this->border[2] + 2;
+    this->height = h
+        + this->margin[0] + this->margin[3]
+        + this->border[0] + this->border[3] + 2;
+    this->parent->move_child(this);
+}
+
 void ui::label::populate_buffers(void)
 {
     if (this->img.data != NULL)
@@ -221,17 +236,7 @@ void ui::label::populate_buffers(void)
         float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60], temp;
 
-        /* We want an extra pixel of space between the string and each
-         * side, even if there is no border or margin, thus the
-         * literal 2s.
-         */
-        this->width = this->img.width
-            + this->margin[1] + this->margin[2]
-            + this->border[1] + this->border[2] + 2;
-        this->height = this->img.height
-            + this->margin[0] + this->margin[3]
-            + this->border[0] + this->border[3] + 2;
-        this->parent->move_child(this);
+        this->set_string_size(this->img.width, this->img.height);
         this->panel::generate_points(vertex, element);
         pw = 1.0f / (float)this->img.width;
         ph = 1.0f / (float)this->img.height;
