@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 08:32:39 tquirk
+ *   last updated 07 Aug 2016, 09:26:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -199,6 +199,21 @@ void ui::text_field::remove_next_char(void)
     }
 }
 
+int ui::text_field::get_cursor_pixel_pos(void)
+{
+    int ret = 0;
+
+    if (this->font != NULL)
+    {
+        std::vector<int> req_size = {0, 0, 0};
+
+        this->font->get_string_size(this->str.substr(0, this->cursor_pos),
+                                    req_size);
+        ret = req_size[0];
+    }
+    return ret;
+}
+
 void ui::text_field::generate_cursor(void)
 {
     if (this->font != NULL)
@@ -208,15 +223,13 @@ void ui::text_field::generate_cursor(void)
         float w = this->width, h = this->height;
         float pw, ph, sw, m[4], b[4];
         GLuint temp;
-        std::vector<int> req_size = {0, 0, 0};
+        int pixel_pos = this->get_cursor_pixel_pos();
 
-        this->font->get_string_size(this->str.substr(0, this->cursor_pos),
-                                    req_size);
         this->parent->get(ui::element::size, ui::size::width, &temp);
         pw = 2.0f / (float)temp;
         this->parent->get(ui::element::size, ui::size::height, &temp);
         ph = -2.0f / (float)temp;
-        sw = pw * (float)req_size[0];
+        sw = pw * (float)pixel_pos;
         m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
         m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
         m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
