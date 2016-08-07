@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Aug 2016, 19:24:15 tquirk
+ *   last updated 07 Aug 2016, 11:40:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -291,22 +291,19 @@ void ui::font::get_string_size(const std::u32string& str,
     }
 }
 
-unsigned char *ui::font::render_string(const std::u32string& str,
-                                   unsigned int& w,
-                                   unsigned int& h)
+void ui::font::render_string(const std::u32string& str, ui::image& img)
 {
     std::vector<int> req_size = {0, 0, 0};
-    unsigned char *img = NULL;
     std::u32string::const_iterator i = str.begin();
     bool l_to_r = (*this)[*i].is_l_to_r();
     int pos, save_pos;
 
     this->get_string_size(str, req_size);
-    w = req_size[0];
-    h = req_size[1] + req_size[2];
-    img = new unsigned char[w * h];
-    memset(img, 0, w * h);
-    save_pos = pos = (l_to_r ? 0 : w - 1);
+    img.width = req_size[0];
+    img.height = req_size[1] + req_size[2];
+    img.data = new unsigned char[img.width * img.height];
+    memset(img.data, 0, img.width * img.height);
+    save_pos = pos = (l_to_r ? 0 : img.width - 1);
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -330,14 +327,15 @@ unsigned char *ui::font::render_string(const std::u32string& str,
             int x_move = abs(pos - save_pos);
             int x_distance = g.x_advance + kerning.x;
             int start = std::min(pos, save_pos);
-            for (j = 0; j < h; ++j)
+            for (j = 0; j < img.height; ++j)
             {
-                row_offset = (w * j) + start;
-                memmove(&img[row_offset + (!l_to_r ? -x_distance : x_distance)],
-                        &img[row_offset],
+                row_offset = (img.width * j) + start;
+                memmove(&img.data[row_offset
+                                  + (!l_to_r ? -x_distance : x_distance)],
+                        &img.data[row_offset],
                         x_move);
-                memset(&img[row_offset - start + save_pos
-                            - (!l_to_r ? x_distance : 0)],
+                memset(&img.data[row_offset - start + save_pos
+                                 - (!l_to_r ? x_distance : 0)],
                        0,
                        x_distance);
             }
@@ -352,13 +350,14 @@ unsigned char *ui::font::render_string(const std::u32string& str,
         }
         for (j = 0; j < g.height; ++j)
         {
-            row_offset = (bottom_row + j + kerning.y) * w + save_pos + kerning.x
+            row_offset = (bottom_row + j + kerning.y) * img.width
+                + save_pos + kerning.x
                 - (!l_to_r && !same_dir ? g.x_advance : 0);
             if (i != str.begin())
                 row_offset += g.left;
             glyph_offset = (g.height - 1 - j) * g.width;
             for (k = 0; k < g.width; ++k)
-                img[row_offset + k] |= g.bitmap[glyph_offset + k];
+                img.data[row_offset + k] |= g.bitmap[glyph_offset + k];
         }
         if (l_to_r)
         {
@@ -369,5 +368,4 @@ unsigned char *ui::font::render_string(const std::u32string& str,
 
         ++i;
     }
-    return img;
 }

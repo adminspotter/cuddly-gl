@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Aug 2016, 23:37:12 tquirk
+ *   last updated 07 Aug 2016, 11:38:51 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -56,6 +56,7 @@
 #include <vector>
 
 #include "../cache.h"
+#include "image.h"
 
 namespace ui
 {
@@ -102,9 +103,7 @@ namespace ui
         struct glyph& operator[](FT_ULong);
 
         void get_string_size(const std::u32string&, std::vector<int>&);
-        unsigned char *render_string(const std::u32string&,
-                                     unsigned int&,
-                                     unsigned int&);
+        void render_string(const std::u32string&, image&);
     };
 }
 

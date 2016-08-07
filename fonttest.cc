@@ -15,17 +15,18 @@ std::vector<std::string> paths =
 int main(int argc, char **argv)
 {
     int i, j;
-    unsigned int w, h;
     ui::font f(font_name, 20, paths);
     std::string s("Howdy");
     std::u32string str(s.begin(), s.end());
-    unsigned char *buf = f.render_string(str, w, h);
+    ui::image img;
 
-    for (i = h - 1; i >= 0; --i)
+    f.render_string(str, img);
+
+    for (i = img.height - 1; i >= 0; --i)
     {
-        for (j = 0; j < w; ++j)
+        for (j = 0; j < img.width; ++j)
         {
-            unsigned char c = buf[i * w + j];
+            unsigned char c = img.data[i * img.width + j];
             if (c & 0xc0)
                 std::cout << "▓";
             else if (c & 0x30)
