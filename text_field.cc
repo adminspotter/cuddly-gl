@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 09:26:57 tquirk
+ *   last updated 07 Aug 2016, 12:58:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -284,28 +284,22 @@ void ui::text_field::generate_string(void)
         float vertex[160], pw, ph, m[4], b[4];
         GLuint element[60];
         std::vector<int> font_max = {0, 0, 0}, string_max = {0, 0, 0};
+        ui::image tmp_img = this->img;
 
         this->font->max_cell_size(font_max);
         font_max[0] *= this->max_length;
         this->font->get_string_size(this->str, string_max);
-        this->set_string_size(font_max[0], font_max[1] + font_max[2]);
+        this->calculate_widget_size(font_max[0], font_max[1] + font_max[2]);
         this->panel::generate_points(vertex, element);
 
-        if (this->img.data != NULL)
+        if (tmp_img.data != NULL)
         {
-            pw = 1.0f / (float)this->img.width;
-            ph = 1.0f / (float)this->img.height;
+            pw = 1.0f / (float)tmp_img.width;
+            ph = 1.0f / (float)tmp_img.height;
             m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
             m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
             m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
             m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
-
-            this->font->get_string_size(this->str, string_max);
-
-            /* TODO:  the displayed string may be too long to fit in the
-             * panel that we have available.  We'll need to check for that
-             * and take a sub-image for display.
-             */
 
             vertex[6]  = 0.0f - m[1] - b[1] - pw;
             vertex[7]  = 1.0f + m[0] + b[0] + ph
@@ -346,7 +340,7 @@ void ui::text_field::generate_string(void)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                      this->img.width, this->img.height, 0, GL_RED,
-                     GL_UNSIGNED_BYTE, this->img.data);
+                     GL_UNSIGNED_BYTE, tmp_img.data);
     }
 }
 
