@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 08:55:42 tquirk
+ *   last updated 08 Aug 2016, 17:47:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -157,8 +157,11 @@ void ui::text_field::first_char(void)
 
 void ui::text_field::previous_char(void)
 {
-    this->cursor_pos = std::max(0u, this->cursor_pos - 1);
-    this->populate_buffers();
+    if (this->cursor_pos > 0)
+    {
+        --this->cursor_pos;
+        this->populate_buffers();
+    }
 }
 
 void ui::text_field::next_char(void)
