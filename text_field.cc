@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 08:41:19 tquirk
+ *   last updated 08 Aug 2016, 08:55:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -196,7 +196,7 @@ void ui::text_field::remove_next_char(void)
     {
         this->str.erase(this->cursor_pos, 1);
         this->generate_string_image();
-        this->generate_string();
+        this->populate_buffers();
     }
 }
 
@@ -215,7 +215,7 @@ int ui::text_field::get_cursor_pixel_pos(void)
     return ret;
 }
 
-void ui::text_field::generate_cursor(void)
+void ui::text_field::generate_cursor(int pixel_pos)
 {
     if (this->font != NULL)
     {
@@ -224,7 +224,8 @@ void ui::text_field::generate_cursor(void)
         float w = this->width, h = this->height;
         float pw, ph, sw, m[4], b[4];
         GLuint temp;
-        int pixel_pos = this->get_cursor_pixel_pos();
+        if (pixel_pos < 0)
+            pixel_pos = this->get_cursor_pixel_pos();
 
         this->parent->get(ui::element::size, ui::size::width, &temp);
         pw = 2.0f / (float)temp;
@@ -278,7 +279,7 @@ void ui::text_field::generate_cursor(void)
     }
 }
 
-void ui::text_field::generate_string(void)
+void ui::text_field::populate_buffers(void)
 {
     if (this->font != NULL)
     {
@@ -308,8 +309,12 @@ void ui::text_field::generate_string(void)
                        &this->img.data[r * this->img.width + start],
                        tmp_img.width);
 
-            /* Fix the cursor's position (lots of refactor above) */
+            /* Fix the cursor's position */
+            pixel_pos -= start;
+            this->generate_cursor(pixel_pos);
         }
+        else
+            this->generate_cursor();
 
         this->calculate_widget_size(font_max[0], font_max[1] + font_max[2]);
         this->panel::generate_points(vertex, element);
@@ -364,12 +369,6 @@ void ui::text_field::generate_string(void)
                      tmp_img.width, tmp_img.height, 0, GL_RED,
                      GL_UNSIGNED_BYTE, tmp_img.data);
     }
-}
-
-void ui::text_field::populate_buffers(void)
-{
-    this->generate_string();
-    this->generate_cursor();
 }
 
 ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
