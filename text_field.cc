@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 08:04:20 tquirk
+ *   last updated 08 Aug 2016, 08:36:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -292,21 +292,14 @@ void ui::text_field::generate_string(void)
         this->font->get_string_size(this->str, string_max);
         if (string_max[0] > font_max[0])
         {
-            int factor, which, chunk = font_max[0] / 2, start, pixel_pos;
+            /* The chunk size is half the widget's width */
+            int chunk = font_max[0] / 2;
+            int pixel_pos = this->get_cursor_pixel_pos();
+            /* We'll keep the cursor in the second half of the widget */
+            int which = (pixel_pos / chunk) - 1;
+            int start = chunk * which;
 
-            /* The chunk size is half the widget's width.  We'll chop
-             * our string up into chunk-sized pieces.
-             */
-            factor = string_max[0] / chunk;
-
-            /* See which part needs to be displayed */
-            pixel_pos = this->get_cursor_pixel_pos();
-            which = factor - 1;
-            while (chunk * which > pixel_pos)
-                --which;
-            start = chunk * which;
-
-            /* Take that portion of the string image */
+            /* Take the appropriate portion of the string image */
             tmp_img.width = std::min(font_max[0], string_max[0] - start);
             delete[] tmp_img.data;
             tmp_img.data = new unsigned char[tmp_img.width * tmp_img.height * tmp_img.per_pixel];
