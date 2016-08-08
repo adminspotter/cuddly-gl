@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 07:45:03 tquirk
+ *   last updated 08 Aug 2016, 08:04:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -292,12 +292,12 @@ void ui::text_field::generate_string(void)
         this->font->get_string_size(this->str, string_max);
         if (string_max[0] > font_max[0])
         {
-            int factor = 2, which, chunk, start, pixel_pos;
+            int factor, which, chunk = font_max[0] / 2, start, pixel_pos;
 
-            /* See if the string needs to be chopped in 1/2, 1/3, etc. */
-            while (string_max[0] / factor > font_max[0])
-                ++factor;
-            chunk = string_max[0] / factor;
+            /* The chunk size is half the widget's width.  We'll chop
+             * our string up into chunk-sized pieces.
+             */
+            factor = string_max[0] / chunk;
 
             /* See which part needs to be displayed */
             pixel_pos = this->get_cursor_pixel_pos();
