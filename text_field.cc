@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 08:36:18 tquirk
+ *   last updated 08 Aug 2016, 08:41:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -152,25 +152,25 @@ void ui::text_field::deactivate_cursor(void)
 void ui::text_field::first_char(void)
 {
     this->cursor_pos = 0;
-    this->generate_cursor();
+    this->populate_buffers();
 }
 
 void ui::text_field::previous_char(void)
 {
     this->cursor_pos = std::max(0u, this->cursor_pos - 1);
-    this->generate_cursor();
+    this->populate_buffers();
 }
 
 void ui::text_field::next_char(void)
 {
     this->cursor_pos = std::min((GLuint)this->str.size(), this->cursor_pos + 1);
-    this->generate_cursor();
+    this->populate_buffers();
 }
 
 void ui::text_field::last_char(void)
 {
     this->cursor_pos = this->str.size();
-    this->generate_cursor();
+    this->populate_buffers();
 }
 
 void ui::text_field::insert_char(uint32_t c)
@@ -296,7 +296,7 @@ void ui::text_field::generate_string(void)
             int chunk = font_max[0] / 2;
             int pixel_pos = this->get_cursor_pixel_pos();
             /* We'll keep the cursor in the second half of the widget */
-            int which = (pixel_pos / chunk) - 1;
+            int which = std::max((pixel_pos / chunk) - 1, 0);
             int start = chunk * which;
 
             /* Take the appropriate portion of the string image */
