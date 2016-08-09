@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:43:19 tquirk
+ *   last updated 09 Aug 2016, 18:17:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,19 +33,6 @@
 #include "ui.h"
 #include "panel.h"
 #include "shader.h"
-
-int ui::context::get_size(GLuint t, void *v)
-{
-    int ret = 0;
-
-    switch (t)
-    {
-      case ui::size::width:   *((GLuint *)v) = this->dim.x;  break;
-      case ui::size::height:  *((GLuint *)v) = this->dim.y;  break;
-      default:                ret = 1;                       break;
-    }
-    return ret;
-}
 
 int ui::context::get_attribute(GLuint t, void *v)
 {

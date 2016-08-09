@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:08:04 tquirk
+ *   last updated 09 Aug 2016, 18:17:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -54,7 +54,6 @@ namespace ui
         panel *old_child;
 
       protected:
-        int get_size(GLuint, void *);
         int get_attribute(GLuint, void *);
 
       public:
