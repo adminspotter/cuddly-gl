@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 22:27:17 tquirk
+ *   last updated 09 Aug 2016, 07:09:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -31,12 +31,17 @@
 #ifndef __INC_R9_COMPOSITE_H__
 #define __INC_R9_COMPOSITE_H__
 
+#include <list>
+
 #include "panel.h"
 
 namespace ui
 {
     class composite : public panel
     {
+      protected:
+        std::list<panel *> children;
+
       public:
         composite(context *, GLuint, GLuint);
         virtual ~composite();
@@ -45,6 +50,10 @@ namespace ui
         virtual void set(GLuint, GLuint, void *);
 
         virtual void draw(void);
+
+        void add_child(panel *);
+        void remove_child(panel *);
+        void move_child(panel *);
     };
 }
 

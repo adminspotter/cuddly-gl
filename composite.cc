@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 22:45:09 tquirk
+ *   last updated 09 Aug 2016, 07:09:05 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -48,5 +48,17 @@ void ui::composite::set(GLuint e, GLuint t, void *v)
 }
 
 void ui::composite::draw(void)
+{
+}
+
+void ui::composite::add_child(panel *p)
+{
+}
+
+void ui::composite::remove_child(panel *p)
+{
+}
+
+void ui::composite::move_child(panel *p)
 {
 }
