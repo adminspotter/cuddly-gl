@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:01:12 tquirk
+ *   last updated 09 Aug 2016, 18:23:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -48,6 +48,9 @@ namespace ui
         std::list<panel *> children;
         quadtree *tree;
 
+        glm::ivec2 old_pos;
+        panel *old_child;
+
         const static int tree_max_depth;
 
         int get_size(GLuint, void *);
@@ -63,6 +66,10 @@ namespace ui
         void add_child(panel *);
         void remove_child(panel *);
         void move_child(panel *);
+
+        void mouse_pos_callback(int, int);
+        void mouse_btn_callback(int, int);
+        void key_callback(int, uint32_t, int, int);
     };
 }
 

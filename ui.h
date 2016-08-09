@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:17:11 tquirk
+ *   last updated 09 Aug 2016, 18:23:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -64,10 +64,6 @@ namespace ui
         void set(GLuint, GLuint, void *);
 
         void draw(void);
-
-        void mouse_pos_callback(int, int);
-        void mouse_btn_callback(int, int);
-        void key_callback(int, uint32_t, int, int);
     };
 }
 
