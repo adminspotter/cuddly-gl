@@ -20,6 +20,7 @@ libr9_client_ui_la_SOURCES = ui_defs.h shader.cc image.h \
 	ui.cc ui.h \
 	quadtree.cc quadtree.h \
 	panel.cc panel.h \
+	composite.cc composite.h \
 	font.cc font.h \
 	label.cc label.h \
 	button.cc button.h \
