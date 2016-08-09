@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 07:09:08 tquirk
+ *   last updated 09 Aug 2016, 08:17:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -21,8 +21,7 @@
  *
  *
  * This file contains the declaration for the composite object.  It's
- * a panel which can have children, which will then be subclassable
- * into more interesting manager widgets.
+ * a role which handles child management
  *
  * Things to do
  *
@@ -33,23 +32,24 @@
 
 #include <list>
 
+#include "quadtree.h"
 #include "panel.h"
 
 namespace ui
 {
-    class composite : public panel
+    class composite
     {
       protected:
+        glm::ivec2 dim;
+        composite *parent;
         std::list<panel *> children;
+        quadtree *tree;
+
+        const static int tree_max_depth;
 
       public:
-        composite(context *, GLuint, GLuint);
+        composite(composite *, GLuint, GLuint);
         virtual ~composite();
-
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
-
-        virtual void draw(void);
 
         void add_child(panel *);
         void remove_child(panel *);

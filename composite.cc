@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 07:09:05 tquirk
+ *   last updated 09 Aug 2016, 08:24:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -30,35 +30,45 @@
 
 #include "composite.h"
 
-ui::composite::composite(context *c, GLuint w, GLuint h)
-    : ui::panel::panel(c, w, h)
+const int ui::composite::tree_max_depth = 4;
+
+ui::composite::composite(composite *c, GLuint w, GLuint h)
+    : dim((int)w, (int)h), children()
 {
+    glm::ivec2 ul = {0, 0};
+
+    this->parent = c;
+    this->tree = new quadtree(NULL,
+                              ul, this->dim,
+                              ui::composite::tree_max_depth);
 }
 
 ui::composite::~composite()
 {
-}
+    delete this->tree;
 
-int ui::composite::get(GLuint e, GLuint t, void *v)
-{
-}
-
-void ui::composite::set(GLuint e, GLuint t, void *v)
-{
-}
-
-void ui::composite::draw(void)
-{
+    while (!this->children.empty())
+        delete this->children.front();
 }
 
 void ui::composite::add_child(panel *p)
 {
+    auto found = std::find(this->children.begin(), this->children.end(), p);
+    if (found == this->children.end())
+    {
+        this->children.push_back(p);
+        this->tree->insert(p);
+    }
 }
 
 void ui::composite::remove_child(panel *p)
 {
+    this->children.remove(p);
+    this->tree->remove(p);
 }
 
 void ui::composite::move_child(panel *p)
 {
+    this->tree->remove(p);
+    this->tree->insert(p);
 }
