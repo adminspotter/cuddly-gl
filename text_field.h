@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 08:53:29 tquirk
+ *   last updated 09 Aug 2016, 09:05:25 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -77,7 +77,7 @@ namespace ui
         virtual void populate_buffers(void);
 
       public:
-        text_field(context *, GLuint = 0, GLuint = 0);
+        text_field(composite *, GLuint = 0, GLuint = 0);
         virtual ~text_field();
 
         virtual int get(GLuint, GLuint, void *);

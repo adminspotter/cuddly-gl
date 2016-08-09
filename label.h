@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 11:37:19 tquirk
+ *   last updated 09 Aug 2016, 09:02:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -65,7 +65,7 @@ namespace ui
         virtual void populate_buffers(void);
 
       public:
-        label(context *, GLuint = 0, GLuint = 0);
+        label(composite *, GLuint = 0, GLuint = 0);
         virtual ~label();
 
         virtual int get(GLuint, GLuint, void *);

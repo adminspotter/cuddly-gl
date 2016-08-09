@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 11:26:05 tquirk
+ *   last updated 09 Aug 2016, 08:52:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,6 +33,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ui_defs.h"
 #include "panel.h"
 
 const float ui::panel::no_texture = -1000.0;
@@ -483,7 +484,7 @@ void ui::panel::populate_buffers(void)
                  GL_DYNAMIC_DRAW);
 }
 
-ui::panel::panel(ui::context *c, GLuint w, GLuint h)
+ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
       key_down_cb(), key_up_cb()
@@ -501,8 +502,8 @@ ui::panel::panel(ui::context *c, GLuint w, GLuint h)
     }
 
     /* Put the panel in the middle of the screen to start */
-    c->get(ui::element::size, ui::size::width, &x);
-    c->get(ui::element::size, ui::size::height, &y);
+    this->parent->get(ui::element::size, ui::size::width, &x);
+    this->parent->get(ui::element::size, ui::size::height, &y);
     this->xpos = x / 2 - (w / 2);
     this->ypos = y / 2 - (h / 2);
 

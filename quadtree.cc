@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Jul 2016, 08:20:00 tquirk
+ *   last updated 09 Aug 2016, 08:50:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,7 @@
 
 #include <algorithm>
 
+#include "ui_defs.h"
 #include "quadtree.h"
 
 int ui::quadtree::classify(ui::panel *p)

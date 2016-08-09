@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jul 2016, 09:33:59 tquirk
+ *   last updated 09 Aug 2016, 09:04:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,7 +57,7 @@ namespace ui
         static void disarm(panel *, void *, void *);
 
       public:
-        button(context *, GLuint = 0, GLuint = 0);
+        button(composite *, GLuint = 0, GLuint = 0);
         virtual ~button();
 
         virtual int get(GLuint, GLuint, void *);

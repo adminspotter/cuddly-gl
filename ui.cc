@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 12:34:06 tquirk
+ *   last updated 09 Aug 2016, 08:43:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,38 +34,17 @@
 #include "panel.h"
 #include "shader.h"
 
-/* We'll use this for our quadtree default max depth */
-const int ui::context::tree_max_depth = 4;
-
 int ui::context::get_size(GLuint t, void *v)
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::size::width:   *((GLuint *)v) = this->width;  break;
-      case ui::size::height:  *((GLuint *)v) = this->height; break;
+      case ui::size::width:   *((GLuint *)v) = this->dim.x;  break;
+      case ui::size::height:  *((GLuint *)v) = this->dim.y;  break;
       default:                ret = 1;                       break;
     }
     return ret;
-}
-
-void ui::context::set_size(GLuint d, void *v)
-{
-    GLuint new_v = *((GLuint *)v);
-
-    switch (d)
-    {
-      case ui::size::width:  this->width = new_v;  break;
-      case ui::size::height: this->height = new_v; break;
-    }
-
-    /* Regenerate our search tree */
-    glm::ivec2 ul = {0, 0}, lr = {this->width, this->height};
-    delete this->tree;
-    this->tree = new ui::quadtree(NULL, ul, lr, ui::context::tree_max_depth);
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        this->tree->insert(*i);
 }
 
 int ui::context::get_attribute(GLuint t, void *v)
@@ -98,14 +77,8 @@ int ui::context::get_attribute(GLuint t, void *v)
 }
 
 ui::context::context(GLuint w, GLuint h)
-    : children(), old_mouse(0, 0)
+    : ui::composite::composite(NULL, w, h), old_mouse(0, 0)
 {
-    glm::ivec2 ul = {0, 0}, lr = {w, h};
-
-    this->width = w;
-    this->height = h;
-
-    this->tree = new quadtree(NULL, ul, lr, ui::context::tree_max_depth);
     this->old_child = NULL;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
@@ -128,11 +101,6 @@ ui::context::~context()
     glDeleteShader(this->frag_shader);
     glUseProgram(0);
     glDeleteProgram(this->shader_pgm);
-
-    delete this->tree;
-
-    while (!this->children.empty())
-        delete this->children.front();
 }
 
 int ui::context::get(GLuint e, GLuint t, void *v)
@@ -150,12 +118,12 @@ int ui::context::get(GLuint e, GLuint t, void *v)
 
 void ui::context::set(GLuint e, GLuint t, void *v)
 {
-    switch (e)
+    if (e == ui::element::size)
     {
-      case ui::element::size: this->set_size(t, v); break;
+        this->set_size(t, v);
+        for (auto i = this->children.begin(); i != this->children.end(); ++i)
+            (*i)->populate_buffers();
     }
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->populate_buffers();
 }
 
 void ui::context::draw(void)
@@ -163,32 +131,6 @@ void ui::context::draw(void)
     glUseProgram(this->shader_pgm);
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
         (*i)->draw();
-}
-
-ui::context& ui::context::add_child(ui::panel *p)
-{
-    auto found = std::find(this->children.begin(), this->children.end(), p);
-    if (found == this->children.end())
-    {
-        this->children.push_back(p);
-        this->tree->insert(p);
-    }
-    return *this;
-}
-
-ui::context& ui::context::remove_child(ui::panel *p)
-{
-    this->children.remove(p);
-    this->tree->remove(p);
-    return *this;
-}
-
-ui::context& ui::context::move_child(ui::panel *p)
-{
-    /* This is pretty brute-force, but it's at least simple to understand */
-    this->tree->remove(p);
-    this->tree->insert(p);
-    return *this;
 }
 
 void ui::context::mouse_pos_callback(int x, int y)

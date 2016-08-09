@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 17:47:18 tquirk
+ *   last updated 09 Aug 2016, 09:08:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ui_defs.h"
 #include "text_field.h"
 
 int ui::text_field::get_cursor_pos(GLuint t, void *v)
@@ -374,7 +375,7 @@ void ui::text_field::populate_buffers(void)
     }
 }
 
-ui::text_field::text_field(ui::context *c, GLuint w, GLuint h)
+ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
     this->cursor_pos = 0;

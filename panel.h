@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2016, 11:22:34 tquirk
+ *   last updated 09 Aug 2016, 08:49:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -41,12 +41,12 @@
 
 #include <list>
 
-#include "ui.h"
+#include "composite.h"
 
 namespace ui
 {
     /* Forward declarations for multi-include problems */
-    class context;
+    class composite;
     class panel;
 
     /* Callback function pointer */
@@ -79,7 +79,7 @@ namespace ui
 
         std::list<cb_list_elem>& which_cb_list(GLuint);
 
-        context *parent;
+        composite *parent;
         GLuint vao, vbo, ebo, vertex_count, element_count;
         GLuint width, height, xpos, ypos;
         GLuint margin[4], border[4];
@@ -101,7 +101,7 @@ namespace ui
         virtual void populate_buffers(void);
 
       public:
-        panel(context *, GLuint, GLuint);
+        panel(composite *, GLuint, GLuint);
         virtual ~panel();
 
         virtual int get(GLuint, GLuint, void *);

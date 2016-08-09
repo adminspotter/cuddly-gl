@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 11:40:20 tquirk
+ *   last updated 09 Aug 2016, 09:04:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -36,6 +36,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ui_defs.h"
 #include "label.h"
 
 #include "../l10n.h"
@@ -282,7 +283,7 @@ void ui::label::populate_buffers(void)
     }
 }
 
-ui::label::label(ui::context *c, GLuint w, GLuint h)
+ui::label::label(ui::composite *c, GLuint w, GLuint h)
     : ui::panel::panel(c, w, h), str(), img()
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};

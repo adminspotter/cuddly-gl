@@ -35,34 +35,26 @@
 #include <list>
 
 #include "ui_defs.h"
-#include "quadtree.h"
+#include "composite.h"
 
 namespace ui
 {
-    /* Forward declarations for multi-include problems */
-    class quadtree;
+    class composite;
     class panel;
 
-    class context
+    class context : public composite
     {
       private:
         GLuint vert_shader, frag_shader, shader_pgm;
         GLuint pos_attr, norm_attr, color_attr, texture_attr;
         GLuint use_text_uniform, text_bgnd_uniform;
-        std::list<panel *> children;
 
-        quadtree *tree;
         /* Previous mouse position and pointed-to child */
         glm::ivec2 old_mouse;
         panel *old_child;
 
-        const static int tree_max_depth;
-
       protected:
-        GLuint width, height;
-
         int get_size(GLuint, void *);
-        void set_size(GLuint, void *);
         int get_attribute(GLuint, void *);
 
       public:
@@ -73,10 +65,6 @@ namespace ui
         void set(GLuint, GLuint, void *);
 
         void draw(void);
-
-        context& add_child(panel *);
-        context& remove_child(panel *);
-        context& move_child(panel *);
 
         void mouse_pos_callback(int, int);
         void mouse_btn_callback(int, int);

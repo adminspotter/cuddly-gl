@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Jul 2016, 10:02:20 tquirk
+ *   last updated 09 Aug 2016, 09:05:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,7 @@
 
 #include <algorithm>
 
+#include "ui_defs.h"
 #include "button.h"
 
 /* ARGSUSED */
@@ -144,7 +145,7 @@ void ui::button::disarm(ui::panel *p, void *call, void *client)
     p->set(ui::element::arm, 0, &is_armed);
 }
 
-ui::button::button(ui::context *c, GLuint w, GLuint h)
+ui::button::button(ui::composite *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
     this->armed = false;
