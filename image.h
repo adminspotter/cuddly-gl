@@ -1,6 +1,6 @@
-/* font.h                                                  -*- C++ -*-
+/* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 12:43:16 tquirk
+ *   last updated 08 Aug 2016, 22:21:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
