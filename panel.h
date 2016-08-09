@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:49:50 tquirk
+ *   last updated 09 Aug 2016, 18:37:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -117,10 +117,10 @@ namespace ui
         virtual void remove_callback(GLuint, cb_fptr, void *);
         virtual void call_callbacks(GLuint, void *);
 
-        /* The context may change sizes, so it needs to be able to
+        /* The composite may change sizes, so it needs to be able to
          * call populate_buffers() in the event of a window resize.
          */
-        friend class context;
+        friend class composite;
     };
 }
 

@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:24:59 tquirk
+ *   last updated 09 Aug 2016, 18:32:35 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -92,25 +92,9 @@ ui::context::~context()
 
 int ui::context::get(GLuint e, GLuint t, void *v)
 {
-    int ret;
-
-    switch (e)
-    {
-      case ui::element::size:       ret = this->get_size(t, v);      break;
-      case ui::element::attribute:  ret = this->get_attribute(t, v); break;
-      default:                      ret = 1;                         break;
-    }
-    return ret;
-}
-
-void ui::context::set(GLuint e, GLuint t, void *v)
-{
-    if (e == ui::element::size)
-    {
-        this->set_size(t, v);
-        for (auto i = this->children.begin(); i != this->children.end(); ++i)
-            (*i)->populate_buffers();
-    }
+    if (e == ui::element::attribute)
+        return this->get_attribute(t, v);
+    return ui::composite::get(e, t, v);
 }
 
 void ui::context::draw(void)

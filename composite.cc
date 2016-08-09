@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:26:07 tquirk
+ *   last updated 09 Aug 2016, 18:31:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -97,7 +97,11 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
 void ui::composite::set(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::size)
+    {
         this->set_size(t, v);
+        for (auto i = this->children.begin(); i != this->children.end(); ++i)
+            (*i)->populate_buffers();
+    }
 }
 
 void ui::composite::add_child(ui::panel *p)
