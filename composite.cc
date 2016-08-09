@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:24:21 tquirk
+ *   last updated 09 Aug 2016, 09:00:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,7 +51,7 @@ ui::composite::~composite()
         delete this->children.front();
 }
 
-void ui::composite::add_child(panel *p)
+void ui::composite::add_child(ui::panel *p)
 {
     auto found = std::find(this->children.begin(), this->children.end(), p);
     if (found == this->children.end())
@@ -61,13 +61,13 @@ void ui::composite::add_child(panel *p)
     }
 }
 
-void ui::composite::remove_child(panel *p)
+void ui::composite::remove_child(ui::panel *p)
 {
     this->children.remove(p);
     this->tree->remove(p);
 }
 
-void ui::composite::move_child(panel *p)
+void ui::composite::move_child(ui::panel *p)
 {
     this->tree->remove(p);
     this->tree->insert(p);
