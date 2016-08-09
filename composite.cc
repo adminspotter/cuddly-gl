@@ -28,19 +28,53 @@
  *
  */
 
+#include <algorithm>
+
+#include "ui_defs.h"
 #include "composite.h"
 
 const int ui::composite::tree_max_depth = 4;
 
+int ui::composite::get_size(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::size::width:  *((GLuint *)v) = this->dim.x;  break;
+      case ui::size::height: *((GLuint *)v) = this->dim.y;  break;
+      default:               ret = 1;                       break;
+    }
+    return ret;
+}
+
+void ui::composite::set_size(GLuint d, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    switch (d)
+    {
+      case ui::size::width:   this->dim.x = new_v;  break;
+      case ui::size::height:  this->dim.y = new_v;  break;
+    }
+
+    /* Regenerate our search tree */
+    glm::ivec2 ul = {0, 0};
+    delete this->tree;
+    this->tree = new ui::quadtree(NULL,
+                                  ul, this->dim,
+                                  ui::composite::tree_max_depth);
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        this->tree->insert(*i);
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : dim((int)w, (int)h), children()
 {
-    glm::ivec2 ul = {0, 0};
+    int nothing = 0;
 
     this->parent = c;
-    this->tree = new quadtree(NULL,
-                              ul, this->dim,
-                              ui::composite::tree_max_depth);
+    this->set_size(0, &nothing);
 }
 
 ui::composite::~composite()
@@ -49,6 +83,19 @@ ui::composite::~composite()
 
     while (!this->children.empty())
         delete this->children.front();
+}
+
+int ui::composite::get(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::size)
+        return this->get_size(t, v);
+    return 1;
+}
+
+void ui::composite::set(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::size)
+        this->set_size(t, v);
 }
 
 void ui::composite::add_child(ui::panel *p)

@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:17:46 tquirk
+ *   last updated 09 Aug 2016, 09:01:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,6 +37,9 @@
 
 namespace ui
 {
+    class quadtree;
+    class panel;
+
     class composite
     {
       protected:
@@ -47,9 +50,15 @@ namespace ui
 
         const static int tree_max_depth;
 
+        int get_size(GLuint, void *);
+        void set_size(GLuint, void *);
+
       public:
         composite(composite *, GLuint, GLuint);
         virtual ~composite();
+
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
 
         void add_child(panel *);
         void remove_child(panel *);
