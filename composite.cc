@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:00:52 tquirk
+ *   last updated 09 Aug 2016, 18:12:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -60,7 +60,8 @@ void ui::composite::set_size(GLuint d, void *v)
 
     /* Regenerate our search tree */
     glm::ivec2 ul = {0, 0};
-    delete this->tree;
+    if (this->tree != NULL)
+        delete this->tree;
     this->tree = new ui::quadtree(NULL,
                                   ul, this->dim,
                                   ui::composite::tree_max_depth);
@@ -74,6 +75,7 @@ ui::composite::composite(composite *c, GLuint w, GLuint h)
     int nothing = 0;
 
     this->parent = c;
+    this->tree = NULL;
     this->set_size(0, &nothing);
 }
 
