@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2016, 08:21:04 tquirk
+ *   last updated 09 Aug 2016, 09:08:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,8 +34,6 @@
 
 #include <list>
 
-#include <glm/vec2.hpp>
-
 #include "ui_defs.h"
 #include "quadtree.h"
 
@@ -44,33 +42,6 @@ namespace ui
     /* Forward declarations for multi-include problems */
     class quadtree;
     class panel;
-
-    /* Mouse motion callback routines */
-    typedef struct mouse_callback_call
-    {
-        glm::ivec2 location;
-    }
-    mouse_call_data;
-
-    /* Button press/release callback routines */
-    typedef struct btn_callback_call
-    {
-        glm::ivec2 location;
-        GLuint button;
-        GLuint state;
-    }
-    btn_call_data;
-
-    /* Key press/release callback routines */
-    typedef struct key_callback_call
-    {
-        glm::ivec2 location;
-        uint32_t character;
-        GLuint key;
-        GLuint state;
-        GLuint mods;
-    }
-    key_call_data;
 
     class context
     {
