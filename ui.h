@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:31:29 tquirk
+ *   last updated 09 Aug 2016, 18:46:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,8 +20,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic ui declarations and the base ui
- * utility namespace definitions for the R9 UI widget set.
+ * This file contains the declarations for the UI context, which loads
+ * and manages the GLSL program which the rest of the UI toolkit uses
+ * to draw its widgets.  It is a descendent of the composite object,
+ * which will allow the context to manage the top-level widgets.
  *
  * Things to do
  *
@@ -29,10 +31,6 @@
 
 #ifndef __INC_R9_UI_H__
 #define __INC_R9_UI_H__
-
-#include <GL/gl.h>
-
-#include <list>
 
 #include "ui_defs.h"
 #include "composite.h"
