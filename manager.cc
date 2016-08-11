@@ -27,18 +27,43 @@
  *
  */
 
+#include "ui_defs.h"
 #include "manager.h"
 
 void ui::manager::motion_callback(panel *p, void *call, void *client)
 {
+    ui::manager *m;
+
+    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    {
+        ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
+
+        m->mouse_pos_callback(mcd->location.x, mcd->location.y);
+    }
 }
 
 void ui::manager::button_callback(panel *p, void *call, void *client)
 {
+    ui::manager *m;
+
+    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    {
+        ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+
+        m->mouse_btn_callback(bcd->button, bcd->state);
+    }
 }
 
 void ui::manager::keypress_callback(panel *p, void *call, void *client)
 {
+    ui::manager *m;
+
+    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    {
+        ui::key_call_data *kcd = (ui::key_call_data *)call;
+
+        m->key_callback(kcd->key, kcd->character, kcd->state, kcd->mods);
+    }
 }
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
