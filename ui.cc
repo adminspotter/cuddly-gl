@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:32:35 tquirk
+ *   last updated 12 Aug 2016, 07:22:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -80,6 +80,7 @@ ui::context::context(GLuint w, GLuint h)
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
     this->use_text_uniform = glGetUniformLocation(shader_pgm, "use_text");
     this->text_bgnd_uniform = glGetUniformLocation(shader_pgm, "text_bgnd");
+    this->translate_uniform = glGetUniformLocation(shader_pgm, "translate");
 }
 
 ui::context::~context()

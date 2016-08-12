@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:46:43 tquirk
+ *   last updated 12 Aug 2016, 07:22:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,7 @@ namespace ui
         GLuint vert_shader, frag_shader, shader_pgm;
         GLuint pos_attr, norm_attr, color_attr, texture_attr;
         GLuint use_text_uniform, text_bgnd_uniform;
+        GLuint translate_uniform;
 
         /* Previous mouse position and pointed-to child */
         glm::ivec2 old_mouse;
