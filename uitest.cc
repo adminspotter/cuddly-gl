@@ -14,6 +14,7 @@
 #include "label.h"
 #include "button.h"
 #include "text_field.h"
+#include "manager.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -31,6 +32,7 @@ ui::panel *p1;
 ui::label *l1;
 ui::button *b1, *b2;
 ui::text_field *t1;
+ui::manager *m1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
@@ -59,7 +61,7 @@ int main(int argc, char **argv)
     GLFWwindow *w;
     GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
-    glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0};
+    glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
 
     if (glfwInit() == GL_FALSE)
     {
@@ -115,17 +117,6 @@ int main(int argc, char **argv)
                ui::element::margin, ui::side::all, &border,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "creating button 1" << std::endl;
-    b1 = new ui::button(ctx, 0, 0);
-    xpos = 50;
-    ypos = 175;
-    border = 0;
-    b1->set_va(ui::element::bgimage, 0, &img,
-               ui::element::margin, ui::side::all, &border,
-               ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg1,
-               ui::element::position, ui::position::x, &xpos,
-               ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating button 2" << std::endl;
     b2 = new ui::button(ctx, 0, 0);
     xpos = 50;
@@ -152,11 +143,30 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::background, &bg1,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    t1->add_callback(ui::callback::enter, enter_callback, NULL);
-    t1->add_callback(ui::callback::leave, leave_callback, NULL);
-    t1->get_va(ui::element::size, ui::size::width, &xpos,
-               ui::element::size, ui::size::height, &ypos, 0);
-    std::cout << "t1 size is " << xpos << ", " << ypos << std::endl;
+    std::cout << "creating manager 1" << std::endl;
+    m1 = new ui::manager(ctx, 200, 200);
+    xpos = 300;
+    ypos = 150;
+    border = 1;
+    m1->set_va(ui::element::border, ui::side::all, &border,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg2,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "creating button 1" << std::endl;
+    b1 = new ui::button(m1, 0, 0);
+    xpos = 25;
+    ypos = 25;
+    border = 0;
+    b1->set_va(ui::element::bgimage, 0, &img,
+               ui::element::margin, ui::side::all, &border,
+               ui::element::border, ui::side::all, &border,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    b1->add_callback(ui::callback::enter, enter_callback, NULL);
+    b1->add_callback(ui::callback::leave, leave_callback, NULL);
+    std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
     {
