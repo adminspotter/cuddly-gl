@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:31:36 tquirk
+ *   last updated 12 Aug 2016, 07:07:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -70,12 +70,13 @@ void ui::composite::set_size(GLuint d, void *v)
 }
 
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : dim((int)w, (int)h), children()
+    : dim((int)w, (int)h), children(), old_pos(0, 0)
 {
     int nothing = 0;
 
     this->parent = c;
     this->tree = NULL;
+    this->old_child = NULL;
     this->set_size(0, &nothing);
 }
 
