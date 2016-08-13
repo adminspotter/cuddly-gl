@@ -70,6 +70,7 @@ namespace ui
         const GLuint font = 8, string = 9, bgimage = 10;
         const GLuint active = 11, arm = 12;
         const GLuint cursor = 13, max_size = 14;
+        const GLuint transform = 15;
     }
 
     namespace size
@@ -136,6 +137,11 @@ namespace ui
     namespace cursor
     {
         const int position = 1, blink = 2;
+    }
+
+    namespace transform
+    {
+        const GLuint translate = 1;
     }
 }
 

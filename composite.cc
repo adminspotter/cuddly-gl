@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 07:07:13 tquirk
+ *   last updated 13 Aug 2016, 07:35:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -69,8 +69,18 @@ void ui::composite::set_size(GLuint d, void *v)
         this->tree->insert(*i);
 }
 
+int ui::composite::get_transform(GLuint t, void *v)
+{
+    if (t == ui::transform::translate)
+    {
+        *((glm::mat4 *)v) = this->translate;
+        return 0;
+    }
+    return 1;
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : dim((int)w, (int)h), children(), old_pos(0, 0)
+    : dim((int)w, (int)h), children(), old_pos(0, 0), translate()
 {
     int nothing = 0;
 
@@ -92,6 +102,8 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::size)
         return this->get_size(t, v);
+    else if (e == ui::element::transform)
+        return this->get_transform(t, v);
     return 1;
 }
 

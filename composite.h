@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 18:23:07 tquirk
+ *   last updated 13 Aug 2016, 07:33:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,8 @@
 
 #include <list>
 
+#include <glm/mat4x4.hpp>
+
 #include "quadtree.h"
 #include "panel.h"
 
@@ -47,6 +49,7 @@ namespace ui
         composite *parent;
         std::list<panel *> children;
         quadtree *tree;
+        glm::mat4 translate;
 
         glm::ivec2 old_pos;
         panel *old_child;
@@ -55,6 +58,7 @@ namespace ui
 
         int get_size(GLuint, void *);
         void set_size(GLuint, void *);
+        virtual int get_transform(GLuint, void *);
 
       public:
         composite(composite *, GLuint, GLuint);
