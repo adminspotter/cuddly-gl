@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 06:44:18 tquirk
+ *   last updated 12 Aug 2016, 07:23:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,9 +45,11 @@ namespace ui
 
       public:
         manager(composite *, GLuint, GLuint);
-        ~manager();
+        virtual ~manager();
 
-        void draw(void);
+        virtual int get(GLuint, GLuint, void *);
+
+        virtual void draw(void);
     };
 }
 
