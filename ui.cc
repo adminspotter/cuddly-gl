@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 07:22:42 tquirk
+ *   last updated 13 Aug 2016, 07:22:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,6 +57,9 @@ int ui::context::get_attribute(GLuint t, void *v)
         break;
       case ui::attribute::text_bgnd:
         *((GLuint *)v) = this->text_bgnd_uniform;
+        break;
+      case ui::attribute::translate:
+        *((GLuint *)v) = this->translate_uniform;
         break;
       default: ret = 1; break;
     }

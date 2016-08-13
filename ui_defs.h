@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:08:26 tquirk
+ *   last updated 13 Aug 2016, 07:22:09 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -80,7 +80,7 @@ namespace ui
     namespace attribute
     {
         const GLuint position = 1, normal = 2, color = 3, texture = 4;
-        const GLuint use_text = 5, text_bgnd = 6;
+        const GLuint use_text = 5, text_bgnd = 6, translate = 7;
     }
 
     namespace side
