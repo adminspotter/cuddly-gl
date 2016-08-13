@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 07:33:19 tquirk
+ *   last updated 13 Aug 2016, 10:25:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,6 +59,7 @@ namespace ui
         int get_size(GLuint, void *);
         void set_size(GLuint, void *);
         virtual int get_transform(GLuint, void *);
+        virtual int get_pixel_size(GLuint, void *);
 
       public:
         composite(composite *, GLuint, GLuint);

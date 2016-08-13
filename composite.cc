@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 07:35:32 tquirk
+ *   last updated 13 Aug 2016, 10:26:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -79,6 +79,19 @@ int ui::composite::get_transform(GLuint t, void *v)
     return 1;
 }
 
+int ui::composite::get_pixel_size(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;
+      case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;
+      default:                ret = 1;
+    }
+    return ret;
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : dim((int)w, (int)h), children(), old_pos(0, 0), translate()
 {
@@ -100,11 +113,13 @@ ui::composite::~composite()
 
 int ui::composite::get(GLuint e, GLuint t, void *v)
 {
-    if (e == ui::element::size)
-        return this->get_size(t, v);
-    else if (e == ui::element::transform)
-        return this->get_transform(t, v);
-    return 1;
+    switch (e)
+    {
+      case ui::element::size:        return this->get_size(t, v);
+      case ui::element::transform:   return this->get_transform(t, v);
+      case ui::element::pixel_size:  return this->get_pixel_size(t, v);
+      default:                       return 1;
+    }
 }
 
 void ui::composite::set(GLuint e, GLuint t, void *v)
