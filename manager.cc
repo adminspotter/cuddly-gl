@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 06:55:03 tquirk
+ *   last updated 12 Aug 2016, 07:37:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -83,6 +83,14 @@ ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
 
 ui::manager::~manager()
 {
+}
+
+int ui::manager::get(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::attribute && this->composite::parent != NULL)
+        /* Eventually, the context will be somebody's parent */
+        return this->composite::parent->get(e, t, v);
+    return this->panel::get(e, t, v);
 }
 
 void ui::manager::draw(void)
