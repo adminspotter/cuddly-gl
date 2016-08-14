@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 10:26:32 tquirk
+ *   last updated 14 Aug 2016, 07:34:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,8 +85,8 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;
-      case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;
+      case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;  break;
+      case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;  break;
       default:                ret = 1;
     }
     return ret;
