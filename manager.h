@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 07:23:52 tquirk
+ *   last updated 13 Aug 2016, 23:15:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -39,6 +39,8 @@ namespace ui
     class manager : public panel, public composite
     {
       protected:
+        int get_pixel_size(GLuint, void *);
+
         static void motion_callback(panel *, void *, void *);
         static void button_callback(panel *, void *, void *);
         static void keypress_callback(panel *, void *, void *);

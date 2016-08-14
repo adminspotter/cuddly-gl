@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 07:37:14 tquirk
+ *   last updated 13 Aug 2016, 23:10:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,13 @@
 
 #include "ui_defs.h"
 #include "manager.h"
+
+int ui::manager::get_pixel_size(GLuint t, void *v)
+{
+    if (this->composite::parent != NULL)
+        return this->composite::parent->get(ui::element::pixel_size, t, v);
+    return 1;
+}
 
 void ui::manager::motion_callback(panel *p, void *call, void *client)
 {
@@ -87,10 +94,21 @@ ui::manager::~manager()
 
 int ui::manager::get(GLuint e, GLuint t, void *v)
 {
-    if (e == ui::element::attribute && this->composite::parent != NULL)
-        /* Eventually, the context will be somebody's parent */
-        return this->composite::parent->get(e, t, v);
-    return this->panel::get(e, t, v);
+    switch (e)
+    {
+      case ui::element::attribute:
+      case ui::element::pixel_size:
+        if (this->composite::parent != NULL)
+            /* Eventually, the context will be somebody's parent */
+            return this->composite::parent->get(e, t, v);
+        break;
+
+      case ui::element::transform:
+        return this->get_transform(t, v);
+
+      default:
+        return this->panel::get(e, t, v);
+    }
 }
 
 void ui::manager::draw(void)
