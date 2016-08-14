@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 23:22:47 tquirk
+ *   last updated 14 Aug 2016, 08:21:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ui_defs.h"
 #include "manager.h"
@@ -141,7 +142,27 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
 
 void ui::manager::draw(void)
 {
+    glm::mat4 t;
+    GLuint tu;
+
     this->panel::draw();
+
+    if (this->composite::parent == NULL)
+        return;
+
+    /* Our children need to be drawn in our coord space. */
+    this->composite::parent->get(ui::element::attribute,
+                                 ui::attribute::translate,
+                                 &tu);
+    glUniformMatrix4fv(tu, 1, GL_FALSE, glm::value_ptr(this->translate));
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
         (*i)->draw();
+
+    /* Reset the uniform to what it was when we got here, in case
+     * we're not the only child of our parent.
+     */
+    this->composite::parent->get(ui::element::transform,
+                                 ui::transform::translate,
+                                 &t);
+    glUniformMatrix4fv(tu, 1, GL_FALSE, glm::value_ptr(t));
 }

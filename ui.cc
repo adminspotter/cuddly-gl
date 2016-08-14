@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 07:22:30 tquirk
+ *   last updated 14 Aug 2016, 07:20:51 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,8 @@
 
 #include <string>
 #include <algorithm>
+
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ui.h"
 #include "panel.h"
@@ -103,6 +105,9 @@ int ui::context::get(GLuint e, GLuint t, void *v)
 
 void ui::context::draw(void)
 {
+    glUniformMatrix4fv(this->translate_uniform,
+                       1, GL_FALSE,
+                       glm::value_ptr(this->translate));
     glUseProgram(this->shader_pgm);
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
         (*i)->draw();

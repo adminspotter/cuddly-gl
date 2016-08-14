@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:52:03 tquirk
+ *   last updated 14 Aug 2016, 07:12:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -259,10 +259,9 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
     float pw, ph, m[4], b[4];
     GLuint vert_count = 0, temp;
 
-    this->parent->get(ui::element::size, ui::size::width, &temp);
-    pw = 2.0f / (float)temp;
-    this->parent->get(ui::element::size, ui::size::height, &temp);
-    ph = -2.0f / (float)temp;
+    this->parent->get(ui::element::pixel_size, ui::size::width, &pw);
+    this->parent->get(ui::element::pixel_size, ui::size::height, &ph);
+    ph = -ph;
     m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
     m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
     m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
