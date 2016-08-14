@@ -52,7 +52,7 @@ void ui::manager::set_position(GLuint t, void *v)
                                      ui::size::height,
                                      &pixel_sz.y);
         pixel_sz.x *= this->xpos;
-        pixel_sz.y *= this->ypos;
+        pixel_sz.y = -(pixel_sz.y * this->ypos);
         this->translate = glm::translate(trans, pixel_sz);
     }
 }
