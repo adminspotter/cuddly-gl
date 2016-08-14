@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 23:10:55 tquirk
+ *   last updated 13 Aug 2016, 23:22:47 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,8 +27,35 @@
  *
  */
 
+#include <glm/vec3.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "ui_defs.h"
 #include "manager.h"
+
+void ui::manager::set_position(GLuint t, void *v)
+{
+    this->panel::set_position(t, v);
+    if (this->composite::parent != NULL)
+    {
+        glm::vec3 pixel_sz(0.0f, 0.0f, 0.0f);
+        glm::mat4 trans;
+        GLuint zero = 0;
+
+        this->composite::parent->get(ui::element::transform,
+                                     ui::transform::translate,
+                                     &trans);
+        this->composite::parent->get(ui::element::pixel_size,
+                                     ui::size::width,
+                                     &pixel_sz.x);
+        this->composite::parent->get(ui::element::pixel_size,
+                                     ui::size::height,
+                                     &pixel_sz.y);
+        pixel_sz.x *= this->xpos;
+        pixel_sz.y *= this->ypos;
+        this->translate = glm::translate(trans, pixel_sz);
+    }
+}
 
 int ui::manager::get_pixel_size(GLuint t, void *v)
 {
