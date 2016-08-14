@@ -136,6 +136,7 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
       default:
         return this->panel::get(e, t, v);
     }
+    return 1;
 }
 
 void ui::manager::draw(void)
