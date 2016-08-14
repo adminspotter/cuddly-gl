@@ -117,18 +117,19 @@ int main(int argc, char **argv)
                ui::element::margin, ui::side::all, &border,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "creating button 2" << std::endl;
-    b2 = new ui::button(ctx, 0, 0);
+    std::cout << "creating button 1" << std::endl;
+    b1 = new ui::button(ctx, 0, 0);
     xpos = 50;
-    ypos = 250;
-    border = 5;
-    b2->set_va(ui::element::font, 0, new ui::font(font_name, 80, paths),
-               ui::element::string, 0, &greeting,
+    ypos = 175;
+    border = 0;
+    b1->set_va(ui::element::bgimage, 0, &img,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg2,
+               ui::element::color, ui::color::foreground, &fg1,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
+    b1->add_callback(ui::callback::enter, enter_callback, NULL);
+    b1->add_callback(ui::callback::leave, leave_callback, NULL);
     std::cout << "creating text field 1" << std::endl;
     t1 = new ui::text_field(ctx, 0, 0);
     xpos = 300;
@@ -153,19 +154,18 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::background, &bg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "creating button 1" << std::endl;
-    b1 = new ui::button(m1, 0, 0);
-    xpos = 25;
-    ypos = 25;
-    border = 0;
-    b1->set_va(ui::element::bgimage, 0, &img,
+    std::cout << "creating button 2" << std::endl;
+    b2 = new ui::button(m1, 0, 0);
+    xpos = 20;
+    ypos = 20;
+    border = 5;
+    b2->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
+               ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    b1->add_callback(ui::callback::enter, enter_callback, NULL);
-    b1->add_callback(ui::callback::leave, leave_callback, NULL);
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
