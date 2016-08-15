@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 23:23:06 tquirk
+ *   last updated 15 Aug 2016, 08:27:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,6 +53,10 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
 
         virtual void draw(void);
+
+        virtual void add_child(panel *);
+        virtual void remove_child(panel *);
+        virtual void move_child(panel *);
     };
 }
 

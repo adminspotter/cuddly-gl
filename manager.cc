@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2016, 09:08:01 tquirk
+ *   last updated 15 Aug 2016, 08:29:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -170,4 +170,24 @@ void ui::manager::draw(void)
                                  ui::transform::translate,
                                  &t);
     glUniformMatrix4fv(tu, 1, GL_FALSE, glm::value_ptr(t));
+}
+
+void ui::manager::add_child(ui::panel *p)
+{
+    this->composite::add_child(p);
+
+    /* If this child is too big to fit in our current size, resize */
+}
+
+void ui::manager::remove_child(ui::panel *p)
+{
+    this->composite::remove_child(p);
+
+    /* If there's a bunch of extra space around our children, resize */
+}
+
+void ui::manager::move_child(ui::panel *p)
+{
+    this->composite::remove_child(p);
+    this->composite::add_child(p);
 }

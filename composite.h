@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 10:25:45 tquirk
+ *   last updated 15 Aug 2016, 19:11:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -68,9 +68,9 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
 
-        void add_child(panel *);
-        void remove_child(panel *);
-        void move_child(panel *);
+        virtual void add_child(panel *);
+        virtual void remove_child(panel *);
+        virtual void move_child(panel *);
 
         void mouse_pos_callback(int, int);
         void mouse_btn_callback(int, int);
