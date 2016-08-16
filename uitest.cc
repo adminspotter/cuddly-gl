@@ -59,7 +59,7 @@ ui::image img;
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len;
+    GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len, spacing;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
 
@@ -130,9 +130,34 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     b1->add_callback(ui::callback::enter, enter_callback, NULL);
     b1->add_callback(ui::callback::leave, leave_callback, NULL);
-    std::cout << "creating text field 1" << std::endl;
-    t1 = new ui::text_field(ctx, 0, 0);
+    std::cout << "creating manager 1" << std::endl;
+    m1 = new ui::manager(ctx, 200, 200);
     xpos = 300;
+    ypos = 150;
+    border = 1;
+    spacing = 10;
+    m1->set_va(ui::element::border, ui::side::all, &border,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg2,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos,
+               ui::element::child_spacing, ui::size::width, &spacing,
+               ui::element::child_spacing, ui::size::height, &spacing, 0);
+    std::cout << "creating button 2" << std::endl;
+    b2 = new ui::button(m1, 0, 0);
+    xpos = 10;
+    ypos = 10;
+    border = 5;
+    b2->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
+               ui::element::string, 0, &greeting,
+               ui::element::margin, ui::side::all, &border,
+               ui::element::border, ui::side::all, &border,
+               ui::element::color, ui::color::foreground, &fg2,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "creating text field 1" << std::endl;
+    t1 = new ui::text_field(m1, 0, 0);
+    xpos = 10;
     ypos = 100;
     border = 1;
     max_len = 10;
@@ -142,28 +167,6 @@ int main(int argc, char **argv)
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::color, ui::color::background, &bg1,
-               ui::element::position, ui::position::x, &xpos,
-               ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "creating manager 1" << std::endl;
-    m1 = new ui::manager(ctx, 200, 200);
-    xpos = 300;
-    ypos = 150;
-    border = 1;
-    m1->set_va(ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg1,
-               ui::element::color, ui::color::background, &bg2,
-               ui::element::position, ui::position::x, &xpos,
-               ui::element::position, ui::position::y, &ypos, 0);
-    std::cout << "creating button 2" << std::endl;
-    b2 = new ui::button(m1, 0, 0);
-    xpos = 20;
-    ypos = 20;
-    border = 5;
-    b2->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
-               ui::element::string, 0, &greeting,
-               ui::element::margin, ui::side::all, &border,
-               ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "done creating things" << std::endl;
