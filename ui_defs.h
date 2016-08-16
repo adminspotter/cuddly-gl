@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 22:19:17 tquirk
+ *   last updated 16 Aug 2016, 06:30:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -92,9 +92,9 @@ namespace ui
 
     namespace corner
     {
-        const GLuint top_left = 1, top_right = 2,
-            bottom_left = 4, bottom_right = 8,
-            top = 3, left = 5, right = 10, bottom = 12, all = 15;
+        const GLuint top_left = 1, top_right = 2;
+        const GLuint bottom_left = 4, bottom_right = 8;
+        const GLuint top = 3, left = 5, right = 10, bottom = 12, all = 15;
     }
 
     namespace color
