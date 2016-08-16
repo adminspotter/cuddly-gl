@@ -46,6 +46,8 @@ namespace ui
         virtual void set_position(GLuint, void *);
         int get_pixel_size(GLuint, void *);
 
+        void set_desired_size(void);
+
         static void motion_callback(panel *, void *, void *);
         static void button_callback(panel *, void *, void *);
         static void keypress_callback(panel *, void *, void *);

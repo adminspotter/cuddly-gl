@@ -27,6 +27,8 @@
  *
  */
 
+#include <algorithm>
+
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -87,6 +89,36 @@ int ui::manager::get_pixel_size(GLuint t, void *v)
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
     return 1;
+}
+
+void ui::manager::set_desired_size(void)
+{
+    glm::ivec2 ds(0, 0);
+    GLuint zero = 0;
+
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    {
+        GLuint cw, ch, cx, cy;
+
+        (*i)->get_va(ui::element::size, ui::size::width, &cw,
+                     ui::element::size, ui::size::height, &ch,
+                     ui::element::position, ui::position::x, &cx,
+                     ui::element::position, ui::position::y, &cy, 0);
+        ds.x = std::max(ds.x, (int)(cx + cw));
+        ds.y = std::max(ds.y, (int)(cy + ch));
+    }
+    ds.x += this->margin[1] + this->margin[2]
+        + this->border[1] + this->border[2]
+        + this->child_spacing.x;
+    ds.y += this->margin[0] + this->margin[3]
+        + this->border[0] + this->border[3]
+        + this->child_spacing.y;
+
+    this->width = ds.x;
+    this->height = ds.y;
+    this->dim = ds;
+    this->composite::set_size(0, &zero);
+    this->populate_buffers();
 }
 
 void ui::manager::motion_callback(panel *p, void *call, void *client)
@@ -223,19 +255,18 @@ void ui::manager::draw(void)
 void ui::manager::add_child(ui::panel *p)
 {
     this->composite::add_child(p);
-
-    /* If this child is too big to fit in our current size, resize */
+    this->set_desired_size();
 }
 
 void ui::manager::remove_child(ui::panel *p)
 {
     this->composite::remove_child(p);
-
-    /* If there's a bunch of extra space around our children, resize */
+    this->set_desired_size();
 }
 
 void ui::manager::move_child(ui::panel *p)
 {
     this->composite::remove_child(p);
     this->composite::add_child(p);
+    this->set_desired_size();
 }
