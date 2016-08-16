@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 23:31:36 tquirk
+ *   last updated 16 Aug 2016, 06:43:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,8 +29,36 @@
 
 #include "row_column.h"
 
+int ui::row_column::get_size(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::size::width:
+      case ui::size::height:   return this->manager::get_size(t, v);
+
+      case ui::size::rows:     *(GLuint *)v = this->grid_sz.x;  break;
+      case ui::size::columns:  *(GLuint *)v = this->grid_sz.y;  break;
+      default:                 ret = 1;                         break;
+    }
+    return ret;
+}
+
+void ui::row_column::set_size(GLuint t, void *v)
+{
+    switch (t)
+    {
+      case ui::size::width:
+      case ui::size::height:   this->manager::set_size(t, v);   break;
+
+      case ui::size::rows:     this->grid_sz.x = *(GLuint *)v;  break;
+      case ui::size::columns:  this->grid_sz.y = *(GLuint *)v;  break;
+    }
+}
+
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h)
+    : ui::manager::manager(c, w, h), grid_sz(0, 1)
 {
 }
 

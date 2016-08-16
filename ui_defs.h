@@ -77,6 +77,7 @@ namespace ui
     namespace size
     {
         const GLuint width = 1, height = 2;
+        const GLuint rows = 3, columns = 4;
     }
 
     namespace attribute
