@@ -1,6 +1,6 @@
 /* row_column.h                                       -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 06:26:10 tquirk
+ *   last updated 16 Aug 2016, 07:11:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -38,13 +38,18 @@ namespace ui
     {
       protected:
         glm::ivec2 grid_sz;
+        GLuint pack_order;
 
         virtual int get_size(GLuint, void *);
         virtual void set_size(GLuint, void *);
+        virtual int get_order(GLuint, void *);
+        virtual void set_order(GLuint, void *);
 
       public:
         row_column(composite *, GLuint, GLuint);
         virtual ~row_column();
+
+        virtual void set(GLuint, GLuint, void *);
     };
 }
 

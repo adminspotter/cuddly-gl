@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 06:43:11 tquirk
+ *   last updated 16 Aug 2016, 07:11:25 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,11 +57,34 @@ void ui::row_column::set_size(GLuint t, void *v)
     }
 }
 
+int ui::row_column::get_order(GLuint t, void *v)
+{
+    *(GLuint *)v = this->pack_order;
+    return 0;
+}
+
+void ui::row_column::set_order(GLuint t, void *v)
+{
+    GLuint new_v = *(GLuint *)v;
+
+    if (new_v == ui::order::row || new_v == ui::order::column)
+        this->pack_order = new_v;
+}
+
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), grid_sz(0, 1)
 {
+    this->pack_order = ui::order::row;
 }
 
 ui::row_column::~row_column()
 {
+}
+
+void ui::row_column::set(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::order)
+        this->set_order(t, v);
+    else
+        this->manager::set(e, t, v);
 }

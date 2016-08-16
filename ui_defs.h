@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 06:30:54 tquirk
+ *   last updated 16 Aug 2016, 06:53:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -72,6 +72,7 @@ namespace ui
         const GLuint cursor = 13, max_size = 14;
         const GLuint transform = 15, pixel_size = 16, child_spacing = 17;
         const GLuint resize = 18;
+        const GLuint order = 19;
     }
 
     namespace size
@@ -149,6 +150,11 @@ namespace ui
     namespace resize
     {
         const GLuint none = 0, shrink = 1, grow = 2, all = 3;
+    }
+
+    namespace order
+    {
+        const GLuint row = 1, column = 2;
     }
 }
 
