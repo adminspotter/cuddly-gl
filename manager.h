@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 08:27:19 tquirk
+ *   last updated 15 Aug 2016, 19:12:29 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -39,6 +39,10 @@ namespace ui
     class manager : public panel, public composite
     {
       protected:
+        glm::ivec2 child_spacing;
+
+        int get_child_spacing(GLuint, void *);
+        void set_child_spacing(GLuint, void *);
         virtual void set_position(GLuint, void *);
         int get_pixel_size(GLuint, void *);
 
@@ -51,6 +55,7 @@ namespace ui
         virtual ~manager();
 
         virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
 
         virtual void draw(void);
 

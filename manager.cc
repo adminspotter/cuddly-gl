@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 08:29:39 tquirk
+ *   last updated 15 Aug 2016, 19:15:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,6 +33,30 @@
 
 #include "ui_defs.h"
 #include "manager.h"
+
+int ui::manager::get_child_spacing(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::size::width:  *((GLuint *)v) = this->child_spacing.x;  break;
+      case ui::size::height: *((GLuint *)v) = this->child_spacing.y;  break;
+      default:               ret = 1;                                 break;
+    }
+    return ret;
+}
+
+void ui::manager::set_child_spacing(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    switch (t)
+    {
+      case ui::size::width:   this->child_spacing.x = new_v;  break;
+      case ui::size::height:  this->child_spacing.y = new_v;  break;
+    }
+}
 
 void ui::manager::set_position(GLuint t, void *v)
 {
@@ -107,7 +131,8 @@ void ui::manager::keypress_callback(panel *p, void *call, void *client)
 }
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
-    : ui::panel::panel(c, w, h), ui::composite::composite(c, w, h)
+    : ui::panel::panel(c, w, h), ui::composite::composite(c, w, h),
+      child_spacing(0, 0)
 {
     this->add_callback(ui::callback::motion,
                        ui::manager::motion_callback, NULL);
@@ -139,10 +164,33 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
       case ui::element::transform:
         return this->get_transform(t, v);
 
+      case ui::element::child_spacing:
+        return this->get_child_spacing(t, v);
+
       default:
         return this->panel::get(e, t, v);
     }
     return 1;
+}
+
+void ui::manager::set(GLuint e, GLuint t, void *v)
+{
+    switch (e)
+    {
+      case ui::element::child_spacing:
+        this->set_child_spacing(t, v);
+        this->populate_buffers();
+        break;
+
+      case ui::element::size:
+        this->panel::set(e, t, v);
+        this->composite::set(e, t, v);
+        break;
+
+      default:
+        this->panel::set(e, t, v);
+        break;
+    }
 }
 
 void ui::manager::draw(void)
