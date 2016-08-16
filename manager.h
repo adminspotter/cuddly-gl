@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 19:12:29 tquirk
+ *   last updated 15 Aug 2016, 22:13:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,9 +40,12 @@ namespace ui
     {
       protected:
         glm::ivec2 child_spacing;
+        GLuint resize;
 
         int get_child_spacing(GLuint, void *);
         void set_child_spacing(GLuint, void *);
+        int get_resize(GLuint, void *);
+        void set_resize(GLuint, void *);
         virtual void set_position(GLuint, void *);
         int get_pixel_size(GLuint, void *);
 
