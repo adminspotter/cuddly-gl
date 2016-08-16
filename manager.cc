@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 22:17:34 tquirk
+ *   last updated 15 Aug 2016, 22:35:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -62,10 +62,19 @@ void ui::manager::set_child_spacing(GLuint t, void *v)
 
 int ui::manager::get_resize(GLuint t, void *v)
 {
+    *(GLuint *)v = this->resize;
+    return 0;
 }
 
 void ui::manager::set_resize(GLuint t, void *v)
 {
+    GLuint new_v = *((GLuint *)v);
+
+    if (new_v <= ui::resize::all)
+        this->resize = new_v;
+
+    if (this->resize != ui::resize::none)
+        this->set_desired_size();
 }
 
 void ui::manager::set_position(GLuint t, void *v)
@@ -104,6 +113,9 @@ void ui::manager::set_desired_size(void)
     glm::ivec2 ds(0, 0);
     GLuint zero = 0;
 
+    if (this->resize == ui::resize::none)
+        return;
+
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
     {
         GLuint cw, ch, cx, cy;
@@ -122,9 +134,23 @@ void ui::manager::set_desired_size(void)
         + this->border[0] + this->border[3]
         + this->child_spacing.y;
 
-    this->width = ds.x;
-    this->height = ds.y;
-    this->dim = ds;
+    /* We could possibly shrink one dimension and grow another, so
+     * we'll handle both cases directly (i.e. no 'else').
+     */
+    if (this->resize & ui::resize::shrink)
+    {
+        if (ds.x < this->width)
+            this->width = this->dim.x = ds.x;
+        if (ds.y < this->height)
+            this->height = this->dim.y = ds.y;
+    }
+    if (this->resize & ui::resize::grow)
+    {
+        if (ds.x > this->width)
+            this->width = this->dim.x = ds.x;
+        if (ds.y > this->height)
+            this->height = this->dim.y = ds.y;
+    }
     this->composite::set_size(0, &zero);
     this->populate_buffers();
 }
