@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 07:11:25 tquirk
+ *   last updated 16 Aug 2016, 07:18:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,6 +27,7 @@
  *
  */
 
+#include "ui_defs.h"
 #include "row_column.h"
 
 int ui::row_column::get_size(GLuint t, void *v)
