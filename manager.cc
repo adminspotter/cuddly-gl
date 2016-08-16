@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 22:35:42 tquirk
+ *   last updated 16 Aug 2016, 07:22:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -75,6 +75,17 @@ void ui::manager::set_resize(GLuint t, void *v)
 
     if (this->resize != ui::resize::none)
         this->set_desired_size();
+}
+
+int ui::manager::get_size(GLuint t, void *v)
+{
+    return this->composite::get_size(t, v);
+}
+
+void ui::manager::set_size(GLuint t, void *v)
+{
+    this->composite::set_size(t, v);
+    this->panel::set_size(t, v);
 }
 
 void ui::manager::set_position(GLuint t, void *v)
