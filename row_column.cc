@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 07:18:01 tquirk
+ *   last updated 16 Aug 2016, 18:44:47 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -26,6 +26,8 @@
  * Things to do
  *
  */
+
+#include <algorithm>
 
 #include "ui_defs.h"
 #include "row_column.h"
@@ -70,6 +72,46 @@ void ui::row_column::set_order(GLuint t, void *v)
 
     if (new_v == ui::order::row || new_v == ui::order::column)
         this->pack_order = new_v;
+}
+
+glm::ivec2 ui::row_column::calculate_cell_size(void)
+{
+    glm::ivec2 cell_size(0, 0);
+
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    {
+        GLuint w, h;
+
+        (*i)->get_va(ui::element::size, ui::size::width, &w,
+                     ui::element::size, ui::size::height, &h, 0);
+        cell_size.x = std::max(cell_size.x, (int)w);
+        cell_size.y = std::max(cell_size.y, (int)h);
+    }
+    return cell_size;
+}
+
+void ui::row_column::set_desired_size(void)
+{
+    glm::ivec2 cell_size(0, 0);
+    GLuint zero = 0;
+
+    /* We do not read minds. */
+    if (this->grid_sz.x == 0 && this->grid_sz.y == 0)
+        return;
+
+    cell_size = this->calculate_cell_size();
+    if (this->grid_sz.x != 0)
+        this->width = ((cell_size.x + this->child_spacing.x) * this->grid_sz.x)
+            + this->child_spacing.x
+            + this->margin[1] + this->margin[2]
+            + this->border[1] + this->border[2];
+    if (this->grid_sz.y != 0)
+        this->height = ((cell_size.y + this->child_spacing.y) * this->grid_sz.y)
+            + this->child_spacing.y
+            + this->margin[0] + this->margin[3]
+            + this->border[0] + this->border[3];
+    this->composite::set_size(0, &zero);
+    this->populate_buffers();
 }
 
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)

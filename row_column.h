@@ -45,6 +45,9 @@ namespace ui
         virtual int get_order(GLuint, void *);
         virtual void set_order(GLuint, void *);
 
+        glm::ivec2 calculate_cell_size(void);
+        virtual void set_desired_size(void);
+
       public:
         row_column(composite *, GLuint, GLuint);
         virtual ~row_column();
