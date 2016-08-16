@@ -1,6 +1,6 @@
 /* manager.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 07:21:30 tquirk
+ *   last updated 16 Aug 2016, 18:32:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,6 +51,7 @@ namespace ui
         virtual void set_position(GLuint, void *);
         int get_pixel_size(GLuint, void *);
 
+        glm::ivec2 calculate_max_point(void);
         virtual void set_desired_size(void);
 
         static void motion_callback(panel *, void *, void *);
