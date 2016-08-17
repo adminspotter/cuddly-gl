@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Aug 2016, 08:39:07 tquirk
+ *   last updated 17 Aug 2016, 18:53:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -104,26 +104,21 @@ glm::ivec2 ui::row_column::calculate_grid_size(void)
      * children to fit into it, so we'll just use what we have.  We
      * also handle the no-grid-size-setting case here.
      */
-    if ((this->grid_sz.x == 0 && this->grid_sz.y == 0)
-        || (this->grid_sz.x != 0 && this->grid_sz.y != 0
-            && this->grid_sz.x * this->grid_sz.y >= num_children))
+    if ((actual.x == 0 && actual.y == 0)
+        || (actual.x != 0 && actual.y != 0
+            && actual.x * actual.y >= num_children))
         return actual;
 
-    if (this->grid_sz.x == 0)
-        /* We have a prescribed number of rows */
+    /* Check if we only have a prescribed number of columns, or are in
+     * row-major order and need to spill.
+     */
+    if (actual.x == 0 || this->pack_order == ui::order::row)
         actual.x = (num_children / actual.y)
             + (num_children % actual.y > 0 ? 1 : 0);
-    else if (this->grid_sz.y == 0)
-        /* We have a prescribed number of columns */
+    else
         actual.y = (num_children / actual.x)
             + (num_children % actual.x > 0 ? 1 : 0);
-    else
-    {
-        /* We have a full grid size setting, but too many children to
-         * fit into it.  Depending on our row- or column-orientation,
-         * we'll spill out somehow.
-         */
-    }
+
     return actual;
 }
 
