@@ -1,6 +1,6 @@
 /* row_column.h                                       -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 07:11:40 tquirk
+ *   last updated 17 Aug 2016, 07:39:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,7 @@ namespace ui
         virtual void set_order(GLuint, void *);
 
         glm::ivec2 calculate_cell_size(void);
+        glm::ivec2 calculate_grid_size(void);
         virtual void set_desired_size(void);
 
       public:

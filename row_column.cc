@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 18:44:47 tquirk
+ *   last updated 17 Aug 2016, 08:39:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -90,32 +90,64 @@ glm::ivec2 ui::row_column::calculate_cell_size(void)
     return cell_size;
 }
 
+/* Either of the grid_sz elements can be 0, which means that we don't
+ * care how many of them there are.  Also, we can have both elements
+ * nonzero, but too many children to fit into the desired grid, so
+ * we'll have to increase the size of the grid to compensate.
+ */
+glm::ivec2 ui::row_column::calculate_grid_size(void)
+{
+    int num_children = this->children.size();
+    glm::ivec2 actual(this->grid_sz);
+
+    /* Easy case: we have a full grid size setting, and not too many
+     * children to fit into it, so we'll just use what we have.  We
+     * also handle the no-grid-size-setting case here.
+     */
+    if ((this->grid_sz.x == 0 && this->grid_sz.y == 0)
+        || (this->grid_sz.x != 0 && this->grid_sz.y != 0
+            && this->grid_sz.x * this->grid_sz.y >= num_children))
+        return actual;
+
+    if (this->grid_sz.x == 0)
+        /* We have a prescribed number of rows */
+        actual.x = (num_children / actual.y)
+            + (num_children % actual.y > 0 ? 1 : 0);
+    else if (this->grid_sz.y == 0)
+        /* We have a prescribed number of columns */
+        actual.y = (num_children / actual.x)
+            + (num_children % actual.x > 0 ? 1 : 0);
+    else
+    {
+        /* We have a full grid size setting, but too many children to
+         * fit into it.  Depending on our row- or column-orientation,
+         * we'll spill out somehow.
+         */
+    }
+    return actual;
+}
+
 void ui::row_column::set_desired_size(void)
 {
-    glm::ivec2 cell_size(0, 0);
+    glm::ivec2 cell_size(0, 0), grid_size(0, 0);
     GLuint zero = 0;
 
-    /* We do not read minds. */
-    if (this->grid_sz.x == 0 && this->grid_sz.y == 0)
-        return;
-
     cell_size = this->calculate_cell_size();
-    if (this->grid_sz.x != 0)
-        this->width = ((cell_size.x + this->child_spacing.x) * this->grid_sz.x)
-            + this->child_spacing.x
-            + this->margin[1] + this->margin[2]
-            + this->border[1] + this->border[2];
-    if (this->grid_sz.y != 0)
-        this->height = ((cell_size.y + this->child_spacing.y) * this->grid_sz.y)
-            + this->child_spacing.y
-            + this->margin[0] + this->margin[3]
-            + this->border[0] + this->border[3];
+    grid_size = this->calculate_grid_size();
+    this->width = ((cell_size.x + this->child_spacing.x) * grid_size.x)
+        + this->child_spacing.x
+        + this->margin[1] + this->margin[2]
+        + this->border[1] + this->border[2];
+    this->height = ((cell_size.y + this->child_spacing.y) * grid_size.y)
+        + this->child_spacing.y
+        + this->margin[0] + this->margin[3]
+        + this->border[0] + this->border[3];
     this->composite::set_size(0, &zero);
     this->populate_buffers();
 }
 
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h), grid_sz(0, 1)
+    : ui::manager::manager(c, w, h), grid_sz(1, 0)
 {
     this->pack_order = ui::order::row;
 }
