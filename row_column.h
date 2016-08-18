@@ -1,6 +1,6 @@
 /* row_column.h                                       -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Aug 2016, 07:39:55 tquirk
+ *   last updated 17 Aug 2016, 19:18:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -48,6 +48,8 @@ namespace ui
         glm::ivec2 calculate_cell_size(void);
         glm::ivec2 calculate_grid_size(void);
         virtual void set_desired_size(void);
+        void insert_row_major(glm::ivec2&, glm::ivec2&);
+        void insert_column_major(glm::ivec2&, glm::ivec2&);
 
       public:
         row_column(composite *, GLuint, GLuint);

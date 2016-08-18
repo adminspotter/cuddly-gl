@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Aug 2016, 18:53:54 tquirk
+ *   last updated 17 Aug 2016, 19:20:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -139,6 +139,55 @@ void ui::row_column::set_desired_size(void)
         + this->border[0] + this->border[3];
     this->composite::set_size(0, &zero);
     this->populate_buffers();
+
+    if (this->pack_order == ui::order::row)
+        this->insert_row_major(grid_size, cell_size);
+    else
+        this->insert_column_major(grid_size, cell_size);
+}
+
+void ui::row_column::insert_row_major(glm::ivec2& grid, glm::ivec2& cell)
+{
+    glm::ivec2 pos(this->margin[1] + this->border[1] + this->child_spacing.x,
+                   this->margin[0] + this->border[0] + this->child_spacing.y);
+    glm::ivec2 cur_pos = pos;
+    auto c = this->children.begin();
+
+    for (int i = 0; i < grid.y; ++i)
+    {
+        cur_pos.y = pos.y + ((cell.y + this->child_spacing.y) * i);
+        for (int j = 0; j < grid.x; ++j)
+        {
+            cur_pos.x = pos.x + ((cell.x + this->child_spacing.x) * j);
+            (*c)->set_va(ui::element::position, ui::position::x, &cur_pos.x,
+                         ui::element::position, ui::position::y, &cur_pos.y, 0);
+
+            if (++c == this->children.end())
+                return;
+        }
+    }
+}
+
+void ui::row_column::insert_column_major(glm::ivec2& grid, glm::ivec2& cell)
+{
+    glm::ivec2 pos(this->margin[1] + this->border[1] + this->child_spacing.x,
+                   this->margin[0] + this->border[0] + this->child_spacing.y);
+    glm::ivec2 cur_pos = pos;
+    auto c = this->children.begin();
+
+    for (int i = 0; i < grid.x; ++i)
+    {
+        cur_pos.x = pos.x + ((cell.x + this->child_spacing.x) * i);
+        for (int j = 0; j < grid.y; ++j)
+        {
+            cur_pos.y = pos.y + ((cell.y + this->child_spacing.y) * j);
+            (*c)->set_va(ui::element::position, ui::position::x, &cur_pos.x,
+                         ui::element::position, ui::position::y, &cur_pos.y, 0);
+
+            if (++c == this->children.end())
+                return;
+        }
+    }
 }
 
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
