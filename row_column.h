@@ -1,6 +1,6 @@
 /* row_column.h                                       -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Aug 2016, 19:18:38 tquirk
+ *   last updated 18 Aug 2016, 07:31:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -56,6 +56,8 @@ namespace ui
         virtual ~row_column();
 
         virtual void set(GLuint, GLuint, void *);
+
+        virtual void move_child(panel *);
     };
 }
 
