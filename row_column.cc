@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Aug 2016, 08:02:46 tquirk
+ *   last updated 18 Aug 2016, 08:19:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,8 +55,8 @@ void ui::row_column::set_size(GLuint t, void *v)
       case ui::size::width:
       case ui::size::height:   this->manager::set_size(t, v);   break;
 
-      case ui::size::rows:     this->grid_sz.x = *(GLuint *)v;  break;
-      case ui::size::columns:  this->grid_sz.y = *(GLuint *)v;  break;
+      case ui::size::rows:     this->grid_sz.y = *(GLuint *)v;  break;
+      case ui::size::columns:  this->grid_sz.x = *(GLuint *)v;  break;
     }
 }
 
@@ -110,9 +110,9 @@ glm::ivec2 ui::row_column::calculate_grid_size(void)
         return actual;
 
     /* Check if we only have a prescribed number of columns, or are in
-     * row-major order and need to spill.
+     * column-major order and need to spill.
      */
-    if (actual.x == 0 || this->pack_order == ui::order::row)
+    if (actual.x == 0 || this->pack_order == ui::order::column)
         actual.x = (num_children / actual.y)
             + (num_children % actual.y > 0 ? 1 : 0);
     else
