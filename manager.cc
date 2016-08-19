@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 18:32:00 tquirk
+ *   last updated 18 Aug 2016, 09:09:31 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -321,7 +321,6 @@ void ui::manager::remove_child(ui::panel *p)
 
 void ui::manager::move_child(ui::panel *p)
 {
-    this->composite::remove_child(p);
-    this->composite::add_child(p);
+    this->composite::move_child(p);
     this->set_desired_size();
 }
