@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2016, 07:34:40 tquirk
+ *   last updated 19 Aug 2016, 15:55:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -165,8 +165,10 @@ void ui::composite::mouse_pos_callback(int x, int y)
         p->get_va(ui::element::position, ui::position::x, &obj.x,
                   ui::element::position, ui::position::y, &obj.y, 0);
         call_data.location = pos - obj;
-        if (this->old_child == NULL)
+        if (this->old_child != p)
             p->call_callbacks(ui::callback::enter, &call_data);
+        if (this->old_child != NULL && this->old_child != p)
+            this->old_child->call_callbacks(ui::callback::leave, &call_data);
         p->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
