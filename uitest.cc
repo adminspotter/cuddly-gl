@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
 #define GLFW_INCLUDE_GL_3
 #include <GLFW/glfw3.h>
@@ -15,6 +16,7 @@
 #include "button.h"
 #include "text_field.h"
 #include "manager.h"
+#include "row_column.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -33,6 +35,7 @@ ui::label *l1;
 ui::button *b1, *b2;
 ui::text_field *t1;
 ui::manager *m1;
+ui::row_column *r1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
@@ -60,6 +63,7 @@ int main(int argc, char **argv)
 {
     GLFWwindow *w;
     GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len, spacing;
+    GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
 
@@ -110,7 +114,7 @@ int main(int argc, char **argv)
     xpos = 50;
     ypos = 125;
     border = 1;
-    l1->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
+    l1->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
                ui::element::string, 0, &greeting,
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::border, ui::side::all, &border,
@@ -128,8 +132,6 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
-    b1->add_callback(ui::callback::enter, enter_callback, NULL);
-    b1->add_callback(ui::callback::leave, leave_callback, NULL);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx, 200, 200);
     xpos = 300;
@@ -148,7 +150,7 @@ int main(int argc, char **argv)
     xpos = 10;
     ypos = 10;
     border = 5;
-    b2->set_va(ui::element::font, 0, new ui::font(font_name, 40, paths),
+    b2->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
                ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
@@ -169,6 +171,40 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::background, &bg1,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "creating row-column 1" << std::endl;
+    r1 = new ui::row_column(ctx, 10, 10);
+    xpos = 200;
+    ypos = 400;
+    border = 1;
+    gridx = 2;
+    gridy = 3;
+    spacing = 10;
+    r1->set_va(ui::element::border, ui::side::all, &border,
+               ui::element::size, ui::size::columns, &gridx,
+               ui::element::size, ui::size::rows, &gridy,
+               ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg1,
+               ui::element::position, ui::position::x, &xpos,
+               ui::element::position, ui::position::y, &ypos,
+               ui::element::child_spacing, ui::size::width, &spacing,
+               ui::element::child_spacing, ui::size::height, &spacing, 0);
+    r1->add_callback(ui::callback::enter, enter_callback, NULL);
+    r1->add_callback(ui::callback::leave, leave_callback, NULL);
+    for (int q = 0; q < 7; ++q)
+    {
+        std::cout << "creating child " << q << std::endl;
+        std::ostringstream s;
+        ui::button *b = new ui::button(r1, 0, 0);
+
+        s << "Button " << q;
+        std::string str = s.str();
+        border = 1;
+        b->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+                  ui::element::string, 0, &str,
+                  ui::element::border, ui::side::all, &border, 0);
+        b->add_callback(ui::callback::enter, enter_callback, NULL);
+        b->add_callback(ui::callback::leave, leave_callback, NULL);
+    }
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
