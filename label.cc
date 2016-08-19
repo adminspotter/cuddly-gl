@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:04:12 tquirk
+ *   last updated 19 Aug 2016, 07:16:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,6 +51,10 @@ int ui::label::get_font(GLuint t, void *v)
 /* ARGSUSED */
 void ui::label::set_font(GLuint t, void *v)
 {
+    if (t == ui::ownership::shared)
+        this->shared_font = true;
+    else
+        this->shared_font = false;
     this->font = (ui::font *)v;
 }
 
@@ -289,6 +293,7 @@ ui::label::label(ui::composite *c, GLuint w, GLuint h)
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
     this->use_text = true;
+    this->shared_font = false;
     this->font = NULL;
     glGenTextures(1, &this->tex);
     glBindTexture(GL_TEXTURE_2D, this->tex);
@@ -303,7 +308,7 @@ ui::label::label(ui::composite *c, GLuint w, GLuint h)
 ui::label::~label()
 {
     glDeleteTextures(1, &this->tex);
-    if (this->font != NULL)
+    if (this->font != NULL && this->shared_font == false)
         delete this->font;
 }
 

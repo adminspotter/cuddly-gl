@@ -66,6 +66,7 @@ int main(int argc, char **argv)
     GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
+    ui::font *std_font = new ui::font(font_name, 30, paths);
 
     if (glfwInit() == GL_FALSE)
     {
@@ -114,7 +115,7 @@ int main(int argc, char **argv)
     xpos = 50;
     ypos = 125;
     border = 1;
-    l1->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+    l1->set_va(ui::element::font, ui::ownership::shared, std_font,
                ui::element::string, 0, &greeting,
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::border, ui::side::all, &border,
@@ -150,7 +151,7 @@ int main(int argc, char **argv)
     xpos = 10;
     ypos = 10;
     border = 5;
-    b2->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+    b2->set_va(ui::element::font, ui::ownership::shared, std_font,
                ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
@@ -163,7 +164,7 @@ int main(int argc, char **argv)
     ypos = 100;
     border = 1;
     max_len = 10;
-    t1->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+    t1->set_va(ui::element::font, ui::ownership::shared, std_font,
                ui::element::string, 0, &greeting,
                ui::element::max_size, ui::size::width, &max_len,
                ui::element::border, ui::side::all, &border,
@@ -199,7 +200,7 @@ int main(int argc, char **argv)
         s << "Button " << q;
         std::string str = s.str();
         border = 1;
-        b->set_va(ui::element::font, 0, new ui::font(font_name, 30, paths),
+        b->set_va(ui::element::font, ui::ownership::shared, std_font,
                   ui::element::string, 0, &str,
                   ui::element::border, ui::side::all, &border, 0);
         b->add_callback(ui::callback::enter, enter_callback, NULL);
@@ -216,6 +217,7 @@ int main(int argc, char **argv)
         glfwPollEvents();
     }
     delete ctx;
+    delete std_font;
     glfwTerminate();
     return 0;
 }

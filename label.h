@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:02:01 tquirk
+ *   last updated 19 Aug 2016, 07:09:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,7 +44,7 @@ namespace ui
     class label : public panel
     {
       protected:
-        bool use_text;
+        bool use_text, shared_font;
         std::u32string str;
         image img;
         ui::font *font;

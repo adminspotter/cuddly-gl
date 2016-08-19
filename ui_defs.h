@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 06:53:34 tquirk
+ *   last updated 19 Aug 2016, 07:16:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -155,6 +155,11 @@ namespace ui
     namespace order
     {
         const GLuint row = 1, column = 2;
+    }
+
+    namespace ownership
+    {
+        const GLuint shared = 1, owned = 2;
     }
 }
 
