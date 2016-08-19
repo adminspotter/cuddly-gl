@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:05:07 tquirk
+ *   last updated 19 Aug 2016, 16:05:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,7 +45,11 @@ int ui::button::get_active_state(GLuint t, void *v)
 /* ARGSUSED */
 void ui::button::set_active_state(GLuint t, void *v)
 {
-    this->active = *((bool *)v);
+    bool new_act = *((bool *)v);
+
+    if (new_act == this->active)
+        return;
+    this->active = new_act;
     if (this->active)
         this->grow_border();
     else
@@ -62,7 +66,11 @@ int ui::button::get_arm_state(GLuint t, void *v)
 /* ARGSUSED */
 void ui::button::set_arm_state(GLuint t, void *v)
 {
-    this->armed = *((bool *)v);
+    bool new_arm =  *((bool *)v);
+
+    if (new_arm == this->armed)
+        return;
+    this->armed = new_arm;
     if (this->armed)
         this->grow_border();
     else
@@ -128,7 +136,8 @@ void ui::button::deactivate(ui::panel *p, void *call, void *client)
 {
     bool active = false;
 
-    p->set(ui::element::active, 0, &active);
+    p->set_va(ui::element::active, 0, &active,
+              ui::element::arm, 0, &active, 0);
 }
 
 void ui::button::arm(ui::panel *p, void *call, void *client)
