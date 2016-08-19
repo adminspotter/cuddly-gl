@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Aug 2016, 08:19:04 tquirk
+ *   last updated 19 Aug 2016, 06:41:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -137,7 +137,10 @@ void ui::row_column::set_desired_size(void)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
+    this->dim.x = this->width;
+    this->dim.y = this->height;
     this->composite::set_size(0, &zero);
+    this->composite::parent->move_child(this);
     this->populate_buffers();
 
     if (this->pack_order == ui::order::row)
@@ -208,13 +211,10 @@ void ui::row_column::set(GLuint e, GLuint t, void *v)
         this->manager::set(e, t, v);
 }
 
-/* The manager's move_child behaviour will not preserve the order of
- * our children, which is actually important to us.  Additionally, we
- * end up in an infinite recursion if we do a set_desired_size at the
- * end.
+/* The manager's move_child behaviour will put us into an infinite
+ * recursion due to the set_desired_size call at the end.
  */
 void ui::row_column::move_child(ui::panel *p)
 {
-    this->tree->remove(p);
-    this->tree->insert(p);
+    this->composite::move_child(p);
 }
