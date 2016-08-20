@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Aug 2016, 16:05:33 tquirk
+ *   last updated 20 Aug 2016, 08:57:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,7 +85,7 @@ void ui::button::set_margin(GLuint s, void *v)
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
             + (s & ui::side::top ? new_v : this->margin[0])
-            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->height)
+            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->size.y)
         {
             if (s & ui::side::top)
                 this->margin[0] = std::max(new_v, min_val);
@@ -96,7 +96,7 @@ void ui::button::set_margin(GLuint s, void *v)
     if (s & ui::side::left || s & ui::side::right)
         if (this->border[1] + this->border[2]
             + (s & ui::side::left ? new_v : this->margin[1])
-            + (s & ui::side::right ? new_v : this->margin[2]) <= this->width)
+            + (s & ui::side::right ? new_v : this->margin[2]) <= this->size.x)
         {
             if (s & ui::side::left)
                 this->margin[1] = std::max(new_v, min_val);

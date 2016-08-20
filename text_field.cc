@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Aug 2016, 19:19:29 tquirk
+ *   last updated 20 Aug 2016, 09:06:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -224,8 +224,8 @@ void ui::text_field::generate_cursor(int pixel_pos)
     if (this->font != NULL)
     {
         float vertex[48];
-        float x = this->xpos, y = this->ypos;
-        float w = this->width, h = this->height;
+        float x = this->pos.x, y = this->pos.y;
+        float w = this->size.x, h = this->size.y;
         float pw, ph, sw, m[4], b[4];
         GLuint temp;
         if (pixel_pos < 0)

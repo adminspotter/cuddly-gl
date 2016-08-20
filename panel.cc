@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2016, 07:12:58 tquirk
+ *   last updated 20 Aug 2016, 10:26:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,9 +59,10 @@ int ui::panel::get_position(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::position::x: *((GLuint *)v) = this->xpos; break;
-      case ui::position::y: *((GLuint *)v) = this->ypos; break;
-      default:              ret = 1;                     break;
+      case ui::position::all: *((glm::ivec2 *)v) = this->pos;  break;
+      case ui::position::x:   *(int *)v = this->pos.x;         break;
+      case ui::position::y:   *(int *)v = this->pos.y;         break;
+      default:                ret = 1;                         break;
     }
     return ret;
 }
@@ -72,8 +73,9 @@ void ui::panel::set_position(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::position::x: this->xpos = new_v; break;
-      case ui::position::y: this->ypos = new_v; break;
+      case ui::position::all:  this->pos = *(glm::ivec2 *)v;  break;
+      case ui::position::x:    this->pos.x = *(int *)v;       break;
+      case ui::position::y:    this->pos.y = *(int *)v;       break;
     }
     this->parent->move_child(this);
 }
@@ -84,29 +86,38 @@ int ui::panel::get_size(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::size::width:  *((GLuint *)v) = this->width;  break;
-      case ui::size::height: *((GLuint *)v) = this->height; break;
-      default:               ret = 1;                       break;
+      case ui::size::all:    *(glm::ivec2 *)v = this->size;  break;
+      case ui::size::width:  *(int *)v = this->size.x;       break;
+      case ui::size::height: *(int *)v = this->size.y;       break;
+      default:               ret = 1;                        break;
     }
     return ret;
 }
 
 void ui::panel::set_size(GLuint d, void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    glm::ivec2 new_sz = this->size;
 
-    if (d & ui::size::height)
-    {
+    if (d == ui::size::all)
+        new_sz = *(glm::ivec2 *)v;
+    else if (d == ui::size::width)
+        new_sz.x = *(int *)v;
+    else if (d == ui::size::height)
+        new_sz.y = *(int *)v;
+    else
+        return;
+
+    if ((d == ui::size::height || d == ui::size::all)
+        && this->size.x != new_sz.x)
         if (this->margin[0] + this->border[0]
-            + this->border[3] + this->margin[3] < new_v)
-            this->height = new_v;
-    }
-    if (d & ui::size::width)
-    {
+            + this->border[3] + this->margin[3] < new_sz.x)
+            this->size.x = new_sz.x;
+    if ((d == ui::size::width || d == ui::size::all)
+        && this->size.y != new_sz.y)
         if (this->margin[1] + this->border[1]
-            + this->border[2] + this->margin[2] < new_v)
-            this->width = new_v;
-    }
+            + this->border[2] + this->margin[2] < new_sz.y)
+            this->size.y = new_sz.y;
+
     this->parent->move_child(this);
 }
 
@@ -132,7 +143,7 @@ void ui::panel::set_border(GLuint s, void *v)
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->margin[0] + this->margin[3]
             + (s & ui::side::top ? new_v : this->border[0])
-            + (s & ui::side::bottom ? new_v : this->border[3]) <= this->height)
+            + (s & ui::side::bottom ? new_v : this->border[3]) <= this->size.y)
         {
             if (s & ui::side::top)     this->border[0] = new_v;
             if (s & ui::side::bottom)  this->border[3] = new_v;
@@ -141,7 +152,7 @@ void ui::panel::set_border(GLuint s, void *v)
     if (s & ui::side::left || s & ui::side::right)
         if (this->margin[1] + this->margin[2]
             + (s & ui::side::left ? new_v : this->border[1])
-            + (s & ui::side::right ? new_v : this->border[2]) <= this->width)
+            + (s & ui::side::right ? new_v : this->border[2]) <= this->size.x)
         {
             if (s & ui::side::left)    this->border[1] = new_v;
             if (s & ui::side::right)   this->border[2] = new_v;
@@ -170,7 +181,7 @@ void ui::panel::set_margin(GLuint s, void *v)
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
             + (s & ui::side::top ? new_v : this->margin[0])
-            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->height)
+            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->size.y)
         {
             if (s & ui::side::top)     this->margin[0] = new_v;
             if (s & ui::side::bottom)  this->margin[3] = new_v;
@@ -179,7 +190,7 @@ void ui::panel::set_margin(GLuint s, void *v)
     if (s & ui::side::left || s & ui::side::right)
         if (this->border[1] + this->border[2]
             + (s & ui::side::left ? new_v : this->margin[1])
-            + (s & ui::side::right ? new_v : this->margin[2]) <= this->width)
+            + (s & ui::side::right ? new_v : this->margin[2]) <= this->size.x)
         {
             if (s & ui::side::left)    this->margin[1] = new_v;
             if (s & ui::side::right)   this->margin[2] = new_v;
@@ -255,7 +266,7 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
      * points.  This will come in very handy in some of the
      * subclasses, which may have tons of duplicated points.
      */
-    float x = this->xpos, y = this->ypos, w = this->width, h = this->height;
+    float x = this->pos.x, y = this->pos.y, w = this->size.x, h = this->size.y;
     float pw, ph, m[4], b[4];
     GLuint vert_count = 0, temp;
 
@@ -486,25 +497,17 @@ void ui::panel::populate_buffers(void)
 ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
-      key_down_cb(), key_up_cb()
+      key_down_cb(), key_up_cb(), size(w, h), pos(0, 0)
 {
     GLuint temp, x, y;
 
     this->parent = c;
 
-    this->width = w;
-    this->height = h;
     for (int i = 0; i < 4; ++i)
     {
         this->border[i] = 0;
         this->margin[i] = 0;
     }
-
-    /* Put the panel in the middle of the screen to start */
-    this->parent->get(ui::element::size, ui::size::width, &x);
-    this->parent->get(ui::element::size, ui::size::height, &y);
-    this->xpos = x / 2 - (w / 2);
-    this->ypos = y / 2 - (h / 2);
 
     this->parent->add_child(this);
 

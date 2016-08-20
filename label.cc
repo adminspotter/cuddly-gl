@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Aug 2016, 07:16:56 tquirk
+ *   last updated 20 Aug 2016, 08:56:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -214,10 +214,10 @@ void ui::label::calculate_widget_size(int w, int h)
      * side, even if there is no border or margin, thus the
      * literal 2s.
      */
-    this->width = w
+    this->size.x = w
         + this->margin[1] + this->margin[2]
         + this->border[1] + this->border[2] + 2;
-    this->height = h
+    this->size.y = h
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3] + 2;
     this->parent->move_child(this);

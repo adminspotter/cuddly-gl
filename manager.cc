@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Aug 2016, 09:09:31 tquirk
+ *   last updated 20 Aug 2016, 10:25:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,8 +42,9 @@ int ui::manager::get_child_spacing(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::size::width:  *((GLuint *)v) = this->child_spacing.x;  break;
-      case ui::size::height: *((GLuint *)v) = this->child_spacing.y;  break;
+      case ui::size::all:    *(glm::ivec2 *)v = this->child_spacing;  break;
+      case ui::size::width:  *(int *)v = this->child_spacing.x;       break;
+      case ui::size::height: *(int *)v = this->child_spacing.y;       break;
       default:               ret = 1;                                 break;
     }
     return ret;
@@ -51,12 +52,11 @@ int ui::manager::get_child_spacing(GLuint t, void *v)
 
 void ui::manager::set_child_spacing(GLuint t, void *v)
 {
-    GLuint new_v = *((GLuint *)v);
-
     switch (t)
     {
-      case ui::size::width:   this->child_spacing.x = new_v;  break;
-      case ui::size::height:  this->child_spacing.y = new_v;  break;
+      case ui::size::all:     this->child_spacing = *(glm::ivec2 *)v;  break;
+      case ui::size::width:   this->child_spacing.x = *(int *)v;       break;
+      case ui::size::height:  this->child_spacing.y = *(int *)v;       break;
     }
 }
 
@@ -95,19 +95,15 @@ void ui::manager::set_position(GLuint t, void *v)
     {
         glm::vec3 pixel_sz(0.0f, 0.0f, 0.0f);
         glm::mat4 trans;
-        GLuint zero = 0;
 
         this->composite::parent->get(ui::element::transform,
                                      ui::transform::translate,
                                      &trans);
         this->composite::parent->get(ui::element::pixel_size,
-                                     ui::size::width,
-                                     &pixel_sz.x);
-        this->composite::parent->get(ui::element::pixel_size,
-                                     ui::size::height,
-                                     &pixel_sz.y);
-        pixel_sz.x *= this->xpos;
-        pixel_sz.y = -(pixel_sz.y * this->ypos);
+                                     ui::size::all,
+                                     &pixel_sz);
+        pixel_sz.x *= this->pos.x;
+        pixel_sz.y = -(pixel_sz.y * this->pos.y);
         this->translate = glm::translate(trans, pixel_sz);
     }
 }
@@ -125,14 +121,13 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
     {
-        GLuint cw, ch, cx, cy;
+        glm::ivec2 c_sz, c_pos;
 
-        (*i)->get_va(ui::element::size, ui::size::width, &cw,
-                     ui::element::size, ui::size::height, &ch,
-                     ui::element::position, ui::position::x, &cx,
-                     ui::element::position, ui::position::y, &cy, 0);
-        max_pt.x = std::max(max_pt.x, (int)(cx + cw));
-        max_pt.y = std::max(max_pt.y, (int)(cy + ch));
+        (*i)->get_va(ui::element::size, ui::size::all, &c_sz,
+                     ui::element::position, ui::position::all, &c_pos, 0);
+        c_sz += c_pos;
+        max_pt.x = std::max(max_pt.x, c_sz.x);
+        max_pt.y = std::max(max_pt.y, c_sz.y);
     }
     return max_pt;
 }
@@ -158,17 +153,17 @@ void ui::manager::set_desired_size(void)
      */
     if (this->resize & ui::resize::shrink)
     {
-        if (max_pt.x < this->width)
-            this->width = this->dim.x = max_pt.x;
-        if (max_pt.y < this->height)
-            this->height = this->dim.y = max_pt.y;
+        if (max_pt.x < this->size.x)
+            this->size.x = this->dim.x = max_pt.x;
+        if (max_pt.y < this->size.y)
+            this->size.y = this->dim.y = max_pt.y;
     }
     if (this->resize & ui::resize::grow)
     {
-        if (max_pt.x > this->width)
-            this->width = this->dim.x = max_pt.x;
-        if (max_pt.y > this->height)
-            this->height = this->dim.y = max_pt.y;
+        if (max_pt.x > this->size.x)
+            this->size.x = this->dim.x = max_pt.x;
+        if (max_pt.y > this->size.y)
+            this->size.y = this->dim.y = max_pt.y;
     }
     this->composite::set_size(0, &zero);
     this->populate_buffers();

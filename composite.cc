@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Aug 2016, 15:55:52 tquirk
+ *   last updated 20 Aug 2016, 09:31:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -30,6 +30,8 @@
 
 #include <algorithm>
 
+#include <glm/vec3.hpp>
+
 #include "ui_defs.h"
 #include "composite.h"
 
@@ -41,8 +43,9 @@ int ui::composite::get_size(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::size::width:  *((GLuint *)v) = this->dim.x;  break;
-      case ui::size::height: *((GLuint *)v) = this->dim.y;  break;
+      case ui::size::all:    *(glm::ivec2 *)v = this->dim;  break;
+      case ui::size::width:  *(int *)v = this->dim.x;       break;
+      case ui::size::height: *(int *)v = this->dim.y;       break;
       default:               ret = 1;                       break;
     }
     return ret;
@@ -50,12 +53,11 @@ int ui::composite::get_size(GLuint t, void *v)
 
 void ui::composite::set_size(GLuint d, void *v)
 {
-    GLuint new_v = *((GLuint *)v);
-
     switch (d)
     {
-      case ui::size::width:   this->dim.x = new_v;  break;
-      case ui::size::height:  this->dim.y = new_v;  break;
+      case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
+      case ui::size::width:   this->dim.x = *(int *)v;       break;
+      case ui::size::height:  this->dim.y = *(int *)v;       break;
     }
 
     /* Regenerate our search tree */
@@ -85,6 +87,15 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
 
     switch (t)
     {
+      case ui::size::all:
+        {
+            glm::vec3 sz(2.0f / (float)this->dim.x,
+                         2.0f / (float)this->dim.y,
+                         0.0f);
+            *(glm::vec3 *)v = sz;
+            break;
+        }
+
       case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;  break;
       case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;  break;
       default:                ret = 1;

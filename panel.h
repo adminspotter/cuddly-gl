@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Aug 2016, 08:14:26 tquirk
+ *   last updated 20 Aug 2016, 07:58:35 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,6 +37,7 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
+#include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
 #include <list>
@@ -81,7 +82,7 @@ namespace ui
 
         composite *parent;
         GLuint vao, vbo, ebo, vertex_count, element_count;
-        GLuint width, height, xpos, ypos;
+        glm::ivec2 size, pos;
         GLuint margin[4], border[4];
         glm::vec4 foreground, background;
 

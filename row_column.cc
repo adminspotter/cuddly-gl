@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Aug 2016, 06:41:45 tquirk
+ *   last updated 20 Aug 2016, 09:36:22 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -38,12 +38,14 @@ int ui::row_column::get_size(GLuint t, void *v)
 
     switch (t)
     {
+      case ui::size::all:
       case ui::size::width:
       case ui::size::height:   return this->manager::get_size(t, v);
 
-      case ui::size::rows:     *(GLuint *)v = this->grid_sz.x;  break;
-      case ui::size::columns:  *(GLuint *)v = this->grid_sz.y;  break;
-      default:                 ret = 1;                         break;
+      case ui::size::grid:     *(glm::ivec2 *)v = this->grid_sz;  break;
+      case ui::size::rows:     *(int *)v = this->grid_sz.x;       break;
+      case ui::size::columns:  *(int *)v = this->grid_sz.y;       break;
+      default:                 ret = 1;                           break;
     }
     return ret;
 }
@@ -52,11 +54,13 @@ void ui::row_column::set_size(GLuint t, void *v)
 {
     switch (t)
     {
+      case ui::size::all:
       case ui::size::width:
-      case ui::size::height:   this->manager::set_size(t, v);   break;
+      case ui::size::height:   this->manager::set_size(t, v);     break;
 
-      case ui::size::rows:     this->grid_sz.y = *(GLuint *)v;  break;
-      case ui::size::columns:  this->grid_sz.x = *(GLuint *)v;  break;
+      case ui::size::grid:     this->grid_sz = *(glm::ivec2 *)v;  break;
+      case ui::size::rows:     this->grid_sz.y = *(int *)v;       break;
+      case ui::size::columns:  this->grid_sz.x = *(int *)v;       break;
     }
 }
 
@@ -76,16 +80,13 @@ void ui::row_column::set_order(GLuint t, void *v)
 
 glm::ivec2 ui::row_column::calculate_cell_size(void)
 {
-    glm::ivec2 cell_size(0, 0);
+    glm::ivec2 cell_size(0, 0), child_sz;
 
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
     {
-        GLuint w, h;
-
-        (*i)->get_va(ui::element::size, ui::size::width, &w,
-                     ui::element::size, ui::size::height, &h, 0);
-        cell_size.x = std::max(cell_size.x, (int)w);
-        cell_size.y = std::max(cell_size.y, (int)h);
+        (*i)->get(ui::element::size, ui::size::all, &child_sz);
+        cell_size.x = std::max(cell_size.x, child_sz.x);
+        cell_size.y = std::max(cell_size.y, child_sz.y);
     }
     return cell_size;
 }
@@ -129,16 +130,15 @@ void ui::row_column::set_desired_size(void)
 
     cell_size = this->calculate_cell_size();
     grid_size = this->calculate_grid_size();
-    this->width = ((cell_size.x + this->child_spacing.x) * grid_size.x)
+    this->size.x = ((cell_size.x + this->child_spacing.x) * grid_size.x)
         + this->child_spacing.x
         + this->margin[1] + this->margin[2]
         + this->border[1] + this->border[2];
-    this->height = ((cell_size.y + this->child_spacing.y) * grid_size.y)
+    this->size.y = ((cell_size.y + this->child_spacing.y) * grid_size.y)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
-    this->dim.x = this->width;
-    this->dim.y = this->height;
+    this->dim = this->size;
     this->composite::set_size(0, &zero);
     this->composite::parent->move_child(this);
     this->populate_buffers();
@@ -162,8 +162,7 @@ void ui::row_column::insert_row_major(glm::ivec2& grid, glm::ivec2& cell)
         for (int j = 0; j < grid.x; ++j)
         {
             cur_pos.x = pos.x + ((cell.x + this->child_spacing.x) * j);
-            (*c)->set_va(ui::element::position, ui::position::x, &cur_pos.x,
-                         ui::element::position, ui::position::y, &cur_pos.y, 0);
+            (*c)->set(ui::element::position, ui::position::all, &cur_pos);
 
             if (++c == this->children.end())
                 return;
@@ -184,8 +183,7 @@ void ui::row_column::insert_column_major(glm::ivec2& grid, glm::ivec2& cell)
         for (int j = 0; j < grid.y; ++j)
         {
             cur_pos.y = pos.y + ((cell.y + this->child_spacing.y) * j);
-            (*c)->set_va(ui::element::position, ui::position::x, &cur_pos.x,
-                         ui::element::position, ui::position::y, &cur_pos.y, 0);
+            (*c)->set(ui::element::position, ui::position::all, &cur_pos);
 
             if (++c == this->children.end())
                 return;
