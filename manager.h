@@ -1,6 +1,6 @@
-/* manager.h                                          -*- C++ -*-
+/* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Aug 2016, 18:32:20 tquirk
+ *   last updated 21 Aug 2016, 12:22:31 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk

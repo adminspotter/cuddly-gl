@@ -1,6 +1,6 @@
-/* row_column.h                                       -*- C++ -*-
+/* row_column.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Aug 2016, 07:31:40 tquirk
+ *   last updated 21 Aug 2016, 12:22:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
