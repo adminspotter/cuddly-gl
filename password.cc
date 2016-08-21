@@ -1,6 +1,6 @@
 /* password.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 12:31:39 tquirk
+ *   last updated 21 Aug 2016, 16:39:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -28,6 +28,45 @@
  */
 
 #include "password.h"
+
+void ui::password::generate_string_image(void)
+{
+    if (this->font != NULL)
+    {
+        std::u32string visible;
+
+        visible.insert(0, this->str.size(), '*');
+        this->font->render_string(visible, this->img);
+    }
+}
+
+void ui::password::get_string_size(const std::u32string& str,
+                                   std::vector<int>& sz)
+{
+    if (this->font != NULL)
+    {
+        std::u32string visible;
+
+        visible.insert(0, this->cursor_pos, '*');
+        this->font->get_string_size(visible, sz);
+    }
+}
+
+int ui::password::get_cursor_pixel_pos(void)
+{
+    int ret = 0;
+
+    if (this->font != NULL)
+    {
+        std::u32string visible;
+        std::vector<int> req_size = {0, 0, 0};
+
+        visible.insert(0, this->cursor_pos, '*');
+        this->font->get_string_size(visible, req_size);
+        ret = req_size[0];
+    }
+    return ret;
+}
 
 ui::password::password(ui::composite *c, GLuint w, GLuint h)
     : ui::text_field::text_field(c, w, h)
