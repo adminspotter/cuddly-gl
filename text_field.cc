@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 09:06:21 tquirk
+ *   last updated 21 Aug 2016, 16:24:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -204,6 +204,13 @@ void ui::text_field::remove_next_char(void)
     }
 }
 
+void ui::text_field::get_string_size(const std::u32string& str,
+                                     std::vector<int>& sz)
+{
+    if (this->font != NULL)
+        this->font->get_string_size(this->str.substr(0, this->cursor_pos), sz);
+}
+
 int ui::text_field::get_cursor_pixel_pos(void)
 {
     int ret = 0;
@@ -212,8 +219,7 @@ int ui::text_field::get_cursor_pixel_pos(void)
     {
         std::vector<int> req_size = {0, 0, 0};
 
-        this->font->get_string_size(this->str.substr(0, this->cursor_pos),
-                                    req_size);
+        this->get_string_size(this->str.substr(0, this->cursor_pos), req_size);
         ret = req_size[0];
     }
     return ret;
@@ -293,7 +299,7 @@ void ui::text_field::populate_buffers(void)
 
         this->font->max_cell_size(font_max);
         font_max[0] *= this->max_length;
-        this->font->get_string_size(this->str, string_max);
+        this->get_string_size(this->str, string_max);
         if (string_max[0] > font_max[0])
         {
             /* The chunk size is half the widget's width */
