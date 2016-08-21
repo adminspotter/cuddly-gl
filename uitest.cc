@@ -15,6 +15,7 @@
 #include "label.h"
 #include "button.h"
 #include "text_field.h"
+#include "password.h"
 #include "manager.h"
 #include "row_column.h"
 
@@ -34,6 +35,7 @@ ui::panel *p1;
 ui::label *l1;
 ui::button *b1, *b2;
 ui::text_field *t1;
+ui::password *pw1;
 ui::manager *m1;
 ui::row_column *r1;
 
@@ -133,9 +135,22 @@ int main(int argc, char **argv)
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
+    std::cout << "creating password 1" << std::endl;
+    pw1 = new ui::password(ctx, 0, 0);
+    xpos = 50;
+    ypos = 250;
+    border = 1;
+    max_len = 5;
+    pw1->set_va(ui::element::font, ui::ownership::shared, std_font,
+                ui::element::border, ui::side::all, &border,
+                ui::element::color, ui::color::foreground, &fg1,
+                ui::element::color, ui::color::background, &bg2,
+                ui::element::position, ui::position::x, &xpos,
+                ui::element::position, ui::position::y, &ypos,
+                ui::element::max_size, ui::size::width, &max_len, 0);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx, 200, 200);
-    xpos = 300;
+    xpos = 350;
     ypos = 150;
     border = 1;
     spacing = 10;
@@ -174,8 +189,8 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx, 10, 10);
-    xpos = 200;
-    ypos = 400;
+    xpos = 350;
+    ypos = 350;
     border = 1;
     gridx = 2;
     gridy = 3;
