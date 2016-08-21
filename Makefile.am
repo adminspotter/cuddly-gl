@@ -26,7 +26,8 @@ libr9_client_ui_la_SOURCES = ui_defs.h shader.cc image.h \
 	font.cc font.h \
 	label.cc label.h \
 	button.cc button.h \
-	text_field.cc text_field.h
+	text_field.cc text_field.h \
+	password.cc password.h
 libr9_client_ui_la_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
 	-DSTORE_PREFIX=\"@datadir@/$(PACKAGE)\" \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \
