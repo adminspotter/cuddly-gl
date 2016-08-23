@@ -54,7 +54,7 @@ void ui::popupmenu::set_popup(GLuint t, void *v)
 }
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
-    : ui::composite::composite(c, w, h)
+    : ui::manager::manager(c, w, h)
 {
 }
 
@@ -66,7 +66,7 @@ int ui::popupmenu::get(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);
-    return this->composite::get(e, t, v);
+    return this->manager::get(e, t, v);
 }
 
 void ui::popupmenu::set(GLuint e, GLuint t, void *v)
@@ -74,5 +74,5 @@ void ui::popupmenu::set(GLuint e, GLuint t, void *v)
     if (e == ui::element::popup)
         this->set_popup(t, v);
     else
-        this->composite::set(e, t, v);
+        this->manager::set(e, t, v);
 }

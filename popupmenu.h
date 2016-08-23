@@ -31,11 +31,11 @@
 #ifndef __INC_R9_POPUPMENU_H__
 #define __INC_R9_POPUPMENU_H__
 
-#include "composite.h"
+#include "manager.h"
 
 namespace ui
 {
-    class popupmenu : public composite
+    class popupmenu : public manager
     {
       protected:
         bool visible;
