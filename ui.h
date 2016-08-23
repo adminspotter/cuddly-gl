@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2016, 07:22:06 tquirk
+ *   last updated 22 Aug 2016, 21:07:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -52,14 +52,20 @@ namespace ui
         glm::ivec2 old_mouse;
         panel *old_child;
 
+        /* The popup menu needs a little bit different handling */
+        panel *popup;
+        glm::ivec2 popup_ul, popup_lr;
+
       protected:
         int get_attribute(GLuint, void *);
+        void set_popup(GLuint, void *);
 
       public:
         context(GLuint, GLuint);
         ~context();
 
         int get(GLuint, GLuint, void *);
+        void set(GLuint, GLuint, void *);
 
         void draw(void);
     };

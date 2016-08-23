@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2016, 07:20:51 tquirk
+ *   last updated 22 Aug 2016, 21:05:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -68,10 +68,22 @@ int ui::context::get_attribute(GLuint t, void *v)
     return ret;
 }
 
+void ui::context::set_popup(GLuint t, void *v)
+{
+    if (t == ui::corner::top_left)
+        this->popup_ul = *(glm::ivec2 *)v;
+    else if (t == ui::corner::bottom_right)
+        this->popup_lr = *(glm::ivec2 *)v;
+    else if (t == ui::popup::menu)
+        this->popup = (panel *)v;
+}
+
 ui::context::context(GLuint w, GLuint h)
-    : ui::composite::composite(NULL, w, h), old_mouse(0, 0)
+    : ui::composite::composite(NULL, w, h), old_mouse(0, 0),
+      popup_ul(0, 0), popup_lr(w, h)
 {
     this->old_child = NULL;
+    this->popup = NULL;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -100,7 +112,15 @@ int ui::context::get(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::attribute)
         return this->get_attribute(t, v);
-    return ui::composite::get(e, t, v);
+    return this->composite::get(e, t, v);
+}
+
+void ui::context::set(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::popup)
+        this->set_popup(t, v);
+    else
+        this->composite::set(e, t, v);
 }
 
 void ui::context::draw(void)
