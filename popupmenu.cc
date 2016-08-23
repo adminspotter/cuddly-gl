@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 23:23:10 tquirk
+ *   last updated 22 Aug 2016, 23:41:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,7 +27,31 @@
  *
  */
 
+#include "ui_defs.h"
+#include "ui.h"
 #include "popupmenu.h"
+
+int ui::popupmenu::get_popup(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::popup::visible:  *(bool *)v = this->visible;      break;
+      case ui::popup::button:   *(int *)v = this->popup_button;  break;
+      default:                  ret = 1;                         break;
+    }
+    return ret;
+}
+
+void ui::popupmenu::set_popup(GLuint t, void *v)
+{
+    switch (t)
+    {
+      case ui::popup::visible:  this->visible = *(bool *)v;      break;
+      case ui::popup::button:   this->popup_button = *(int *)v;  break;
+    }
+}
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     : ui::composite::composite(c, w, h)
@@ -36,4 +60,19 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
 
 ui::popupmenu::~popupmenu()
 {
+}
+
+int ui::popupmenu::get(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::popup)
+        return this->get_popup(t, v);
+    return this->composite::get(e, t, v);
+}
+
+void ui::popupmenu::set(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::popup)
+        this->set_popup(t, v);
+    else
+        this->composite::set(e, t, v);
 }

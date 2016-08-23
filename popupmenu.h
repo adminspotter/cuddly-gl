@@ -1,6 +1,6 @@
 /* popupmenu.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 23:12:51 tquirk
+ *   last updated 22 Aug 2016, 23:41:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,9 +37,19 @@ namespace ui
 {
     class popupmenu : public composite
     {
+      protected:
+        bool visible;
+        int popup_button;
+
+        int get_popup(GLuint, void *);
+        void set_popup(GLuint, void *);
+
       public:
         popupmenu(composite *, GLuint, GLuint);
         virtual ~popupmenu();
+
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
     };
 }
 
