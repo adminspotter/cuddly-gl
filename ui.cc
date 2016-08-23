@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 21:05:37 tquirk
+ *   last updated 22 Aug 2016, 21:50:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -76,6 +76,8 @@ void ui::context::set_popup(GLuint t, void *v)
         this->popup_lr = *(glm::ivec2 *)v;
     else if (t == ui::popup::menu)
         this->popup = (panel *)v;
+    else if (t == ui::popup::button)
+        this->popup_button = *(int *)v;
 }
 
 ui::context::context(GLuint w, GLuint h)
@@ -84,6 +86,7 @@ ui::context::context(GLuint w, GLuint h)
 {
     this->old_child = NULL;
     this->popup = NULL;
+    this->popup_button = ui::mouse::button2;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -131,4 +134,19 @@ void ui::context::draw(void)
     glUseProgram(this->shader_pgm);
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
         (*i)->draw();
+}
+
+void ui::context::mouse_btn_callback(int btn, int state)
+{
+    if (this->popup != NULL
+        && btn == this->popup_button
+        && state == ui::mouse::down
+        && this->old_pos.x >= this->popup_ul.x
+        && this->old_pos.x <= this->popup_lr.x
+        && this->old_pos.y >= this->popup_ul.y
+        && this->old_pos.y <= this->popup_lr.y
+        && this->tree->search(this->old_pos) == NULL)
+        this->popup->set(ui::element::popup, ui::popup::visible, &state);
+    else
+        this->composite::mouse_btn_callback(btn, state);
 }

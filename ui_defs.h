@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 18:32:06 tquirk
+ *   last updated 22 Aug 2016, 21:43:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -165,7 +165,7 @@ namespace ui
 
     namespace popup
     {
-        const GLuint menu = 2;
+        const GLuint visible = 1, button = 2, menu = 3;
     }
 }
 
