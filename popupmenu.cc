@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 23:41:36 tquirk
+ *   last updated 23 Aug 2016, 16:35:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,7 +29,6 @@
 
 #include "ui_defs.h"
 #include "ui.h"
-#include "manager.h"
 #include "popupmenu.h"
 
 int ui::popupmenu::get_popup(GLuint t, void *v)
@@ -61,7 +60,14 @@ void ui::popupmenu::show(ui::panel *p, void *call, void *client)
     bool t = true;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
-        pm->set(ui::element::popup, ui::popup::visible, &t);
+    {
+        glm::ivec2 tmp_vec;
+
+        pm->get(ui::element::size, ui::size::all, &tmp_vec);
+        tmp_vec = bcd->location - (tmp_vec / 2);
+        pm->set_va(ui::element::position, ui::position::all, &tmp_vec,
+                   ui::element::popup, ui::popup::visible, &t, 0);
+    }
 }
 
 void ui::popupmenu::hide(ui::panel *p, void *call, void *client)
