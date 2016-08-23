@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 22:02:54 tquirk
+ *   last updated 23 Aug 2016, 00:19:52 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -70,14 +70,12 @@ int ui::context::get_attribute(GLuint t, void *v)
 
 void ui::context::set_popup(GLuint t, void *v)
 {
-    if (t == ui::corner::top_left)
-        this->popup_ul = *(glm::ivec2 *)v;
-    else if (t == ui::corner::bottom_right)
-        this->popup_lr = *(glm::ivec2 *)v;
-    else if (t == ui::popup::menu)
-        this->popup = (panel *)v;
-    else if (t == ui::popup::button)
-        this->popup_button = *(int *)v;
+    switch (t)
+    {
+      case ui::corner::top_left:     this->popup_ul = *(glm::ivec2 *)v;  break;
+      case ui::corner::bottom_right: this->popup_lr = *(glm::ivec2 *)v;  break;
+      case ui::popup::menu:          this->popup = (ui::panel *)v;       break;
+    }
 }
 
 ui::context::context(GLuint w, GLuint h)
@@ -86,7 +84,6 @@ ui::context::context(GLuint w, GLuint h)
 {
     this->old_child = NULL;
     this->popup = NULL;
-    this->popup_button = ui::mouse::button2;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -138,18 +135,23 @@ void ui::context::draw(void)
 
 void ui::context::mouse_btn_callback(int btn, int state)
 {
-    if (this->popup != NULL
-        && btn == this->popup_button
-        && state == ui::mouse::down
-        && this->old_pos.x >= this->popup_ul.x
-        && this->old_pos.x <= this->popup_lr.x
-        && this->old_pos.y >= this->popup_ul.y
-        && this->old_pos.y <= this->popup_lr.y
-        && this->tree->search(this->old_pos) == NULL)
+    if (this->popup != NULL)
     {
-        bool visible = (state == ui::mouse::down ? true : false);
+        int pb;
 
-        this->popup->set(ui::element::popup, ui::popup::visible, &visible);
+        this->popup->get(ui::element::popup, ui::popup::button, &pb);
+        if (btn == pb
+            && state == ui::mouse::down
+            && this->old_pos.x >= this->popup_ul.x
+            && this->old_pos.x <= this->popup_lr.x
+            && this->old_pos.y >= this->popup_ul.y
+            && this->old_pos.y <= this->popup_lr.y
+            && this->tree->search(this->old_pos) == NULL)
+        {
+            bool visible = (state == ui::mouse::down ? true : false);
+
+            this->popup->set(ui::element::popup, ui::popup::visible, &visible);
+        }
     }
     else
         this->composite::mouse_btn_callback(btn, state);
