@@ -29,6 +29,7 @@
 
 #include "ui_defs.h"
 #include "ui.h"
+#include "manager.h"
 #include "popupmenu.h"
 
 int ui::popupmenu::get_popup(GLuint t, void *v)
@@ -53,13 +54,57 @@ void ui::popupmenu::set_popup(GLuint t, void *v)
     }
 }
 
+void ui::popupmenu::show(ui::panel *p, void *call, void *client)
+{
+    ui::popupmenu *pm = (ui::popupmenu *)client;
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+    bool t = true;
+
+    if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
+        pm->set(ui::element::popup, ui::popup::visible, &t);
+}
+
+void ui::popupmenu::hide(ui::panel *p, void *call, void *client)
+{
+    ui::popupmenu *pm = (ui::popupmenu *)client;
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+    bool f = false;
+
+    if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
+        pm->set(ui::element::popup, ui::popup::visible, &f);
+}
+
+
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h)
 {
+    ui::context *ctx = dynamic_cast<ui::context *>(c);
+    ui::manager *mgr = dynamic_cast<ui::manager *>(c);
+    this->popup_button = ui::mouse::button2;
+
+    /* Our parent could be either a UI context, or a regular manager */
+    if (ctx != NULL)
+        ctx->set(ui::element::popup, ui::popup::menu, this);
+    else if (mgr != NULL)
+    {
+        mgr->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        mgr->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+    }
 }
 
 ui::popupmenu::~popupmenu()
 {
+    ui::context *ctx = dynamic_cast<ui::context *>(this->composite::parent);
+    ui::manager *mgr = dynamic_cast<ui::manager *>(this->composite::parent);
+
+    /* Our parent could be either a UI context, or a regular manager */
+    if (ctx != NULL)
+        ctx->set(ui::element::popup, ui::popup::menu, NULL);
+    else if (mgr != NULL)
+    {
+        mgr->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        mgr->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+    }
 }
 
 int ui::popupmenu::get(GLuint e, GLuint t, void *v)

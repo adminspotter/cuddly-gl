@@ -44,6 +44,9 @@ namespace ui
         int get_popup(GLuint, void *);
         void set_popup(GLuint, void *);
 
+        static void show(panel *, void *, void *);
+        static void hide(panel *, void *, void *);
+
       public:
         popupmenu(composite *, GLuint, GLuint);
         virtual ~popupmenu();
