@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 09:31:41 tquirk
+ *   last updated 22 Aug 2016, 22:38:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -203,15 +203,15 @@ void ui::composite::mouse_btn_callback(int btn, int state)
     {
         glm::ivec2 obj;
         ui::btn_call_data call_data;
+        GLuint which = (state == ui::mouse::up
+                        ? ui::callback::btn_up
+                        : ui::callback::btn_down);
 
-        p->get_va(ui::element::position, ui::position::x, &obj.x,
-                  ui::element::position, ui::position::y, &obj.y, 0);
+        p->get(ui::element::position, ui::position::all, &obj);
         call_data.location = this->old_pos - obj;
         call_data.button = btn;
-        call_data.state = (state == ui::mouse::up
-                           ? ui::callback::btn_up
-                           : ui::callback::btn_down);
-        p->call_callbacks(call_data.state, &call_data);
+        call_data.state = state;
+        p->call_callbacks(which, &call_data);
     }
 
     this->old_child = p;
@@ -225,17 +225,17 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
     {
         glm::ivec2 obj;
         ui::key_call_data call_data;
+        GLuint which = (state == ui::key::up
+                        ? ui::callback::key_up
+                        : ui::callback::key_down);
 
-        p->get_va(ui::element::position, ui::position::x, &obj.x,
-                  ui::element::position, ui::position::y, &obj.y, 0);
+        p->get(ui::element::position, ui::position::all, &obj);
         call_data.location = this->old_pos - obj;
         call_data.key = key;
         call_data.character = c;
-        call_data.state = (state == ui::key::up
-                           ? ui::callback::key_up
-                           : ui::callback::key_down);
+        call_data.state = state;
         call_data.mods = mods;
-        p->call_callbacks(call_data.state, &call_data);
+        p->call_callbacks(which, &call_data);
     }
 
     this->old_child = p;

@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 10:25:14 tquirk
+ *   last updated 22 Aug 2016, 23:04:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -171,9 +171,9 @@ void ui::manager::set_desired_size(void)
 
 void ui::manager::motion_callback(panel *p, void *call, void *client)
 {
-    ui::manager *m;
+    ui::manager *m = dynamic_cast<ui::manager *>(p);
 
-    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    if (m != NULL)
     {
         ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
 
@@ -183,30 +183,25 @@ void ui::manager::motion_callback(panel *p, void *call, void *client)
 
 void ui::manager::button_callback(panel *p, void *call, void *client)
 {
-    ui::manager *m;
+    ui::manager *m = dynamic_cast<ui::manager *>(p);
 
-    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    if (m != NULL)
     {
         ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
-        m->mouse_btn_callback(bcd->button,
-                              (bcd->state == ui::callback::btn_up
-                               ? ui::mouse::up : ui::mouse::down));
+        m->mouse_btn_callback(bcd->button, bcd->state);
     }
 }
 
 void ui::manager::keypress_callback(panel *p, void *call, void *client)
 {
-    ui::manager *m;
+    ui::manager *m = dynamic_cast<ui::manager *>(p);
 
-    if ((m = dynamic_cast<ui::manager *>(p)) != NULL)
+    if (m != NULL)
     {
         ui::key_call_data *kcd = (ui::key_call_data *)call;
 
-        m->key_callback(kcd->key, kcd->character,
-                        (kcd->state == ui::callback::key_up
-                         ? ui::key::up : ui::key::down),
-                        kcd->mods);
+        m->key_callback(kcd->key, kcd->character, kcd->state, kcd->mods);
     }
 }
 
