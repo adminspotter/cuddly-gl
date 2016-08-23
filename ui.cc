@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 00:19:52 tquirk
+ *   last updated 23 Aug 2016, 00:24:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -135,18 +135,17 @@ void ui::context::draw(void)
 
 void ui::context::mouse_btn_callback(int btn, int state)
 {
-    if (this->popup != NULL)
+    if (this->popup != NULL
+        && this->old_pos.x >= this->popup_ul.x
+        && this->old_pos.x <= this->popup_lr.x
+        && this->old_pos.y >= this->popup_ul.y
+        && this->old_pos.y <= this->popup_lr.y
+        && this->tree->search(this->old_pos) == NULL)
     {
         int pb;
 
         this->popup->get(ui::element::popup, ui::popup::button, &pb);
-        if (btn == pb
-            && state == ui::mouse::down
-            && this->old_pos.x >= this->popup_ul.x
-            && this->old_pos.x <= this->popup_lr.x
-            && this->old_pos.y >= this->popup_ul.y
-            && this->old_pos.y <= this->popup_lr.y
-            && this->tree->search(this->old_pos) == NULL)
+        if (btn == pb)
         {
             bool visible = (state == ui::mouse::down ? true : false);
 
