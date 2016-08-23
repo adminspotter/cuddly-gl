@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 21:50:45 tquirk
+ *   last updated 22 Aug 2016, 22:02:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -146,7 +146,11 @@ void ui::context::mouse_btn_callback(int btn, int state)
         && this->old_pos.y >= this->popup_ul.y
         && this->old_pos.y <= this->popup_lr.y
         && this->tree->search(this->old_pos) == NULL)
-        this->popup->set(ui::element::popup, ui::popup::visible, &state);
+    {
+        bool visible = (state == ui::mouse::down ? true : false);
+
+        this->popup->set(ui::element::popup, ui::popup::visible, &visible);
+    }
     else
         this->composite::mouse_btn_callback(btn, state);
 }
