@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 00:17:36 tquirk
+ *   last updated 23 Aug 2016, 07:04:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -58,6 +58,7 @@ namespace ui
 
       protected:
         int get_attribute(GLuint, void *);
+        int get_popup(GLuint, void *);
         void set_popup(GLuint, void *);
 
       public:

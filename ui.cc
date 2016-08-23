@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 00:24:10 tquirk
+ *   last updated 23 Aug 2016, 07:11:44 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -68,6 +68,20 @@ int ui::context::get_attribute(GLuint t, void *v)
     return ret;
 }
 
+int ui::context::get_popup(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::corner::top_left:      *(glm::ivec2 *)v = this->popup_ul;  break;
+      case ui::corner::bottom_right:  *(glm::ivec2 *)v = this->popup_lr;  break;
+      case ui::popup::menu:           *(ui::panel **)v = this->popup;     break;
+      default:                        ret = 1;                            break;
+    }
+    return ret;
+}
+
 void ui::context::set_popup(GLuint t, void *v)
 {
     switch (t)
@@ -106,13 +120,18 @@ ui::context::~context()
     glDeleteShader(this->frag_shader);
     glUseProgram(0);
     glDeleteProgram(this->shader_pgm);
+    if (this->popup != NULL)
+        delete this->popup;
 }
 
 int ui::context::get(GLuint e, GLuint t, void *v)
 {
-    if (e == ui::element::attribute)
-        return this->get_attribute(t, v);
-    return this->composite::get(e, t, v);
+    switch (e)
+    {
+      case ui::element::attribute:  return this->get_attribute(t, v);
+      case ui::element::popup:      return this->get_popup(t, v);
+      default:                      return this->composite::get(e, t, v);
+    }
 }
 
 void ui::context::set(GLuint e, GLuint t, void *v)
