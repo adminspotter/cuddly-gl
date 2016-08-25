@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 13:14:56 tquirk
+ *   last updated 25 Aug 2016, 13:40:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,6 +57,11 @@ void ui::popupmenu::set_popup(GLuint t, void *v)
       case ui::popup::visible:  this->visible = *(bool *)v;      break;
       case ui::popup::button:   this->popup_button = *(int *)v;  break;
     }
+}
+
+void ui::popupmenu::set_resize(GLuint t, void *v)
+{
+    /* No-op, since we don't want this to change */
 }
 
 void ui::popupmenu::show(ui::panel *p, void *call, void *client)
@@ -312,6 +317,7 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     ui::context *ctx = dynamic_cast<ui::context *>(c);
     ui::manager *mgr = dynamic_cast<ui::manager *>(c);
     this->popup_button = ui::mouse::button2;
+    this->resize = ui::resize::none;
 
     /* Our parent could be either a UI context, or a regular manager */
     if (ctx != NULL)
