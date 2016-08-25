@@ -369,3 +369,15 @@ void ui::popupmenu::draw(void)
     if (this->visible)
         this->panel::draw();
 }
+
+void ui::popupmenu::add_child(panel *p)
+{
+    this->manager::add_child(p);
+    this->populate_buffers();
+}
+
+void ui::popupmenu::remove_child(panel *p)
+{
+    this->manager::remove_child(p);
+    this->populate_buffers();
+}

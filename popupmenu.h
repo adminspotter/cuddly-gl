@@ -58,6 +58,9 @@ namespace ui
         virtual void set(GLuint, GLuint, void *);
 
         virtual void draw(void);
+
+        virtual void add_child(panel *);
+        virtual void remove_child(panel *);
     };
 }
 
