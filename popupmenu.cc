@@ -119,7 +119,7 @@ void ui::popupmenu::populate_buffers(void)
     float vertex[(count * 64) + (this->children.size() * 32)];
     float increment = M_PI * 2.0f / (float)count;
     GLuint element[(count * 18) + (this->children.size() * 6)];
-    int i;
+    int i, border_index = count * 16, border_count = 0;
 
     this->composite::parent->get(ui::element::pixel_size,
                                  ui::size::all,
@@ -158,6 +158,52 @@ void ui::popupmenu::populate_buffers(void)
 
         this->vertex_count += 16;
         this->element_count += 6;
+
+        /* Outer border */
+        if (this->border[0] != 0)
+        {
+            vertex[border_index] = m0.x * cosf(angle) + this->pos.x;
+            vertex[border_index + 1] = m0.y * sinf(angle) + this->pos.y;
+            memcpy(&vertex[border_index + 2],
+                   glm::value_ptr(this->foreground),
+                   sizeof(float) * 4);
+            vertex[border_index + 6] = ui::panel::no_texture;
+            vertex[border_index + 7] = ui::panel::no_texture;
+
+            vertex[border_index + 8] = b0.x * cosf(angle) + this->pos.x;
+            vertex[border_index + 9] = b0.y * sinf(angle) + this->pos.y;
+            memcpy(&vertex[border_index + 10],
+                   glm::value_ptr(this->foreground),
+                   sizeof(float) * 4);
+            vertex[border_index + 14] = ui::panel::no_texture;
+            vertex[border_index + 15] = ui::panel::no_texture;
+
+            border_index += 16;
+            border_count += 6;
+        }
+
+        /* Inner border */
+        if (this->border[3] != 0)
+        {
+            vertex[border_index] = b3.x * cosf(angle) + this->pos.x;
+            vertex[border_index + 1] = b3.y * sinf(angle) + this->pos.y;
+            memcpy(&vertex[border_index + 2],
+                   glm::value_ptr(this->foreground),
+                   sizeof(float) * 4);
+            vertex[border_index + 6] = ui::panel::no_texture;
+            vertex[border_index + 7] = ui::panel::no_texture;
+
+            vertex[border_index + 8] = m3.x * cosf(angle) + this->pos.x;
+            vertex[border_index + 9] = m3.y * sinf(angle) + this->pos.y;
+            memcpy(&vertex[border_index + 10],
+                   glm::value_ptr(this->foreground),
+                   sizeof(float) * 4);
+            vertex[border_index + 14] = ui::panel::no_texture;
+            vertex[border_index + 15] = ui::panel::no_texture;
+
+            border_index += 16;
+            border_count += 6;
+        }
     }
 
     increment = M_PI * 2.0f / this->children.size();
