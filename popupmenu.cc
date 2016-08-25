@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 12:44:17 tquirk
+ *   last updated 25 Aug 2016, 13:14:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -108,7 +108,7 @@ void ui::popupmenu::populate_buffers(void)
         b3 = m3 + glm::vec2(this->border[3], this->border[3]);
     }
 
-    int count = std::min(this->size.x / 3, 15);
+    int count = std::max(this->size.x / 3, 15);
 
     /* We need room for 8 sets of points - inner and outer edges, plus
      * possible inner and outer borders (2 points each).  Each point
