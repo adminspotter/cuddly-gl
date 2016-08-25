@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 16:35:42 tquirk
+ *   last updated 24 Aug 2016, 22:36:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -26,6 +26,12 @@
  * Things to do
  *
  */
+
+#include <math.h>
+
+#include <algorithm>
+
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ui_defs.h"
 #include "ui.h"
@@ -80,6 +86,50 @@ void ui::popupmenu::hide(ui::panel *p, void *call, void *client)
         pm->set(ui::element::popup, ui::popup::visible, &f);
 }
 
+/* We'll use a parametric function to draw our ellipse.
+ *
+ * <radius.x * cos(theta), radius.y * sin(theta)>
+ */
+void ui::popupmenu::populate_buffers(void)
+{
+    glm::vec2 pixel_sz;
+    glm::vec2 radius(this->size.x / 2.0f, this->size.y / 2.0f);
+    glm::vec2 inner = radius * 0.2f;
+    glm::vec2 m0, m3, b0, b3;
+
+    if (this->border[0] != 0)
+    {
+        m0 = radius - glm::vec2(this->margin[0], this->margin[0]);
+        b0 = m0 - glm::vec2(this->border[0], this->border[0]);
+    }
+    if (this->border[3] != 0)
+    {
+        m3 = radius - glm::vec2(this->margin[3], this->margin[3]);
+        b3 = m3 - glm::vec2(this->border[3], this->border[3]);
+    }
+
+    int count = std::min(this->size.x / 3, 15);
+
+    /* We need room for 8 sets of points - inner and outer edges, plus
+     * possible inner and outer borders (2 points each).  Each point
+     * is 8 floats - 2 xy, 4 color, 2 texture st.  We also need
+     * dividers for each sector, so that's another 4 points per
+     * divider.
+     */
+    float vertex[(count * 64) + (this->children.size() * 32)];
+    float increment = M_PI * 2.0f / (float)count;
+    GLuint element[(count * 18) + (this->children.size() * 6)];
+    int i;
+
+    this->composite::parent->get(ui::element::pixel_size,
+                                 ui::size::all,
+                                 &pixel_sz);
+    radius.x *= pixel_sz.x;
+    inner.x *= pixel_sz.x;
+    radius.y *= pixel_sz.y;
+    inner.y *= pixel_sz.y;
+
+}
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h)

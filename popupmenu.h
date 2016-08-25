@@ -1,6 +1,6 @@
 /* popupmenu.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 23:41:52 tquirk
+ *   last updated 23 Aug 2016, 21:04:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,8 @@ namespace ui
 
         static void show(panel *, void *, void *);
         static void hide(panel *, void *, void *);
+
+        void populate_buffers(void);
 
       public:
         popupmenu(composite *, GLuint, GLuint);
