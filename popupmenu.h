@@ -1,6 +1,6 @@
 /* popupmenu.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 21:04:46 tquirk
+ *   last updated 25 Aug 2016, 12:44:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,6 +55,8 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
+
+        virtual void draw(void);
     };
 }
 

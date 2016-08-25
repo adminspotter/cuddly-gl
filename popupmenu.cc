@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 08:51:41 tquirk
+ *   last updated 25 Aug 2016, 12:44:17 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -233,6 +233,11 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
         mgr->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
         mgr->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
     }
+
+    this->prep_vao_vbo(&this->vao, &this->vbo);
+    glGenBuffers(1, &this->ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+    this->populate_buffers();
 }
 
 ui::popupmenu::~popupmenu()
@@ -263,4 +268,10 @@ void ui::popupmenu::set(GLuint e, GLuint t, void *v)
         this->set_popup(t, v);
     else
         this->manager::set(e, t, v);
+}
+
+void ui::popupmenu::draw(void)
+{
+    if (this->visible)
+        this->panel::draw();
 }
