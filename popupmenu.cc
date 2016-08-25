@@ -226,11 +226,73 @@ void ui::popupmenu::populate_buffers(void)
     }
 
     increment = M_PI * 2.0f / this->children.size();
+
+    /* We'll use the m elements for our divider endpoints.  If they
+     * are already set, nice, and if not, we'll set to the relevant
+     * edge of the background polys.
+     */
+    if (m0.x == 0.0f && m0.y == 0.0f)
+        m0 = radius;
+    if (m3.x == 0.0f && m3.y == 0.0f)
+        m3 = inner;
+
+    this->vertex_count = border_index;
+    vert_count = border_count;
+    this->element_count = border_element;
+
     for (i = 0; i < this->children.size(); ++i)
     {
         float angle = increment * i;
 
         /* Add the dividers for each child */
+        vertex[this->vertex_count] = m0.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 1] = m0.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 2],
+               glm::value_ptr(this->foreground),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
+
+        vertex[this->vertex_count + 8] = m3.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 9] = m3.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 10],
+               glm::value_ptr(this->foreground),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
+
+        /* Make the dividers one degree wide.  There's probably a nice
+         * way to do this so the edges will be parallel, but I don't
+         * have a network link to be able to research at the moment.
+         */
+        angle += M_PI * 2.0f / 360;
+
+        vertex[this->vertex_count + 16] = m0.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 17] = m0.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 18],
+               glm::value_ptr(this->foreground),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 22] = ui::panel::no_texture;
+        vertex[this->vertex_count + 23] = ui::panel::no_texture;
+
+        vertex[this->vertex_count + 24] = m3.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 25] = m3.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 26],
+               glm::value_ptr(this->foreground),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 30] = ui::panel::no_texture;
+        vertex[this->vertex_count + 31] = ui::panel::no_texture;
+        this->vertex_count += 32;
+        vert_count += 4;
+
+        element[this->element_count] = vert_count - 4;
+        element[this->element_count + 1] = vert_count - 2;
+        element[this->element_count + 2] = vert_count - 3;
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = vert_count - 1;
+        element[this->element_count + 5] = vert_count - 3;
+        this->element_count += 6;
+
         /* Reposition each child to be in the middle of its sector */
     }
     glBindVertexArray(this->vao);
