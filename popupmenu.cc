@@ -119,7 +119,8 @@ void ui::popupmenu::populate_buffers(void)
     float vertex[(count * 64) + (this->children.size() * 32)];
     float increment = M_PI * 2.0f / (float)count;
     GLuint element[(count * 18) + (this->children.size() * 6)];
-    int i, border_index = count * 16, border_count = 0;
+    int i, border_index = count * 16, border_count = count * 2;
+    int border_element = count * 6, vert_count = 0;
 
     this->composite::parent->get(ui::element::pixel_size,
                                  ui::size::all,
@@ -130,6 +131,8 @@ void ui::popupmenu::populate_buffers(void)
     radius.y *= pixel_sz.y;  inner.y *= pixel_sz.y;
     b0.y *= pixel_sz.y;      m0.y *= pixel_sz.y;
     b3.y *= pixel_sz.y;      m3.y *= pixel_sz.y;
+
+    this->vertex_count = this->element_count = 0;
 
     for (i = 0; i < count; ++i)
     {
@@ -150,15 +153,15 @@ void ui::popupmenu::populate_buffers(void)
                sizeof(float) * 4);
         vertex[this->vertex_count + 14] = ui::panel::no_texture;
         vertex[this->vertex_count + 15] = ui::panel::no_texture;
-
-        element[this->element_count] = i * 2;
-        element[this->element_count + 1] = i * 2 + 1;
-        element[this->element_count + 2] = (i * 2 + 3) % count;
-        element[this->element_count + 3] = element[this->element_count];
-        element[this->element_count + 4] = element[this->element_count + 2];
-        element[this->element_count + 5] = (i * 2 + 2) % count;
-
         this->vertex_count += 16;
+        vert_count += 2;
+
+        element[this->element_count] = vert_count - 2;
+        element[this->element_count + 1] = vert_count - 1;
+        element[this->element_count + 2] = (vert_count + 1) % (count * 2);
+        element[this->element_count + 3] = vert_count - 2;
+        element[this->element_count + 4] = (vert_count + 1) % (count * 2);
+        element[this->element_count + 5] = vert_count % (count * 2);
         this->element_count += 6;
 
         /* Outer border */
@@ -216,6 +219,15 @@ void ui::popupmenu::populate_buffers(void)
         /* Add the dividers for each child */
         /* Reposition each child to be in the middle of its sector */
     }
+    glBindVertexArray(this->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 sizeof(float) * this->vertex_count, vertex,
+                 GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(GLuint) * this->element_count, element,
+                 GL_DYNAMIC_DRAW);
 }
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
