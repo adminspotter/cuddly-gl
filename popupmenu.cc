@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 08:37:23 tquirk
+ *   last updated 25 Aug 2016, 08:51:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -124,10 +124,12 @@ void ui::popupmenu::populate_buffers(void)
     this->composite::parent->get(ui::element::pixel_size,
                                  ui::size::all,
                                  &pixel_sz);
-    radius.x *= pixel_sz.x;
-    inner.x *= pixel_sz.x;
-    radius.y *= pixel_sz.y;
-    inner.y *= pixel_sz.y;
+    radius.x *= pixel_sz.x;  inner.x *= pixel_sz.x;
+    b0.x *= pixel_sz.x;      m0.x *= pixel_sz.x;
+    b3.x *= pixel_sz.x;      m3.x *= pixel_sz.x;
+    radius.y *= pixel_sz.y;  inner.y *= pixel_sz.y;
+    b0.y *= pixel_sz.y;      m0.y *= pixel_sz.y;
+    b3.y *= pixel_sz.y;      m3.y *= pixel_sz.y;
 
     for (i = 0; i < count; ++i)
     {
