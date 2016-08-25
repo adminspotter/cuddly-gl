@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 21:43:12 tquirk
+ *   last updated 24 Aug 2016, 07:56:55 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -91,6 +91,7 @@ namespace ui
     namespace side
     {
         const GLuint top = 1, left = 2, right = 4, bottom = 8, all = 15;
+        const GLuint outer = 1, inner = 8;
     }
 
     namespace corner
