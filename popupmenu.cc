@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Aug 2016, 23:06:56 tquirk
+ *   last updated 25 Aug 2016, 08:37:23 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -104,8 +104,8 @@ void ui::popupmenu::populate_buffers(void)
     }
     if (this->border[3] != 0)
     {
-        m3 = radius - glm::vec2(this->margin[3], this->margin[3]);
-        b3 = m3 - glm::vec2(this->border[3], this->border[3]);
+        m3 = inner + glm::vec2(this->margin[3], this->margin[3]);
+        b3 = m3 + glm::vec2(this->border[3], this->border[3]);
     }
 
     int count = std::min(this->size.x / 3, 15);
