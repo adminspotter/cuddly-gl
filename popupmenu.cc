@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Aug 2016, 22:36:14 tquirk
+ *   last updated 24 Aug 2016, 23:06:56 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -129,6 +129,45 @@ void ui::popupmenu::populate_buffers(void)
     radius.y *= pixel_sz.y;
     inner.y *= pixel_sz.y;
 
+    for (i = 0; i < count; ++i)
+    {
+        float angle = increment * i;
+
+        vertex[this->vertex_count] = radius.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 1] = radius.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 2],
+               glm::value_ptr(this->background),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 6] = ui::panel::no_texture;
+        vertex[this->vertex_count + 7] = ui::panel::no_texture;
+
+        vertex[this->vertex_count + 8] = inner.x * cosf(angle) + this->pos.x;
+        vertex[this->vertex_count + 9] = inner.y * sinf(angle) + this->pos.y;
+        memcpy(&vertex[this->vertex_count + 10],
+               glm::value_ptr(this->background),
+               sizeof(float) * 4);
+        vertex[this->vertex_count + 14] = ui::panel::no_texture;
+        vertex[this->vertex_count + 15] = ui::panel::no_texture;
+
+        element[this->element_count] = i * 2;
+        element[this->element_count + 1] = i * 2 + 1;
+        element[this->element_count + 2] = (i * 2 + 3) % count;
+        element[this->element_count + 3] = element[this->element_count];
+        element[this->element_count + 4] = element[this->element_count + 2];
+        element[this->element_count + 5] = (i * 2 + 2) % count;
+
+        this->vertex_count += 16;
+        this->element_count += 6;
+    }
+
+    increment = M_PI * 2.0f / this->children.size();
+    for (i = 0; i < this->children.size(); ++i)
+    {
+        float angle = increment * i;
+
+        /* Add the dividers for each child */
+        /* Reposition each child to be in the middle of its sector */
+    }
 }
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
