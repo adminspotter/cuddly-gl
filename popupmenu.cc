@@ -182,9 +182,16 @@ void ui::popupmenu::populate_buffers(void)
                    sizeof(float) * 4);
             vertex[border_index + 14] = ui::panel::no_texture;
             vertex[border_index + 15] = ui::panel::no_texture;
-
             border_index += 16;
-            border_count += 6;
+            border_count += 2;
+
+            element[border_element] =  border_count - 2;
+            element[border_element + 1] = border_count - 1;
+            element[border_element + 2] = border_count + 1;
+            element[border_element + 3] = border_count - 2;
+            element[border_element + 4] = border_count + 1;
+            element[border_element + 5] = border_count;
+            border_element += 6;
         }
 
         /* Inner border */
@@ -205,9 +212,16 @@ void ui::popupmenu::populate_buffers(void)
                    sizeof(float) * 4);
             vertex[border_index + 14] = ui::panel::no_texture;
             vertex[border_index + 15] = ui::panel::no_texture;
-
             border_index += 16;
-            border_count += 6;
+            border_count += 2;
+
+            element[border_element] =  border_count - 2;
+            element[border_element + 1] = border_count - 1;
+            element[border_element + 2] = border_count + 1;
+            element[border_element + 3] = border_count - 2;
+            element[border_element + 4] = border_count + 1;
+            element[border_element + 5] = border_count;
+            border_element += 6;
         }
     }
 
