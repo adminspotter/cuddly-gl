@@ -26,9 +26,9 @@ void mouse_button_callback(GLFWwindow *, int, int, int);
 void key_callback(GLFWwindow *, int, int, int, int);
 void char_callback(GLFWwindow *, unsigned int, int);
 void create_image(int, int);
-void enter_callback(ui::panel *, void *, void *);
-void leave_callback(ui::panel *, void *, void *);
-void clicky_callback(ui::panel *, void *, void *);
+void enter_callback(ui::event_target *, void *, void *);
+void leave_callback(ui::event_target *, void *, void *);
+void clicky_callback(ui::event_target *, void *, void *);
 
 ui::context *ctx;
 ui::panel *p1;
@@ -344,19 +344,19 @@ void create_image(int width, int height)
 }
 
 /* ARGSUSED */
-void enter_callback(ui::panel *p, void *client, void *call)
+void enter_callback(ui::event_target *p, void *client, void *call)
 {
     std::cout << "we're in!" << std::endl;
 }
 
 /* ARGSUSED */
-void leave_callback(ui::panel *p, void *client, void *call)
+void leave_callback(ui::event_target *p, void *client, void *call)
 {
     std::cout << "out, baby!" << std::endl;
 }
 
 /* ARGSUSED */
-void clicky_callback(ui::panel *p, void *client, void *call)
+void clicky_callback(ui::event_target *p, void *client, void *call)
 {
     std::cout << "clicky clicky!" << std::endl;
 }
