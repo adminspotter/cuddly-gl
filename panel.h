@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 07:58:35 tquirk
+ *   last updated 25 Aug 2016, 23:35:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,45 +40,18 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
-#include <list>
-
 #include "composite.h"
+#include "callback.h"
 
 namespace ui
 {
     /* Forward declarations for multi-include problems */
     class composite;
-    class panel;
 
-    /* Callback function pointer */
-    typedef void (*cb_fptr)(panel *, void *, void *);
-
-    class panel
+    class panel : public event_target
     {
       protected:
         const static float no_texture;
-
-        typedef struct cb_list_tag
-        {
-            cb_fptr ptr;
-            void *client_data;
-
-            bool operator==(const struct cb_list_tag& p) const
-                {
-                    return (this->ptr == p.ptr
-                            && this->client_data == p.client_data);
-                };
-            void operator()(panel *p, void *call_data)
-                {
-                    this->ptr(p, call_data, this->client_data);
-                };
-        }
-        cb_list_elem;
-        std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
-        std::list<cb_list_elem> btn_down_cb, btn_up_cb;
-        std::list<cb_list_elem> key_down_cb, key_up_cb;
-
-        std::list<cb_list_elem>& which_cb_list(GLuint);
 
         composite *parent;
         GLuint vao, vbo, ebo, vertex_count, element_count;
@@ -113,10 +86,6 @@ namespace ui
         virtual void draw(void);
 
         void close(void);
-
-        virtual void add_callback(GLuint, cb_fptr, void *);
-        virtual void remove_callback(GLuint, cb_fptr, void *);
-        virtual void call_callbacks(GLuint, void *);
 
         /* The composite may change sizes, so it needs to be able to
          * call populate_buffers() in the event of a window resize.
