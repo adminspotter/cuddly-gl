@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 10:26:40 tquirk
+ *   last updated 25 Aug 2016, 23:36:17 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,21 +37,6 @@
 #include "panel.h"
 
 const float ui::panel::no_texture = -1000.0;
-
-std::list<ui::panel::cb_list_elem>& ui::panel::which_cb_list(GLuint which)
-{
-    switch (which)
-    {
-      case ui::callback::enter:     return this->enter_cb;
-      case ui::callback::leave:     return this->leave_cb;
-      default:
-      case ui::callback::btn_down:  return this->btn_down_cb;
-      case ui::callback::btn_up:    return this->btn_up_cb;
-      case ui::callback::motion:    return this->motion_cb;
-      case ui::callback::key_down:  return this->key_down_cb;
-      case ui::callback::key_up:    return this->key_up_cb;
-    }
-}
 
 int ui::panel::get_position(GLuint t, void *v)
 {
@@ -496,8 +481,7 @@ void ui::panel::populate_buffers(void)
 
 ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
-      enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
-      key_down_cb(), key_up_cb(), size(w, h), pos(0, 0)
+      size(w, h), pos(0, 0), ui::event_target::event_target()
 {
     GLuint temp, x, y;
 
@@ -599,29 +583,4 @@ void ui::panel::draw(void)
 void ui::panel::close(void)
 {
     delete this;
-}
-
-void ui::panel::add_callback(GLuint cb_list, ui::cb_fptr funcptr, void *client)
-{
-    std::list<ui::panel::cb_list_elem>& l = this->which_cb_list(cb_list);
-    cb_list_elem new_elem = {funcptr, client};
-
-    l.push_back(new_elem);
-}
-
-void ui::panel::remove_callback(GLuint cb_list, ui::cb_fptr funcptr, void *client)
-{
-    std::list<cb_list_elem>& l = this->which_cb_list(cb_list);
-    cb_list_elem old_elem = {funcptr, client};
-
-    l.remove(old_elem);
-}
-
-void ui::panel::call_callbacks(GLuint cb_list, void *call_data)
-{
-    std::list<cb_list_elem>& l = this->which_cb_list(cb_list);
-    std::list<cb_list_elem>::iterator i;
-
-    for (i = l.begin(); i != l.end(); ++i)
-        (*i)(this, call_data);
 }
