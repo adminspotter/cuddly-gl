@@ -1,6 +1,6 @@
 /* callback.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:05:19 tquirk
+ *   last updated 25 Aug 2016, 23:34:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -31,17 +31,17 @@
 #ifndef __INC_R9_CALLBACK_H__
 #define __INC_R9_CALLBACK_H__
 
-#include <list>
+#include <GL/gl.h>
 
-#include "panel.h"
+#include <list>
 
 namespace ui
 {
     /* A forward declaration, to solve multi-include problems */
-    class panel;
+    class event_target;
 
     /* Callback function pointer */
-    typedef void (*cb_fptr)(panel *, void *, void *);
+    typedef void (*cb_fptr)(event_target *, void *, void *);
 
     typedef struct cb_list_tag
     {
@@ -53,14 +53,14 @@ namespace ui
                 return (this->ptr == p.ptr
                         && this->client_data == p.client_data);
             };
-        void operator()(panel *p, void *call_data)
+        void operator()(event_target *p, void *call_data)
             {
                 this->ptr(p, call_data, this->client_data);
             };
     }
     cb_list_elem;
 
-    class event_handler
+    class event_target
     {
       protected:
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
@@ -70,8 +70,8 @@ namespace ui
         std::list<cb_list_elem>& which_cb_list(GLuint);
 
       public:
-        event_handler();
-        ~event_handler();
+        event_target();
+        ~event_target();
 
         virtual void add_callback(GLuint, cb_fptr, void *);
         virtual void remove_callback(GLuint, cb_fptr, void *);
