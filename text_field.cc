@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 16:24:06 tquirk
+ *   last updated 25 Aug 2016, 23:43:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -94,7 +94,9 @@ void ui::text_field::set_bgimage(GLuint t, void *v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
-void ui::text_field::enter_callback(ui::panel *p, void *call, void *client)
+void ui::text_field::enter_callback(ui::event_target *p,
+                                    void *call,
+                                    void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
 
@@ -103,7 +105,9 @@ void ui::text_field::enter_callback(ui::panel *p, void *call, void *client)
     t->activate_cursor();
 }
 
-void ui::text_field::leave_callback(ui::panel *p, void *call, void *client)
+void ui::text_field::leave_callback(ui::event_target *p,
+                                    void *call,
+                                    void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
 
@@ -112,7 +116,9 @@ void ui::text_field::leave_callback(ui::panel *p, void *call, void *client)
     t->deactivate_cursor();
 }
 
-void ui::text_field::key_callback(ui::panel *p, void *call, void *client)
+void ui::text_field::key_callback(ui::event_target *p,
+                                  void *call,
+                                  void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
     ui::key_call_data *c = (ui::key_call_data *)call;

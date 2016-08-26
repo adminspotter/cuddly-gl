@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 13:40:53 tquirk
+ *   last updated 25 Aug 2016, 23:44:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -64,7 +64,7 @@ void ui::popupmenu::set_resize(GLuint t, void *v)
     /* No-op, since we don't want this to change */
 }
 
-void ui::popupmenu::show(ui::panel *p, void *call, void *client)
+void ui::popupmenu::show(ui::event_target *p, void *call, void *client)
 {
     ui::popupmenu *pm = (ui::popupmenu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
@@ -81,7 +81,7 @@ void ui::popupmenu::show(ui::panel *p, void *call, void *client)
     }
 }
 
-void ui::popupmenu::hide(ui::panel *p, void *call, void *client)
+void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
 {
     ui::popupmenu *pm = (ui::popupmenu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;

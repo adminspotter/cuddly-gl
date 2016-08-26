@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 09:04:49 tquirk
+ *   last updated 25 Aug 2016, 23:37:05 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -51,10 +51,10 @@ namespace ui
         void grow_border(void);
         void shrink_border(void);
 
-        static void activate(panel *, void *, void *);
-        static void deactivate(panel *, void *, void *);
-        static void arm(panel *, void *, void *);
-        static void disarm(panel *, void *, void *);
+        static void activate(event_target *, void *, void *);
+        static void deactivate(event_target *, void *, void *);
+        static void arm(event_target *, void *, void *);
+        static void disarm(event_target *, void *, void *);
 
       public:
         button(composite *, GLuint = 0, GLuint = 0);

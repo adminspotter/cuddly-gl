@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 08:57:50 tquirk
+ *   last updated 25 Aug 2016, 23:40:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -124,34 +124,42 @@ void ui::button::shrink_border(void)
 }
 
 /* ARGSUSED */
-void ui::button::activate(ui::panel *p, void *call, void *client)
+void ui::button::activate(ui::event_target *p, void *call, void *client)
 {
+    ui::button *b = dynamic_cast<ui::button *>(p);
     bool active = true;
 
-    p->set(ui::element::active, 0, &active);
+    if (b != NULL)
+        b->set(ui::element::active, 0, &active);
 }
 
 /* ARGSUSED */
-void ui::button::deactivate(ui::panel *p, void *call, void *client)
+void ui::button::deactivate(ui::event_target *p, void *call, void *client)
 {
+    ui::button *b = dynamic_cast<ui::button *>(p);
     bool active = false;
 
-    p->set_va(ui::element::active, 0, &active,
-              ui::element::arm, 0, &active, 0);
+    if (b != NULL)
+        b->set_va(ui::element::active, 0, &active,
+                  ui::element::arm, 0, &active, 0);
 }
 
-void ui::button::arm(ui::panel *p, void *call, void *client)
+void ui::button::arm(ui::event_target *p, void *call, void *client)
 {
+    ui::button *b = dynamic_cast<ui::button *>(p);
     bool armed = true;
 
-    p->set(ui::element::arm, 0, &armed);
+    if (b != NULL)
+        b->set(ui::element::arm, 0, &armed);
 }
 
-void ui::button::disarm(ui::panel *p, void *call, void *client)
+void ui::button::disarm(ui::event_target *p, void *call, void *client)
 {
+    ui::button *b = dynamic_cast<ui::button *>(p);
     bool is_armed = false;
 
-    p->set(ui::element::arm, 0, &is_armed);
+    if (b != NULL)
+        b->set(ui::element::arm, 0, &is_armed);
 }
 
 ui::button::button(ui::composite *c, GLuint w, GLuint h)

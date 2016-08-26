@@ -1,6 +1,6 @@
 /* popupmenu.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 13:40:12 tquirk
+ *   last updated 25 Aug 2016, 23:43:58 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,8 +45,8 @@ namespace ui
         void set_popup(GLuint, void *);
         virtual void set_resize(GLuint, void *);
 
-        static void show(panel *, void *, void *);
-        static void hide(panel *, void *, void *);
+        static void show(event_target *, void *, void *);
+        static void hide(event_target *, void *, void *);
 
         void populate_buffers(void);
 
