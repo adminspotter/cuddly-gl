@@ -23,6 +23,11 @@
  * This file contains the method definitions for the popup menu.  Our
  * long-desired pie menus are finally implemented!
  *
+ * When not visible, the menu lives outside of the screen coordinates,
+ * so that it doesn't get found when its parent searches its area.
+ * Otherwise, it turns into a dead zone which is the size of the
+ * menu's bounding box.
+ *
  * Things to do
  *
  */
@@ -64,31 +69,43 @@ void ui::popupmenu::set_resize(GLuint t, void *v)
     /* No-op, since we don't want this to change */
 }
 
+/* This is the callback that we add to our parents, in order that they
+ * pop us up under the right conditions.  The client data pointer
+ * should point to us.
+ */
 void ui::popupmenu::show(ui::event_target *p, void *call, void *client)
 {
     ui::popupmenu *pm = (ui::popupmenu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
-    bool t = true;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
     {
-        glm::ivec2 tmp_vec;
-
-        pm->get(ui::element::size, ui::size::all, &tmp_vec);
-        tmp_vec = bcd->location - (tmp_vec / 2);
-        pm->set_va(ui::element::position, ui::position::all, &tmp_vec,
-                   ui::element::popup, ui::popup::visible, &t, 0);
+        /* Move the menu into the visible area */
+        pm->pos = bcd->location;
+        pm->visible = true;
+        pm->composite::parent->move_child(pm);
+        pm->populate_buffers();
     }
 }
 
+/* We should not assume that the event target is the popup menu.  This
+ * may be called from our parent, so we should use the client data,
+ * which should always point to us.
+ */
 void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
 {
     ui::popupmenu *pm = (ui::popupmenu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
-    bool f = false;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
-        pm->set(ui::element::popup, ui::popup::visible, &f);
+    {
+        /* Move the menu back out of the visible area */
+        pm->pos.x = -pm->size.x;
+        pm->pos.y = -pm->size.y;
+        pm->visible = false;
+        pm->composite::parent->move_child(pm);
+        pm->populate_buffers();
+    }
 }
 
 /* We'll use a parametric function to draw our ellipse.
