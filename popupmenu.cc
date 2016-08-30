@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:44:15 tquirk
+ *   last updated 30 Aug 2016, 18:10:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -331,19 +331,19 @@ void ui::popupmenu::populate_buffers(void)
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h)
 {
-    ui::context *ctx = dynamic_cast<ui::context *>(c);
-    ui::manager *mgr = dynamic_cast<ui::manager *>(c);
+    ui::event_target *e = dynamic_cast<ui::event_target *>(c);
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
+    this->visible = false;
+    this->pos.x = -w;
+    this->pos.y = -h;
 
-    /* Our parent could be either a UI context, or a regular manager */
-    if (ctx != NULL)
-        ctx->set(ui::element::popup, ui::popup::menu, this);
-    else if (mgr != NULL)
+    if (e != NULL)
     {
-        mgr->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        mgr->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        e->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        e->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
     }
+    this->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
 
     this->prep_vao_vbo(&this->vao, &this->vbo);
     glGenBuffers(1, &this->ebo);
@@ -353,16 +353,12 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
 
 ui::popupmenu::~popupmenu()
 {
-    ui::context *ctx = dynamic_cast<ui::context *>(this->composite::parent);
-    ui::manager *mgr = dynamic_cast<ui::manager *>(this->composite::parent);
+    ui::event_target *e;
 
-    /* Our parent could be either a UI context, or a regular manager */
-    if (ctx != NULL)
-        ctx->set(ui::element::popup, ui::popup::menu, NULL);
-    else if (mgr != NULL)
+    if ((e = dynamic_cast<ui::event_target *>(this->composite::parent)) != NULL)
     {
-        mgr->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        mgr->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        e->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        e->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
     }
 }
 
