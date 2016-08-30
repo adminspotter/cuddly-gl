@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 07:04:46 tquirk
+ *   last updated 26 Aug 2016, 08:01:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,13 +34,14 @@
 
 #include "ui_defs.h"
 #include "composite.h"
+#include "callback.h"
 
 namespace ui
 {
     class composite;
     class panel;
 
-    class context : public composite
+    class context : public composite, public event_target
     {
       private:
         GLuint vert_shader, frag_shader, shader_pgm;
@@ -52,21 +53,14 @@ namespace ui
         glm::ivec2 old_mouse;
         panel *old_child;
 
-        /* The popup menu needs a little bit different handling */
-        panel *popup;
-        glm::ivec2 popup_ul, popup_lr;
-
       protected:
         int get_attribute(GLuint, void *);
-        int get_popup(GLuint, void *);
-        void set_popup(GLuint, void *);
 
       public:
         context(GLuint, GLuint);
         ~context();
 
         int get(GLuint, GLuint, void *);
-        void set(GLuint, GLuint, void *);
 
         void draw(void);
 

@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Aug 2016, 07:11:44 tquirk
+ *   last updated 26 Aug 2016, 08:06:44 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -68,36 +68,10 @@ int ui::context::get_attribute(GLuint t, void *v)
     return ret;
 }
 
-int ui::context::get_popup(GLuint t, void *v)
-{
-    int ret = 0;
-
-    switch (t)
-    {
-      case ui::corner::top_left:      *(glm::ivec2 *)v = this->popup_ul;  break;
-      case ui::corner::bottom_right:  *(glm::ivec2 *)v = this->popup_lr;  break;
-      case ui::popup::menu:           *(ui::panel **)v = this->popup;     break;
-      default:                        ret = 1;                            break;
-    }
-    return ret;
-}
-
-void ui::context::set_popup(GLuint t, void *v)
-{
-    switch (t)
-    {
-      case ui::corner::top_left:     this->popup_ul = *(glm::ivec2 *)v;  break;
-      case ui::corner::bottom_right: this->popup_lr = *(glm::ivec2 *)v;  break;
-      case ui::popup::menu:          this->popup = (ui::panel *)v;       break;
-    }
-}
-
 ui::context::context(GLuint w, GLuint h)
-    : ui::composite::composite(NULL, w, h), old_mouse(0, 0),
-      popup_ul(0, 0), popup_lr(w, h)
+    : ui::composite::composite(NULL, w, h), old_mouse(0, 0)
 {
     this->old_child = NULL;
-    this->popup = NULL;
 
     this->vert_shader = load_shader(GL_VERTEX_SHADER,
                                     SHADER_SRC_PATH "/ui_vertex.glsl");
@@ -120,8 +94,6 @@ ui::context::~context()
     glDeleteShader(this->frag_shader);
     glUseProgram(0);
     glDeleteProgram(this->shader_pgm);
-    if (this->popup != NULL)
-        delete this->popup;
 }
 
 int ui::context::get(GLuint e, GLuint t, void *v)
@@ -129,17 +101,8 @@ int ui::context::get(GLuint e, GLuint t, void *v)
     switch (e)
     {
       case ui::element::attribute:  return this->get_attribute(t, v);
-      case ui::element::popup:      return this->get_popup(t, v);
       default:                      return this->composite::get(e, t, v);
     }
-}
-
-void ui::context::set(GLuint e, GLuint t, void *v)
-{
-    if (e == ui::element::popup)
-        this->set_popup(t, v);
-    else
-        this->composite::set(e, t, v);
 }
 
 void ui::context::draw(void)
@@ -154,22 +117,20 @@ void ui::context::draw(void)
 
 void ui::context::mouse_btn_callback(int btn, int state)
 {
-    if (this->popup != NULL
-        && this->old_pos.x >= this->popup_ul.x
-        && this->old_pos.x <= this->popup_lr.x
-        && this->old_pos.y >= this->popup_ul.y
-        && this->old_pos.y <= this->popup_lr.y
-        && this->tree->search(this->old_pos) == NULL)
+    ui::panel *p = this->tree->search(this->old_pos);
+
+    if (p == NULL)
     {
-        int pb;
+        ui::btn_call_data call_data;
+        GLuint which = (state == ui::mouse::up
+                        ? ui::callback::btn_up
+                        : ui::callback::btn_down);
 
-        this->popup->get(ui::element::popup, ui::popup::button, &pb);
-        if (btn == pb)
-        {
-            bool visible = (state == ui::mouse::down ? true : false);
-
-            this->popup->set(ui::element::popup, ui::popup::visible, &visible);
-        }
+        call_data.location = this->old_pos;
+        call_data.button = btn;
+        call_data.state = state;
+        this->call_callbacks(which, &call_data);
+        this->old_child = p;
     }
     else
         this->composite::mouse_btn_callback(btn, state);
