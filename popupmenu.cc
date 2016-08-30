@@ -116,8 +116,8 @@ void ui::popupmenu::populate_buffers(void)
 {
     glm::vec2 pixel_sz;
     glm::vec2 radius(this->size.x / 2.0f, this->size.y / 2.0f);
-    glm::vec2 inner = radius * 0.2f;
-    glm::vec2 m0, m3, b0, b3;
+    glm::vec2 inner = radius * 0.15f;
+    glm::vec2 center, m0, m3, b0, b3;
 
     if (this->border[0] != 0)
     {
@@ -154,22 +154,25 @@ void ui::popupmenu::populate_buffers(void)
     b0.y *= pixel_sz.y;      m0.y *= pixel_sz.y;
     b3.y *= pixel_sz.y;      m3.y *= pixel_sz.y;
 
+    center.x = this->pos.x * pixel_sz.x - 1.0f;
+    center.y = -this->pos.y * pixel_sz.y + 1.0f;
+
     this->vertex_count = this->element_count = 0;
 
     for (i = 0; i < count; ++i)
     {
         float angle = increment * i;
 
-        vertex[this->vertex_count] = radius.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 1] = radius.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count] = radius.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 1] = radius.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
         vertex[this->vertex_count + 6] = ui::panel::no_texture;
         vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
-        vertex[this->vertex_count + 8] = inner.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 9] = inner.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count + 8] = inner.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 9] = inner.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->background),
                sizeof(float) * 4);
@@ -189,16 +192,16 @@ void ui::popupmenu::populate_buffers(void)
         /* Outer border */
         if (this->border[0] != 0)
         {
-            vertex[border_index] = m0.x * cosf(angle) + this->pos.x;
-            vertex[border_index + 1] = m0.y * sinf(angle) + this->pos.y;
+            vertex[border_index] = m0.x * cosf(angle) + center.x;
+            vertex[border_index + 1] = m0.y * sinf(angle) + center.y;
             memcpy(&vertex[border_index + 2],
                    glm::value_ptr(this->foreground),
                    sizeof(float) * 4);
             vertex[border_index + 6] = ui::panel::no_texture;
             vertex[border_index + 7] = ui::panel::no_texture;
 
-            vertex[border_index + 8] = b0.x * cosf(angle) + this->pos.x;
-            vertex[border_index + 9] = b0.y * sinf(angle) + this->pos.y;
+            vertex[border_index + 8] = b0.x * cosf(angle) + center.x;
+            vertex[border_index + 9] = b0.y * sinf(angle) + center.y;
             memcpy(&vertex[border_index + 10],
                    glm::value_ptr(this->foreground),
                    sizeof(float) * 4);
@@ -207,6 +210,7 @@ void ui::popupmenu::populate_buffers(void)
             border_index += 16;
             border_count += 2;
 
+            /* TODO: the first segment will not be correct */
             element[border_element] =  border_count - 2;
             element[border_element + 1] = border_count - 1;
             element[border_element + 2] = border_count + 1;
@@ -219,16 +223,16 @@ void ui::popupmenu::populate_buffers(void)
         /* Inner border */
         if (this->border[3] != 0)
         {
-            vertex[border_index] = b3.x * cosf(angle) + this->pos.x;
-            vertex[border_index + 1] = b3.y * sinf(angle) + this->pos.y;
+            vertex[border_index] = b3.x * cosf(angle) + center.x;
+            vertex[border_index + 1] = b3.y * sinf(angle) + center.y;
             memcpy(&vertex[border_index + 2],
                    glm::value_ptr(this->foreground),
                    sizeof(float) * 4);
             vertex[border_index + 6] = ui::panel::no_texture;
             vertex[border_index + 7] = ui::panel::no_texture;
 
-            vertex[border_index + 8] = m3.x * cosf(angle) + this->pos.x;
-            vertex[border_index + 9] = m3.y * sinf(angle) + this->pos.y;
+            vertex[border_index + 8] = m3.x * cosf(angle) + center.x;
+            vertex[border_index + 9] = m3.y * sinf(angle) + center.y;
             memcpy(&vertex[border_index + 10],
                    glm::value_ptr(this->foreground),
                    sizeof(float) * 4);
@@ -237,6 +241,7 @@ void ui::popupmenu::populate_buffers(void)
             border_index += 16;
             border_count += 2;
 
+            /* TODO: the first segment will not be correct */
             element[border_element] =  border_count - 2;
             element[border_element + 1] = border_count - 1;
             element[border_element + 2] = border_count + 1;
@@ -267,16 +272,16 @@ void ui::popupmenu::populate_buffers(void)
         float angle = increment * i;
 
         /* Add the dividers for each child */
-        vertex[this->vertex_count] = m0.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 1] = m0.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count] = m0.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 1] = m0.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 2],
                glm::value_ptr(this->foreground),
                sizeof(float) * 4);
         vertex[this->vertex_count + 6] = ui::panel::no_texture;
         vertex[this->vertex_count + 7] = ui::panel::no_texture;
 
-        vertex[this->vertex_count + 8] = m3.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 9] = m3.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count + 8] = m3.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 9] = m3.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 10],
                glm::value_ptr(this->foreground),
                sizeof(float) * 4);
@@ -289,16 +294,16 @@ void ui::popupmenu::populate_buffers(void)
          */
         angle += M_PI * 2.0f / 360;
 
-        vertex[this->vertex_count + 16] = m0.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 17] = m0.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count + 16] = m0.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 17] = m0.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 18],
                glm::value_ptr(this->foreground),
                sizeof(float) * 4);
         vertex[this->vertex_count + 22] = ui::panel::no_texture;
         vertex[this->vertex_count + 23] = ui::panel::no_texture;
 
-        vertex[this->vertex_count + 24] = m3.x * cosf(angle) + this->pos.x;
-        vertex[this->vertex_count + 25] = m3.y * sinf(angle) + this->pos.y;
+        vertex[this->vertex_count + 24] = m3.x * cosf(angle) + center.x;
+        vertex[this->vertex_count + 25] = m3.y * sinf(angle) + center.y;
         memcpy(&vertex[this->vertex_count + 26],
                glm::value_ptr(this->foreground),
                sizeof(float) * 4);
