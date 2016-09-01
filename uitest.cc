@@ -71,6 +71,7 @@ int main(int argc, char **argv)
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
     ui::font *std_font = new ui::font(font_name, 30, paths);
+    ui::font *tiny_font = new ui::font(font_name, 15, paths);
     int button;
 
     if (glfwInit() == GL_FALSE)
@@ -232,21 +233,19 @@ int main(int argc, char **argv)
                 ui::element::margin, ui::side::outer, &border,
                 ui::element::border, ui::side::inner, &border,
                 ui::element::popup, ui::popup::button, &button, 0);
-    /*for (int q = 0; q < 7; ++q)
+    for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::button *b = new ui::button(r1, 0, 0);
+        ui::label *pul = new ui::label(pu1, 0, 0);
 
-        s << 'a' + q;
+        s << (char)('a' + q);
         std::string str = s.str();
-        border = 1;
-        b->set_va(ui::element::font, ui::ownership::shared, std_font,
-                  ui::element::string, 0, &str,
-                  ui::element::border, ui::side::all, &border, 0);
-        b->add_callback(ui::callback::enter, enter_callback, NULL);
-        b->add_callback(ui::callback::leave, leave_callback, NULL);
-    }*/
+        pul->set_va(ui::element::font, ui::ownership::shared, tiny_font,
+                    ui::element::string, 0, &str, 0);
+        pul->add_callback(ui::callback::enter, enter_callback, NULL);
+        pul->add_callback(ui::callback::leave, leave_callback, NULL);
+    }
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
@@ -258,6 +257,7 @@ int main(int argc, char **argv)
         glfwPollEvents();
     }
     delete ctx;
+    delete tiny_font;
     delete std_font;
     glfwTerminate();
     return 0;
