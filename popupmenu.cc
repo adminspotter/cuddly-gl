@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Aug 2016, 18:10:01 tquirk
+ *   last updated 01 Sep 2016, 07:45:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -103,7 +103,12 @@ void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
         pm->pos.x = -pm->size.x;
         pm->pos.y = -pm->size.y;
         pm->visible = false;
-        pm->composite::parent->move_child(pm);
+        /* A remove-add performs the move within the composite tree,
+         * with the side-effect of making sure we're last to draw, and
+         * therefore on the top of the stack.
+         */
+        pm->composite::parent->remove_child(pm);
+        pm->composite::parent->add_child(pm);
         pm->populate_buffers();
     }
 }
