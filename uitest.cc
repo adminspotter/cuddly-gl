@@ -18,6 +18,7 @@
 #include "password.h"
 #include "manager.h"
 #include "row_column.h"
+#include "popupmenu.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -38,6 +39,7 @@ ui::text_field *t1;
 ui::password *pw1;
 ui::manager *m1;
 ui::row_column *r1;
+ui::popupmenu *pu1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
@@ -69,6 +71,7 @@ int main(int argc, char **argv)
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
     ui::font *std_font = new ui::font(font_name, 30, paths);
+    int button;
 
     if (glfwInit() == GL_FALSE)
     {
@@ -208,7 +211,7 @@ int main(int argc, char **argv)
     r1->add_callback(ui::callback::leave, leave_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
-        std::cout << "creating child " << q << std::endl;
+        std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
         ui::button *b = new ui::button(r1, 0, 0);
 
@@ -221,6 +224,29 @@ int main(int argc, char **argv)
         b->add_callback(ui::callback::enter, enter_callback, NULL);
         b->add_callback(ui::callback::leave, leave_callback, NULL);
     }
+    std::cout << "creating popup 1" << std::endl;
+    pu1 = new ui::popupmenu(ctx, 200, 125);
+    border = 1;
+    button = ui::mouse::button0;
+    pu1->set_va(ui::element::border, ui::side::outer, &border,
+                ui::element::margin, ui::side::outer, &border,
+                ui::element::border, ui::side::inner, &border,
+                ui::element::popup, ui::popup::button, &button, 0);
+    /*for (int q = 0; q < 7; ++q)
+    {
+        std::cout << "  creating child " << q << std::endl;
+        std::ostringstream s;
+        ui::button *b = new ui::button(r1, 0, 0);
+
+        s << 'a' + q;
+        std::string str = s.str();
+        border = 1;
+        b->set_va(ui::element::font, ui::ownership::shared, std_font,
+                  ui::element::string, 0, &str,
+                  ui::element::border, ui::side::all, &border, 0);
+        b->add_callback(ui::callback::enter, enter_callback, NULL);
+        b->add_callback(ui::callback::leave, leave_callback, NULL);
+    }*/
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
