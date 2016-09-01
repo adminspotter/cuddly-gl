@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 Sep 2016, 07:45:43 tquirk
+ *   last updated 01 Sep 2016, 08:40:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -284,6 +284,10 @@ void ui::popupmenu::populate_buffers(void)
 
     if (this->children.size() > 0)
     {
+        auto child = this->children.begin();
+        glm::ivec2 middle = this->size / 4;
+        glm::ivec2 child_pos, child_size;
+
         increment = M_PI * 2.0f / this->children.size();
 
         /* We'll use the m elements for our divider endpoints.  If
@@ -295,7 +299,7 @@ void ui::popupmenu::populate_buffers(void)
         if (m3.x == 0.0f && m3.y == 0.0f)
             m3 = inner;
 
-        for (i = 0; i < this->children.size(); ++i)
+        for (i = 0; i < this->children.size(); ++i, ++child)
         {
             float angle = increment * i;
 
@@ -352,6 +356,13 @@ void ui::popupmenu::populate_buffers(void)
             /* Reposition each child to be in the middle of its
              * sector.
              */
+            angle += increment / 2.0f;
+            (*child)->get(ui::element::size, ui::size::all, &child_size);
+            child_pos.x = (int)truncf((float)middle.x * cos(angle))
+                + this->pos.x - (child_size.x / 2);
+            child_pos.y = (int)truncf((float)middle.y * sin(angle))
+                + this->pos.y - (child_size.y / 2);
+            (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
     }
     glBindVertexArray(this->vao);
@@ -417,7 +428,7 @@ void ui::popupmenu::set(GLuint e, GLuint t, void *v)
 void ui::popupmenu::draw(void)
 {
     if (this->visible)
-        this->panel::draw();
+        this->manager::draw();
 }
 
 void ui::popupmenu::add_child(panel *p)
