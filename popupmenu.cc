@@ -210,13 +210,22 @@ void ui::popupmenu::populate_buffers(void)
             border_index += 16;
             border_count += 2;
 
-            /* TODO: the first segment will not be correct */
             element[border_element] =  border_count - 2;
             element[border_element + 1] = border_count - 1;
-            element[border_element + 2] = border_count + 1;
+            element[border_element + 2]
+                = border_count + (this->border[3] != 0 ? 3 : 1);
             element[border_element + 3] = border_count - 2;
-            element[border_element + 4] = border_count + 1;
-            element[border_element + 5] = border_count;
+            element[border_element + 4] = element[border_element + 2];
+            element[border_element + 5]
+                = border_count + (this->border[3] != 0 ? 2 : 0);
+
+            /* Fix up the last segment */
+            if (i == count - 1)
+            {
+                element[border_element + 2] = (count * 2) + 1;
+                element[border_element + 4] = (count * 2) + 1;
+                element[border_element + 5] = count * 2;
+            }
             border_element += 6;
         }
 
@@ -241,13 +250,25 @@ void ui::popupmenu::populate_buffers(void)
             border_index += 16;
             border_count += 2;
 
-            /* TODO: the first segment will not be correct */
             element[border_element] =  border_count - 2;
             element[border_element + 1] = border_count - 1;
-            element[border_element + 2] = border_count + 1;
+            element[border_element + 2]
+                = border_count + (this->border[0] != 0 ? 3 : 1);
             element[border_element + 3] = border_count - 2;
-            element[border_element + 4] = border_count + 1;
-            element[border_element + 5] = border_count;
+            element[border_element + 4] = element[border_element + 2];
+            element[border_element + 5]
+                = border_count + (this->border[0] != 0 ? 2 : 0);
+
+            /* Fix up the last segment */
+            if (i == count - 1)
+            {
+                element[border_element + 2]
+                    = (count * 2) + (this->border[0] != 0 ? 3 : 1);
+                element[border_element + 4]
+                    = (count * 2) + (this->border[0] != 0 ? 3 : 1);
+                element[border_element + 5]
+                    = (count * 2) + (this->border[0] != 0 ? 2 : 0);
+            }
             border_element += 6;
         }
     }
