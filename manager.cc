@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:35:34 tquirk
+ *   last updated 02 Sep 2016, 06:49:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -169,6 +169,14 @@ void ui::manager::set_desired_size(void)
     this->populate_buffers();
 }
 
+void ui::manager::leave_callback(event_target *p, void *call, void *client)
+{
+    ui::manager *m = dynamic_cast<ui::manager *>(p);
+
+    if (m != NULL && m->old_child != NULL)
+        m->old_child->call_callbacks(ui::callback::leave, NULL);
+}
+
 void ui::manager::motion_callback(event_target *p, void *call, void *client)
 {
     ui::manager *m = dynamic_cast<ui::manager *>(p);
@@ -211,6 +219,8 @@ ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
 {
     this->resize = ui::resize::all;
 
+    this->add_callback(ui::callback::leave,
+                       ui::manager::leave_callback, NULL);
     this->add_callback(ui::callback::motion,
                        ui::manager::motion_callback, NULL);
     this->add_callback(ui::callback::btn_down,
