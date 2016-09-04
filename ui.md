@@ -87,3 +87,65 @@ p->get_va(ui::element::margin, ui::side::right, &margin,
           ui::element::border, ui::side::bottom, &border, 0);
 /* margin is now 5, and border is now 0 */
 ```
+
+### Callbacks ###
+
+Events are propagated through the widget set by callbacks.  Each type
+of callback has a list of zero or more functions that it will call for
+that event.  Currently the events that our toolkit handles are mouse
+motion, enter, leave, mouse button down, mouse button up, key down,
+and key up.  They, as with the get and set, have a consistent
+interfaces.  A callback routine has a standard signature:
+
+* widget (`ui::event_target *`)  
+  This is the widget which is processing the event.
+* call data (`void *`)  
+  This is (usually) an event-dependent structure, detailed below.
+* client data (`void *`)  
+  This is any sort of data that the client may wish to pass into
+  the callback, and is completely implementation-defined.
+
+The `cb_fptr` type, defined in
+[callback.h](../blob/client/ui/callback.h), defines the required
+signature for a callback routine.
+
+Adding to and removing from a callback list also has a consistent
+interface:
+
+* list name (`GLuint`)  
+  This is a constant from the `ui::callback` namespace
+* function name (`cb_fptr`)  
+  The name of the function.  Any class methods must be static.
+* client data (`void *`)  
+  Any free-form data that the callback will expect to receive.
+
+In almost all cases, the toolkit handles event propagation and calling
+the appropriate callback lists for us, but there may be situations in
+which we'd like to call a callback list on our own.  Calling callback
+lists has a consistent interface:
+
+* list name (`GLuint`)  
+  As above, a constant from the `ui::callback` namespace.
+* call data (`void *`)  
+  A call defined structure; internal calls will contain the relevant
+  struct defined in [ui_defs.h](../blob/client/ui/ui_defs.h).
+
+Please note that the client data pointer is saved in the callback list
+when it is added, so if the structure or variable that the client data
+points to changes between the time when the callback is added to the
+list, and the time it is called, whatever is pointed to at the time of
+the call will be what is received by the callback routine.  Typically,
+these will be file-static or global variables, or objects or class
+members, so that their scope does not impact any calls the callback
+routines might see.
+
+Removing from a callback list does not depend on what the client data
+pointer points to, but simply the value of the pointer, i.e. the
+address that it points to.  It is used as a secondary key, because we
+may use the same callback routine multiple times in a single callback
+list, differing only in the client data we pass.
+
+The `ui::event_target` class, which is used by all types of widgets,
+adds callback lists and handling.  The full implementation is found in
+[callback.h](../blob/client/ui/callback.h) and
+[callback.cc](../blob/client/ui/callback.cc).
