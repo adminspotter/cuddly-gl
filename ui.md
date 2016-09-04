@@ -208,12 +208,13 @@ text fields, etc.
 
 ### Panel-derived widgets ###
 
-<a name="ui_panel"></a>The `ui::panel` class
-([panel.h](../client/ui/panel.h) and
-[panel.cc](../client/ui/panel.cc)) isn't really a functional
-widget on its own, but provides a basic set of pieces for other
-widgets:  border, margin, size, position, color.  It also handles
-general setup and cleanup of the OpenGL VAO and VBO for each widget.
+#### Panel ####
+
+The `ui::panel` class ([panel.h](../client/ui/panel.h) and
+[panel.cc](../client/ui/panel.cc)) isn't really a functional widget on
+its own, but provides a basic set of pieces for other widgets:
+border, margin, size, position, color.  It also handles general setup
+and cleanup of the OpenGL VAO and VBO for each widget.
 
 The panel is also derived from `ui::event_target`, so the standard
 callback handling is available.
@@ -257,10 +258,9 @@ all need to be the same.  Each is independent of the others.
 
 #### Label ####
 
-<a name="ui_label"></a>The `ui::label` class
-([label.h](../client/ui/label.h) and
+The `ui::label` class ([label.h](../client/ui/label.h) and
 [label.cc](../client/ui/label.cc)) is a descendent of the
-[`ui::panel`](#ui_panel) widget class, and adds either a string or an
+[`ui::panel`](#panel) widget class, and adds either a string or an
 image.  The string and image are mutually exclusive; setting an image
 removes any configured string, and setting a string removes any
 configured image.
@@ -268,32 +268,31 @@ configured image.
 Input strings are `std::string`, and should be encoded UTF-8.  Output
 strings will always be UTF-8 `std::string`.  Internally, the string is
 converted into `std::u32string`.  Font handling is done via the
-[`ui::font`](#ui_font) support type.
+[`ui::font`](#font) support type.
 
-Images use the [`ui::image`](#ui_image) support type.
+Images use the [`ui::image`](#image) support type.
 
 ##### Resources #####
 
 * `ui::element::font`
-  * No subtypes ([`ui::font`](#ui_font))
+  * No subtypes ([`ui::font`](#font))
 * `ui::element::string`
   * No subtypes (`std::string`)
 * `ui::element::bgimage`
-  * No subtypes ([`ui::image`](#ui_image))
+  * No subtypes ([`ui::image`](#image))
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
 
 #### Button ####
 
-<a name="ui_button"></a>The `ui::button` class
-([button.h](../client/ui/button.h) and
+The `ui::button` class ([button.h](../client/ui/button.h) and
 [button.cc](../client/ui/button.cc)) is a descendent of the
-[`ui::label`](#ui_label) widget class.  It adds some state resources,
+[`ui::label`](#label) widget class.  It adds some state resources,
 `active` and `armed` and some default callbacks.  When the cursor
 enters the button, it becomes active, and when the mouse button is
 pressed, the button becomes armed.
@@ -307,22 +306,21 @@ pressed, the button becomes armed.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
-* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 * `ui::element::bgimage` (`ui::label`)
 
 #### Text Field ####
 
-<a name="ui_text_field"></a>The `ui::text_field` class
-([text_field.h](../client/ui/text_field.h) and
-[text_field.cc](../client/ui/text_field.cc)) is a descendent of
-the [`ui::label`](#ui_label) widget class.  It adds the ability to
-edit the string.
+The `ui::text_field` class ([text_field.h](../client/ui/text_field.h)
+and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
+the [`ui::label`](#label) widget class.  It adds the ability to edit
+the string.
 
 ##### Resources #####
 
@@ -334,22 +332,21 @@ edit the string.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
-* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 
 #### Password ####
 
-<a name="ui_password"></a>The `ui::password` class
-([password.h](../client/ui/password.h) and
+The `ui::password` class ([password.h](../client/ui/password.h) and
 [password.cc](../client/ui/password.cc)) is a descendent of the
-[`ui::text_field`](#ui_text_field) widget class.  It has almost the
-exact same behaviour, but displays a series of '*' characters, rather
-than the actual string.
+[`ui::text_field`](#text_field) widget class.  It has almost the exact
+same behaviour, but displays a series of '*' characters, rather than
+the actual string.
 
 ##### Resources #####
 
@@ -357,22 +354,23 @@ The password field does not add any new resources.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
-* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
-* `ui::element::cursor` ([`ui::text_field`](#ui_text_field))
+* `ui::element::cursor` ([`ui::text_field`](#text_field))
 * `ui::element::max_size` (`ui::text_field`)
 
 ### Composite-derived widgets ###
 
-<a name="ui_composite"></a>The `ui::composite` class
-([composite.h](../client/ui/composite.h) and
-[composite.cc](../client/ui/composite.cc)) acts as a parent to
-other widgets, and handles the event propagation through the toolkit.
+#### Composite ####
+
+The `ui::composite` class ([composite.h](../client/ui/composite.h) and
+[composite.cc](../client/ui/composite.cc)) acts as a parent to other
+widgets, and handles the event propagation through the toolkit.
 
 ##### Resources #####
 
@@ -392,11 +390,10 @@ elements are read-only.
 
 #### Context ####
 
-<a name="ui_context"></a>The `ui::context` ([ui.h](../client/ui/ui.h)
-and [ui.cc](../client/ui/ui.cc)) is a bit of an outlier when compared
-with most of the other classes.  It functions as the top-level
-"window", and manages the OpenGL shaders which we use to draw our
-widgets.
+The `ui::context` ([ui.h](../client/ui/ui.h) and
+[ui.cc](../client/ui/ui.cc)) is a bit of an outlier when compared with
+most of the other classes.  It functions as the top-level "window",
+and manages the OpenGL shaders which we use to draw our widgets.
 
 The context's constructor also has a different signature, and only
 takes width and height.  It has no parent because it is the ultimate
@@ -425,16 +422,15 @@ controlled via the OpenGL rendering program contained in
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#ui_composite))
+* `ui::element::size` ([`ui::composite`](#composite))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
 
 #### Manager ####
 
-<a name="ui_manager"></a>The `ui::manager` class
-([manager.h](../client/ui/manager.h) and
+The `ui::manager` class ([manager.h](../client/ui/manager.h) and
 [manager.cc](../client/ui/manager.cc)) inherits from both the
-[`ui::composite`](#ui_composite) and the [`ui::panel`](#ui_panel), and
+[`ui::composite`](#composite) and the [`ui::panel`](#panel), and
 functions as a very basic "bulletin board" widget.  Its children are
 positioned independently within the confines of the manager, which can
 grow and shrink to fit.  Each child's position is relative to the
@@ -462,7 +458,7 @@ or grow independently.  `ui::resize::all` is the same as
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#ui_composite), [`ui::panel`](#ui_panel))
+* `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
 * `ui::element::position` (`ui::panel`)
@@ -472,10 +468,9 @@ or grow independently.  `ui::resize::all` is the same as
 
 #### Popup Menu ####
 
-<a name="ui_popup"></a>The `ui::popupmenu` class
-([popupmenu.h](../client/ui/popupmenu.h) and
+The `ui::popupmenu` class ([popupmenu.h](../client/ui/popupmenu.h) and
 [popupmenu.cc](../client/ui/popupmenu.cc)) inherits from the
-[`ui::manager`](#ui_manager), and implements a popup pie menu.
+[`ui::manager`](#manager), and implements a popup pie menu.
 
 The border and margin function the same as the resources from the
 panel, except for the names it recognizes.  "left" and "right" don't
@@ -502,7 +497,7 @@ satisfactory for this resource.
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#ui_composite), [`ui::panel`](#ui_panel))
+* `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
 * `ui::element::position` (`ui::panel`)
@@ -512,10 +507,9 @@ satisfactory for this resource.
 
 #### Row Column ####
 
-<a name="ui_row_column"></a>The `ui::row_column` class
-([row_column.h](../client/ui/row_column.h) and
-[row_column.cc](../client/ui/row_column.cc)) inherits from the
-[`ui::manager`](#ui_manager), and arranges its children into a gridded
+The `ui::row_column` class ([row_column.h](../client/ui/row_column.h)
+and [row_column.cc](../client/ui/row_column.cc)) inherits from the
+[`ui::manager`](#manager), and arranges its children into a gridded
 layout.
 
 The inherited size resources are taken over by the grid, and can be
@@ -544,13 +538,13 @@ widget to include the spacing between its grid elements.
 
 ###### Inherited resources ######
 
-* `ui::element::transform` (`ui::composite`)
+* `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
-* `ui::element::child_spacing` ([`ui::manager`](#ui_manager))
+* `ui::element::child_spacing` ([`ui::manager`](#manager))
 
 ### Support classes ###
 
