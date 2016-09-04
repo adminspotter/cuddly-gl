@@ -380,6 +380,42 @@ elements are read-only.
   * `ui::size::all` (`glm::vec2`)
 
 #### Context ####
+
+<a name="ui_context"></a>The `ui::context` ([ui.h](../client/ui/ui.h)
+and [ui.cc](../client/ui/ui.cc)) is a bit of an outlier when compared
+with most of the other classes.  It functions as the top-level
+"window", and manages the OpenGL shaders which we use to draw our
+widgets.
+
+The context's constructor also has a different signature, and only
+takes width and height.
+
+```c++
+ui::context *ctx = new ui::context(800, 600);
+```
+
+##### Resources #####
+
+All of the new resources which the context adds are read-only, and are
+controlled via the OpenGL rendering program contained in
+[ui_vertex.glsl](../client/shaders/ui_vertex.glsl) and
+[ui_fragment.glsl](../client/shaders/ui_fragment.glsl).
+
+* `ui::element::attribute`
+  * `ui::attribute::position` (`GLuint`)
+  * `ui::attribute::normal` (`GLuint`)
+  * `ui::attribute::color` (`GLuint`)
+  * `ui::attribute::texture` (`GLuint`)
+  * `ui::attribute::use_text` (`GLuint`)
+  * `ui::attribute::text_bgnd` (`GLuint`)
+  * `ui::attribute::translate` (`GLuint`)
+
+###### Inherited resources ######
+
+* `ui::element::size` ([`ui::composite`](#ui_composite))
+* `ui::element::transform` (`ui::composite`)
+* `ui::element::pixel_size` (`ui::composite`)
+
 #### Manager ####
 #### Popup Menu ####
 #### Row Column ####
