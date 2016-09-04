@@ -430,6 +430,42 @@ controlled via the OpenGL rendering program contained in
 * `ui::element::pixel_size` (`ui::composite`)
 
 #### Manager ####
+
+<a name="ui_manager"></a>The `ui::manager` class
+([manager.h](../client/ui/manager.h) and
+[manager.cc](../client/ui/manager.cc)) inherits from both the
+[`ui::composite`](#ui_composite) and the [`ui::panel`](#ui_panel), and
+functions as a very basic "bulletin board" widget.  Its children are
+positioned independently within the confines of the manager, which can
+grow and shrink to fit.  Each child's position is relative to the
+upper-left corner of the manager.
+
+The new child spacing resource controls the spacing between elements
+and the edges of the manager, for purposes of grow/shrink.
+
+##### Resources #####
+
+* `ui::element::child_spacing`
+  * `ui::size::width` (`int`)
+  * `ui::size::height` (`int`)
+  * `ui::size::all` (`glm::ivec2`)
+* `ui::element::resize`
+  * No subtypes, but defined value arguments (`GLuint`)
+    * `ui::resize::none`
+    * `ui::resize::shrink`
+    * `ui::resize::grow`
+    * `ui::resize::all`
+
+The resize value arguments function as a mask, so that we can shrink
+or grow independently.  `ui::resize::all` is the same as
+`ui::resize::shrink | ui::resize::grow`.
+
+###### Inherited resources ######
+
+* `ui::element::size` ([`ui::composite`](#ui_composite))
+* `ui::element::transform` (`ui::composite`)
+* `ui::element::pixel_size` (`ui::composite`)
+
 #### Popup Menu ####
 #### Row Column ####
 
