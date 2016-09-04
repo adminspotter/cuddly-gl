@@ -34,3 +34,56 @@ Examples:
 ui::panel *p = new ui::panel(parent, 200, 100);
 ui::button *b = new ui::button(NULL, 60, 30);
 ```
+
+### Getting and setting resources ###
+
+Some widgets need a bit more configuration than just size.  All
+widgets have a set of resources that can be configured however
+desired.  We can `get` or `set` any of them at any time, and the call
+interface for both is identical:
+
+* element name (`GLuint`)  
+  This will be a constant from the `ui::element` namespace.
+* type (`GLuint`)  
+  Most types have their own `ui::` namespaces for subtypes.  Some
+  items don't really have a subtype, so this value doesn't matter.
+* value (`void *`)  
+  Always a void pointer, which we cast internally to what it needs to
+  be.
+
+Examples:
+```c++
+ui::panel *p = new ui::panel(parent, 200, 100);
+int w = 300;
+p->set(ui::element::size, ui::size::width, &w);
+
+w = 937;
+p->get(ui::element::size, ui::size::width, &w);
+/* w is now 300 */
+
+ui::button *b = new ui::panel(parent, 10, 10);
+std::string some_string = "Howdy!";
+b->set(ui::element::string, 0, &some_string);
+
+some_string = "Buh-bye.";
+b->get(ui::element::string, 0, &some_string);
+/* some_string is now "Howdy!" */
+```
+
+There are also vararg-type get and set functions for each object,
+`get_va` and `set_va`.  Syntax is mostly the same, sets of
+element/type/value, and ends with an extra 0.
+
+Examples:
+```c++
+ui::panel *p = new ui::panel(parent, 100, 100);
+int margin = 5, border = 1;
+p->set_va(ui::element::margin, ui::side::all, &margin,
+          ui::element::border, ui::side::top, &border, 0);
+
+margin = 123;
+border = 456;
+p->get_va(ui::element::margin, ui::side::right, &margin,
+          ui::element::border, ui::side::bottom, &border, 0);
+/* margin is now 5, and border is now 0 */
+```
