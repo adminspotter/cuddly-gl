@@ -20,3 +20,17 @@ upper left of our window.  OpenGL screen coordinates, which fall into
 floating-point [-1.0, 1.0] ranges in both dimensions, are only used
 internally when generating vertex buffers and the like, so any
 interaction with the UI widget set will be in pixels.
+
+### Creation ###
+
+All our widgets take the same thing to create:
+
+* parent (`ui::composite *`)
+* width (`GLuint`)
+* height (`GLuint`)
+
+Examples:
+```c++
+ui::panel *p = new ui::panel(parent, 200, 100);
+ui::button *b = new ui::button(NULL, 60, 30);
+```
