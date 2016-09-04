@@ -119,6 +119,30 @@ interface:
 * client data (`void *`)  
   Any free-form data that the callback will expect to receive.
 
+Examples:
+```c++
+void some_callback(ui::event_target *t, void *call, void *client)
+{
+    /* ... */
+}
+
+stuct something
+{
+    /* ... */
+}
+some_struct;
+
+ui::button *b = new ui::button(parent, 100, 50);
+b->add_callback(ui::callback::btn_down, some_callback, NULL);
+b->add_callback(ui::callback::btn_down, some_callback, &some_struct);
+
+/* The mouse button down callback list has two elements */
+
+b->remove_callback(ui::callback::btn_down, some_callback, &some_struct);
+
+/* Now the mouse button down callback list has one element */
+```
+
 In almost all cases, the toolkit handles event propagation and calling
 the appropriate callback lists for us, but there may be situations in
 which we'd like to call a callback list on our own.  Calling callback
@@ -130,6 +154,14 @@ lists has a consistent interface:
   A call defined structure; internal calls will contain the relevant
   struct defined in [ui_defs.h](../blob/client/ui/ui_defs.h).
 
+```c++
+/* Continuing from the add/remove example above */
+
+b->call_callbacks(ui::callback::btn_down, NULL);
+
+/* some_callback will be called with both call and client data NULL */
+```
+
 Please note that the client data pointer is saved in the callback list
 when it is added, so if the structure or variable that the client data
 points to changes between the time when the callback is added to the
@@ -137,7 +169,24 @@ list, and the time it is called, whatever is pointed to at the time of
 the call will be what is received by the callback routine.  Typically,
 these will be file-static or global variables, or objects or class
 members, so that their scope does not impact any calls the callback
-routines might see.
+routines might see.  For an example:
+
+```c++
+ui::button *b = new ui::button(parent, 100, 50);
+
+int data = 123;
+b->add_callback(ui::callback::btn_down, some_callback, &data);
+
+/* ... */
+
+data = 456;
+
+/* ... */
+
+b->call_callbacks(ui::callback::btn_down, NULL);
+
+/* The some_callback routine will receive '456' as its client data */
+```
 
 Removing from a callback list does not depend on what the client data
 pointer points to, but simply the value of the pointer, i.e. the
