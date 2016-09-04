@@ -306,6 +306,31 @@ pressed, the button becomes armed.
 * `ui::element::bgimage` (`ui::label`)
 
 #### Text Field ####
+
+<a name="ui_text_field"></a>The `ui::text_field` class
+([text_field.h](../blob/client/ui/text_field.h) and
+[text_field.cc](../blob/client/ui/text_field.cc)) is a descendent of
+the [`ui::label`](#ui_label) widget class.  It adds the ability to
+edit the string.
+
+##### Resources #####
+
+* `ui::element::cursor`
+  * `ui::cursor::position` (`GLuint`)
+  * `ui::cursor::blink` (`GLuint`)
+* `ui::element::max_size`
+  * No subtypes (`GLuint`)
+
+###### Inherited resources ######
+
+* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::size` (`ui::panel`)
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
+* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::string` (`ui::label`)
+
 #### Password ####
 
 ### Composite-derived widgets ###
