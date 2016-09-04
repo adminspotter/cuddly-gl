@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:40:27 tquirk
+ *   last updated 04 Sep 2016, 18:18:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -130,7 +130,7 @@ void ui::button::activate(ui::event_target *p, void *call, void *client)
     bool active = true;
 
     if (b != NULL)
-        b->set(ui::element::active, 0, &active);
+        b->set(ui::element::state, ui::state::active, &active);
 }
 
 /* ARGSUSED */
@@ -140,8 +140,8 @@ void ui::button::deactivate(ui::event_target *p, void *call, void *client)
     bool active = false;
 
     if (b != NULL)
-        b->set_va(ui::element::active, 0, &active,
-                  ui::element::arm, 0, &active, 0);
+        b->set_va(ui::element::state, ui::state::active, &active,
+                  ui::element::state, ui::state::armed, &active, 0);
 }
 
 void ui::button::arm(ui::event_target *p, void *call, void *client)
@@ -150,21 +150,22 @@ void ui::button::arm(ui::event_target *p, void *call, void *client)
     bool armed = true;
 
     if (b != NULL)
-        b->set(ui::element::arm, 0, &armed);
+        b->set(ui::element::state, ui::state::armed, &armed);
 }
 
 void ui::button::disarm(ui::event_target *p, void *call, void *client)
 {
     ui::button *b = dynamic_cast<ui::button *>(p);
-    bool is_armed = false;
+    bool armed = false;
 
     if (b != NULL)
-        b->set(ui::element::arm, 0, &is_armed);
+        b->set(ui::element::state, ui::state::armed, &armed);
 }
 
 ui::button::button(ui::composite *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h)
 {
+    this->active = false;
     this->armed = false;
 
     for (int i = 0; i < 4; ++i)
@@ -183,30 +184,32 @@ ui::button::~button()
 
 int ui::button::get(GLuint e, GLuint t, void *v)
 {
-    switch (e)
+    if (e == ui::element::state)
     {
-      case ui::element::active:  return this->get_active_state(t, v);
-      case ui::element::arm:     return this->get_arm_state(t, v);
-      default:                   return ui::label::get(e, t, v);
+        switch (t)
+        {
+          case ui::state::active:  return this->get_active_state(t, v);
+          case ui::state::armed:   return this->get_arm_state(t, v);
+        }
     }
+    return ui::label::get(e, t, v);
 }
 
 void ui::button::set(GLuint e, GLuint t, void *v)
 {
-    switch (e)
-    {
-      case ui::element::active:
-        this->set_active_state(t, v);
-        this->populate_buffers();
-        break;
+    if (e == ui::element::state)
+        switch (t)
+        {
+          case ui::state::active:
+            this->set_active_state(t, v);
+            this->populate_buffers();
+            break;
 
-      case ui::element::arm:
-        this->set_arm_state(t, v);
-        this->populate_buffers();
-        break;
-
-      default:
+          case ui::state::armed:
+            this->set_arm_state(t, v);
+            this->populate_buffers();
+            break;
+        }
+    else
         ui::label::set(e, t, v);
-        break;
-    }
 }
