@@ -245,6 +245,38 @@ callback handling is available.
   * `ui::color::background` (`glm::vec4`)
 
 #### Label ####
+
+<a name="ui_label"></a>The `ui::label` class
+([label.h](../blob/client/ui/label.h) and
+[label.cc](../blob/client/ui/label.cc)) is a descendent of the
+[`ui::panel`](#ui_panel) widget class, and adds either a string or an
+image.  The string and image are mutually exclusive; setting an image
+removes any configured string, and setting a string removes any
+configured image.
+
+Input strings are `std::string`, and should be encoded UTF-8.  Output
+strings will always be UTF-8 `std::string`.  Internally, the string is
+converted into `std::u32string`.  Font handling is done via the
+[`ui::font`](#ui_font) support type.
+
+Images use the [`ui::image`](#ui_image) support type.
+
+##### Resources #####
+
+* `ui::element::font`
+  * No subtypes ([`ui::font`](#ui_font))
+* `ui::element::string`
+  * No subtypes (`std::string`)
+* `ui::element::bgimage`
+  * No subtypes ([`ui::image`](#ui_image))
+
+###### Inherited resources ######
+
+* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
+
 #### Button ####
 #### Text Field ####
 #### Password ####
