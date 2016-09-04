@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     xpos = 50;
     ypos = 175;
     border = 0;
-    b1->set_va(ui::element::bgimage, 0, &img,
+    b1->set_va(ui::element::image, 0, &img,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,

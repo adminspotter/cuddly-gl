@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 08:56:57 tquirk
+ *   last updated 04 Sep 2016, 18:05:46 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -74,14 +74,14 @@ void ui::label::set_string(GLuint t, void *v)
 }
 
 /* ARGSUSED */
-int ui::label::get_bgimage(GLuint t, void *v)
+int ui::label::get_image(GLuint t, void *v)
 {
     v = (void *)&this->img;
     return 0;
 }
 
 /* ARGSUSED */
-void ui::label::set_bgimage(GLuint t, void *v)
+void ui::label::set_image(GLuint t, void *v)
 {
     this->use_text = false;
     this->str.clear();
@@ -316,10 +316,10 @@ int ui::label::get(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
-      case ui::element::font:     return this->get_font(t, v);
-      case ui::element::string:   return this->get_string(t, v);
-      case ui::element::bgimage:  return this->get_bgimage(t, v);
-      default:                    return ui::panel::get(e, t, v);
+      case ui::element::font:    return this->get_font(t, v);
+      case ui::element::string:  return this->get_string(t, v);
+      case ui::element::image:   return this->get_image(t, v);
+      default:                   return ui::panel::get(e, t, v);
     }
 }
 
@@ -337,8 +337,8 @@ void ui::label::set(GLuint e, GLuint t, void *v)
         this->populate_buffers();
         break;
 
-      case ui::element::bgimage:
-        this->set_bgimage(t, v);
+      case ui::element::image:
+        this->set_image(t, v);
         this->populate_buffers();
         break;
 
