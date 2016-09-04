@@ -244,6 +244,17 @@ callback handling is available.
   * `ui::color::foreground` (`glm::vec4`)
   * `ui::color::background` (`glm::vec4`)
 
+The side subtypes for border and margin will function as masks, and
+can be combined arbitrarily.
+
+``` c++
+GLuint left_and_right = ui::side::left | ui::side::right;
+GLuint all_but_top = ui::side::left | ui::side::right | ui::side::bottom;
+```
+
+This allows flexibility in margins and borders, in that they do not
+all need to be the same.  Each is independent of the others.
+
 #### Label ####
 
 <a name="ui_label"></a>The `ui::label` class
