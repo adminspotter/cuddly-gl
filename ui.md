@@ -467,6 +467,45 @@ or grow independently.  `ui::resize::all` is the same as
 * `ui::element::pixel_size` (`ui::composite`)
 
 #### Popup Menu ####
+
+<a name="ui_popup"></a>The `ui::popupmenu` class
+([popupmenu.h](../client/ui/popupmenu.h) and
+[popupmenu.cc](../client/ui/popupmenu.cc)) inherits from the
+[`ui::manager`](#ui_manager), and implements a popup pie menu.
+
+The border and margin function the same as the resources from the
+panel, except for the names it recognizes.  "left" and "right" don't
+have a lot of meaning for an ellipse with a hole in the middle of it,
+so we instead use "inner" and "outer".
+
+The popup resources control a couple of different aspects of the popup
+menu.  The visible resource controls whether the menu is visible, and
+the button resource controls which mouse button will cause the menu to
+pop up.  Any of the button constants within `ui::mouse` are
+satisfactory for this resource.
+
+##### Resources #####
+
+* `ui::element::border`
+  * `ui::side::inner` (`GLuint`)
+  * `ui::side::outer` (`GLuint`)
+* `ui::element::margin`
+  * `ui::side::inner` (`GLuint`)
+  * `ui::side::outer` (`GLuint`)
+* `ui::element::popup`
+  * `ui::popup::visible` (`bool`)
+  * `ui::popup::button` (`int`)
+
+###### Inherited resources ######
+
+* `ui::element::size` ([`ui::composite`](#ui_composite), [`ui::panel`](#ui_panel))
+* `ui::element::transform` (`ui::composite`)
+* `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::position` (`ui::panel`)
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
+
 #### Row Column ####
 
 <a name="ui_row_column"></a>The `ui::row_column` class
