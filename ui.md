@@ -469,6 +469,43 @@ or grow independently.  `ui::resize::all` is the same as
 #### Popup Menu ####
 #### Row Column ####
 
+<a name="ui_row_column"></a>The `ui::row_column` class
+([row_column.h](../client/ui/row_column.h) and
+[row_column.cc](../client/ui/row_column.cc)) inherits from the
+[`ui::manager`](#ui_manager), and arranges its children into a gridded
+layout.
+
+The inherited size resources are taken over by the grid, and can be
+specified as a certain number of rows and columns.  Objects in excess
+of the grid's size will cause the prescribed size to spill out along
+the appropriate order (see order resource below).  One dimension may
+be specified as 0, which indicates that the only constraint is the
+other dimension.
+
+There is an order resource, which indicates whether objects are added
+to the grid in row-major or column-major order.
+
+The row column extends the child spacing resource from the manager
+widget to include the spacing between its grid elements.
+
+##### Resources #####
+
+* `ui::element::size`
+  * `ui::size::rows` (`int`)
+  * `ui::size::columns` (`int`)
+  * `ui::size::grid` (`glm::ivec2`)
+* `ui::element::order`
+  * No subtypes, but defined value arguments (`GLuint`)
+    * `ui::order::row`
+    * `ui::order::column`
+
+###### Inherited resources ######
+
+* `ui::element::size` ([`ui::composite`](#ui_composite))
+* `ui::element::transform` (`ui::composite`)
+* `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::child_spacing` ([`ui::manager`](#ui_manager))
+
 ### Support classes ###
 
 #### Font ####
