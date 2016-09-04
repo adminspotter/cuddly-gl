@@ -399,7 +399,9 @@ with most of the other classes.  It functions as the top-level
 widgets.
 
 The context's constructor also has a different signature, and only
-takes width and height.
+takes width and height.  It has no parent because it is the ultimate
+parent; all toolkit elements are owned, directly or indirectly, by the
+context.
 
 ```c++
 ui::context *ctx = new ui::context(800, 600);
