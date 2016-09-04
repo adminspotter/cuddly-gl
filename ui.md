@@ -106,7 +106,7 @@ interfaces.  A callback routine has a standard signature:
   the callback, and is completely implementation-defined.
 
 The `cb_fptr` type, defined in
-[callback.h](../blob/client/ui/callback.h), defines the required
+[callback.h](../client/ui/callback.h), defines the required
 signature for a callback routine.
 
 Adding to and removing from a callback list also has a consistent
@@ -152,7 +152,7 @@ lists has a consistent interface:
   As above, a constant from the `ui::callback` namespace.
 * call data (`void *`)  
   A call defined structure; internal calls will contain the relevant
-  struct defined in [ui_defs.h](../blob/client/ui/ui_defs.h).
+  struct defined in [ui_defs.h](../client/ui/ui_defs.h).
 
 ```c++
 /* Continuing from the add/remove example above */
@@ -196,8 +196,8 @@ list, differing only in the client data we pass.
 
 The `ui::event_target` class, which is used by all types of widgets,
 adds callback lists and handling.  The full implementation is found in
-[callback.h](../blob/client/ui/callback.h) and
-[callback.cc](../blob/client/ui/callback.cc).
+[callback.h](../client/ui/callback.h) and
+[callback.cc](../client/ui/callback.cc).
 
 ## Widgets ##
 
@@ -209,8 +209,8 @@ text fields, etc.
 ### Panel-derived widgets ###
 
 <a name="ui_panel"></a>The `ui::panel` class
-([panel.h](../blob/client/ui/panel.h) and
-[panel.cc](../blob/client/ui/panel.cc)) isn't really a functional
+([panel.h](../client/ui/panel.h) and
+[panel.cc](../client/ui/panel.cc)) isn't really a functional
 widget on its own, but provides a basic set of pieces for other
 widgets:  border, margin, size, position, color.  It also handles
 general setup and cleanup of the OpenGL VAO and VBO for each widget.
@@ -247,8 +247,8 @@ callback handling is available.
 #### Label ####
 
 <a name="ui_label"></a>The `ui::label` class
-([label.h](../blob/client/ui/label.h) and
-[label.cc](../blob/client/ui/label.cc)) is a descendent of the
+([label.h](../client/ui/label.h) and
+[label.cc](../client/ui/label.cc)) is a descendent of the
 [`ui::panel`](#ui_panel) widget class, and adds either a string or an
 image.  The string and image are mutually exclusive; setting an image
 removes any configured string, and setting a string removes any
@@ -280,8 +280,8 @@ Images use the [`ui::image`](#ui_image) support type.
 #### Button ####
 
 <a name="ui_button"></a>The `ui::button` class
-([button.h](../blob/client/ui/button.h) and
-[button.cc](../blob/client/ui/button.cc)) is a descendent of the
+([button.h](../client/ui/button.h) and
+[button.cc](../client/ui/button.cc)) is a descendent of the
 [`ui::label`](#ui_label) widget class.  It adds some state resources,
 `active` and `armed` and some default callbacks.  When the cursor
 enters the button, it becomes active, and when the mouse button is
@@ -308,8 +308,8 @@ pressed, the button becomes armed.
 #### Text Field ####
 
 <a name="ui_text_field"></a>The `ui::text_field` class
-([text_field.h](../blob/client/ui/text_field.h) and
-[text_field.cc](../blob/client/ui/text_field.cc)) is a descendent of
+([text_field.h](../client/ui/text_field.h) and
+[text_field.cc](../client/ui/text_field.cc)) is a descendent of
 the [`ui::label`](#ui_label) widget class.  It adds the ability to
 edit the string.
 
@@ -334,8 +334,8 @@ edit the string.
 #### Password ####
 
 <a name="ui_password"></a>The `ui::password` class
-([password.h](../blob/client/ui/password.h) and
-[password.cc](../blob/client/ui/password.cc)) is a descendent of the
+([password.h](../client/ui/password.h) and
+[password.cc](../client/ui/password.cc)) is a descendent of the
 [`ui::text_field`](#ui_text_field) widget class.  It has almost the
 exact same behaviour, but displays a series of '*' characters, rather
 than the actual string.
