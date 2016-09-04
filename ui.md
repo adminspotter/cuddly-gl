@@ -278,6 +278,33 @@ Images use the [`ui::image`](#ui_image) support type.
 * `ui::element::color` (`ui::panel`)
 
 #### Button ####
+
+<a name="ui_button"></a>The `ui::button` class
+([button.h](../blob/client/ui/button.h) and
+[button.cc](../blob/client/ui/button.cc)) is a descendent of the
+[`ui::label`](#ui_label) widget class.  It adds some state resources,
+`active` and `armed` and some default callbacks.  When the cursor
+enters the button, it becomes active, and when the mouse button is
+pressed, the button becomes armed.
+
+##### Resources #####
+
+* `ui::element::active`
+  * No subtypes (`bool`)
+* `ui::element::arm`
+  * No subtypes (`bool`)
+
+###### Inherited resources ######
+
+* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::size` (`ui::panel`)
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
+* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::string` (`ui::label`)
+* `ui::element::bgimage` (`ui::label`)
+
 #### Text Field ####
 #### Password ####
 
