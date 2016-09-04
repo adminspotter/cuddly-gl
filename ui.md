@@ -198,3 +198,30 @@ The `ui::event_target` class, which is used by all types of widgets,
 adds callback lists and handling.  The full implementation is found in
 [callback.h](../blob/client/ui/callback.h) and
 [callback.cc](../blob/client/ui/callback.cc).
+
+## Widgets ##
+
+There are a couple classes of widgets.  The composite-derived widgets
+may have children, and are mostly considered manager-type widgets.
+The panel-derived widgets are most of the "regular" things:  buttons,
+text fields, etc.
+
+### Panel-derived widgets ###
+
+#### Label ####
+#### Button ####
+#### Text Field ####
+#### Password ####
+
+### Composite-derived widgets ###
+
+#### Context ####
+#### Manager ####
+#### Popup Menu ####
+#### Row Column ####
+
+### Support classes ###
+
+#### Font ####
+#### Image ####
+#### Quadtree ####
