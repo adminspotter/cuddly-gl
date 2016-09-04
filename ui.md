@@ -333,6 +333,29 @@ edit the string.
 
 #### Password ####
 
+<a name="ui_password"></a>The `ui::password` class
+([password.h](../blob/client/ui/password.h) and
+[password.cc](../blob/client/ui/password.cc)) is a descendent of the
+[`ui::text_field`](#ui_text_field) widget class.  It has almost the
+exact same behaviour, but displays a series of '*' characters, rather
+than the actual string.
+
+##### Resources #####
+
+The password field does not add any new resources.
+
+###### Inherited resources ######
+
+* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::size` (`ui::panel`)
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
+* `ui::element::font` ([`ui::label`](#ui_label))
+* `ui::element::string` (`ui::label`)
+* `ui::element::cursor` ([`ui::text_field`](#ui_text_field))
+* `ui::element::max_size` (`ui::text_field`)
+
 ### Composite-derived widgets ###
 
 #### Context ####
