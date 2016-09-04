@@ -358,6 +358,27 @@ The password field does not add any new resources.
 
 ### Composite-derived widgets ###
 
+<a name="ui_composite"></a>The `ui::composite` class
+([composite.h](../client/ui/composite.h) and
+[composite.cc](../client/ui/composite.cc)) acts as a parent to
+other widgets, and handles the event propagation through the toolkit.
+
+##### Resources #####
+
+The size resources are read-write, but the transform and pixel_size
+elements are read-only.
+
+* `ui::element::size`
+  * `ui::size::width` (`int`)
+  * `ui::size::height` (`int`)
+  * `ui::size::all` (`glm::ivec2`)
+* `ui::element::transform`
+  * `ui::transform::translate` (`glm::mat4`)
+* `ui::element::pixel_size`
+  * `ui::size::width` (`float`)
+  * `ui::size::height` (`float`)
+  * `ui::size::all` (`glm::vec2`)
+
 #### Context ####
 #### Manager ####
 #### Popup Menu ####
