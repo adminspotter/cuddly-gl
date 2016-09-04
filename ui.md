@@ -208,6 +208,42 @@ text fields, etc.
 
 ### Panel-derived widgets ###
 
+<a name="ui_panel"></a>The `ui::panel` class
+([panel.h](../blob/client/ui/panel.h) and
+[panel.cc](../blob/client/ui/panel.cc)) isn't really a functional
+widget on its own, but provides a basic set of pieces for other
+widgets:  border, margin, size, position, color.  It also handles
+general setup and cleanup of the OpenGL VAO and VBO for each widget.
+
+The panel is also derived from `ui::event_target`, so the standard
+callback handling is available.
+
+##### Resources #####
+
+* `ui::element::position`
+  * `ui::position::x` (`int`)
+  * `ui::position::y` (`int`)
+  * `ui::position::all` (`glm::ivec2`)
+* `ui::element::size`
+  * `ui::size::width` (`int`)
+  * `ui::size::height` (`int`)
+  * `ui::size::all` (`glm::ivec2`)
+* `ui::element::border`
+  * `ui::side::top` (`GLuint`)
+  * `ui::side::bottom` (`GLuint`)
+  * `ui::side::left` (`GLuint`)
+  * `ui::side::right` (`GLuint`)
+  * `ui::side::all` (`GLuint`)
+* `ui::element::margin`
+  * `ui::side::top` (`GLuint`)
+  * `ui::side::bottom` (`GLuint`)
+  * `ui::side::left` (`GLuint`)
+  * `ui::side::right` (`GLuint`)
+  * `ui::side::all` (`GLuint`)
+* `ui::element::color`
+  * `ui::color::foreground` (`glm::vec4`)
+  * `ui::color::background` (`glm::vec4`)
+
 #### Label ####
 #### Button ####
 #### Text Field ####
