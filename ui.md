@@ -462,9 +462,13 @@ or grow independently.  `ui::resize::all` is the same as
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#ui_composite))
+* `ui::element::size` ([`ui::composite`](#ui_composite), [`ui::panel`](#ui_panel))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::position` (`ui::panel`)
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
 
 #### Popup Menu ####
 
@@ -540,9 +544,12 @@ widget to include the spacing between its grid elements.
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#ui_composite))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::position` ([`ui::panel`](#ui_panel))
+* `ui::element::border` (`ui::panel`)
+* `ui::element::margin` (`ui::panel`)
+* `ui::element::color` (`ui::panel`)
 * `ui::element::child_spacing` ([`ui::manager`](#ui_manager))
 
 ### Support classes ###
