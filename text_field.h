@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:41:57 tquirk
+ *   last updated 05 Sep 2016, 07:05:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -47,14 +47,14 @@ namespace ui
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
+        virtual int get_size(GLuint, void *);
+        virtual void set_size(GLuint, void *);
         int get_cursor_pos(GLuint, void *);
         void set_cursor_pos(GLuint, void *);
         int get_cursor_blink(GLuint, void *);
         void set_cursor_blink(GLuint, void *);
-        int get_max_size(GLuint, void *);
-        void set_max_size(GLuint, void *);
         void set_string(GLuint, void *);
-        void set_bgimage(GLuint, void *);
+        void set_image(GLuint, void *);
 
         static void enter_callback(event_target *, void *, void *);
         static void leave_callback(event_target *, void *, void *);

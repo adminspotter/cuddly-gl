@@ -151,7 +151,7 @@ int main(int argc, char **argv)
                 ui::element::color, ui::color::background, &bg2,
                 ui::element::position, ui::position::x, &xpos,
                 ui::element::position, ui::position::y, &ypos,
-                ui::element::max_size, ui::size::width, &max_len, 0);
+                ui::element::size, ui::size::max_width, &max_len, 0);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx, 200, 200);
     xpos = 350;
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     max_len = 10;
     t1->set_va(ui::element::font, ui::ownership::shared, std_font,
                ui::element::string, 0, &greeting,
-               ui::element::max_size, ui::size::width, &max_len,
+               ui::element::size, ui::size::max_width, &max_len,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,
                ui::element::color, ui::color::background, &bg1,

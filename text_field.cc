@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:43:01 tquirk
+ *   last updated 05 Sep 2016, 07:13:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -35,10 +35,32 @@
 #include "ui_defs.h"
 #include "text_field.h"
 
+int ui::text_field::get_size(GLuint t, void *v)
+{
+    switch (t)
+    {
+      case ui::size::max_width:
+        *((GLuint *)v) = this->max_length;
+        return 0;
+
+      default:
+        return this->label::get_size(t, v);
+    }
+}
+
+void ui::text_field::set_size(GLuint t, void *v)
+{
+    switch (t)
+    {
+      case ui::size::max_width:  this->max_length = *(int *)v;  break;
+      default:                   this->label::set_size(t, v);   break;
+    }
+}
+
 int ui::text_field::get_cursor_pos(GLuint t, void *v)
 {
     *((GLuint *)v) = this->cursor_pos;
-    return 1;
+    return 0;
 }
 
 void ui::text_field::set_cursor_pos(GLuint t, void *v)
@@ -55,31 +77,13 @@ void ui::text_field::set_cursor_pos(GLuint t, void *v)
 int ui::text_field::get_cursor_blink(GLuint t, void *v)
 {
     *((GLuint *)v) = this->blink;
-    return 1;
+    return 0;
 }
 
 void ui::text_field::set_cursor_blink(GLuint t, void *v)
 {
     this->blink = *((GLuint *)v);
     this->reset_cursor();
-}
-
-int ui::text_field::get_max_size(GLuint t, void *v)
-{
-    int ret = 0;
-
-    if (t == ui::size::width)
-    {
-        *((GLuint *)v) = this->max_length;
-        ret = 1;
-    }
-    return ret;
-}
-
-void ui::text_field::set_max_size(GLuint t, void *v)
-{
-    if (t == ui::size::width)
-        this->max_length = *(int *)v;
 }
 
 void ui::text_field::set_string(GLuint t, void *v)
@@ -89,7 +93,7 @@ void ui::text_field::set_string(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_bgimage(GLuint t, void *v)
+void ui::text_field::set_image(GLuint t, void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
 }
@@ -428,7 +432,6 @@ int ui::text_field::get(GLuint e, GLuint t, void *v)
           case ui::cursor::position:  return this->get_cursor_pos(t, v);
           case ui::cursor::blink:     return this->get_cursor_blink(t, v);
         }
-      case ui::element::max_size:     return this->get_max_size(t, v);
       default:                        return ui::label::get(e, t, v);
     }
 }
@@ -444,11 +447,6 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
           case ui::cursor::blink:     this->set_cursor_blink(t, v); break;
         }
         this->generate_cursor();
-        break;
-
-      case ui::element::max_size:
-        this->set_max_size(t, v);
-        this->populate_buffers();
         break;
 
       default:
