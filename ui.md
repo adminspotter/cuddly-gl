@@ -278,12 +278,13 @@ Images use the [`ui::image`](#image) support type.
   * No subtypes ([`ui::font`](#font))
 * `ui::element::string`
   * No subtypes (`std::string`)
-* `ui::element::bgimage`
+* `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 
 ###### Inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
+* `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
