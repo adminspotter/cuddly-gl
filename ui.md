@@ -555,5 +555,33 @@ widget to include the spacing between its grid elements.
 ### Support classes ###
 
 #### Font ####
+
+The `ui::font` ([font.h](../client/ui/font.h) and
+[font.cc](../client/ui/font.cc)) is used by the `ui::label` and its
+descendents.  It is a wrapper around libfreetype2, which provides the
+specific functionality that we require:  sizing of glyphs and strings,
+and rendering of strings into bitmaps.
+
+Its interface shares very little in common with the rest of our UI
+toolkit, but it is largely meant to be an internal interface, used
+only by the calling widgets.
+
 #### Image ####
+
+The `ui::image` ([image.h](../client/ui/image.h)) is a simple
+structure which holds image data and some metadata about the image
+(size and bytes per pixel).
+
+It has very little interface at all; a blank constructor, a copy
+constructor, and an assignment operator.
+
 #### Quadtree ####
+
+The `ui::quadtree` ([quadtree.h](../client/ui/quadtree.h) and
+[quadtree.cc](../client/ui/quadtree.cc)) is the search structure that
+the `ui::composite` and its descendents use to quickly search their
+area for children.  Almost all of the event handling routines use this
+tree to locate the child which should be sent the event in question.
+
+The interface is very simple; insert, search, remove, and clear.  It
+deals only with `ui::panel` objects and descendents.
