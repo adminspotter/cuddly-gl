@@ -333,7 +333,7 @@ set but will be ignored.
   * `ui::cursor::position` (`GLuint`)
   * `ui::cursor::blink` (`GLuint`)
 * `ui::element::size`
-  * `ui::size::width (`GLuint`)
+  * `ui::size::width` (`GLuint`)
   * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`GLuint`)
   * `ui::size::max_width` (`GLuint`)
