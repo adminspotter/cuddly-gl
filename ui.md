@@ -299,10 +299,9 @@ pressed, the button becomes armed.
 
 ##### Resources #####
 
-* `ui::element::active`
-  * No subtypes (`bool`)
-* `ui::element::arm`
-  * No subtypes (`bool`)
+* `ui::element::state`
+  * `ui::element::active` (`bool`)
+  * `ui::element::armed` (`bool`)
 
 ###### Inherited resources ######
 
