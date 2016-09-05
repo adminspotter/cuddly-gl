@@ -362,14 +362,13 @@ The password field does not add any new resources.
 ###### Inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 * `ui::element::cursor` ([`ui::text_field`](#text_field))
-* `ui::element::max_size` (`ui::text_field`)
+* `ui::element::size` (`ui::text_field`)
 
 ### Composite-derived widgets ###
 
