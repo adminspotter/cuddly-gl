@@ -321,18 +321,25 @@ and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
 the [`ui::label`](#label) widget class.  It adds the ability to edit
 the string.
 
+The text field adds a size subtype of max_width, which indicates the
+desired width of the field.  The standard height is 1 character.  The
+inherited width and height subtypes can be retrieved, and can also be
+set but will be ignored.
+
 ##### Resources #####
 
 * `ui::element::cursor`
   * `ui::cursor::position` (`GLuint`)
   * `ui::cursor::blink` (`GLuint`)
-* `ui::element::max_size`
-  * No subtypes (`GLuint`)
+* `ui::element::size`
+  * `ui::size::width (`GLuint`)
+  * `ui::size::height` (`GLuint`)
+  * `ui::size::all` (`GLuint`)
+  * `ui::size::max_width` (`GLuint`)
 
 ###### Inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::size` (`ui::panel`)
 * `ui::element::border` (`ui::panel`)
 * `ui::element::margin` (`ui::panel`)
 * `ui::element::color` (`ui::panel`)
