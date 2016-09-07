@@ -316,7 +316,7 @@ pressed, the button becomes armed.
 * `ui::element::color` (`ui::panel`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
-* `ui::element::bgimage` (`ui::label`)
+* `ui::element::image` (`ui::label`)
 
 #### Text Field ####
 
