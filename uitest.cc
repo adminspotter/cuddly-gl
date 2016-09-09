@@ -270,12 +270,9 @@ void error_callback(int err, const char *desc)
 
 void window_size_callback(GLFWwindow *w, int width, int height)
 {
-    GLuint temp;
+    glm::ivec2 sz(width, height);
 
-    temp = width;
-    ctx->set(ui::element::size, ui::size::width, &temp);
-    temp = height;
-    ctx->set(ui::element::size, ui::size::height, &temp);
+    ctx->set(ui::element::size, ui::size::all, &sz);
 }
 
 void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
