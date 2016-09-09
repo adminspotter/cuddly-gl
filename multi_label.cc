@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Sep 2016, 07:08:13 tquirk
+ *   last updated 07 Sep 2016, 08:18:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -30,6 +30,11 @@
  */
 
 #include "multi_label.h"
+
+void ui::multi_label::set_image(GLuint t, void *v)
+{
+    /* Don't do anything; this doesn't make sense in this widget. */
+}
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
     : ui::label::label(p, w, h)

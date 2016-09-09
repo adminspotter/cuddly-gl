@@ -1,6 +1,6 @@
 /* multi_label.h                                           -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Sep 2016, 06:57:19 tquirk
+ *   last updated 07 Sep 2016, 08:18:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -38,6 +38,9 @@ namespace ui
 {
     class multi_label : public label
     {
+      protected:
+        virtual void set_image(GLuint, void *);
+
       public:
         multi_label(composite *, GLuint, GLuint);
         virtual ~multi_label();
