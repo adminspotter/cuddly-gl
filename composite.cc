@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Sep 2016, 06:58:19 tquirk
+ *   last updated 12 Sep 2016, 07:19:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -194,7 +194,10 @@ void ui::composite::mouse_pos_callback(int x, int y)
         if (this->old_child != p)
             p->call_callbacks(ui::callback::enter, &call_data);
         if (this->old_child != NULL && this->old_child != p)
+        {
             this->old_child->call_callbacks(ui::callback::leave, &call_data);
+            this->close_pending();
+        }
         p->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
