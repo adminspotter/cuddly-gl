@@ -23,7 +23,7 @@ interaction with the UI widget set will be in pixels.
 
 ### Creation ###
 
-All our widgets take the same thing to create:
+All our widgets take the same set of arguments to create:
 
 * parent (`ui::composite *`)
 * width (`GLuint`)
@@ -198,6 +198,18 @@ The `ui::event_target` class, which is used by all types of widgets,
 adds callback lists and handling.  The full implementation is found in
 [callback.h](../client/ui/callback.h) and
 [callback.cc](../client/ui/callback.cc).
+
+### Closing ###
+
+There is a single call to close any panel-derived widget:
+
+```c++
+ui::panel *p = new ui::panel(context, 123, 456);
+
+/* ... */
+
+p->close();
+```
 
 ## Widgets ##
 
