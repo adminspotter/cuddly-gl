@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Sep 2016, 07:59:25 tquirk
+ *   last updated 12 Sep 2016, 06:58:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -103,6 +103,21 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
     return ret;
 }
 
+void ui::composite::close_pending(void)
+{
+    auto child = this->children.begin();
+
+    while (child != this->children.end())
+        /* If we delete the pointer and erase(), we get an apparent
+         * double-free segfault, so it seems(?) that erase() actually
+         * deletes pointers that it owns?
+         */
+        if ((*child)->to_close == true)
+            child = this->children.erase(child);
+        else
+            ++child;
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : dim((int)w, (int)h), children(), old_pos(0, 0), translate()
 {
@@ -189,6 +204,7 @@ void ui::composite::mouse_pos_callback(int x, int y)
                                 0);
         call_data.location = pos - obj;
         this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        this->close_pending();
     }
 
     /* p might no longer exist at this position.  Let's search again,
@@ -215,6 +231,7 @@ void ui::composite::mouse_btn_callback(int btn, int state)
         call_data.button = btn;
         call_data.state = state;
         p->call_callbacks(which, &call_data);
+        this->close_pending();
     }
 
     /* p might no longer exist at this position.  Let's search again,
@@ -242,6 +259,7 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
         call_data.state = state;
         call_data.mods = mods;
         p->call_callbacks(which, &call_data);
+        this->close_pending();
     }
 
     /* p might no longer exist at this position.  Let's search again,
