@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Aug 2016, 22:38:08 tquirk
+ *   last updated 12 Sep 2016, 07:23:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -103,6 +103,21 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
     return ret;
 }
 
+void ui::composite::close_pending(void)
+{
+    auto child = this->children.begin();
+
+    while (child != this->children.end())
+        /* If we delete the pointer and erase(), we get an apparent
+         * double-free segfault, so it seems(?) that erase() actually
+         * deletes pointers that it owns?
+         */
+        if ((*child)->to_close == true)
+            child = this->children.erase(child);
+        else
+            ++child;
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : dim((int)w, (int)h), children(), old_pos(0, 0), translate()
 {
@@ -173,25 +188,29 @@ void ui::composite::mouse_pos_callback(int x, int y)
 
     if (p != NULL)
     {
-        p->get_va(ui::element::position, ui::position::x, &obj.x,
-                  ui::element::position, ui::position::y, &obj.y, 0);
+        p->get(ui::element::position, ui::position::all, &obj);
         call_data.location = pos - obj;
         if (this->old_child != p)
             p->call_callbacks(ui::callback::enter, &call_data);
         if (this->old_child != NULL && this->old_child != p)
+        {
             this->old_child->call_callbacks(ui::callback::leave, &call_data);
+            this->close_pending();
+        }
         p->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
     {
-        this->old_child->get_va(ui::element::position, ui::position::x, &obj.x,
-                                ui::element::position, ui::position::y, &obj.y,
-                                0);
+        this->old_child->get(ui::element::position, ui::position::all, &obj);
         call_data.location = pos - obj;
         this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        this->close_pending();
     }
 
-    this->old_child = p;
+    /* p might no longer exist at this position.  Let's search again,
+     * just to make sure.
+     */
+    this->old_child = this->tree->search(pos);
     this->old_pos = pos;
 }
 
@@ -212,9 +231,13 @@ void ui::composite::mouse_btn_callback(int btn, int state)
         call_data.button = btn;
         call_data.state = state;
         p->call_callbacks(which, &call_data);
+        this->close_pending();
     }
 
-    this->old_child = p;
+    /* p might no longer exist at this position.  Let's search again,
+     * just to make sure.
+     */
+    this->old_child = this->tree->search(this->old_pos);
 }
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
@@ -236,7 +259,11 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
         call_data.state = state;
         call_data.mods = mods;
         p->call_callbacks(which, &call_data);
+        this->close_pending();
     }
 
-    this->old_child = p;
+    /* p might no longer exist at this position.  Let's search again,
+     * just to make sure.
+     */
+    this->old_child = this->tree->search(this->old_pos);
 }

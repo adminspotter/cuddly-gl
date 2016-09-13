@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:36:17 tquirk
+ *   last updated 11 Sep 2016, 11:43:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -485,6 +485,7 @@ ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
 {
     GLuint temp, x, y;
 
+    this->to_close = false;
     this->parent = c;
 
     for (int i = 0; i < 4; ++i)
@@ -582,5 +583,5 @@ void ui::panel::draw(void)
 
 void ui::panel::close(void)
 {
-    delete this;
+    this->to_close = true;
 }
