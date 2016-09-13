@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Sep 2016, 06:59:13 tquirk
+ *   last updated 13 Sep 2016, 07:17:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -239,35 +239,34 @@ void ui::text_field::generate_cursor(int pixel_pos)
     if (this->font != NULL)
     {
         float vertex[48];
-        float x = this->pos.x, y = this->pos.y;
-        float w = this->size.x, h = this->size.y;
-        float pw, ph, sw, m[4], b[4];
+        float x = this->pos.x, y = this->pos.y, h = this->size.y;
+        float sw, m[4], b[4];
+        glm::vec2 ps;
         GLuint temp;
         if (pixel_pos < 0)
             pixel_pos = this->get_cursor_pixel_pos();
 
-        this->parent->get(ui::element::pixel_size, ui::size::width, &pw);
-        this->parent->get(ui::element::pixel_size, ui::size::height, &ph);
-        ph = -ph;
-        sw = pw * (float)pixel_pos;
-        m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
-        m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
-        m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
-        m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
+        this->parent->get(ui::element::pixel_size, ui::size::all, &ps);
+        ps.y = -ps.y;
+        sw = ps.x * (float)pixel_pos;
+        m[0] = this->margin[0] * ps.y;  b[0] = this->border[0] * ps.y;
+        m[1] = this->margin[1] * ps.x;  b[1] = this->border[1] * ps.x;
+        m[2] = this->margin[2] * ps.x;  b[2] = this->border[2] * ps.x;
+        m[3] = this->margin[3] * ps.y;  b[3] = this->border[3] * ps.y;
 
-        vertex[0] = x * pw - 1.0f + m[1] + b[1] + sw + pw;
-        vertex[1] = y * ph + 1.0f + m[0] + b[0] + ph;
+        vertex[0] = x * ps.x - 1.0f + m[1] + b[1] + sw + ps.x;
+        vertex[1] = y * ps.y + 1.0f + m[0] + b[0] + ps.y;
         memcpy(&vertex[2],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
         vertex[6] = vertex[7] = ui::panel::no_texture;
 
         vertex[8] = vertex[0];
-        vertex[9] = vertex[1] + (h * ph) - m[0] - b[0] - m[3] - b[3] - ph - ph;
+        vertex[9] = vertex[1] + (h * ps.y) - m[0] - b[0] - m[3] - b[3] - ps.y - ps.y;
         memcpy(&vertex[10],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
         vertex[14] = vertex[15] = ui::panel::no_texture;
 
-        vertex[16] = vertex[0] + pw;
+        vertex[16] = vertex[0] + ps.x;
         vertex[17] = vertex[1];
         memcpy(&vertex[18],
                glm::value_ptr(this->foreground), sizeof(float) * 4);
