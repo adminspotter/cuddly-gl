@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Sep 2016, 07:13:57 tquirk
+ *   last updated 13 Sep 2016, 06:59:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -104,9 +104,8 @@ void ui::text_field::enter_callback(ui::event_target *p,
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
 
-    if (t == NULL)
-        return;
-    t->activate_cursor();
+    if (t != NULL)
+        t->activate_cursor();
 }
 
 void ui::text_field::leave_callback(ui::event_target *p,
@@ -115,9 +114,8 @@ void ui::text_field::leave_callback(ui::event_target *p,
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
 
-    if (t == NULL)
-        return;
-    t->deactivate_cursor();
+    if (t != NULL)
+        t->deactivate_cursor();
 }
 
 void ui::text_field::key_callback(ui::event_target *p,
@@ -127,20 +125,21 @@ void ui::text_field::key_callback(ui::event_target *p,
     ui::text_field *t = dynamic_cast<ui::text_field *>(p);
     ui::key_call_data *c = (ui::key_call_data *)call;
 
-    if (t == NULL)
-        return;
-    if (c->key == ui::key::no_key && c->character != 0)
-        t->insert_char(c->character);
-    else
-        switch (c->key)
-        {
-          case ui::key::l_arrow:  t->previous_char();         break;
-          case ui::key::r_arrow:  t->next_char();             break;
-          case ui::key::home:     t->first_char();            break;
-          case ui::key::end:      t->last_char();             break;
-          case ui::key::bkspc:    t->remove_previous_char();  break;
-          case ui::key::del:      t->remove_next_char();      break;
-        }
+    if (t != NULL)
+    {
+        if (c->key == ui::key::no_key && c->character != 0)
+            t->insert_char(c->character);
+        else
+            switch (c->key)
+            {
+              case ui::key::l_arrow:  t->previous_char();         break;
+              case ui::key::r_arrow:  t->next_char();             break;
+              case ui::key::home:     t->first_char();            break;
+              case ui::key::end:      t->last_char();             break;
+              case ui::key::bkspc:    t->remove_previous_char();  break;
+              case ui::key::del:      t->remove_next_char();      break;
+            }
+    }
 }
 
 void ui::text_field::reset_cursor(void)
