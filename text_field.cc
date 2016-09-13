@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Sep 2016, 07:17:36 tquirk
+ *   last updated 13 Sep 2016, 07:51:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -217,7 +217,7 @@ void ui::text_field::get_string_size(const std::u32string& str,
                                      std::vector<int>& sz)
 {
     if (this->font != NULL)
-        this->font->get_string_size(this->str.substr(0, this->cursor_pos), sz);
+        this->font->get_string_size(str, sz);
 }
 
 int ui::text_field::get_cursor_pixel_pos(void)
