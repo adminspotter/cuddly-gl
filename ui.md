@@ -12,6 +12,8 @@ object-oriented, so that model really seemed to fit our requirements.
 Callbacks, consistent create/get/set, consistent set of resources, and
 so on.
 
+## Overview ##
+
 All classes and constants live within the `ui::` namespace.  It's
 short, and yet still descriptive.
 
@@ -30,6 +32,7 @@ All our widgets take the same set of arguments to create:
 * height (`GLuint`)
 
 Examples:
+
 ```c++
 ui::panel *p = new ui::panel(parent, 200, 100);
 ui::button *b = new ui::button(NULL, 60, 30);
@@ -52,6 +55,7 @@ interface for both is identical:
   be.
 
 Examples:
+
 ```c++
 ui::panel *p = new ui::panel(parent, 200, 100);
 int w = 300;
@@ -75,6 +79,7 @@ There are also vararg-type get and set functions for each object,
 element/type/value, and ends with an extra 0.
 
 Examples:
+
 ```c++
 ui::panel *p = new ui::panel(parent, 100, 100);
 int margin = 5, border = 1;
@@ -120,6 +125,7 @@ interface:
   Any free-form data that the callback will expect to receive.
 
 Examples:
+
 ```c++
 void some_callback(ui::event_target *t, void *call, void *client)
 {
@@ -231,7 +237,7 @@ and cleanup of the OpenGL VAO and VBO for each widget.
 The panel is also derived from `ui::event_target`, so the standard
 callback handling is available.
 
-##### Resources #####
+##### Panel resources #####
 
 * `ui::element::position`
   * `ui::position::x` (`int`)
@@ -284,7 +290,7 @@ converted into `std::u32string`.  Font handling is done via the
 
 Images use the [`ui::image`](#image) support type.
 
-##### Resources #####
+##### Label resources #####
 
 * `ui::element::font`
   * No subtypes ([`ui::font`](#font))
@@ -293,7 +299,7 @@ Images use the [`ui::image`](#image) support type.
 * `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 
-###### Inherited resources ######
+###### Label inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::size` (`ui::panel`)
@@ -310,13 +316,13 @@ The `ui::button` class ([button.h](../client/ui/button.h) and
 enters the button, it becomes active, and when the mouse button is
 pressed, the button becomes armed.
 
-##### Resources #####
+##### Button resources #####
 
 * `ui::element::state`
   * `ui::element::active` (`bool`)
   * `ui::element::armed` (`bool`)
 
-###### Inherited resources ######
+###### Button inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::size` (`ui::panel`)
@@ -339,7 +345,7 @@ desired width of the field.  The standard height is 1 character.  The
 inherited width and height subtypes can be retrieved, and can also be
 set but will be ignored.
 
-##### Resources #####
+##### Text field resources #####
 
 * `ui::element::cursor`
   * `ui::cursor::position` (`GLuint`)
@@ -350,7 +356,7 @@ set but will be ignored.
   * `ui::size::all` (`GLuint`)
   * `ui::size::max_width` (`GLuint`)
 
-###### Inherited resources ######
+###### Text field inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::border` (`ui::panel`)
@@ -367,11 +373,11 @@ The `ui::password` class ([password.h](../client/ui/password.h) and
 same behaviour, but displays a series of '*' characters, rather than
 the actual string.
 
-##### Resources #####
+##### Password resources #####
 
 The password field does not add any new resources.
 
-###### Inherited resources ######
+###### Password inherited resources ######
 
 * `ui::element::position` ([`ui::panel`](#panel))
 * `ui::element::border` (`ui::panel`)
@@ -390,7 +396,7 @@ The `ui::composite` class ([composite.h](../client/ui/composite.h) and
 [composite.cc](../client/ui/composite.cc)) acts as a parent to other
 widgets, and handles the event propagation through the toolkit.
 
-##### Resources #####
+##### Composite resources #####
 
 The size resources are read-write, but the transform and pixel_size
 elements are read-only.
@@ -422,7 +428,7 @@ context.
 ui::context *ctx = new ui::context(800, 600);
 ```
 
-##### Resources #####
+##### Context resources #####
 
 All of the new resources which the context adds are read-only, and are
 controlled via the OpenGL rendering program contained in
@@ -438,7 +444,7 @@ controlled via the OpenGL rendering program contained in
   * `ui::attribute::text_bgnd` (`GLuint`)
   * `ui::attribute::translate` (`GLuint`)
 
-###### Inherited resources ######
+###### Context inherited resources ######
 
 * `ui::element::size` ([`ui::composite`](#composite))
 * `ui::element::transform` (`ui::composite`)
@@ -457,7 +463,7 @@ upper-left corner of the manager.
 The new child spacing resource controls the spacing between elements
 and the edges of the manager, for purposes of grow/shrink.
 
-##### Resources #####
+##### Manager resources #####
 
 * `ui::element::child_spacing`
   * `ui::size::width` (`int`)
@@ -474,7 +480,7 @@ The resize value arguments function as a mask, so that we can shrink
 or grow independently.  `ui::resize::all` is the same as
 `ui::resize::shrink | ui::resize::grow`.
 
-###### Inherited resources ######
+###### Manager inherited resources ######
 
 * `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
 * `ui::element::transform` (`ui::composite`)
@@ -501,7 +507,7 @@ the button resource controls which mouse button will cause the menu to
 pop up.  Any of the button constants within `ui::mouse` are
 satisfactory for this resource.
 
-##### Resources #####
+##### Popup menu resources #####
 
 * `ui::element::border`
   * `ui::side::inner` (`GLuint`)
@@ -513,7 +519,7 @@ satisfactory for this resource.
   * `ui::popup::visible` (`bool`)
   * `ui::popup::button` (`int`)
 
-###### Inherited resources ######
+###### Popup menu inherited resources ######
 
 * `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
 * `ui::element::transform` (`ui::composite`)
@@ -543,7 +549,7 @@ to the grid in row-major or column-major order.
 The row column extends the child spacing resource from the manager
 widget to include the spacing between its grid elements.
 
-##### Resources #####
+##### Row column resources #####
 
 * `ui::element::size`
   * `ui::size::rows` (`int`)
@@ -554,7 +560,7 @@ widget to include the spacing between its grid elements.
     * `ui::order::row`
     * `ui::order::column`
 
-###### Inherited resources ######
+###### Row column inherited resources ######
 
 * `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
