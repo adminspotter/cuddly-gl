@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Sep 2016, 19:01:24 tquirk
+ *   last updated 22 Sep 2016, 08:46:45 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -31,6 +31,23 @@
 
 #include "multi_label.h"
 
+/* The "string" which contains all the whitespace characters that
+ * we're interested in.
+ */
+std::u32string ui::multi_label::whitespace =
+{
+    0x0020, 0x1680, 0x180e, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
+    0x2006, 0x2007, 0x2008, 0x2009, 0x200a, 0x200b, 0x205f, 0x3000
+};
+
+/* The "string" which contains all line-break characters.  We also
+ * include the vertical tab and form-feed.
+ */
+std::u32string ui::multi_label::newline =
+{
+    0x000a, 0x000b, 0x000c, 0x000d
+};
+
 void ui::multi_label::set_image(GLuint t, void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
@@ -49,6 +66,28 @@ bool ui::multi_label::is_whitespace(uint32_t c)
         || c == 0x205f || c == 0x3000)
         return true;
     return false;
+}
+
+/* This function will consider 0x000d and 0x000a separately, so if the
+ * system newline is the combination of the two, we'll get
+ * double-spacing.
+ */
+void ui::multi_label::split_by_newlines(std::u32string s,
+                                        std::list<std::u32string>& strs)
+{
+    std::u32string tmp_str = s;
+    std::u32string::size_type pos;
+
+    while ((pos = tmp_str.find_first_of(ui::multi_label::newline))
+           != std::u32string::npos)
+    {
+        if (pos > 0)
+            strs.push_back(tmp_str.substr(0, pos - 1));
+        else
+            strs.push_back(std::u32string());
+        tmp_str = tmp_str.substr(pos + 1);
+    }
+    strs.push_back(tmp_str);
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
