@@ -1,6 +1,6 @@
 /* multi_label.h                                           -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Sep 2016, 08:48:34 tquirk
+ *   last updated 22 Sep 2016, 09:51:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,9 @@ namespace ui
         bool is_whitespace(uint32_t);
 
         void split_by_newlines(std::u32string, std::list<std::u32string>&);
+        void hard_split_string(GLuint, std::vector<int>&,
+                               std::list<std::u32string>&,
+                               std::list<std::u32string>::iterator&);
 
       public:
         multi_label(composite *, GLuint, GLuint);

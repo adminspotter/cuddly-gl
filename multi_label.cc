@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Sep 2016, 08:46:45 tquirk
+ *   last updated 22 Sep 2016, 23:47:25 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -88,6 +88,36 @@ void ui::multi_label::split_by_newlines(std::u32string s,
         tmp_str = tmp_str.substr(pos + 1);
     }
     strs.push_back(tmp_str);
+}
+
+/* There is no whitespace in our string which will break close enough
+ * to the beginning to give us the width we want.  So we'll break at a
+ * point which gives us the size we need.  This is the function which
+ * breaks up the proverbial "page-widening posts".
+ *
+ * We'll use a binary search through the string to reduce the number
+ * of string-size calculations we need to do.
+ */
+void ui::multi_label::hard_split_string(GLuint width,
+                                        std::vector<int>& sz,
+                                        std::list<std::u32string>& strs,
+                                        std::list<std::u32string>::iterator& i)
+{
+    std::u32string str = *i;
+    std::u32string::size_type first = 0, last = str.size() - 1, pos = last / 2;
+    auto new_iter = i;
+
+    while (last - first > 1)
+    {
+        this->font->get_string_size(str.substr(0, pos), sz);
+        if (sz[0] <= width)
+            last = pos;
+        else
+            first = pos;
+        pos = first + ((last - first) / 2);
+    }
+    *i = str.substr(0, pos);
+    strs.insert(++new_iter, str.substr(pos + 1));
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
