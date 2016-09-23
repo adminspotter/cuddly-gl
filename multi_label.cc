@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Sep 2016, 23:47:25 tquirk
+ *   last updated 23 Sep 2016, 07:52:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -98,14 +98,11 @@ void ui::multi_label::split_by_newlines(std::u32string s,
  * We'll use a binary search through the string to reduce the number
  * of string-size calculations we need to do.
  */
-void ui::multi_label::hard_split_string(GLuint width,
-                                        std::vector<int>& sz,
-                                        std::list<std::u32string>& strs,
-                                        std::list<std::u32string>::iterator& i)
+std::u32string::size_type ui::multi_label::hard_split_string(GLuint width,
+                                                             std::u32string& str)
 {
-    std::u32string str = *i;
+    std::vector<int> sz = {0, 0, 0};
     std::u32string::size_type first = 0, last = str.size() - 1, pos = last / 2;
-    auto new_iter = i;
 
     while (last - first > 1)
     {
@@ -116,8 +113,48 @@ void ui::multi_label::hard_split_string(GLuint width,
             first = pos;
         pos = first + ((last - first) / 2);
     }
-    *i = str.substr(0, pos);
-    strs.insert(++new_iter, str.substr(pos + 1));
+    return pos;
+}
+
+void ui::multi_label::split_string_to_width(GLuint width,
+                                            std::list<std::u32string>& strs)
+{
+    std::vector<int> sz = {0, 0, 0};
+    std::u32string::size_type pos;
+
+    /* Split on newlines, push everything into the list */
+    this->split_by_newlines(this->str, strs);
+
+    /* For each list element:
+     * 1) Get string size
+     * 2) While size is too long, find character before last chunk of whitespace
+     * 3) If we have a chunk that fits, insert the remainder next in the list,
+     *    and shorten ourselves to be the leading substring
+     */
+    for (auto i = strs.begin(); i != strs.end(); ++i)
+    {
+        auto next = i;
+        ++next;
+
+        this->font->get_string_size(*i, sz);
+        while (sz[0] > width)
+        {
+            pos = (*i).find_last_of(ui::multi_label::whitespace);
+            if (pos != std::u32string::npos)
+                this->font->get_string_size((*i).substr(), sz);
+            else
+            {
+                /* There isn't any whitespace that we can break on,
+                 * that lets our string be short enough.  We'll chop
+                 * things apart at the closest character.
+                 */
+                pos = this->hard_split_string(width, *i);
+                break;
+            }
+        }
+        strs.insert(next, (*i).substr(pos + 1));
+        *i = (*i).substr(0, pos);
+    }
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
