@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Sep 2016, 07:52:49 tquirk
+ *   last updated 23 Sep 2016, 08:10:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,7 +32,8 @@
 #include "multi_label.h"
 
 /* The "string" which contains all the whitespace characters that
- * we're interested in.
+ * we're interested in.  Found a nice table at
+ * https://www.cs.tut.fi/~jkorpela/chars/spaces.html
  */
 std::u32string ui::multi_label::whitespace =
 {
@@ -51,21 +52,6 @@ std::u32string ui::multi_label::newline =
 void ui::multi_label::set_image(GLuint t, void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
-}
-
-/* We need to be able to break on any arbitrary space when doing
- * multiline strings, so let's get a list of all the valid whitespace
- * that we can break on, in one place.  Found a nice table at
- * https://www.cs.tut.fi/~jkorpela/chars/spaces.html
- */
-bool ui::multi_label::is_whitespace(uint32_t c)
-{
-    if ((c >= 0x000a && c <= 0x000d)
-        || c == 0x0020 || c == 0x1680 || c == 0x180e
-        || (c >= 0x2000 && c <= 0x200b)
-        || c == 0x205f || c == 0x3000)
-        return true;
-    return false;
 }
 
 /* This function will consider 0x000d and 0x000a separately, so if the
