@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Sep 2016, 08:21:52 tquirk
+ *   last updated 24 Sep 2016, 08:58:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -302,6 +302,8 @@ void ui::font::render_string(const std::u32string& str, ui::image& img)
     img.width = req_size[0];
     img.height = req_size[1] + req_size[2];
     img.per_pixel = 1;
+    if (img.data != NULL)
+        delete[] img.data;
     img.data = new unsigned char[img.width * img.height];
     memset(img.data, 0, img.width * img.height);
     save_pos = pos = (l_to_r ? 0 : img.width - 1);
