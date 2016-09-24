@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Sep 2016, 08:10:13 tquirk
+ *   last updated 24 Sep 2016, 07:50:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,14 +85,14 @@ void ui::multi_label::split_by_newlines(std::u32string s,
  * of string-size calculations we need to do.
  */
 std::u32string::size_type ui::multi_label::hard_split_string(GLuint width,
-                                                             std::u32string& str)
+                                                             std::u32string& s)
 {
     std::vector<int> sz = {0, 0, 0};
-    std::u32string::size_type first = 0, last = str.size() - 1, pos = last / 2;
+    std::u32string::size_type first = 0, last = s.size() - 1, pos = last / 2;
 
     while (last - first > 1)
     {
-        this->font->get_string_size(str.substr(0, pos), sz);
+        this->font->get_string_size(s.substr(0, pos), sz);
         if (sz[0] <= width)
             last = pos;
         else
