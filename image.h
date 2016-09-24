@@ -1,6 +1,6 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Aug 2016, 22:21:07 tquirk
+ *   last updated 24 Sep 2016, 09:25:09 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,10 +40,8 @@ namespace ui
 
         image()
             {
-                this->width = 0;
-                this->height = 0;
-                this->per_pixel = 0;
                 this->data = NULL;
+                this->reset();
             };
         image(const image& i)
             {
@@ -70,6 +68,15 @@ namespace ui
                     memcpy(this->data, i.data, new_size);
                 }
                 return *this;
+            };
+        void reset(void)
+            {
+                this->width = 0;
+                this->height = 0;
+                this->per_pixel = 0;
+                if (this->data != NULL)
+                    delete[] this->data;
+                this->data = NULL;
             };
     };
 
