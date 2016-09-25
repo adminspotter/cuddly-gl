@@ -127,7 +127,7 @@ void ui::multi_label::split_string_to_width(GLuint width,
         {
             pos = (*i).find_last_of(ui::multi_label::whitespace);
             if (pos != std::u32string::npos)
-                this->font->get_string_size((*i).substr(), sz);
+                this->font->get_string_size((*i).substr(0, pos - 1), sz);
             else
             {
                 /* There isn't any whitespace that we can break on,
