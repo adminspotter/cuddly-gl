@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Sep 2016, 07:50:04 tquirk
+ *   last updated 25 Sep 2016, 17:10:04 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -141,6 +141,32 @@ void ui::multi_label::split_string_to_width(GLuint width,
         strs.insert(next, (*i).substr(pos + 1));
         *i = (*i).substr(0, pos);
     }
+}
+
+void ui::multi_label::generate_string_image(void)
+{
+    if (this->font != NULL)
+    {
+        std::list<std::u32string> strs;
+        std::vector<std::u32string> str_vec;
+        GLuint width = this->size.x - this->margin[1] - this->border[1]
+            - this->border[2] - this->margin[2] - 2;
+
+        this->split_string_to_width(width, strs);
+        str_vec.insert(str_vec.begin(), strs.begin(), strs.end());
+        this->font->render_multiline_string(str_vec, this->img);
+    }
+}
+
+void ui::multi_label::calculate_widget_size(int w, int h)
+{
+    /* We'll leave the x size as-is, since it's what we used to
+     * generate the string image.
+     */
+    this->size.y = h
+        + this->margin[0] + this->border[0]
+        + this->border[3] + this->margin[3] + 2;
+    this->parent->move_child(this);
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
