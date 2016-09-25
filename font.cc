@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Sep 2016, 09:31:47 tquirk
+ *   last updated 25 Sep 2016, 17:18:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -374,4 +374,9 @@ void ui::font::render_string(const std::u32string& str, ui::image& img)
 
         ++i;
     }
+}
+
+void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
+                                       ui::image& img)
+{
 }

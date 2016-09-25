@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Aug 2016, 11:38:51 tquirk
+ *   last updated 25 Sep 2016, 17:06:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -104,6 +104,8 @@ namespace ui
 
         void get_string_size(const std::u32string&, std::vector<int>&);
         void render_string(const std::u32string&, image&);
+        void render_multiline_string(const std::vector<std::u32string>&,
+                                     image&);
     };
 }
 
