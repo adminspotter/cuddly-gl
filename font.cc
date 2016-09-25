@@ -379,4 +379,50 @@ void ui::font::render_string(const std::u32string& str, ui::image& img)
 void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
                                        ui::image& img)
 {
+    std::vector<int> req_size = {0, 0, 0};
+    ui::image *imgs = new ui::image[strs.size()];
+    int str_count = 0, line_height = this->face->size->metrics.height >> 6;
+
+    img.reset();
+    img.width = 0;
+    for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
+    {
+        this->render_string(*i, imgs[str_count]);
+        img.width = std::max(img.width, imgs[str_count].width);
+    }
+
+    /* We'll keep our line spacing consistent to what is contained in
+     * the font records, so we need n - 1 line-spacings, plus the
+     * ascender of the top string, and the descender of the bottom
+     * string.
+     */
+    img.height = (str_count - 1) * line_height;
+    this->get_string_size(strs.back(), req_size);
+    img.height += req_size[2];
+    if (str_count > 1)
+        this->get_string_size(strs.front(), req_size);
+    img.height += req_size[1];
+
+    img.per_pixel = 1;
+    img.data = new unsigned char[img.width * img.height];
+    memset(img.data, 0, sizeof(unsigned char) * img.width * img.height);
+
+    /* Now copy everything into place in the main image.  We're still
+     * producing upside-down images, so we'll copy bottom-to-top.
+     */
+    GLuint row_offset = (img.height - 1) * img.width;
+    GLuint prev_desc = req_size[2];
+
+    for (int i = 0; i < str_count; ++i)
+    {
+        for (int j = imgs[i].height - 1; j >= 0; --j, row_offset -= img.width)
+            memcpy(&(img.data[row_offset]),
+                   &(imgs[i].data[j * imgs[i].width]),
+                   imgs[i].width);
+        this->get_string_size(strs[i], req_size);
+        row_offset -= (line_height - prev_desc - req_size[1]) * img.width;
+        prev_desc = req_size[2];
+    }
+
+    delete[] imgs;
 }
