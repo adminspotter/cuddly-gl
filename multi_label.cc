@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Sep 2016, 23:27:23 tquirk
+ *   last updated 26 Sep 2016, 08:19:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -68,7 +68,7 @@ void ui::multi_label::split_by_newlines(std::u32string s,
            != std::u32string::npos)
     {
         if (pos > 0)
-            strs.push_back(tmp_str.substr(0, pos - 1));
+            strs.push_back(tmp_str.substr(0, pos));
         else
             strs.push_back(std::u32string());
         tmp_str = tmp_str.substr(pos + 1);
