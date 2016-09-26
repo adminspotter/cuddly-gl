@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Sep 2016, 08:27:47 tquirk
+ *   last updated 26 Sep 2016, 09:23:29 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -94,9 +94,9 @@ std::u32string::size_type ui::multi_label::hard_split_string(GLuint width,
     {
         this->font->get_string_size(s.substr(0, pos), sz);
         if (sz[0] <= width)
-            last = pos;
-        else
             first = pos;
+        else
+            last = pos;
         pos = first + ((last - first) / 2);
     }
     return pos;
@@ -119,6 +119,7 @@ void ui::multi_label::split_string_to_width(GLuint width,
      */
     for (auto i = strs.begin(); i != strs.end(); ++i)
     {
+        bool hard_split = false;
         std::u32string tmp_str = *i;
         auto next = i;
         ++next;
@@ -130,16 +131,19 @@ void ui::multi_label::split_string_to_width(GLuint width,
         {
             pos = tmp_str.find_last_of(ui::multi_label::whitespace);
             if (pos == std::u32string::npos)
+            {
                 /* There isn't any whitespace that we can break on,
                  * that lets our string be short enough.  We'll chop
                  * things apart at the closest character.
                  */
                 pos = this->hard_split_string(width, tmp_str);
+                hard_split = true;
+            }
 
             tmp_str = tmp_str.substr(0, pos);
             this->font->get_string_size(tmp_str, sz);
         }
-        strs.insert(next, (*i).substr(tmp_str.size() + 1));
+        strs.insert(next, (*i).substr(tmp_str.size() + (hard_split ? 0 : 1)));
         *i = tmp_str;
     }
 }
