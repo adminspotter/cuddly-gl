@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Sep 2016, 08:19:49 tquirk
+ *   last updated 26 Sep 2016, 08:27:47 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -129,20 +129,15 @@ void ui::multi_label::split_string_to_width(GLuint width,
         while (sz[0] > width)
         {
             pos = tmp_str.find_last_of(ui::multi_label::whitespace);
-            if (pos != std::u32string::npos)
-            {
-                tmp_str = tmp_str.substr(0, pos);
-                this->font->get_string_size(tmp_str, sz);
-            }
-            else
-            {
+            if (pos == std::u32string::npos)
                 /* There isn't any whitespace that we can break on,
                  * that lets our string be short enough.  We'll chop
                  * things apart at the closest character.
                  */
                 pos = this->hard_split_string(width, tmp_str);
-                break;
-            }
+
+            tmp_str = tmp_str.substr(0, pos);
+            this->font->get_string_size(tmp_str, sz);
         }
         strs.insert(next, (*i).substr(tmp_str.size() + 1));
         *i = tmp_str;
