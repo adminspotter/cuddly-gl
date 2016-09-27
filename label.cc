@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Sep 2016, 18:05:46 tquirk
+ *   last updated 26 Sep 2016, 22:29:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -228,7 +228,7 @@ void ui::label::populate_buffers(void)
     if (this->img.data != NULL)
     {
         float vertex[160], pw, ph, m[4], b[4];
-        GLuint element[60], temp;
+        GLuint element[60], temp, w, h;
 
         this->calculate_widget_size(this->img.width, this->img.height);
         this->panel::generate_points(vertex, element);
@@ -238,11 +238,17 @@ void ui::label::populate_buffers(void)
         m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
         m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
         m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
+        w = this->size.x - this->margin[1] - this->margin[2]
+            - this->border[1] - this->border[2] - 2;
+        h = this->size.y - this->margin[0] - this->margin[0]
+            - this->border[3] - this->border[3] - 2;
 
         vertex[6]  = 0.0f - m[1] - b[1] - pw;
-        vertex[7]  = 1.0f + m[0] + b[0] + ph;
+        vertex[7]  = 1.0f + m[0] + b[0] + ph
+            + ((h - this->img.height) * ph);
 
-        vertex[14] = 1.0f + m[2] + b[2] + pw;
+        vertex[14] = 1.0f + m[2] + b[2] + pw
+            + ((w - this->img.width) * pw);
         vertex[15] = vertex[7];
 
         vertex[22] = vertex[6];
