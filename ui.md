@@ -1,16 +1,19 @@
 # r9 User Interface library #
 
-We evaluated a number of other UI toolkits, and found that all of them
-had limitations that didn't work for what we wanted:  they required a
-specific UI library that we weren't using; they had an inconsistent
-call structure; or they just didn't work like we wanted them to.
+We want a lightweight, C++-specific, OpenGL-only toolkit, that makes
+sense to call, is internally consistent, and doesn't force us to use
+any specific windowing toolkit.  We're Xt programmers from way back,
+and despite Xt being a C library, it is still largely object-oriented,
+so that model really seemed to fit our requirements.  Callbacks,
+consistent create/get/set, consistent set of resources, and so on.
 
-We wanted a lightweight, C++-specific, OpenGL-only toolkit, that made
-sense to call, and was internally consistent.  We're Xt programmers
-from way back, and despite Xt being a C library, it is still largely
-object-oriented, so that model really seemed to fit our requirements.
-Callbacks, consistent create/get/set, consistent set of resources, and
-so on.
+We evaluated a number of other OpenGL-specific UI toolkits, and found
+that none of them had all the things that we wanted:  some required a
+specific UI library that we weren't using; others had an inconsistent
+call structure.  A lot of the advice we saw on various OpenGL
+discussion forums was "write your own!  It's not that hard, and it'll
+be exactly what you want!" so we did.  "Not that hard" wasn't quite
+the whole story, but we're definitely getting exactly what we want.
 
 ## Overview ##
 
@@ -331,7 +334,7 @@ pressed, the button becomes armed.
 * `ui::element::color` (`ui::panel`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
-* `ui::element::bgimage` (`ui::label`)
+* `ui::element::image` (`ui::label`)
 
 #### Text Field ####
 
