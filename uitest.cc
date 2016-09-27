@@ -19,6 +19,7 @@
 #include "manager.h"
 #include "row_column.h"
 #include "popupmenu.h"
+#include "multi_label.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -40,8 +41,10 @@ ui::password *pw1;
 ui::manager *m1;
 ui::row_column *r1;
 ui::popupmenu *pu1;
+ui::multi_label *ml1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
+std::string multiline("Hi this is     adm1nspotter, and I like    cheese!\nHowdy!\nabcdefghijklmnopqrstuvwxyz");
 std::vector<std::string> paths =
 {
     "./test",
@@ -246,6 +249,18 @@ int main(int argc, char **argv)
         pul->add_callback(ui::callback::enter, enter_callback, NULL);
         pul->add_callback(ui::callback::leave, leave_callback, NULL);
     }
+    std::cout << "creating multi_label" << std::endl;
+    ml1 = new ui::multi_label(ctx, 200, 10);
+    xpos = 50;
+    ypos = 300;
+    border = 1;
+    ml1->set_va(ui::element::font, ui::ownership::shared, std_font,
+                ui::element::string, 0, &multiline,
+                ui::element::color, ui::color::foreground, &fg1,
+                ui::element::border, ui::side::all, &border,
+                ui::element::margin, ui::side::all, &border,
+                ui::element::position, ui::position::x, &xpos,
+                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
