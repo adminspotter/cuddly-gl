@@ -1,6 +1,6 @@
-/* callback.cc
+/* active.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Oct 2016, 08:07:27 tquirk
+ *   last updated 08 Oct 2016, 11:00:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -28,7 +28,7 @@
  */
 
 #include "ui_defs.h"
-#include "callback.h"
+#include "active.h"
 
 std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
 {

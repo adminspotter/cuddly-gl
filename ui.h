@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Oct 2016, 10:58:02 tquirk
+ *   last updated 08 Oct 2016, 11:01:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,7 +34,7 @@
 
 #include "ui_defs.h"
 #include "composite.h"
-#include "callback.h"
+#include "active.h"
 
 namespace ui
 {

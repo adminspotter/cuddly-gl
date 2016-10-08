@@ -17,7 +17,7 @@ fonttest_LDFLAGS = $(CLIENT_LDFLAGS)
 fonttest_LDADD = libr9_client_ui.la $(CLIENT_LDLIBS)
 
 libr9_client_ui_la_SOURCES = ui_defs.h shader.cc image.h \
-	callback.cc callback.h \
+	active.cc active.h \
 	ui.cc ui.h \
 	quadtree.cc quadtree.h \
 	panel.cc panel.h \

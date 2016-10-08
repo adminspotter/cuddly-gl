@@ -1,6 +1,6 @@
-/* callback.h                                              -*- C++ -*-
+/* active.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Oct 2016, 08:06:57 tquirk
+ *   last updated 08 Oct 2016, 11:00:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef __INC_R9_CALLBACK_H__
-#define __INC_R9_CALLBACK_H__
+#ifndef __INC_R9_ACTIVE_H__
+#define __INC_R9_ACTIVE_H__
 
 #include <list>
 
@@ -78,4 +78,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_CALLBACK_H__ */
+#endif /* __INC_R9_ACTIVE_H__ */
