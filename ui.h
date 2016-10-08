@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Aug 2016, 08:01:33 tquirk
+ *   last updated 08 Oct 2016, 10:58:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -41,7 +41,7 @@ namespace ui
     class composite;
     class panel;
 
-    class context : public composite, public event_target
+    class context : public composite, public active
     {
       private:
         GLuint vert_shader, frag_shader, shader_pgm;

@@ -37,10 +37,10 @@
 namespace ui
 {
     /* A forward declaration, to solve multi-include problems */
-    class event_target;
+    class active;
 
     /* Callback function pointer */
-    typedef void (*cb_fptr)(event_target *, void *, void *);
+    typedef void (*cb_fptr)(active *, void *, void *);
 
     typedef struct cb_list_tag
     {
@@ -52,14 +52,14 @@ namespace ui
                 return (this->ptr == p.ptr
                         && this->client_data == p.client_data);
             };
-        void operator()(event_target *p, void *call_data)
+        void operator()(active *p, void *call_data)
             {
                 this->ptr(p, call_data, this->client_data);
             };
     }
     cb_list_elem;
 
-    class event_target : public rect
+    class active : public rect
     {
       protected:
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
@@ -69,8 +69,8 @@ namespace ui
         std::list<cb_list_elem>& which_cb_list(GLuint);
 
       public:
-        event_target();
-        ~event_target();
+        active(GLuint, GLuint);
+        ~active();
 
         virtual void add_callback(GLuint, cb_fptr, void *);
         virtual void remove_callback(GLuint, cb_fptr, void *);
