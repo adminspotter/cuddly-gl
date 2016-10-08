@@ -31,10 +31,26 @@
 
 int ui::rect::get_size(GLuint t, void *v)
 {
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::size::all:    *(glm::ivec2 *)v = this->dim;  break;
+      case ui::size::width:  *(int *)v = this->dim.x;       break;
+      case ui::size::height: *(int *)v = this->dim.y;       break;
+      default:               ret = 1;                       break;
+    }
+    return ret;
 }
 
 void ui::rect::set_size(GLuint t, void *v)
 {
+    switch (t)
+    {
+      case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
+      case ui::size::width:   this->dim.x = *(int *)v;       break;
+      case ui::size::height:  this->dim.y = *(int *)v;       break;
+    }
 }
 
 ui::rect::rect(GLuint w, GLuint h)
@@ -48,16 +64,49 @@ ui::rect::~rect()
 
 int ui::rect::get(GLuint e, GLuint t, void *v)
 {
+    int ret = 1;
+
+    if (e == ui::element::size)
+        ret = this->get_size(t, v);
+    return ret;
 }
 
 void ui::rect::set(GLuint e, GLuint t, void *v)
 {
+    if (e == ui::element::size)
+        this->set_size(t, v);
 }
 
 void ui::rect::get_va(GLuint e, GLuint t, void *v, ...)
 {
+    va_list args;
+    GLuint item[2];
+    void *ptr;
+
+    this->get(e, t, v);
+    va_start(args, v);
+    while ((item[0] = va_arg(args, GLuint)) != 0)
+    {
+        item[1] = va_arg(args, GLuint);
+        ptr = va_arg(args, void *);
+        this->get(item[0], item[1], ptr);
+    }
+    va_end(args);
 }
 
 void ui::rect::set_va(GLuint e, GLuint t, void *v, ...)
 {
+    va_list args;
+    GLuint item[2];
+    void *ptr;
+
+    this->set(e, t, v);
+    va_start(args, v);
+    while ((item[0] = va_arg(args, GLuint)) != 0)
+    {
+        item[1] = va_arg(args, GLuint);
+        ptr = va_arg(args, void *);
+        this->set(item[0], item[1], ptr);
+    }
+    va_end(args);
 }
