@@ -1,6 +1,6 @@
 /* rect.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Oct 2016, 08:04:15 tquirk
+ *   last updated 08 Oct 2016, 10:45:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,8 @@
 
 #ifndef __INC_R9_RECT_H__
 #define __INC_R9_RECT_H__
+
+#include <GL/gl.h>
 
 #include <glm/vec2.hpp>
 
