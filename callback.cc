@@ -1,6 +1,6 @@
 /* callback.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Aug 2016, 00:25:32 tquirk
+ *   last updated 07 Oct 2016, 08:07:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -45,8 +45,9 @@ std::list<ui::cb_list_elem>& ui::event_target::which_cb_list(GLuint which)
     }
 }
 
-ui::event_target::event_target()
-    : enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
+ui::event_target::event_target(GLuint w, GLuint h)
+    : ui::rect(w, h),
+      enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
       key_down_cb(), key_up_cb()
 {
 }

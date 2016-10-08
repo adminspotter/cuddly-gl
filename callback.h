@@ -1,6 +1,6 @@
 /* callback.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:34:43 tquirk
+ *   last updated 07 Oct 2016, 08:06:57 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,9 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic callback role.  We need to factor the
- * callback lists out of everything, so they can be a role in
- * anything.
+ * This file adds the callback role to our rect class, to try to
+ * reduce multiple inheritance.
  *
  * Things to do
  *
@@ -31,9 +30,9 @@
 #ifndef __INC_R9_CALLBACK_H__
 #define __INC_R9_CALLBACK_H__
 
-#include <GL/gl.h>
-
 #include <list>
+
+#include "rect.h"
 
 namespace ui
 {
@@ -60,7 +59,7 @@ namespace ui
     }
     cb_list_elem;
 
-    class event_target
+    class event_target : public rect
     {
       protected:
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
