@@ -1,6 +1,6 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Oct 2016, 08:04:46 tquirk
+ *   last updated 09 Oct 2016, 14:23:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -27,6 +27,7 @@
  *
  */
 
+#include "ui_defs.h"
 #include "rect.h"
 
 int ui::rect::get_size(GLuint t, void *v)
