@@ -37,22 +37,65 @@
 
 int ui::widget::get_position(GLuint t, void *v)
 {
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::position::all: *((glm::ivec2 *)v) = this->pos;  break;
+      case ui::position::x:   *(int *)v = this->pos.x;         break;
+      case ui::position::y:   *(int *)v = this->pos.y;         break;
+      default:                ret = 1;                         break;
+    }
+    return ret;
 }
 
 void ui::widget::set_position(GLuint t, void *v)
 {
+    GLuint new_v = *((GLuint *)v);
+
+    switch (t)
+    {
+      case ui::position::all:  this->pos = *(glm::ivec2 *)v;  break;
+      case ui::position::x:    this->pos.x = *(int *)v;       break;
+      case ui::position::y:    this->pos.y = *(int *)v;       break;
+    }
+
+    this->parent->move_child(this);
+
+    /* Recalculate position translation matrix */
+    glm::vec3 pixel_sz;
+    glm::mat4 new_trans;
+
+    this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
+    pixel_sz.x *= this->pos.x;
+    pixel_sz.y = -(pixel_sz.y * this->pos.y);
+    this->pos_transform = glm::translate(new_trans, pixel_sz);
 }
 
 int ui::widget::get_state(GLuint t, void *v)
 {
+    if (t == ui::state::visible)
+    {
+        *(bool *)v = this->visible;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::widget::set_state(GLuint t, void *v)
 {
+    if (t == ui::state::visible)
+    {
+        this->visible = *(bool *)v;
+        this->parent->move_child(this);
+    }
 }
 
 void ui::widget::set_size(GLuint t, void *v)
 {
+    this->rect::set_size(t, v);
+    this->populate_buffers();
+    this->parent->move_child(this);
 }
 
 void ui::widget::generate_points(void)

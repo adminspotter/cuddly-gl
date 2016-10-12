@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Sep 2016, 07:08:07 tquirk
+ *   last updated 09 Oct 2016, 09:02:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -172,7 +172,7 @@ namespace ui
 
     namespace state
     {
-        const GLuint active = 1, armed = 2;
+        const GLuint visible = 1, active = 2, armed = 3;
     }
 }
 
