@@ -1,6 +1,6 @@
 /* panel.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Sep 2016, 11:16:10 tquirk
+ *   last updated 10 Oct 2016, 08:52:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -41,14 +41,14 @@
 #include <glm/vec4.hpp>
 
 #include "composite.h"
-#include "callback.h"
+#include "active.h"
 
 namespace ui
 {
     /* Forward declarations for multi-include problems */
     class composite;
 
-    class panel : public event_target
+    class panel : public active
     {
       protected:
         const static float no_texture;

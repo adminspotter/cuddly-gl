@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Sep 2016, 11:43:34 tquirk
+ *   last updated 10 Oct 2016, 08:53:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -481,7 +481,7 @@ void ui::panel::populate_buffers(void)
 
 ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
-      size(w, h), pos(0, 0), ui::event_target::event_target()
+      size(w, h), pos(0, 0), ui::active::active(w, h)
 {
     GLuint temp, x, y;
 
