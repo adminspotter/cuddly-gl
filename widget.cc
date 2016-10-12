@@ -66,10 +66,51 @@ void ui::widget::populate_buffers(void)
 ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     : ui::active(w, h), pos(0, 0), pos_transform()
 {
+    GLuint pos_attr, color_attr, texture_attr;
+
+    if (c == NULL)
+        throw std::runtime_error(_("Widget must have a parent."));
+    this->parent = c;
+    this->parent->add_child(this);
+
+    this->parent->get_va(ui::element::attribute,
+                         ui::attribute::position,
+                         &pos_attr,
+                         ui::element::attribute,
+                         ui::attribute::color,
+                         &color_attr,
+                         ui::element::attribute,
+                         ui::attribute::texture,
+                         &texture_attr, 0);
+
+    glGenVertexArrays(1, &this->vao);
+    glBindVertexArray(this->vao);
+    glGenBuffers(1, &this->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glGenBuffers(1, &this->ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+    glEnableVertexAttribArray(pos_attr);
+    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)0);
+    glEnableVertexAttribArray(color_attr);
+    glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
+    glEnableVertexAttribArray(texture_attr);
+    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
+
+    this->vertex_count = this->element_count = 0;
+    this->visible = true;
+
+    this->populate_buffers();
 }
 
 ui::widget::~widget()
 {
+    this->parent->remove_child(this);
+    glDeleteBuffers(1, &this->ebo);
+    glDeleteBuffers(1, &this->vbo);
+    glDeleteVertexArrays(1, &this->vao);
 }
 
 int ui::widget::get(GLuint e, GLuint t, void *v)
