@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2016, 06:49:17 tquirk
+ *   last updated 11 Oct 2016, 08:32:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -54,10 +54,10 @@ namespace ui
         glm::ivec2 calculate_max_point(void);
         virtual void set_desired_size(void);
 
-        static void leave_callback(event_target *, void *, void *);
-        static void motion_callback(event_target *, void *, void *);
-        static void button_callback(event_target *, void *, void *);
-        static void keypress_callback(event_target *, void *, void *);
+        static void leave_callback(active *, void *, void *);
+        static void motion_callback(active *, void *, void *);
+        static void button_callback(active *, void *, void *);
+        static void keypress_callback(active *, void *, void *);
 
       public:
         manager(composite *, GLuint, GLuint);

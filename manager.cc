@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Sep 2016, 11:45:35 tquirk
+ *   last updated 11 Oct 2016, 08:32:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -169,17 +169,17 @@ void ui::manager::set_desired_size(void)
     this->populate_buffers();
 }
 
-void ui::manager::leave_callback(event_target *p, void *call, void *client)
+void ui::manager::leave_callback(active *a, void *call, void *client)
 {
-    ui::manager *m = dynamic_cast<ui::manager *>(p);
+    ui::manager *m = dynamic_cast<ui::manager *>(a);
 
     if (m != NULL && m->old_child != NULL)
         m->old_child->call_callbacks(ui::callback::leave, NULL);
 }
 
-void ui::manager::motion_callback(event_target *p, void *call, void *client)
+void ui::manager::motion_callback(active *a, void *call, void *client)
 {
-    ui::manager *m = dynamic_cast<ui::manager *>(p);
+    ui::manager *m = dynamic_cast<ui::manager *>(a);
 
     if (m != NULL)
     {
@@ -189,9 +189,9 @@ void ui::manager::motion_callback(event_target *p, void *call, void *client)
     }
 }
 
-void ui::manager::button_callback(event_target *p, void *call, void *client)
+void ui::manager::button_callback(active *a, void *call, void *client)
 {
-    ui::manager *m = dynamic_cast<ui::manager *>(p);
+    ui::manager *m = dynamic_cast<ui::manager *>(a);
 
     if (m != NULL)
     {
@@ -201,9 +201,9 @@ void ui::manager::button_callback(event_target *p, void *call, void *client)
     }
 }
 
-void ui::manager::keypress_callback(event_target *p, void *call, void *client)
+void ui::manager::keypress_callback(active *a, void *call, void *client)
 {
-    ui::manager *m = dynamic_cast<ui::manager *>(p);
+    ui::manager *m = dynamic_cast<ui::manager *>(a);
 
     if (m != NULL)
     {
