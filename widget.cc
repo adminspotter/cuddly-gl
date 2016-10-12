@@ -158,12 +158,37 @@ ui::widget::~widget()
 
 int ui::widget::get(GLuint e, GLuint t, void *v)
 {
+    int ret;
+
+    switch (e)
+    {
+      case ui::element::position:  ret = this->get_position(t, v);    break;
+      case ui::element::state:     ret = this->get_state(t, v);       break;
+      default:                     ret = this->active::get(e, t, v);  break;
+    }
+    return ret;
 }
 
 void ui::widget::set(GLuint e, GLuint t, void *v)
 {
+    switch (e)
+    {
+      case ui::element::position:  this->set_position(t, v);    break;
+      case ui::element::state:     this->set_state(t, v);       break;
+      default:                     this->active::set(e, t, v);  break;
+    }
 }
 
 void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
+    if (this->visible == true)
+    {
+        glm::mat4 trans = pos_transform * parent_trans;
+
+        glBindVertexArray(this->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        glUniformMatrix4fv(trans_uniform, 1, GL_FALSE, glm::value_ptr(trans));
+        glDrawElements(GL_TRIANGLES, this->element_count, GL_UNSIGNED_INT, 0);
+    }
 }
