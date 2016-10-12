@@ -31,6 +31,8 @@
 #ifndef __INC_R9_WIDGET_H__
 #define __INC_R9_WIDGET_H__
 
+#include <glm/mat4x4.hpp>
+
 #include "active.h"
 #include "composite.h"
 
@@ -43,11 +45,29 @@ namespace ui
       protected:
         composite *parent;
         glm::ivec2 pos;
+        glm::mat4 pos_transform;
+        GLuint vao, vbo, ebo, vertex_count, element_count;
+        bool visible;
+
+        int get_position(GLuint, void *);
+        void set_position(GLuint, void *);
+        int get_state(GLuint, void *);
+        void set_state(GLuint, void *);
+        virtual void set_size(GLuint, void *);
+
+        virtual void generate_points(void);
+        virtual void populate_buffers(void);
 
       public:
         widget(composite *, GLuint, GLuint);
         virtual ~widget();
 
+        virtual int get(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, void *);
+
+        virtual void draw(GLuint, const glm::mat4&);
+
+        friend class composite;
     };
 }
 
