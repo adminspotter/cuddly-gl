@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Sep 2016, 07:23:43 tquirk
+ *   last updated 10 Oct 2016, 09:01:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -119,7 +119,7 @@ void ui::composite::close_pending(void)
 }
 
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : dim((int)w, (int)h), children(), old_pos(0, 0), translate()
+    : ui::rect::rect(w, h), children(), old_pos(0, 0), translate()
 {
     int nothing = 0;
 

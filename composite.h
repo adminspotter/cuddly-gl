@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Sep 2016, 11:32:21 tquirk
+ *   last updated 13 Oct 2016, 08:33:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,7 @@
 
 #include <glm/mat4x4.hpp>
 
+#include "rect.h"
 #include "quadtree.h"
 #include "panel.h"
 
@@ -42,10 +43,9 @@ namespace ui
     class quadtree;
     class panel;
 
-    class composite
+    class composite : public virtual rect
     {
       protected:
-        glm::ivec2 dim;
         composite *parent;
         std::list<panel *> children;
         quadtree *tree;

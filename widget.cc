@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Oct 2016, 08:27:17 tquirk
+ *   last updated 15 Oct 2016, 09:29:31 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -107,7 +107,8 @@ void ui::widget::populate_buffers(void)
 }
 
 ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
-    : ui::active(w, h), pos(0, 0), pos_transform()
+    : ui::active::active(w, h), ui::rect::rect(w, h),
+      pos(0, 0), pos_transform()
 {
     GLuint pos_attr, color_attr, texture_attr;
 

@@ -1,6 +1,6 @@
 /* panel.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Oct 2016, 08:53:08 tquirk
+ *   last updated 15 Oct 2016, 14:23:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -81,7 +81,7 @@ int ui::panel::get_size(GLuint t, void *v)
 
 void ui::panel::set_size(GLuint d, void *v)
 {
-    glm::ivec2 new_sz = this->size;
+    glm::ivec2 new_sz = this->dim;
 
     if (d == ui::size::all)
         new_sz = *(glm::ivec2 *)v;
@@ -93,15 +93,15 @@ void ui::panel::set_size(GLuint d, void *v)
         return;
 
     if ((d == ui::size::height || d == ui::size::all)
-        && this->size.x != new_sz.x)
+        && this->dim.x != new_sz.x)
         if (this->margin[0] + this->border[0]
             + this->border[3] + this->margin[3] < new_sz.x)
-            this->size.x = new_sz.x;
+            this->dim.x = new_sz.x;
     if ((d == ui::size::width || d == ui::size::all)
-        && this->size.y != new_sz.y)
+        && this->dim.y != new_sz.y)
         if (this->margin[1] + this->border[1]
             + this->border[2] + this->margin[2] < new_sz.y)
-            this->size.y = new_sz.y;
+            this->dim.y = new_sz.y;
 
     this->parent->move_child(this);
 }
@@ -251,7 +251,7 @@ void ui::panel::generate_points(float *vertex, GLuint *element)
      * points.  This will come in very handy in some of the
      * subclasses, which may have tons of duplicated points.
      */
-    float x = this->pos.x, y = this->pos.y, w = this->size.x, h = this->size.y;
+    float x = this->pos.x, y = this->pos.y, w = this->dim.x, h = this->dim.y;
     float pw, ph, m[4], b[4];
     GLuint vert_count = 0, temp;
 
@@ -481,7 +481,7 @@ void ui::panel::populate_buffers(void)
 
 ui::panel::panel(ui::composite *c, GLuint w, GLuint h)
     : foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f),
-      size(w, h), pos(0, 0), ui::active::active(w, h)
+      ui::rect::rect(w, h), pos(0, 0), ui::active::active(w, h)
 {
     GLuint temp, x, y;
 

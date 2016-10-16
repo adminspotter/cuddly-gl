@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2016, 08:32:21 tquirk
+ *   last updated 13 Oct 2016, 08:46:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -153,17 +153,17 @@ void ui::manager::set_desired_size(void)
      */
     if (this->resize & ui::resize::shrink)
     {
-        if (max_pt.x < this->size.x)
-            this->size.x = this->dim.x = max_pt.x;
-        if (max_pt.y < this->size.y)
-            this->size.y = this->dim.y = max_pt.y;
+        if (max_pt.x < this->dim.x)
+            this->dim.x = max_pt.x;
+        if (max_pt.y < this->dim.y)
+            this->dim.y = max_pt.y;
     }
     if (this->resize & ui::resize::grow)
     {
-        if (max_pt.x > this->size.x)
-            this->size.x = this->dim.x = max_pt.x;
-        if (max_pt.y > this->size.y)
-            this->size.y = this->dim.y = max_pt.y;
+        if (max_pt.x > this->dim.x)
+            this->dim.x = max_pt.x;
+        if (max_pt.y > this->dim.y)
+            this->dim.y = max_pt.y;
     }
     this->composite::set_size(0, &zero);
     this->populate_buffers();
@@ -214,8 +214,8 @@ void ui::manager::keypress_callback(active *a, void *call, void *client)
 }
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
-    : ui::panel::panel(c, w, h), ui::composite::composite(c, w, h),
-      child_spacing(0, 0)
+    : ui::widget::widget(c, w, h), ui::composite::composite(c, w, h),
+      ui::rect::rect(w, h), child_spacing(0, 0)
 {
     this->resize = ui::resize::all;
 

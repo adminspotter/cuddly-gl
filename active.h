@@ -1,6 +1,6 @@
 /* active.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Oct 2016, 11:00:26 tquirk
+ *   last updated 13 Oct 2016, 08:32:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,7 +59,7 @@ namespace ui
     }
     cb_list_elem;
 
-    class active : public rect
+    class active : public virtual rect
     {
       protected:
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
