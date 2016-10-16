@@ -38,7 +38,7 @@
 /* ARGSUSED */
 int ui::button::get_active_state(GLuint t, void *v)
 {
-    *((bool *)v) = this->active;
+    *((bool *)v) = this->activated;
     return 0;
 }
 
@@ -47,10 +47,10 @@ void ui::button::set_active_state(GLuint t, void *v)
 {
     bool new_act = *((bool *)v);
 
-    if (new_act == this->active)
+    if (new_act == this->activated)
         return;
-    this->active = new_act;
-    if (this->active)
+    this->activated = new_act;
+    if (this->activated)
         this->grow_border();
     else
         this->shrink_border();
@@ -80,7 +80,7 @@ void ui::button::set_arm_state(GLuint t, void *v)
 void ui::button::set_margin(GLuint s, void *v)
 {
     GLuint new_v = *((GLuint *)v);
-    GLuint min_val = (this->active ? 0 : 1) + (this->armed ? 0 : 1);
+    GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);
 
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
@@ -124,9 +124,9 @@ void ui::button::shrink_border(void)
 }
 
 /* ARGSUSED */
-void ui::button::activate(ui::event_target *p, void *call, void *client)
+void ui::button::activate(ui::active *a, void *call, void *client)
 {
-    ui::button *b = dynamic_cast<ui::button *>(p);
+    ui::button *b = dynamic_cast<ui::button *>(a);
     bool active = true;
 
     if (b != NULL)
@@ -134,9 +134,9 @@ void ui::button::activate(ui::event_target *p, void *call, void *client)
 }
 
 /* ARGSUSED */
-void ui::button::deactivate(ui::event_target *p, void *call, void *client)
+void ui::button::deactivate(ui::active *a, void *call, void *client)
 {
-    ui::button *b = dynamic_cast<ui::button *>(p);
+    ui::button *b = dynamic_cast<ui::button *>(a);
     bool active = false;
 
     if (b != NULL)
@@ -144,18 +144,18 @@ void ui::button::deactivate(ui::event_target *p, void *call, void *client)
                   ui::element::state, ui::state::armed, &active, 0);
 }
 
-void ui::button::arm(ui::event_target *p, void *call, void *client)
+void ui::button::arm(ui::active *a, void *call, void *client)
 {
-    ui::button *b = dynamic_cast<ui::button *>(p);
+    ui::button *b = dynamic_cast<ui::button *>(a);
     bool armed = true;
 
     if (b != NULL)
         b->set(ui::element::state, ui::state::armed, &armed);
 }
 
-void ui::button::disarm(ui::event_target *p, void *call, void *client)
+void ui::button::disarm(ui::active *a, void *call, void *client)
 {
-    ui::button *b = dynamic_cast<ui::button *>(p);
+    ui::button *b = dynamic_cast<ui::button *>(a);
     bool armed = false;
 
     if (b != NULL)
@@ -165,7 +165,7 @@ void ui::button::disarm(ui::event_target *p, void *call, void *client)
 ui::button::button(ui::composite *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h), ui::rect::rect(w, h)
 {
-    this->active = false;
+    this->activated = false;
     this->armed = false;
 
     for (int i = 0; i < 4; ++i)

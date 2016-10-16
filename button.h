@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:37:05 tquirk
+ *   last updated 13 Oct 2016, 00:08:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,7 +40,7 @@ namespace ui
     class button : public label
     {
       protected:
-        bool active, armed;
+        bool activated, armed;
 
         int get_active_state(GLuint, void *);
         void set_active_state(GLuint, void *);
@@ -51,10 +51,10 @@ namespace ui
         void grow_border(void);
         void shrink_border(void);
 
-        static void activate(event_target *, void *, void *);
-        static void deactivate(event_target *, void *, void *);
-        static void arm(event_target *, void *, void *);
-        static void disarm(event_target *, void *, void *);
+        static void activate(active *, void *, void *);
+        static void deactivate(active *, void *, void *);
+        static void arm(active *, void *, void *);
+        static void disarm(active *, void *, void *);
 
       public:
         button(composite *, GLuint = 0, GLuint = 0);
