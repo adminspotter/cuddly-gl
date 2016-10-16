@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Sep 2016, 18:18:43 tquirk
+ *   last updated 13 Oct 2016, 08:38:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,7 +85,7 @@ void ui::button::set_margin(GLuint s, void *v)
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
             + (s & ui::side::top ? new_v : this->margin[0])
-            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->size.y)
+            + (s & ui::side::bottom ? new_v : this->margin[3]) <= this->dim.y)
         {
             if (s & ui::side::top)
                 this->margin[0] = std::max(new_v, min_val);
@@ -96,7 +96,7 @@ void ui::button::set_margin(GLuint s, void *v)
     if (s & ui::side::left || s & ui::side::right)
         if (this->border[1] + this->border[2]
             + (s & ui::side::left ? new_v : this->margin[1])
-            + (s & ui::side::right ? new_v : this->margin[2]) <= this->size.x)
+            + (s & ui::side::right ? new_v : this->margin[2]) <= this->dim.x)
         {
             if (s & ui::side::left)
                 this->margin[1] = std::max(new_v, min_val);
@@ -163,7 +163,7 @@ void ui::button::disarm(ui::event_target *p, void *call, void *client)
 }
 
 ui::button::button(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h)
+    : ui::label::label(c, w, h), ui::rect::rect(w, h)
 {
     this->active = false;
     this->armed = false;

@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Sep 2016, 07:51:45 tquirk
+ *   last updated 13 Oct 2016, 08:40:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -239,7 +239,7 @@ void ui::text_field::generate_cursor(int pixel_pos)
     if (this->font != NULL)
     {
         float vertex[48];
-        float x = this->pos.x, y = this->pos.y, h = this->size.y;
+        float x = this->pos.x, y = this->pos.y, h = this->dim.y;
         float sw, m[4], b[4];
         glm::vec2 ps;
         GLuint temp;
@@ -389,7 +389,7 @@ void ui::text_field::populate_buffers(void)
 }
 
 ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h)
+    : ui::label::label(c, w, h), ui::rect::rect(w, h)
 {
     this->cursor_pos = 0;
     this->blink = 250;

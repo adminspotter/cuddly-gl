@@ -1,6 +1,6 @@
 /* password.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 16:39:37 tquirk
+ *   last updated 13 Oct 2016, 08:40:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -69,7 +69,7 @@ int ui::password::get_cursor_pixel_pos(void)
 }
 
 ui::password::password(ui::composite *c, GLuint w, GLuint h)
-    : ui::text_field::text_field(c, w, h)
+    : ui::text_field::text_field(c, w, h), ui::rect::rect(w, h)
 {
 }
 

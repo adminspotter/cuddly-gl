@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Oct 2016, 09:15:20 tquirk
+ *   last updated 14 Oct 2016, 08:20:27 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -69,7 +69,7 @@ int ui::context::get_attribute(GLuint t, void *v)
 }
 
 ui::context::context(GLuint w, GLuint h)
-    : ui::composite::composite(NULL, w, h), ui::active::active(w, h),
+    : ui::composite::composite(NULL, w, h), ui::rect::rect(w, h),
       old_mouse(0, 0)
 {
     this->old_child = NULL;

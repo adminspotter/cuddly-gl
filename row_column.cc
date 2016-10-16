@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Aug 2016, 09:36:22 tquirk
+ *   last updated 13 Oct 2016, 08:45:05 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -192,7 +192,7 @@ void ui::row_column::insert_column_major(glm::ivec2& grid, glm::ivec2& cell)
 }
 
 ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h), grid_sz(1, 0)
+    : ui::manager::manager(c, w, h), ui::rect::rect(w, h), grid_sz(1, 0)
 {
     this->pack_order = ui::order::row;
 }

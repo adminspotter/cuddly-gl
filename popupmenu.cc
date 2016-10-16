@@ -1,6 +1,6 @@
 /* popupmenu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 Sep 2016, 08:40:37 tquirk
+ *   last updated 14 Oct 2016, 08:19:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -120,7 +120,7 @@ void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
 void ui::popupmenu::populate_buffers(void)
 {
     glm::vec2 pixel_sz;
-    glm::vec2 radius(this->size.x / 2.0f, this->size.y / 2.0f);
+    glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
     glm::vec2 inner = radius * 0.15f;
     glm::vec2 center, m0, m3, b0, b3;
 
@@ -135,7 +135,7 @@ void ui::popupmenu::populate_buffers(void)
         b3 = m3 + glm::vec2(this->border[3], this->border[3]);
     }
 
-    int count = std::max(this->size.x / 3, 15);
+    int count = std::max(this->dim.x / 3, 15);
 
     /* We need room for 8 sets of points - inner and outer edges, plus
      * possible inner and outer borders (2 points each).  Each point
@@ -285,7 +285,7 @@ void ui::popupmenu::populate_buffers(void)
     if (this->children.size() > 0)
     {
         auto child = this->children.begin();
-        glm::ivec2 middle = this->size / 4;
+        glm::ivec2 middle = this->dim / 4;
         glm::ivec2 child_pos, child_size;
 
         increment = M_PI * 2.0f / this->children.size();
@@ -377,7 +377,7 @@ void ui::popupmenu::populate_buffers(void)
 }
 
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h)
+    : ui::manager::manager(c, w, h), ui::rect(w, h)
 {
     ui::event_target *e = dynamic_cast<ui::event_target *>(c);
     this->popup_button = ui::mouse::button2;
