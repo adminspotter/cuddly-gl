@@ -84,11 +84,11 @@ void ui::popupmenu::show(ui::event_target *p, void *call, void *client)
     }
 }
 
-/* We should not assume that the event target is the popup menu.  This
- * may be called from our parent, so we should use the client data,
- * which should always point to us.
+/* We should not assume that a points to the popup menu.  This may be
+ * called from our parent, so we should use the client data, which
+ * should always point to us.
  */
-void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
+void ui::popupmenu::hide(ui::active *a, void *call, void *client)
 {
     ui::popupmenu *pm = (ui::popupmenu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
@@ -366,15 +366,15 @@ void ui::popupmenu::populate_buffers(void)
 ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), ui::rect(w, h)
 {
-    ui::event_target *e = dynamic_cast<ui::event_target *>(c);
+    ui::active *a = dynamic_cast<ui::active *>(c);
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
     this->visible = false;
 
-    if (e != NULL)
+    if (a != NULL)
     {
-        e->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        e->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        a->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        a->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
     }
     this->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
 
@@ -386,12 +386,12 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
 
 ui::popupmenu::~popupmenu()
 {
-    ui::event_target *e;
+    ui::active *a;
 
-    if ((e = dynamic_cast<ui::event_target *>(this->composite::parent)) != NULL)
+    if ((a = dynamic_cast<ui::active *>(this->composite::parent)) != NULL)
     {
-        e->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        e->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        a->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
+        a->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
     }
 }
 

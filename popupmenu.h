@@ -44,8 +44,8 @@ namespace ui
         void set_popup(GLuint, void *);
         virtual void set_resize(GLuint, void *);
 
-        static void show(event_target *, void *, void *);
-        static void hide(event_target *, void *, void *);
+        static void show(active *, void *, void *);
+        static void hide(active *, void *, void *);
 
         void populate_buffers(void);
 
