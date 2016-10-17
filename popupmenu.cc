@@ -48,7 +48,6 @@ int ui::popupmenu::get_popup(GLuint t, void *v)
 
     switch (t)
     {
-      case ui::popup::visible:  *(bool *)v = this->visible;      break;
       case ui::popup::button:   *(int *)v = this->popup_button;  break;
       default:                  ret = 1;                         break;
     }
@@ -59,7 +58,6 @@ void ui::popupmenu::set_popup(GLuint t, void *v)
 {
     switch (t)
     {
-      case ui::popup::visible:  this->visible = *(bool *)v;      break;
       case ui::popup::button:   this->popup_button = *(int *)v;  break;
     }
 }
@@ -80,11 +78,9 @@ void ui::popupmenu::show(ui::event_target *p, void *call, void *client)
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
     {
-        /* Move the menu into the visible area */
-        pm->pos = bcd->location;
-        pm->visible = true;
-        pm->composite::parent->move_child(pm);
-        pm->populate_buffers();
+        bool t = true;
+        pm->set_va(ui::element::position, ui::position::all, &(bcd->location),
+                   ui::element::state, ui::state::visible, &t, 0);
     }
 }
 
@@ -99,17 +95,8 @@ void ui::popupmenu::hide(ui::event_target *p, void *call, void *client)
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
     {
-        /* Move the menu back out of the visible area */
-        pm->pos.x = -pm->size.x;
-        pm->pos.y = -pm->size.y;
-        pm->visible = false;
-        /* A remove-add performs the move within the composite tree,
-         * with the side-effect of making sure we're last to draw, and
-         * therefore on the top of the stack.
-         */
-        pm->composite::parent->remove_child(pm);
-        pm->composite::parent->add_child(pm);
-        pm->populate_buffers();
+        bool f = false;
+        pm->set(ui::element::state, ui::state::visible, &f);
     }
 }
 
@@ -383,8 +370,6 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
     this->visible = false;
-    this->pos.x = -w;
-    this->pos.y = -h;
 
     if (e != NULL)
     {

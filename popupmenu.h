@@ -1,6 +1,6 @@
 /* popupmenu.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Aug 2016, 23:43:58 tquirk
+ *   last updated 13 Oct 2016, 18:39:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -38,7 +38,6 @@ namespace ui
     class popupmenu : public manager
     {
       protected:
-        bool visible;
         int popup_button;
 
         int get_popup(GLuint, void *);
