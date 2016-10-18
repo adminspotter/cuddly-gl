@@ -35,6 +35,35 @@
 #include "widget.h"
 #include "../l10n.h"
 
+const float ui::vertex_buffer::no_texture = -1000.0;
+
+ui::vertex_buffer::vertex_buffer(GLuint verts, GLuint elts)
+{
+    this->vertex = new float[verts];
+    this->element = new GLuint[elts];
+}
+
+ui::vertex_buffer::~vertex_buffer()
+{
+    delete[] this->element;
+    delete[] this->vertex;
+}
+
+void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
+                                     const glm::vec4& color)
+{
+}
+
+size_t ui::vertex_buffer::vertex_size(void)
+{
+    return sizeof(float) * this->vertex_index;
+}
+
+size_t ui::vertex_buffer::element_size(void)
+{
+    return sizeof(GLuint) * this->element_index;
+}
+
 int ui::widget::get_position(GLuint t, void *v)
 {
     int ret = 0;

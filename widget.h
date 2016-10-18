@@ -41,6 +41,23 @@ namespace ui
 {
     class composite;
 
+    struct vertex_buffer
+    {
+        const static float no_texture;
+
+        float *vertex;
+        GLuint *element;
+        GLuint vertex_index, vertex_count, element_index;
+
+        vertex_buffer(GLuint verts, GLuint elts);
+        ~vertex_buffer();
+
+        void generate_box(glm::vec2, glm::vec2, const glm::vec4&);
+
+        size_t vertex_size(void);
+        size_t element_size(void);
+    };
+
     class widget : public active
     {
       protected:
