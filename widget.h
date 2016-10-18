@@ -64,7 +64,7 @@ namespace ui
         composite *parent;
         glm::ivec2 pos;
         glm::mat4 pos_transform;
-        GLuint vao, vbo, ebo, vertex_count, element_count;
+        GLuint vao, vbo, ebo, element_count;
         GLuint border[4], margin[4];
         glm::vec4 foreground, background;
         bool visible;

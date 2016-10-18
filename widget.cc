@@ -319,6 +319,22 @@ ui::vertex_buffer *ui::widget::generate_points(void)
 
 void ui::widget::populate_buffers(void)
 {
+    ui::vertex_buffer *vb = this->generate_points();
+
+    if (vb == NULL)
+        return;
+
+    this->element_count = vb->element_index;
+    glBindVertexArray(this->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 vb->vertex_size(), vb->vertex,
+                 GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 vb->element_size(), vb->element,
+                 GL_DYNAMIC_DRAW);
+    delete vb;
 }
 
 ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
@@ -362,7 +378,7 @@ ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void *)(sizeof(float) * 6));
 
-    this->vertex_count = this->element_count = 0;
+    this->element_count = 0;
     this->visible = true;
 
     this->populate_buffers();
