@@ -71,15 +71,15 @@ namespace ui
 
         int get_position(GLuint, void *);
         void set_position(GLuint, void *);
-        int get_state(GLuint, void *);
-        void set_state(GLuint, void *);
+        virtual int get_state(GLuint, void *);
+        virtual void set_state(GLuint, void *);
         virtual int get_border(GLuint, void *);
         virtual void set_border(GLuint, void *);
         virtual int get_margin(GLuint, void *);
         virtual void set_margin(GLuint, void *);
         int get_color(GLuint, void *);
         void set_color(GLuint, void *);
-        virtual void set_size(GLuint, void *);
+        virtual void set_size(GLuint, void *) override;
 
         virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
@@ -88,8 +88,8 @@ namespace ui
         widget(composite *, GLuint, GLuint);
         virtual ~widget();
 
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
+        virtual int get(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, void *) override;
 
         virtual void draw(GLuint, const glm::mat4&);
 
