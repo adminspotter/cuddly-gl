@@ -81,7 +81,7 @@ namespace ui
         void set_color(GLuint, void *);
         virtual void set_size(GLuint, void *);
 
-        virtual void generate_points(void);
+        virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
 
       public:

@@ -270,8 +270,51 @@ void ui::widget::set_size(GLuint t, void *v)
     this->parent->move_child(this);
 }
 
-void ui::widget::generate_points(void)
+ui::vertex_buffer *ui::widget::generate_points(void)
 {
+    ui::vertex_buffer *vb = new ui::vertex_buffer(160, 60);
+    float w = this->dim.x, h = this->dim.y, m[4], b[4];
+    glm::vec2 psz;
+
+    this->parent->get(ui::element::pixel_size, ui::size::all, &psz);
+    psz.y = -psz.y;
+    w *= psz.x;
+    h *= psz.y;
+    m[0] = this->margin[0] * psz.y;  b[0] = this->border[0] * psz.y;
+    m[1] = this->margin[1] * psz.x;  b[1] = this->border[1] * psz.x;
+    m[2] = this->margin[2] * psz.x;  b[2] = this->border[2] * psz.x;
+    m[3] = this->margin[3] * psz.y;  b[3] = this->border[3] * psz.y;
+
+    vb->generate_box(glm::vec2(-1.0f, 1.0f),
+                     glm::vec2(-1.0f + w, 1.0f + h),
+                     this->background);
+
+    if (this->border[0] != 0)
+        vb->generate_box(glm::vec2(vb->vertex[0] + m[1],
+                                   vb->vertex[1] + m[0]),
+                         glm::vec2(vb->vertex[8] - m[2],
+                                   vb->vertex[1] + m[0] + b[0]),
+                         this->foreground);
+    if (this->border[1] != 0)
+        vb->generate_box(glm::vec2(vb->vertex[0] + m[1],
+                                   vb->vertex[1] + m[0]),
+                         glm::vec2(vb->vertex[0] + m[1] + b[1],
+                                   vb->vertex[17] - m[3]),
+                         this->foreground);
+    if (this->border[2] != 0)
+        vb->generate_box(glm::vec2(vb->vertex[8] - m[2] - b[2],
+                                   vb->vertex[1] + m[0]),
+                         glm::vec2(vb->vertex[8] - m[2],
+                                   vb->vertex[17] - m[3]),
+                         this->foreground);
+    if (this->border[3] != 0)
+        vb->generate_box(glm::vec2(vb->vertex[0] + m[1],
+                                   vb->vertex[17] + m[3] - b[3]),
+                         glm::vec2(vb->vertex[8] - m[2],
+                                   vb->vertex[17] - m[3]),
+                         this->foreground);
+
+    return vb;
 }
 
 void ui::widget::populate_buffers(void)
