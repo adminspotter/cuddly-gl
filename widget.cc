@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Oct 2016, 09:29:31 tquirk
+ *   last updated 18 Oct 2016, 09:17:02 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -91,6 +91,44 @@ void ui::widget::set_state(GLuint t, void *v)
     }
 }
 
+int ui::widget::get_border(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::side::top:    *((GLuint *)v) = this->border[0]; break;
+      case ui::side::left:   *((GLuint *)v) = this->border[1]; break;
+      case ui::side::right:  *((GLuint *)v) = this->border[2]; break;
+      case ui::side::bottom: *((GLuint *)v) = this->border[3]; break;
+      default:               ret = 1;                          break;
+    }
+    return ret;
+}
+
+void ui::widget::set_border(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    if (t & ui::side::top || t & ui::side::bottom)
+        if (this->margin[0] + this->margin[3]
+            + (t & ui::side::top ? new_v : this->border[0])
+            + (t & ui::side::bottom ? new_v : this->border[3]) <= this->dim.y)
+        {
+            if (t & ui::side::top)     this->border[0] = new_v;
+            if (t & ui::side::bottom)  this->border[3] = new_v;
+        }
+
+    if (t & ui::side::left || t & ui::side::right)
+        if (this->margin[1] + this->margin[2]
+            + (t & ui::side::left ? new_v : this->border[1])
+            + (t & ui::side::right ? new_v : this->border[2]) <= this->dim.x)
+        {
+            if (t & ui::side::left)    this->border[1] = new_v;
+            if (t & ui::side::right)   this->border[2] = new_v;
+        }
+}
+
 void ui::widget::set_size(GLuint t, void *v)
 {
     this->rect::set_size(t, v);
@@ -111,6 +149,9 @@ ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
       pos(0, 0), pos_transform()
 {
     GLuint pos_attr, color_attr, texture_attr;
+
+    for (int i = 0; i < 4; ++i)
+        this->border[i] = this->margin[i] = 0;
 
     if (c == NULL)
         throw std::runtime_error(_("Widget must have a parent."));
@@ -165,6 +206,7 @@ int ui::widget::get(GLuint e, GLuint t, void *v)
     {
       case ui::element::position:  ret = this->get_position(t, v);    break;
       case ui::element::state:     ret = this->get_state(t, v);       break;
+      case ui::element::border:    ret = this->get_border(t, v);      break;
       default:                     ret = this->active::get(e, t, v);  break;
     }
     return ret;
@@ -176,6 +218,7 @@ void ui::widget::set(GLuint e, GLuint t, void *v)
     {
       case ui::element::position:  this->set_position(t, v);    break;
       case ui::element::state:     this->set_state(t, v);       break;
+      case ui::element::border:    this->set_border(t, v);      break;
       default:                     this->active::set(e, t, v);  break;
     }
 }
