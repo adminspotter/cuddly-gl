@@ -52,6 +52,43 @@ ui::vertex_buffer::~vertex_buffer()
 void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
                                      const glm::vec4& color)
 {
+    vertex[this->vertex_index] = ul.x;
+    vertex[this->vertex_index + 1] = ul.y;
+    memcpy(&vertex[this->vertex_index + 2],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+
+    vertex[this->vertex_index + 8] = lr.x;
+    vertex[this->vertex_index + 9] = vertex[this->vertex_index + 1];
+    memcpy(&vertex[this->vertex_index + 10],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+
+    vertex[this->vertex_index + 16] = vertex[this->vertex_index];
+    vertex[this->vertex_index + 17] = lr.y;
+    memcpy(&vertex[this->vertex_index + 18],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+
+    vertex[this->vertex_index + 24] = vertex[this->vertex_index + 8];
+    vertex[this->vertex_index + 25] = vertex[this->vertex_index + 17];
+    memcpy(&vertex[this->vertex_index + 26],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
+    this->vertex_index += 32;
+    this->vertex_count += 4;
+
+    element[this->element_index] = this->vertex_count - 4;
+    element[this->element_index + 1] = this->vertex_count - 2;
+    element[this->element_index + 2] = this->vertex_count - 3;
+    element[this->element_index + 3] = this->vertex_count - 2;
+    element[this->element_index + 4] = this->vertex_count - 1;
+    element[this->element_index + 5] = this->vertex_count - 3;
+    this->element_index += 6;
 }
 
 size_t ui::vertex_buffer::vertex_size(void)
