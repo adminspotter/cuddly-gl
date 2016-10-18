@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Sep 2016, 22:29:34 tquirk
+ *   last updated 18 Oct 2016, 09:05:13 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,14 +32,10 @@
 
 #include <stdlib.h>
 
-#include <stdexcept>
-
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ui_defs.h"
 #include "label.h"
-
-#include "../l10n.h"
 
 /* ARGSUSED */
 int ui::label::get_font(GLuint t, void *v)
