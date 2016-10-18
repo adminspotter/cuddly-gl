@@ -31,6 +31,7 @@
 #ifndef __INC_R9_WIDGET_H__
 #define __INC_R9_WIDGET_H__
 
+#include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
 #include "active.h"
@@ -48,6 +49,7 @@ namespace ui
         glm::mat4 pos_transform;
         GLuint vao, vbo, ebo, vertex_count, element_count;
         GLuint border[4], margin[4];
+        glm::vec4 foreground, background;
         bool visible;
 
         int get_position(GLuint, void *);
@@ -58,6 +60,8 @@ namespace ui
         virtual void set_border(GLuint, void *);
         virtual int get_margin(GLuint, void *);
         virtual void set_margin(GLuint, void *);
+        int get_color(GLuint, void *);
+        void set_color(GLuint, void *);
         virtual void set_size(GLuint, void *);
 
         virtual void generate_points(void);

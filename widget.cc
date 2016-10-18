@@ -167,6 +167,36 @@ void ui::widget::set_margin(GLuint t, void *v)
         }
 }
 
+int ui::widget::get_color(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::color::foreground:
+        memcpy(v, glm::value_ptr(this->foreground), sizeof(float) * 4);
+        break;
+
+      case ui::color::background:
+        memcpy(v, glm::value_ptr(this->background), sizeof(float) * 4);
+        break;
+
+      default:
+        ret = 1;
+        break;
+    }
+    return ret;
+}
+
+void ui::widget::set_color(GLuint t, void *v)
+{
+    if (t & ui::color::foreground)
+        memcpy(glm::value_ptr(this->foreground), v, sizeof(float) * 4);
+
+    if (t & ui::color::background)
+        memcpy(glm::value_ptr(this->background), v, sizeof(float) * 4);
+}
+
 void ui::widget::set_size(GLuint t, void *v)
 {
     this->rect::set_size(t, v);
@@ -184,7 +214,8 @@ void ui::widget::populate_buffers(void)
 
 ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     : ui::active::active(w, h), ui::rect::rect(w, h),
-      pos(0, 0), pos_transform()
+      pos(0, 0), pos_transform(),
+      foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
     GLuint pos_attr, color_attr, texture_attr;
 
@@ -246,6 +277,7 @@ int ui::widget::get(GLuint e, GLuint t, void *v)
       case ui::element::state:     ret = this->get_state(t, v);       break;
       case ui::element::border:    ret = this->get_border(t, v);      break;
       case ui::element::margin:    ret = this->get_margin(t, v);      break;
+      case ui::element::color:     ret = this->get_color(t, v);       break;
       default:                     ret = this->active::get(e, t, v);  break;
     }
     return ret;
@@ -259,6 +291,7 @@ void ui::widget::set(GLuint e, GLuint t, void *v)
       case ui::element::state:     this->set_state(t, v);       break;
       case ui::element::border:    this->set_border(t, v);      break;
       case ui::element::margin:    this->set_margin(t, v);      break;
+      case ui::element::color:     this->set_color(t, v);       break;
       default:                     this->active::set(e, t, v);  break;
     }
 }
