@@ -47,7 +47,7 @@ namespace ui
         glm::ivec2 pos;
         glm::mat4 pos_transform;
         GLuint vao, vbo, ebo, vertex_count, element_count;
-        GLuint border[4];
+        GLuint border[4], margin[4];
         bool visible;
 
         int get_position(GLuint, void *);
@@ -56,6 +56,8 @@ namespace ui
         void set_state(GLuint, void *);
         virtual int get_border(GLuint, void *);
         virtual void set_border(GLuint, void *);
+        virtual int get_margin(GLuint, void *);
+        virtual void set_margin(GLuint, void *);
         virtual void set_size(GLuint, void *);
 
         virtual void generate_points(void);

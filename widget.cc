@@ -129,6 +129,44 @@ void ui::widget::set_border(GLuint t, void *v)
         }
 }
 
+int ui::widget::get_margin(GLuint t, void *v)
+{
+    int ret = 0;
+
+    switch (t)
+    {
+      case ui::side::top:    *((GLuint *)v) = this->margin[0]; break;
+      case ui::side::left:   *((GLuint *)v) = this->margin[1]; break;
+      case ui::side::right:  *((GLuint *)v) = this->margin[2]; break;
+      case ui::side::bottom: *((GLuint *)v) = this->margin[3]; break;
+      default:               ret = 1;                          break;
+    }
+    return ret;
+}
+
+void ui::widget::set_margin(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    if (t & ui::side::top || t & ui::side::bottom)
+        if (this->border[0] + this->border[3]
+            + (t & ui::side::top ? new_v : this->margin[0])
+            + (t & ui::side::bottom ? new_v : this->margin[3]) <= this->dim.y)
+        {
+            if (t & ui::side::top)     this->margin[0] = new_v;
+            if (t & ui::side::bottom)  this->margin[3] = new_v;
+        }
+
+    if (t & ui::side::left || t & ui::side::right)
+        if (this->border[1] + this->border[2]
+            + (t & ui::side::left ? new_v : this->margin[1])
+            + (t & ui::side::right ? new_v : this->margin[2]) <= this->dim.x)
+        {
+            if (t & ui::side::left)    this->margin[1] = new_v;
+            if (t & ui::side::right)   this->margin[2] = new_v;
+        }
+}
+
 void ui::widget::set_size(GLuint t, void *v)
 {
     this->rect::set_size(t, v);
@@ -207,6 +245,7 @@ int ui::widget::get(GLuint e, GLuint t, void *v)
       case ui::element::position:  ret = this->get_position(t, v);    break;
       case ui::element::state:     ret = this->get_state(t, v);       break;
       case ui::element::border:    ret = this->get_border(t, v);      break;
+      case ui::element::margin:    ret = this->get_margin(t, v);      break;
       default:                     ret = this->active::get(e, t, v);  break;
     }
     return ret;
@@ -219,6 +258,7 @@ void ui::widget::set(GLuint e, GLuint t, void *v)
       case ui::element::position:  this->set_position(t, v);    break;
       case ui::element::state:     this->set_state(t, v);       break;
       case ui::element::border:    this->set_border(t, v);      break;
+      case ui::element::margin:    this->set_margin(t, v);      break;
       default:                     this->active::set(e, t, v);  break;
     }
 }
