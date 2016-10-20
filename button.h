@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 00:08:34 tquirk
+ *   last updated 17 Oct 2016, 21:52:51 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,12 +42,14 @@ namespace ui
       protected:
         bool activated, armed;
 
-        int get_active_state(GLuint, void *);
-        void set_active_state(GLuint, void *);
-        int get_arm_state(GLuint, void *);
-        void set_arm_state(GLuint, void *);
-        void set_margin(GLuint, void *);
+        virtual int get_state(GLuint, void *) override;
+        virtual void set_state(GLuint, void *) override;
+        virtual void set_margin(GLuint, void *) override;
 
+        int get_active_state(bool *);
+        void set_active_state(bool);
+        int get_arm_state(bool *);
+        void set_arm_state(bool);
         void grow_border(void);
         void shrink_border(void);
 
@@ -59,9 +61,6 @@ namespace ui
       public:
         button(composite *, GLuint = 0, GLuint = 0);
         virtual ~button();
-
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
     };
 }
 

@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:38:50 tquirk
+ *   last updated 17 Oct 2016, 21:54:38 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -35,46 +35,28 @@
 #include "ui_defs.h"
 #include "button.h"
 
-/* ARGSUSED */
-int ui::button::get_active_state(GLuint t, void *v)
+int ui::button::get_state(GLuint t, void *v)
 {
-    *((bool *)v) = this->activated;
-    return 0;
+    bool *val = (bool *)v;
+
+    switch (t)
+    {
+      case ui::state::active:  return this->get_active_state(val);
+      case ui::state::armed:   return this->get_arm_state(val);
+      default:                 return this->widget::get_state(t, v);
+    }
 }
 
-/* ARGSUSED */
-void ui::button::set_active_state(GLuint t, void *v)
+void ui::button::set_state(GLuint t, void *v)
 {
-    bool new_act = *((bool *)v);
+    bool val = *(bool *)v;
 
-    if (new_act == this->activated)
-        return;
-    this->activated = new_act;
-    if (this->activated)
-        this->grow_border();
-    else
-        this->shrink_border();
-}
-
-/* ARGSUSED */
-int ui::button::get_arm_state(GLuint t, void *v)
-{
-    *((bool *)v) = this->armed;
-    return 0;
-}
-
-/* ARGSUSED */
-void ui::button::set_arm_state(GLuint t, void *v)
-{
-    bool new_arm =  *((bool *)v);
-
-    if (new_arm == this->armed)
-        return;
-    this->armed = new_arm;
-    if (this->armed)
-        this->grow_border();
-    else
-        this->shrink_border();
+    switch (t)
+    {
+      case ui::state::active:  this->set_active_state(val);   break;
+      case ui::state::armed:   this->set_arm_state(val);      break;
+      default:                 this->label::set_state(t, v);  break;
+    }
 }
 
 void ui::button::set_margin(GLuint s, void *v)
@@ -103,6 +85,38 @@ void ui::button::set_margin(GLuint s, void *v)
             if (s & ui::side::right)
                 this->margin[2] = std::max(new_v, min_val);
         }
+}
+
+int ui::button::get_active_state(bool *v)
+{
+    *v = this->activated;
+    return 0;
+}
+
+void ui::button::set_active_state(bool v)
+{
+    if (v == this->activated)
+        return;
+    if ((this->activated = v) == true)
+        this->grow_border();
+    else
+        this->shrink_border();
+}
+
+int ui::button::get_arm_state(bool *v)
+{
+    *v = this->armed;
+    return 0;
+}
+
+void ui::button::set_arm_state(bool v)
+{
+    if (v == this->armed)
+        return;
+    if ((this->armed = v) == true)
+        this->grow_border();
+    else
+        this->shrink_border();
 }
 
 void ui::button::grow_border(void)
@@ -180,36 +194,4 @@ ui::button::button(ui::composite *c, GLuint w, GLuint h)
 
 ui::button::~button()
 {
-}
-
-int ui::button::get(GLuint e, GLuint t, void *v)
-{
-    if (e == ui::element::state)
-    {
-        switch (t)
-        {
-          case ui::state::active:  return this->get_active_state(t, v);
-          case ui::state::armed:   return this->get_arm_state(t, v);
-        }
-    }
-    return ui::label::get(e, t, v);
-}
-
-void ui::button::set(GLuint e, GLuint t, void *v)
-{
-    if (e == ui::element::state)
-        switch (t)
-        {
-          case ui::state::active:
-            this->set_active_state(t, v);
-            this->populate_buffers();
-            break;
-
-          case ui::state::armed:
-            this->set_arm_state(t, v);
-            this->populate_buffers();
-            break;
-        }
-    else
-        ui::label::set(e, t, v);
 }
