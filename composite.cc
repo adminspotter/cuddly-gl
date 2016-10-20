@@ -98,21 +98,6 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
     return ret;
 }
 
-void ui::composite::close_pending(void)
-{
-    auto child = this->children.begin();
-
-    while (child != this->children.end())
-        /* If we delete the pointer and erase(), we get an apparent
-         * double-free segfault, so it seems(?) that erase() actually
-         * deletes pointers that it owns?
-         */
-        if ((*child)->to_close == true)
-            child = this->children.erase(child);
-        else
-            ++child;
-}
-
 void ui::composite::regenerate_search_tree(void)
 {
     glm::ivec2 ul(0, 0);
@@ -213,7 +198,6 @@ void ui::composite::mouse_pos_callback(int x, int y)
         this->old_child->get(ui::element::position, ui::position::all, &obj);
         call_data.location = pos - obj;
         this->old_child->call_callbacks(ui::callback::leave, &call_data);
-        this->close_pending();
     }
 
     /* w might no longer exist at this position.  Let's search again,
@@ -240,7 +224,6 @@ void ui::composite::mouse_btn_callback(int btn, int state)
         call_data.button = btn;
         call_data.state = state;
         w->call_callbacks(which, &call_data);
-        this->close_pending();
     }
 
     /* w might no longer exist at this position.  Let's search again,
@@ -268,7 +251,6 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
         call_data.state = state;
         call_data.mods = mods;
         w->call_callbacks(which, &call_data);
-        this->close_pending();
     }
 
     /* p might no longer exist at this position.  Let's search again,

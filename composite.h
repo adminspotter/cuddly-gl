@@ -60,7 +60,6 @@ namespace ui
         virtual void set_resize(GLuint, void *);
         virtual int get_pixel_size(GLuint, void *);
 
-        void close_pending(void);
         void regenerate_search_tree(void);
 
       public:
