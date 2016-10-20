@@ -62,6 +62,7 @@ namespace ui
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(int, int);
+        virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
 
       public:

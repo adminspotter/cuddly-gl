@@ -229,6 +229,51 @@ void ui::label::calculate_widget_size(int w, int h)
     this->parent->move_child(this);
 }
 
+ui::vertex_buffer *ui::label::generate_points(void)
+{
+    if (this->img.data == NULL)
+        return NULL;
+
+    ui::vertex_buffer *vb = this->widget::generate_points();
+    float pw, ph, m[4], b[4];
+
+    pw = 1.0f / (float)this->img.width;
+    ph = 1.0f / (float)this->img.height;
+    m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
+    m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
+    m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
+    m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
+
+    vb->vertex[6]  = 0.0f - m[1] - b[1] - pw;
+    vb->vertex[7]  = 1.0f + m[0] + b[0] + ph
+        + ((this->dim.y - this->margin[0] - this->margin[3]
+            - this->border[0] - this->border[3] - 2 - this->img.height)
+           * ph);
+
+    vb->vertex[14] = 1.0f + m[2] + b[2] + pw
+        + ((this->dim.x - this->margin[1] - this->margin[2]
+            - this->border[1] - this->border[2] - 2 - this->img.width)
+           * pw);
+    vb->vertex[15] = vb->vertex[7];
+
+    vb->vertex[22] = vb->vertex[6];
+    vb->vertex[23] = 0.0f - m[3] - b[3] - ph;
+
+    vb->vertex[30] = vb->vertex[14];
+    vb->vertex[31] = vb->vertex[23];
+
+    memcpy(&(vb->vertex[2]),
+           glm::value_ptr(this->foreground), sizeof(float) * 4);
+    memcpy(&(vb->vertex[10]),
+           glm::value_ptr(this->foreground), sizeof(float) * 4);
+    memcpy(&(vb->vertex[18]),
+           glm::value_ptr(this->foreground), sizeof(float) * 4);
+    memcpy(&(vb->vertex[26]),
+           glm::value_ptr(this->foreground), sizeof(float) * 4);
+
+    return vb;
+}
+
 void ui::label::populate_buffers(void)
 {
     this->widget::populate_buffers();
