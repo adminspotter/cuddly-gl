@@ -52,6 +52,12 @@ void ui::label::set_font(GLuint t, void *v)
     else
         this->shared_font = false;
     this->font = (ui::font *)v;
+    if (this->str.size() > 0)
+    {
+        this->generate_string_image();
+        this->calculate_widget_size(this->img.width, this->img.height);
+        this->populate_buffers();
+    }
 }
 
 /* ARGSUSED */
@@ -67,6 +73,8 @@ void ui::label::set_string(GLuint t, void *v)
     this->use_text = true;
     this->str = utf8tou32str(*((std::string *)v));
     this->generate_string_image();
+    this->calculate_widget_size(this->img.width, this->img.height);
+    this->populate_buffers();
 }
 
 /* ARGSUSED */
@@ -82,6 +90,8 @@ void ui::label::set_image(GLuint t, void *v)
     this->use_text = false;
     this->str.clear();
     this->img = *(ui::image *)v;
+    this->calculate_widget_size(this->img.width, this->img.height);
+    this->populate_buffers();
 }
 
 /* We need to be able to convert from UTF-8 representation to
@@ -304,7 +314,6 @@ ui::label::label(ui::composite *c, GLuint w, GLuint h)
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, black);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    this->populate_buffers();
 }
 
 ui::label::~label()
@@ -329,25 +338,10 @@ void ui::label::set(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
-      case ui::element::font:
-        this->set_font(t, v);
-        this->populate_buffers();
-        break;
-
-      case ui::element::string:
-        this->set_string(t, v);
-        this->populate_buffers();
-        break;
-
-      case ui::element::image:
-        this->set_image(t, v);
-        this->populate_buffers();
-        break;
-
-      default:
-        /* This already calls populate_buffers, so no need to call it again */
-        ui::panel::set(e, t, v);
-        break;
+      case ui::element::font:    this->set_font(t, v);      break;
+      case ui::element::string:  this->set_string(t, v);    break;
+      case ui::element::image:   this->set_image(t, v);     break;
+      default:                   ui::panel::set(e, t, v);   break;
     }
 }
 
