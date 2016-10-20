@@ -21,7 +21,7 @@
  *
  *
  * This file contains the method definitions for the composite object.
- * It's a panel which can have children, which will then be
+ * It's a widget which can have children, which will then be
  * subclassable into more interesting manager widgets.
  *
  * Things to do
@@ -158,46 +158,43 @@ void ui::composite::set(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::composite::add_child(ui::panel *p)
+void ui::composite::add_child(ui::widget *w)
 {
-    auto found = std::find(this->children.begin(), this->children.end(), p);
+    auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found == this->children.end())
     {
-        this->children.push_back(p);
-        this->tree->insert(p);
+        this->children.push_back(w);
+        this->tree->insert(w);
     }
 }
 
-void ui::composite::remove_child(ui::panel *p)
+void ui::composite::remove_child(ui::widget *w)
 {
-    this->children.remove(p);
-    this->tree->remove(p);
+    this->children.remove(w);
+    this->tree->remove(w);
 }
 
-void ui::composite::move_child(ui::panel *p)
+void ui::composite::move_child(ui::widget *w)
 {
-    this->tree->remove(p);
-    this->tree->insert(p);
+    this->tree->remove(w);
+    this->tree->insert(w);
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)
 {
     glm::ivec2 pos = {x, y}, obj;
     ui::mouse_call_data call_data;
-    ui::panel *p = this->tree->search(pos);
+    ui::widget *w = this->tree->search(pos);
 
-    if (p != NULL)
+    if (w != NULL)
     {
-        p->get(ui::element::position, ui::position::all, &obj);
+        w->get(ui::element::position, ui::position::all, &obj);
         call_data.location = pos - obj;
-        if (this->old_child != p)
-            p->call_callbacks(ui::callback::enter, &call_data);
-        if (this->old_child != NULL && this->old_child != p)
-        {
+        if (this->old_child != w)
+            w->call_callbacks(ui::callback::enter, &call_data);
+        if (this->old_child != NULL && this->old_child != w)
             this->old_child->call_callbacks(ui::callback::leave, &call_data);
-            this->close_pending();
-        }
-        p->call_callbacks(ui::callback::motion, &call_data);
+        w->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
     {
@@ -207,7 +204,7 @@ void ui::composite::mouse_pos_callback(int x, int y)
         this->close_pending();
     }
 
-    /* p might no longer exist at this position.  Let's search again,
+    /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
      */
     this->old_child = this->tree->search(pos);
@@ -216,9 +213,9 @@ void ui::composite::mouse_pos_callback(int x, int y)
 
 void ui::composite::mouse_btn_callback(int btn, int state)
 {
-    ui::panel *p = this->tree->search(this->old_pos);
+    ui::widget *w = this->tree->search(this->old_pos);
 
-    if (p != NULL)
+    if (w != NULL)
     {
         glm::ivec2 obj;
         ui::btn_call_data call_data;
@@ -226,15 +223,15 @@ void ui::composite::mouse_btn_callback(int btn, int state)
                         ? ui::callback::btn_up
                         : ui::callback::btn_down);
 
-        p->get(ui::element::position, ui::position::all, &obj);
+        w->get(ui::element::position, ui::position::all, &obj);
         call_data.location = this->old_pos - obj;
         call_data.button = btn;
         call_data.state = state;
-        p->call_callbacks(which, &call_data);
+        w->call_callbacks(which, &call_data);
         this->close_pending();
     }
 
-    /* p might no longer exist at this position.  Let's search again,
+    /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
      */
     this->old_child = this->tree->search(this->old_pos);
@@ -242,9 +239,9 @@ void ui::composite::mouse_btn_callback(int btn, int state)
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
 {
-    ui::panel *p = this->tree->search(this->old_pos);
+    ui::widget *w = this->tree->search(this->old_pos);
 
-    if (p != NULL)
+    if (w != NULL)
     {
         glm::ivec2 obj;
         ui::key_call_data call_data;
@@ -252,13 +249,13 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
                         ? ui::callback::key_up
                         : ui::callback::key_down);
 
-        p->get(ui::element::position, ui::position::all, &obj);
+        w->get(ui::element::position, ui::position::all, &obj);
         call_data.location = this->old_pos - obj;
         call_data.key = key;
         call_data.character = c;
         call_data.state = state;
         call_data.mods = mods;
-        p->call_callbacks(which, &call_data);
+        w->call_callbacks(which, &call_data);
         this->close_pending();
     }
 

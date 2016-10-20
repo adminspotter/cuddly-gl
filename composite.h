@@ -36,23 +36,23 @@
 
 #include "rect.h"
 #include "quadtree.h"
-#include "panel.h"
+#include "widget.h"
 
 namespace ui
 {
     class quadtree;
-    class panel;
+    class widget;
 
     class composite : public virtual rect
     {
       protected:
         composite *parent;
-        std::list<panel *> children;
+        std::list<widget *> children;
         quadtree *tree;
         glm::mat4 translate;
 
         glm::ivec2 old_pos;
-        panel *old_child;
+        widget *old_child;
 
         const static int tree_max_depth;
 
@@ -70,9 +70,9 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
 
-        virtual void add_child(panel *);
-        virtual void remove_child(panel *);
-        virtual void move_child(panel *);
+        virtual void add_child(widget *);
+        virtual void remove_child(widget *);
+        virtual void move_child(widget *);
 
         void mouse_pos_callback(int, int);
         virtual void mouse_btn_callback(int, int);
