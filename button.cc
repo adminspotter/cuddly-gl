@@ -126,6 +126,7 @@ void ui::button::grow_border(void)
         ++this->border[i];
         this->margin[i] = (this->margin[i] > 1 ? this->margin[i] - 1 : 0);
     }
+    this->populate_buffers();
 }
 
 void ui::button::shrink_border(void)
@@ -135,6 +136,7 @@ void ui::button::shrink_border(void)
         this->border[i] = (this->border[i] > 1 ? this->border[i] - 1 : 0);
         ++this->margin[i];
     }
+    this->populate_buffers();
 }
 
 /* ARGSUSED */
