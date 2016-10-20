@@ -85,16 +85,6 @@ void ui::composite::set_resize(GLuint t, void *v)
         this->resize = new_v;
 }
 
-int ui::composite::get_transform(GLuint t, void *v)
-{
-    if (t == ui::transform::translate)
-    {
-        *((glm::mat4 *)v) = this->translate;
-        return 0;
-    }
-    return 1;
-}
-
 int ui::composite::get_pixel_size(GLuint t, void *v)
 {
     int ret = 0;
@@ -133,7 +123,7 @@ void ui::composite::close_pending(void)
 }
 
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : ui::rect::rect(w, h), children(), old_pos(0, 0), translate()
+    : ui::rect::rect(w, h), children(), old_pos(0, 0)
 {
     int nothing = 0;
 
@@ -156,7 +146,6 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
     switch (e)
     {
       case ui::element::size:        return this->get_size(t, v);
-      case ui::element::transform:   return this->get_transform(t, v);
       case ui::element::resize:      return this->get_resize(t, v);
       case ui::element::pixel_size:  return this->get_pixel_size(t, v);
       default:                       return 1;
