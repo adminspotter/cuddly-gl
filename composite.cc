@@ -59,16 +59,7 @@ void ui::composite::set_size(GLuint d, void *v)
       case ui::size::width:   this->dim.x = *(int *)v;       break;
       case ui::size::height:  this->dim.y = *(int *)v;       break;
     }
-
-    /* Regenerate our search tree */
-    glm::ivec2 ul = {0, 0};
-    if (this->tree != NULL)
-        delete this->tree;
-    this->tree = new ui::quadtree(NULL,
-                                  ul, this->dim,
-                                  ui::composite::tree_max_depth);
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        this->tree->insert(*i);
+    this->regenerate_search_tree();
 }
 
 int ui::composite::get_resize(GLuint t, void *v)
@@ -122,15 +113,27 @@ void ui::composite::close_pending(void)
             ++child;
 }
 
+void ui::composite::regenerate_search_tree(void)
+{
+    glm::ivec2 ul(0, 0);
+
+    if (this->tree != NULL)
+        delete this->tree;
+    this->tree = new ui::quadtree(NULL,
+                                  ul, this->dim,
+                                  ui::composite::tree_max_depth);
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        if ((*i)->visible == true)
+            this->tree->insert(*i);
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : ui::rect::rect(w, h), children(), old_pos(0, 0)
 {
-    int nothing = 0;
-
     this->parent = c;
     this->tree = NULL;
     this->old_child = NULL;
-    this->set_size(0, &nothing);
+    this->regenerate_search_tree();
 }
 
 ui::composite::~composite()
@@ -171,7 +174,8 @@ void ui::composite::add_child(ui::widget *w)
     if (found == this->children.end())
     {
         this->children.push_back(w);
-        this->tree->insert(w);
+        if (w->visible == true)
+            this->tree->insert(w);
     }
 }
 
@@ -184,7 +188,8 @@ void ui::composite::remove_child(ui::widget *w)
 void ui::composite::move_child(ui::widget *w)
 {
     this->tree->remove(w);
-    this->tree->insert(w);
+    if (w->visible == true)
+        this->tree->insert(w);
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)
