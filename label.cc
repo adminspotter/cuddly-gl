@@ -21,7 +21,7 @@
  *
  *
  * This file contains the basic label object definitions.  We derive
- * from the panel, which will take care of the box part.  In this
+ * from the widget, which will take care of the box part.  In this
  * class, we'll add font handling via freetype, and we'll get our text
  * on the screen via a 2D GL texture.  We will handle either text
  * rendering, or image rendering.
@@ -220,10 +220,10 @@ void ui::label::calculate_widget_size(int w, int h)
      * side, even if there is no border or margin, thus the
      * literal 2s.
      */
-    this->size.x = w
+    this->dim.x = w
         + this->margin[1] + this->margin[2]
         + this->border[1] + this->border[2] + 2;
-    this->size.y = h
+    this->dim.y = h
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3] + 2;
     this->parent->move_child(this);
@@ -231,55 +231,9 @@ void ui::label::calculate_widget_size(int w, int h)
 
 void ui::label::populate_buffers(void)
 {
+    this->widget::populate_buffers();
     if (this->img.data != NULL)
     {
-        float vertex[160], pw, ph, m[4], b[4];
-        GLuint element[60], temp, w, h;
-
-        this->calculate_widget_size(this->img.width, this->img.height);
-        this->panel::generate_points(vertex, element);
-        pw = 1.0f / (float)this->img.width;
-        ph = 1.0f / (float)this->img.height;
-        m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
-        m[1] = this->margin[1] * pw;  b[1] = this->border[1] * pw;
-        m[2] = this->margin[2] * pw;  b[2] = this->border[2] * pw;
-        m[3] = this->margin[3] * ph;  b[3] = this->border[3] * ph;
-        w = this->size.x - this->margin[1] - this->margin[2]
-            - this->border[1] - this->border[2] - 2;
-        h = this->size.y - this->margin[0] - this->margin[0]
-            - this->border[3] - this->border[3] - 2;
-
-        vertex[6]  = 0.0f - m[1] - b[1] - pw;
-        vertex[7]  = 1.0f + m[0] + b[0] + ph
-            + ((h - this->img.height) * ph);
-
-        vertex[14] = 1.0f + m[2] + b[2] + pw
-            + ((w - this->img.width) * pw);
-        vertex[15] = vertex[7];
-
-        vertex[22] = vertex[6];
-        vertex[23] = 0.0f - m[3] - b[3] - ph;
-
-        vertex[30] = vertex[14];
-        vertex[31] = vertex[23];
-
-        memcpy(&vertex[2],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        memcpy(&vertex[10],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        memcpy(&vertex[18],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        memcpy(&vertex[26],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(float) * this->vertex_count, vertex,
-                     GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     sizeof(GLuint) * this->element_count, element,
-                     GL_DYNAMIC_DRAW);
         glBindTexture(GL_TEXTURE_2D, this->tex);
 
         if (this->use_text)
@@ -300,7 +254,7 @@ void ui::label::populate_buffers(void)
 }
 
 ui::label::label(ui::composite *c, GLuint w, GLuint h)
-    : ui::panel::panel(c, w, h), str(), img()
+    : ui::widget::widget(c, w, h), ui::rect::rect(w, h), str(), img()
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
@@ -330,7 +284,7 @@ int ui::label::get(GLuint e, GLuint t, void *v)
       case ui::element::font:    return this->get_font(t, v);
       case ui::element::string:  return this->get_string(t, v);
       case ui::element::image:   return this->get_image(t, v);
-      default:                   return ui::panel::get(e, t, v);
+      default:                   return ui::widget::get(e, t, v);
     }
 }
 
@@ -341,23 +295,25 @@ void ui::label::set(GLuint e, GLuint t, void *v)
       case ui::element::font:    this->set_font(t, v);      break;
       case ui::element::string:  this->set_string(t, v);    break;
       case ui::element::image:   this->set_image(t, v);     break;
-      default:                   ui::panel::set(e, t, v);   break;
+      default:                   ui::widget::set(e, t, v);  break;
     }
 }
 
-void ui::label::draw(void)
+void ui::label::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     GLuint text, bgnd, val = (this->use_text ? 1 : 0);
 
-    this->parent->get(ui::element::attribute, ui::attribute::use_text, &text);
-    this->parent->get(ui::element::attribute, ui::attribute::text_bgnd, &bgnd);
+    this->parent->get_va(ui::element::attribute,
+                         ui::attribute::use_text, &text,
+                         ui::element::attribute,
+                         ui::attribute::text_bgnd, &bgnd, 0);
     glUniform1ui(text, val);
     glUniform4f(bgnd,
                 this->background.x, this->background.y,
                 this->background.z, this->background.a);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, this->tex);
-    ui::panel::draw();
+    ui::widget::draw(trans_uniform, parent_trans);
     glDisable(GL_TEXTURE_2D);
     glUniform1ui(text, 0);
 }

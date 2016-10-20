@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Sep 2016, 08:48:06 tquirk
+ *   last updated 18 Oct 2016, 09:04:34 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -36,12 +36,12 @@
 
 #include <string>
 
-#include "panel.h"
+#include "widget.h"
 #include "font.h"
 
 namespace ui
 {
-    class label : public panel
+    class label : public widget
     {
       protected:
         bool use_text, shared_font;
@@ -71,7 +71,7 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
 
-        virtual void draw(void);
+        virtual void draw(GLuint, const glm::mat4&);
     };
 }
 
