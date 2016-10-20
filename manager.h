@@ -40,11 +40,9 @@ namespace ui
     {
       protected:
         glm::ivec2 child_spacing;
-        GLuint resize;
 
         int get_child_spacing(GLuint, void *);
         void set_child_spacing(GLuint, void *);
-        int get_resize(GLuint, void *);
         virtual void set_resize(GLuint, void *);
         virtual int get_size(GLuint, void *);
         virtual void set_size(GLuint, void *);

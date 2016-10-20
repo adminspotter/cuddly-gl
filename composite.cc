@@ -71,6 +71,20 @@ void ui::composite::set_size(GLuint d, void *v)
         this->tree->insert(*i);
 }
 
+int ui::composite::get_resize(GLuint t, void *v)
+{
+    *(GLuint *)v = this->resize;
+    return 0;
+}
+
+void ui::composite::set_resize(GLuint t, void *v)
+{
+    GLuint new_v = *((GLuint *)v);
+
+    if (new_v <= ui::resize::all)
+        this->resize = new_v;
+}
+
 int ui::composite::get_transform(GLuint t, void *v)
 {
     if (t == ui::transform::translate)
@@ -143,6 +157,7 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
     {
       case ui::element::size:        return this->get_size(t, v);
       case ui::element::transform:   return this->get_transform(t, v);
+      case ui::element::resize:      return this->get_resize(t, v);
       case ui::element::pixel_size:  return this->get_pixel_size(t, v);
       default:                       return 1;
     }
@@ -150,12 +165,15 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
 
 void ui::composite::set(GLuint e, GLuint t, void *v)
 {
-    if (e == ui::element::size)
+    switch (e)
     {
-        this->set_size(t, v);
-        for (auto i = this->children.begin(); i != this->children.end(); ++i)
-            (*i)->populate_buffers();
+      case ui::element::size:    this->set_size(t, v);    break;
+      case ui::element::resize:  this->set_resize(t, v);  break;
+      default:                   return;
     }
+
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        (*i)->populate_buffers();
 }
 
 void ui::composite::add_child(ui::widget *w)

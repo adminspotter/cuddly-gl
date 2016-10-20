@@ -60,12 +60,6 @@ void ui::manager::set_child_spacing(GLuint t, void *v)
     }
 }
 
-int ui::manager::get_resize(GLuint t, void *v)
-{
-    *(GLuint *)v = this->resize;
-    return 0;
-}
-
 void ui::manager::set_resize(GLuint t, void *v)
 {
     GLuint new_v = *((GLuint *)v);
@@ -252,7 +246,6 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
 
       case ui::element::transform:      return this->get_transform(t, v);
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
-      case ui::element::resize:         return this->get_resize(t, v);
       default:                          return this->panel::get(e, t, v);
     }
     return 1;
@@ -265,10 +258,6 @@ void ui::manager::set(GLuint e, GLuint t, void *v)
       case ui::element::child_spacing:
         this->set_child_spacing(t, v);
         this->populate_buffers();
-        break;
-
-      case ui::element::resize:
-        this->set_resize(t, v);
         break;
 
       case ui::element::size:

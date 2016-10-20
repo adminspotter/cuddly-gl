@@ -50,6 +50,7 @@ namespace ui
         std::list<widget *> children;
         quadtree *tree;
         glm::mat4 translate;
+        GLuint resize;
 
         glm::ivec2 old_pos;
         widget *old_child;
@@ -59,6 +60,8 @@ namespace ui
         int get_size(GLuint, void *);
         void set_size(GLuint, void *);
         virtual int get_transform(GLuint, void *);
+        virtual int get_resize(GLuint, void *);
+        virtual void set_resize(GLuint, void *);
         virtual int get_pixel_size(GLuint, void *);
 
         void close_pending(void);
