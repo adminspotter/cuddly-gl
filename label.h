@@ -62,17 +62,17 @@ namespace ui
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(int, int);
-        virtual vertex_buffer *generate_points(void);
-        virtual void populate_buffers(void);
+        virtual vertex_buffer *generate_points(void) override;
+        virtual void populate_buffers(void) override;
 
       public:
         label(composite *, GLuint = 0, GLuint = 0);
         virtual ~label();
 
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
+        virtual int get(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, void *) override;
 
-        virtual void draw(GLuint, const glm::mat4&);
+        virtual void draw(GLuint, const glm::mat4&) override;
     };
 }
 
