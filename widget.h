@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Oct 2016, 21:43:14 tquirk
+ *   last updated 22 Oct 2016, 09:21:48 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,6 +53,8 @@ namespace ui
         ~vertex_buffer();
 
         void generate_box(glm::vec2, glm::vec2, const glm::vec4&);
+        void generate_ellipse(glm::vec2, glm::vec2, float, int,
+                              const glm::vec4&);
 
         size_t vertex_size(void);
         size_t element_size(void);

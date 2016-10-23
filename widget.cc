@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Oct 2016, 09:17:02 tquirk
+ *   last updated 23 Oct 2016, 10:09:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -25,6 +25,8 @@
  * Things to do
  *
  */
+
+#include <math.h>
 
 #include <stdexcept>
 
@@ -89,6 +91,64 @@ void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
     element[this->element_index + 4] = this->vertex_count - 1;
     element[this->element_index + 5] = this->vertex_count - 3;
     this->element_index += 6;
+}
+
+/* The inner_pct is a percentage of the entire radius, rather than a
+ * raw screen coord value of any kind.  For example, if the radius is
+ * (100, 100), and the inner_pct is 0.15, the inner radius is (15,
+ * 15).
+ *
+ * TODO:  There may be some degenerate stuff that occurs with
+ * inner_pct of 0.0, so we should test this.
+ */
+void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
+                                         float inner_pct, int segments,
+                                         const glm::vec4& color)
+{
+    /* Clamp inner_pct and segments to reasonable ranges */
+    if (inner_pct < 0.0)  inner_pct = 0.0;
+    if (inner_pct >= 1.0) inner_pct = 0.99;
+
+    if (segments < 15)  segments = 15;
+    if (segments > 720) segments = 720;
+
+    glm::vec2 inner = radius * inner_pct;
+    float increment = M_PI * 2.0f / (float)segments;
+    GLuint vertex_start_count = this->vertex_count;
+
+    for (int i = 0; i < segments; ++i)
+    {
+        float angle = increment * i;
+
+        vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
+        vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
+        memcpy(&vertex[this->vertex_index + 2],
+               glm::value_ptr(color), sizeof(float) * 4);
+        vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
+        vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+
+        vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
+        vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
+        memcpy(&vertex[this->vertex_index + 10],
+               glm::value_ptr(color), sizeof(float) * 4);
+        vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
+        vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+        this->vertex_index += 16;
+        this->vertex_count += 2;
+
+        element[this->element_index] = this->vertex_count - 2;
+        element[this->element_index + 1] = this->vertex_count - 1;
+        element[this->element_index + 2] = this->vertex_count + 1;
+        element[this->element_index + 3] = this->vertex_count - 2;
+        element[this->element_index + 4] = this->vertex_count + 1;
+        element[this->element_index + 5] = this->vertex_count;
+        this->element_index += 6;
+    }
+
+    /* Fix up the last segment */
+    element[this->element_index - 4] = vertex_start_count + 1;
+    element[this->element_index - 2] = vertex_start_count + 1;
+    element[this->element_index - 1] = vertex_start_count;
 }
 
 size_t ui::vertex_buffer::vertex_size(void)
