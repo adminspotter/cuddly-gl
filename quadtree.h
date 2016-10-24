@@ -1,6 +1,6 @@
 /* quadtree.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Jul 2016, 07:04:28 tquirk
+ *   last updated 09 Oct 2016, 14:40:03 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,18 +34,18 @@
 
 #include <glm/vec2.hpp>
 
-#include "panel.h"
+#include "widget.h"
 
 namespace ui
 {
     /* Forward declaration for multi-include problems */
-    class panel;
+    class widget;
 
     class quadtree
     {
       private:
         glm::ivec2 center, min, max;
-        std::list<ui::panel *> contents;
+        std::list<ui::widget *> contents;
         quadtree *quadrant[4], *parent;
 
         static const int quad0 = 1, quad1 = 2, quad2 = 4, quad3 = 8;
@@ -68,17 +68,17 @@ namespace ui
                 return (x < this->center.x ? 0 : 1)
                     + (y < this->center.y ? 0 : 2);
             };
-        int classify(ui::panel *);
+        int classify(ui::widget *);
 
       public:
         quadtree(quadtree *, glm::ivec2&, glm::ivec2&, int, int = 0);
         ~quadtree();
 
-        void insert(ui::panel *);
-        void remove(ui::panel *);
+        void insert(ui::widget *);
+        void remove(ui::widget *);
         void clear(void);
 
-        ui::panel *search(const glm::ivec2&);
+        ui::widget *search(const glm::ivec2&);
     };
 }
 

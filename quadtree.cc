@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Aug 2016, 08:50:33 tquirk
+ *   last updated 09 Oct 2016, 14:43:09 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -37,15 +37,13 @@
 #include "ui_defs.h"
 #include "quadtree.h"
 
-int ui::quadtree::classify(ui::panel *p)
+int ui::quadtree::classify(ui::widget *p)
 {
     glm::ivec2 ul, lr;
     int retval = 0;
 
-    p->get_va(ui::element::position, ui::position::x,  &ul.x,
-              ui::element::position, ui::position::y,  &ul.y,
-              ui::element::size,     ui::size::width,  &lr.x,
-              ui::element::size,     ui::size::height, &lr.y, 0);
+    p->get_va(ui::element::position, ui::position::all, &ul,
+              ui::element::size, ui::size::all, &lr, 0);
     /* Width and height are not absolute screen coords */
     lr += ul;
     retval |= this->quad_mask(ul);
@@ -105,7 +103,7 @@ ui::quadtree::~quadtree()
     if (this->quadrant[3] != NULL) delete this->quadrant[3];
 }
 
-void ui::quadtree::insert(ui::panel *obj)
+void ui::quadtree::insert(ui::widget *obj)
 {
     int which = this->classify(obj);
 
@@ -122,7 +120,7 @@ void ui::quadtree::insert(ui::panel *obj)
         this->quadrant[3]->insert(obj);
 }
 
-void ui::quadtree::remove(ui::panel *obj)
+void ui::quadtree::remove(ui::widget *obj)
 {
     int which = this->classify(obj);
 
@@ -146,7 +144,7 @@ void ui::quadtree::clear(void)
     if (this->quadrant[3] != NULL) this->quadrant[3]->clear();
 }
 
-ui::panel *ui::quadtree::search(const glm::ivec2& pt)
+ui::widget *ui::quadtree::search(const glm::ivec2& pt)
 {
     if (this->contents.empty())
         return NULL;
@@ -155,15 +153,13 @@ ui::panel *ui::quadtree::search(const glm::ivec2& pt)
     if (this->quadrant[which] != NULL)
         return this->quadrant[which]->search(pt);
 
-    std::list<ui::panel *>::iterator i;
+    std::list<ui::widget *>::iterator i;
     for (i = this->contents.begin(); i != this->contents.end(); ++i)
     {
         glm::ivec2 ul, lr;
 
-        (*i)->get_va(ui::element::position, ui::position::x,  &ul.x,
-                     ui::element::position, ui::position::y,  &ul.y,
-                     ui::element::size,     ui::size::width,  &lr.x,
-                     ui::element::size,     ui::size::height, &lr.y, 0);
+        (*i)->get_va(ui::element::position, ui::position::all, &ul,
+                     ui::element::size, ui::size::all, &lr, 0);
         lr += ul;
         if (pt.x >= ul.x && pt.x < lr.x && pt.y >= ul.y && pt.y < lr.y)
             return *i;
