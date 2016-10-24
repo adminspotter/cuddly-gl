@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:40:02 tquirk
+ *   last updated 21 Oct 2016, 08:22:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -98,31 +98,31 @@ void ui::text_field::set_image(GLuint t, void *v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
-void ui::text_field::enter_callback(ui::event_target *p,
+void ui::text_field::enter_callback(ui::active *a,
                                     void *call,
                                     void *client)
 {
-    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
     if (t != NULL)
         t->activate_cursor();
 }
 
-void ui::text_field::leave_callback(ui::event_target *p,
+void ui::text_field::leave_callback(ui::active *a,
                                     void *call,
                                     void *client)
 {
-    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
     if (t != NULL)
         t->deactivate_cursor();
 }
 
-void ui::text_field::key_callback(ui::event_target *p,
+void ui::text_field::key_callback(ui::active *a,
                                   void *call,
                                   void *client)
 {
-    ui::text_field *t = dynamic_cast<ui::text_field *>(p);
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::key_call_data *c = (ui::key_call_data *)call;
 
     if (t != NULL)

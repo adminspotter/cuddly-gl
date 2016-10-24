@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Sep 2016, 07:05:34 tquirk
+ *   last updated 21 Oct 2016, 08:23:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -25,8 +25,6 @@
  * adding keyboard handling and a moving cursor.
  *
  * Things to do
- *   - Determine if we want to add a 'password' flag here, to display
- *     things as asterisks, or have that in a subclass.
  *
  */
 
@@ -56,9 +54,9 @@ namespace ui
         void set_string(GLuint, void *);
         void set_image(GLuint, void *);
 
-        static void enter_callback(event_target *, void *, void *);
-        static void leave_callback(event_target *, void *, void *);
-        static void key_callback(event_target *, void *, void *);
+        static void enter_callback(active *, void *, void *);
+        static void leave_callback(active *, void *, void *);
+        static void key_callback(active *, void *, void *);
 
         void reset_cursor(void);
         void activate_cursor(void);
