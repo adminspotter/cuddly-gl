@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Oct 2016, 10:09:14 tquirk
+ *   last updated 24 Oct 2016, 07:18:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -93,7 +93,11 @@ void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
     this->element_index += 6;
 }
 
-/* The inner_pct is a percentage of the entire radius, rather than a
+/* We'll use a parametric function to draw our ellipse.
+ *
+ * <radius.x * cos(theta), radius.y * sin(theta)>
+ *
+ * The inner_pct is a percentage of the entire radius, rather than a
  * raw screen coord value of any kind.  For example, if the radius is
  * (100, 100), and the inner_pct is 0.15, the inner radius is (15,
  * 15).
@@ -149,6 +153,58 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
     element[this->element_index - 4] = vertex_start_count + 1;
     element[this->element_index - 2] = vertex_start_count + 1;
     element[this->element_index - 1] = vertex_start_count;
+}
+
+void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
+                                                 glm::vec2 radius,
+                                                 float pct, float angle,
+                                                 const glm::vec4& color)
+{
+    glm::vec2 inner = radius * pct;
+
+    vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
+    vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[this->vertex_index + 2],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+
+    vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
+    vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[this->vertex_index + 10],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+
+    /* Make the dividers one degree wide.  There's probably a nice way
+     * to do this so the edges will be parallel, but these don't look
+     * too bad for now.
+     */
+    angle += M_PI * 2.0f / 360;
+
+    vertex[this->vertex_index + 16] = radius.x * cosf(angle) + center.x;
+    vertex[this->vertex_index + 17] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[this->vertex_index + 18],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+
+    vertex[this->vertex_index + 24] = inner.x * cosf(angle) + center.x;
+    vertex[this->vertex_index + 25] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[this->vertex_index + 26],
+           glm::value_ptr(color), sizeof(float) * 4);
+    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
+    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
+    this->vertex_index += 32;
+    this->vertex_count += 4;
+
+    element[this->element_index] = this->vertex_count - 4;
+    element[this->element_index + 1] = this->vertex_count - 2;
+    element[this->element_index + 2] = this->vertex_count - 3;
+    element[this->element_index + 3] = this->vertex_count - 2;
+    element[this->element_index + 4] = this->vertex_count - 1;
+    element[this->element_index + 5] = this->vertex_count - 3;
+    this->element_index += 6;
 }
 
 size_t ui::vertex_buffer::vertex_size(void)
