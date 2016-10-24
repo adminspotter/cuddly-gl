@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:45:05 tquirk
+ *   last updated 24 Oct 2016, 08:27:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -130,15 +130,14 @@ void ui::row_column::set_desired_size(void)
 
     cell_size = this->calculate_cell_size();
     grid_size = this->calculate_grid_size();
-    this->size.x = ((cell_size.x + this->child_spacing.x) * grid_size.x)
+    this->dim.x = ((cell_size.x + this->child_spacing.x) * grid_size.x)
         + this->child_spacing.x
         + this->margin[1] + this->margin[2]
         + this->border[1] + this->border[2];
-    this->size.y = ((cell_size.y + this->child_spacing.y) * grid_size.y)
+    this->dim.y = ((cell_size.y + this->child_spacing.y) * grid_size.y)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
-    this->dim = this->size;
     this->composite::set_size(0, &zero);
     this->composite::parent->move_child(this);
     this->populate_buffers();
