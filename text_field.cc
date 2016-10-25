@@ -277,6 +277,52 @@ void ui::text_field::set_cursor_transform(int pixel_pos)
     this->cursor_transform = glm::translate(new_trans, dest);
 }
 
+int ui::text_field::calculate_field_length(void)
+{
+    /* We have an extra pixel on each side of the field, per
+     * ui::label::calculate_widget_size, thus the literal 2.
+     */
+    return this->dim.x - this->margin[1] - this->margin[2]
+        - this->border[1] - this->border[2] - 2;
+}
+
+void ui::text_field::generate_string_image(void)
+{
+    this->label::generate_string_image();
+
+    std::vector<int> string_max = {0, 0, 0};
+    ui::image tmp_img = this->img;
+    int pixel_pos = this->get_cursor_pixel_pos();
+    int field_len = this->calculate_field_length();
+
+    this->get_string_size(this->str, string_max);
+    if (string_max[0] > field_len)
+    {
+        /* The full string is too big to be displayed in its entirety.
+         * We'll chunk the image into half-widget-size pieces, and try
+         * to pick a starting chunk such that the cursor is in the
+         * second half of the widget.
+         */
+        int chunk = field_len / 2;
+        int which = std::max((pixel_pos / chunk) - 1, 0);
+        int start = chunk * which;
+
+        /* Take the appropriate portion of the string image */
+        tmp_img.width = std::min(field_len, string_max[0] - start);
+        delete[] tmp_img.data;
+        tmp_img.data = new unsigned char[tmp_img.width
+                                         * tmp_img.height
+                                         * tmp_img.per_pixel];
+        for (int r = 0; r < tmp_img.height; ++r)
+            memcpy(&tmp_img.data[r * tmp_img.width],
+                   &this->img.data[r * this->img.width + start],
+                   tmp_img.width);
+
+        /* Fix the cursor's position */
+        pixel_pos -= start;
+    }
+}
+
 void ui::text_field::populate_buffers(void)
 {
     if (this->font != NULL)
