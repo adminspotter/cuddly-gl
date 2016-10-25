@@ -71,9 +71,9 @@ void ui::popupmenu::set_resize(GLuint t, void *v)
  * pop us up under the right conditions.  The client data pointer
  * should point to us.
  */
-void ui::popupmenu::show(ui::event_target *p, void *call, void *client)
+void ui::popupmenu::show(ui::active *a, void *call, void *client)
 {
-    ui::popupmenu *pm = (ui::popupmenu *)client;
+    ui::pie_menu *pm = (ui::pie_menu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
@@ -416,13 +416,13 @@ void ui::popupmenu::draw(void)
         this->manager::draw();
 }
 
-void ui::popupmenu::add_child(panel *p)
+void ui::pie_menu::add_child(ui::widget *p)
 {
     this->manager::add_child(p);
     this->populate_buffers();
 }
 
-void ui::popupmenu::remove_child(panel *p)
+void ui::pie_menu::remove_child(ui::widget *p)
 {
     this->manager::remove_child(p);
     this->populate_buffers();

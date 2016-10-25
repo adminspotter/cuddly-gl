@@ -58,8 +58,8 @@ namespace ui
 
         virtual void draw(void);
 
-        virtual void add_child(panel *);
-        virtual void remove_child(panel *);
+        virtual void add_child(widget *) override;
+        virtual void remove_child(widget *) override;
     };
 }
 
