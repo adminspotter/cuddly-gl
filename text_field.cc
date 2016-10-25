@@ -39,12 +39,8 @@ int ui::text_field::get_size(GLuint t, void *v)
 {
     switch (t)
     {
-      case ui::size::max_width:
-        *((GLuint *)v) = this->max_length;
-        return 0;
-
-      default:
-        return this->label::get_size(t, v);
+      case ui::size::max_width:  *((GLuint *)v) = this->max_length;  return 0;
+      default:                   return this->label::get_size(t, v);
     }
 }
 
