@@ -378,9 +378,6 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     }
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
-    this->prep_vao_vbo(&this->vao, &this->vbo);
-    glGenBuffers(1, &this->ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     this->populate_buffers();
 }
 
