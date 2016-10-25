@@ -422,12 +422,40 @@ void ui::text_field::populate_buffers(void)
 ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
     : ui::label::label(c, w, h), ui::rect::rect(w, h)
 {
+    GLuint pos_attr, color_attr, texture_attr;
+
     this->cursor_pos = 0;
     this->blink = 250;
     this->max_length = 20;
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
     this->cursor_active = false;
+
+    this->parent->get_va(ui::element::attribute,
+                         ui::attribute::position,
+                         &pos_attr,
+                         ui::element::attribute,
+                         ui::attribute::color,
+                         &color_attr,
+                         ui::element::attribute,
+                         ui::attribute::texture,
+                         &texture_attr, 0);
+
+    glGenVertexArrays(1, &this->cursor_vao);
+    glBindVertexArray(this->cursor_vao);
+    glGenBuffers(1, &this->cursor_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
+    glGenBuffers(1, &this->cursor_ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->cursor_ebo);
+    glEnableVertexAttribArray(pos_attr);
+    glVertexAttribPointer(pos_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)0);
+    glEnableVertexAttribArray(color_attr);
+    glVertexAttribPointer(color_attr, 4, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 2));
+    glEnableVertexAttribArray(texture_attr);
+    glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(float) * 8, (void *)(sizeof(float) * 6));
 
     this->add_callback(ui::callback::enter,
                        ui::text_field::enter_callback,
@@ -439,12 +467,12 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
                        ui::text_field::key_callback,
                        NULL);
 
-    this->prep_vao_vbo(&this->cursor_vao, &this->cursor_vbo);
     this->populate_buffers();
 }
 
 ui::text_field::~text_field()
 {
+    glDeleteBuffers(1, &this->cursor_ebo);
     glDeleteBuffers(1, &this->cursor_vbo);
     glDeleteVertexArrays(1, &this->cursor_vao);
 }

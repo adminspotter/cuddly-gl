@@ -41,7 +41,7 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
-        GLuint cursor_vao, cursor_vbo;
+        GLuint cursor_vao, cursor_vbo, cursor_ebo;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
