@@ -43,6 +43,9 @@ ui::vertex_buffer::vertex_buffer(GLuint verts, GLuint elts)
 {
     this->vertex = new float[verts];
     this->element = new GLuint[elts];
+    this->vertex_index = 0;
+    this->vertex_count = 0;
+    this->element_index = 0;
 }
 
 ui::vertex_buffer::~vertex_buffer()
