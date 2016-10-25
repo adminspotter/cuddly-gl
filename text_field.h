@@ -46,13 +46,13 @@ namespace ui
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
-        virtual int get_size(GLuint, void *);
-        virtual void set_size(GLuint, void *);
+        virtual int get_size(GLuint, void *) override;
+        virtual void set_size(GLuint, void *) override;
         virtual int get_cursor(GLuint, void *);
         virtual void set_cursor(GLuint, void *);
         virtual void set_font(GLuint, void *) override;
-        void set_string(GLuint, void *);
-        void set_image(GLuint, void *);
+        virtual void set_string(GLuint, void *) override;
+        virtual void set_image(GLuint, void *) final;
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
@@ -85,8 +85,8 @@ namespace ui
         text_field(composite *, GLuint = 0, GLuint = 0);
         virtual ~text_field();
 
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
+        virtual int get(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };
