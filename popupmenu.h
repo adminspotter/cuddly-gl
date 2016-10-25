@@ -1,6 +1,6 @@
-/* popupmenu.h                                             -*- C++ -*-
+/* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 18:39:10 tquirk
+ *   last updated 24 Oct 2016, 07:38:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the declaration for the popup menu.  It is a
+ * This file contains the declaration for the popup pie menu.  It is a
  * composite subclass which will draw a round or oval popup window,
  * chopped into several segments.
  *
@@ -28,14 +28,14 @@
  *
  */
 
-#ifndef __INC_R9_POPUPMENU_H__
-#define __INC_R9_POPUPMENU_H__
+#ifndef __INC_R9_PIE_MENU_H__
+#define __INC_R9_PIE_MENU_H__
 
 #include "manager.h"
 
 namespace ui
 {
-    class popupmenu : public manager
+    class pie_menu : public manager
     {
       protected:
         int popup_button;
@@ -50,8 +50,8 @@ namespace ui
         void populate_buffers(void);
 
       public:
-        popupmenu(composite *, GLuint, GLuint);
-        virtual ~popupmenu();
+        pie_menu(composite *, GLuint, GLuint);
+        virtual ~pie_menu();
 
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
@@ -63,4 +63,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_POPUPMENU_H__ */
+#endif /* __INC_R9_PIE_MENU_H__ */

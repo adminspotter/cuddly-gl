@@ -1,6 +1,6 @@
-/* popupmenu.cc
+/* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Oct 2016, 08:19:06 tquirk
+ *   last updated 24 Oct 2016, 07:41:50 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,7 +42,7 @@
 #include "ui.h"
 #include "popupmenu.h"
 
-int ui::popupmenu::get_popup(GLuint t, void *v)
+int ui::pie_menu::get_popup(GLuint t, void *v)
 {
     int ret = 0;
 
@@ -54,7 +54,7 @@ int ui::popupmenu::get_popup(GLuint t, void *v)
     return ret;
 }
 
-void ui::popupmenu::set_popup(GLuint t, void *v)
+void ui::pie_menu::set_popup(GLuint t, void *v)
 {
     switch (t)
     {
@@ -62,7 +62,7 @@ void ui::popupmenu::set_popup(GLuint t, void *v)
     }
 }
 
-void ui::popupmenu::set_resize(GLuint t, void *v)
+void ui::pie_menu::set_resize(GLuint t, void *v)
 {
     /* No-op, since we don't want this to change */
 }
@@ -71,7 +71,7 @@ void ui::popupmenu::set_resize(GLuint t, void *v)
  * pop us up under the right conditions.  The client data pointer
  * should point to us.
  */
-void ui::popupmenu::show(ui::active *a, void *call, void *client)
+void ui::pie_menu::show(ui::active *a, void *call, void *client)
 {
     ui::pie_menu *pm = (ui::pie_menu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
@@ -84,13 +84,13 @@ void ui::popupmenu::show(ui::active *a, void *call, void *client)
     }
 }
 
-/* We should not assume that a points to the popup menu.  This may be
- * called from our parent, so we should use the client data, which
- * should always point to us.
+/* We should not assume that the active parameter points to the popup
+ * menu.  This may be called from our parent, so we should use the
+ * client data, which should always point to us.
  */
-void ui::popupmenu::hide(ui::active *a, void *call, void *client)
+void ui::pie_menu::hide(ui::active *a, void *call, void *client)
 {
-    ui::popupmenu *pm = (ui::popupmenu *)client;
+    ui::pie_menu *pm = (ui::pie_menu *)client;
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
@@ -363,7 +363,7 @@ void ui::popupmenu::populate_buffers(void)
                  GL_DYNAMIC_DRAW);
 }
 
-ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
+ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), ui::rect(w, h)
 {
     ui::active *a = dynamic_cast<ui::active *>(c);
@@ -373,10 +373,10 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
 
     if (a != NULL)
     {
-        a->add_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        a->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        a->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+        a->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     }
-    this->add_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+    this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
     this->prep_vao_vbo(&this->vao, &this->vbo);
     glGenBuffers(1, &this->ebo);
@@ -384,25 +384,25 @@ ui::popupmenu::popupmenu(composite *c, GLuint w, GLuint h)
     this->populate_buffers();
 }
 
-ui::popupmenu::~popupmenu()
+ui::pie_menu::~pie_menu()
 {
     ui::active *a;
 
     if ((a = dynamic_cast<ui::active *>(this->composite::parent)) != NULL)
     {
-        a->remove_callback(ui::callback::btn_down, ui::popupmenu::show, this);
-        a->remove_callback(ui::callback::btn_up, ui::popupmenu::hide, this);
+        a->remove_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+        a->remove_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     }
 }
 
-int ui::popupmenu::get(GLuint e, GLuint t, void *v)
+int ui::pie_menu::get(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);
     return this->manager::get(e, t, v);
 }
 
-void ui::popupmenu::set(GLuint e, GLuint t, void *v)
+void ui::pie_menu::set(GLuint e, GLuint t, void *v)
 {
     if (e == ui::element::popup)
         this->set_popup(t, v);
@@ -410,7 +410,7 @@ void ui::popupmenu::set(GLuint e, GLuint t, void *v)
         this->manager::set(e, t, v);
 }
 
-void ui::popupmenu::draw(void)
+void ui::pie_menu::draw(void)
 {
     if (this->visible)
         this->manager::draw();
