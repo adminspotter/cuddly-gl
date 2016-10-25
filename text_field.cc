@@ -95,6 +95,7 @@ void ui::text_field::set_string(GLuint t, void *v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->generate_string_image();
     this->reset_cursor();
 }
 
@@ -321,6 +322,8 @@ void ui::text_field::generate_string_image(void)
         /* Fix the cursor's position */
         pixel_pos -= start;
     }
+
+    this->set_cursor_transform(pixel_pos);
 }
 
 void ui::text_field::generate_cursor(void)
