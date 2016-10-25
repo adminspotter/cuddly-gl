@@ -56,7 +56,7 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
 
-        virtual void draw(void);
+        virtual void draw(GLuint, const glm::mat4&);
 
         virtual void add_child(widget *) override;
         virtual void remove_child(widget *) override;

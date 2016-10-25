@@ -407,10 +407,10 @@ void ui::pie_menu::set(GLuint e, GLuint t, void *v)
         this->manager::set(e, t, v);
 }
 
-void ui::pie_menu::draw(void)
+void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     if (this->visible)
-        this->manager::draw();
+        this->manager::draw(trans_uniform, parent_trans);
 }
 
 void ui::pie_menu::add_child(ui::widget *p)
