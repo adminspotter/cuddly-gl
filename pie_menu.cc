@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 07:41:50 tquirk
+ *   last updated 25 Oct 2016, 16:49:35 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -40,7 +40,7 @@
 
 #include "ui_defs.h"
 #include "ui.h"
-#include "popupmenu.h"
+#include "pie_menu.h"
 
 int ui::pie_menu::get_popup(GLuint t, void *v)
 {

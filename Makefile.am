@@ -32,7 +32,7 @@ libr9_client_ui_la_SOURCES = ui_defs.h image.h \
 	composite.cc composite.h \
 	manager.cc manager.h \
 	row_column.cc row_column.h \
-	popupmenu.cc popupmenu.h
+	pie_menu.cc pie_menu.h
 libr9_client_ui_la_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
 	-DSTORE_PREFIX=\"@datadir@/$(PACKAGE)\" \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \

@@ -18,7 +18,7 @@
 #include "password.h"
 #include "manager.h"
 #include "row_column.h"
-#include "popupmenu.h"
+#include "pie_menu.h"
 #include "multi_label.h"
 
 void error_callback(int, const char *);
