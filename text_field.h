@@ -41,7 +41,7 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
-        GLuint cursor_vao, cursor_vbo, cursor_ebo;
+        GLuint cursor_vao, cursor_vbo, cursor_ebo, cursor_element_count;
         glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
@@ -77,10 +77,9 @@ namespace ui
         virtual int get_cursor_pixel_pos(void);
         void set_cursor_transform(int);
         int calculate_field_length(void);
-        virtual void generate_string_image(void) override;
 
-        void generate_cursor(int = -1);
-        virtual void populate_buffers(void);
+        virtual void generate_string_image(void) override;
+        void generate_cursor(void);
 
       public:
         text_field(composite *, GLuint = 0, GLuint = 0);
