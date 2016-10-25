@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 07:18:16 tquirk
+ *   last updated 25 Oct 2016, 17:56:47 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -312,6 +312,8 @@ void ui::widget::set_border(GLuint t, void *v)
             if (t & ui::side::left)    this->border[1] = new_v;
             if (t & ui::side::right)   this->border[2] = new_v;
         }
+
+    this->populate_buffers();
 }
 
 int ui::widget::get_margin(GLuint t, void *v)
@@ -350,6 +352,8 @@ void ui::widget::set_margin(GLuint t, void *v)
             if (t & ui::side::left)    this->margin[1] = new_v;
             if (t & ui::side::right)   this->margin[2] = new_v;
         }
+
+    this->populate_buffers();
 }
 
 int ui::widget::get_color(GLuint t, void *v)
@@ -380,6 +384,8 @@ void ui::widget::set_color(GLuint t, void *v)
 
     if (t & ui::color::background)
         memcpy(glm::value_ptr(this->background), v, sizeof(float) * 4);
+
+    this->populate_buffers();
 }
 
 void ui::widget::set_size(GLuint t, void *v)
