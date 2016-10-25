@@ -42,21 +42,21 @@ namespace ui
 
         int get_popup(GLuint, void *);
         void set_popup(GLuint, void *);
-        virtual void set_resize(GLuint, void *);
+        virtual void set_resize(GLuint, void *) override;
 
         static void show(active *, void *, void *);
         static void hide(active *, void *, void *);
 
-        virtual vertex_buffer *generate_points(void);
+        virtual vertex_buffer *generate_points(void) override;
 
       public:
         pie_menu(composite *, GLuint, GLuint);
         virtual ~pie_menu();
 
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
+        virtual int get(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, void *) override;
 
-        virtual void draw(GLuint, const glm::mat4&);
+        virtual void draw(GLuint, const glm::mat4&) override;
 
         virtual void add_child(widget *) override;
         virtual void remove_child(widget *) override;
