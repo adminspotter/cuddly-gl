@@ -76,16 +76,17 @@ void ui::text_field::set_cursor(GLuint t, void *v)
     }
 }
 
-/* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
-int ui::text_field::get_cursor_blink(GLuint t, void *v)
+void ui::text_field::set_font(GLuint t, void *v)
 {
-    *((GLuint *)v) = this->blink;
-    return 0;
-}
+    std::vector<int> font_max = {0, 0, 0};
 
-void ui::text_field::set_cursor_blink(GLuint t, void *v)
-{
-    this->blink = *((GLuint *)v);
+    this->label::set_font(t, v);
+
+    this->font->max_cell_size(font_max);
+    font_max[0] *= this->max_length;
+    this->calculate_widget_size(font_max[0], font_max[1] + font_max[2]);
+
+    this->generate_cursor();
     this->reset_cursor();
 }
 

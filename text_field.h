@@ -49,6 +49,7 @@ namespace ui
         virtual void set_size(GLuint, void *);
         virtual int get_cursor(GLuint, void *);
         virtual void set_cursor(GLuint, void *);
+        virtual void set_font(GLuint, void *) override;
         void set_string(GLuint, void *);
         void set_image(GLuint, void *);
 
