@@ -57,20 +57,27 @@ void ui::text_field::set_size(GLuint t, void *v)
     }
 }
 
-int ui::text_field::get_cursor_pos(GLuint t, void *v)
+int ui::text_field::get_cursor(GLuint t, void *v)
 {
-    *((GLuint *)v) = this->cursor_pos;
-    return 0;
+    GLuint *val = (GLuint *)v;
+
+    switch (t)
+    {
+      case ui::cursor::position:  return this->get_cursor_pos(val);
+      case ui::cursor::blink:     return this->get_cursor_blink(val);
+      default:                    return 1;
+    }
 }
 
-void ui::text_field::set_cursor_pos(GLuint t, void *v)
+void ui::text_field::set_cursor(GLuint t, void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint val = *(GLuint *)v;
 
-    if (new_v > this->str.size())
-        new_v = this->str.size();
-    this->cursor_pos = new_v;
-    this->reset_cursor();
+    switch (t)
+    {
+      case ui::cursor::position:  this->set_cursor_pos(val);    break;
+      case ui::cursor::blink:     this->set_cursor_blink(val);  break;
+    }
 }
 
 /* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
@@ -451,13 +458,8 @@ int ui::text_field::get(GLuint e, GLuint t, void *v)
 
     switch (e)
     {
-      case ui::element::cursor:
-        switch (t)
-        {
-          case ui::cursor::position:  return this->get_cursor_pos(t, v);
-          case ui::cursor::blink:     return this->get_cursor_blink(t, v);
-        }
-      default:                        return ui::label::get(e, t, v);
+      case ui::element::cursor:  return this->get_cursor(t, v);
+      default:                   return this->label::get(e, t, v);
     }
 }
 
@@ -465,18 +467,8 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
-      case ui::element::cursor:
-        switch (t)
-        {
-          case ui::cursor::position:  this->set_cursor_pos(t, v);   break;
-          case ui::cursor::blink:     this->set_cursor_blink(t, v); break;
-        }
-        this->generate_cursor();
-        break;
-
-      default:
-        ui::label::set(e, t, v);
-        break;
+      case ui::element::cursor:  this->set_cursor(t, v);     break;
+      default:                   this->label::set(e, t, v);  break;
     }
 }
 

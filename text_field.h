@@ -47,10 +47,8 @@ namespace ui
 
         virtual int get_size(GLuint, void *);
         virtual void set_size(GLuint, void *);
-        int get_cursor_pos(GLuint, void *);
-        void set_cursor_pos(GLuint, void *);
-        int get_cursor_blink(GLuint, void *);
-        void set_cursor_blink(GLuint, void *);
+        virtual int get_cursor(GLuint, void *);
+        virtual void set_cursor(GLuint, void *);
         void set_string(GLuint, void *);
         void set_image(GLuint, void *);
 
