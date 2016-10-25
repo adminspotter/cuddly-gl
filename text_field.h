@@ -58,6 +58,10 @@ namespace ui
         static void leave_callback(active *, void *, void *);
         static void key_callback(active *, void *, void *);
 
+        int get_cursor_pos(GLuint *);
+        void set_cursor_pos(GLuint);
+        int get_cursor_blink(GLuint *);
+        void set_cursor_blink(GLuint);
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);

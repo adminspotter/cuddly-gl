@@ -142,6 +142,33 @@ void ui::text_field::key_callback(ui::active *a,
     }
 }
 
+int ui::text_field::get_cursor_pos(GLuint *v)
+{
+    *v = this->cursor_pos;
+    return 0;
+}
+
+void ui::text_field::set_cursor_pos(GLuint v)
+{
+    if (v > this->str.size())
+        v = this->str.size();
+    this->cursor_pos = v;
+    this->reset_cursor();
+}
+
+/* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
+int ui::text_field::get_cursor_blink(GLuint *v)
+{
+    *v = this->blink;
+    return 0;
+}
+
+void ui::text_field::set_cursor_blink(GLuint v)
+{
+    this->blink = v;
+    this->reset_cursor();
+}
+
 void ui::text_field::reset_cursor(void)
 {
     this->cursor_visible = true;
