@@ -266,66 +266,15 @@ int ui::text_field::get_cursor_pixel_pos(void)
     return ret;
 }
 
-void ui::text_field::generate_cursor(int pixel_pos)
+void ui::text_field::set_cursor_transform(int pixel_pos)
 {
-    if (this->font != NULL)
-    {
-        float vertex[48];
-        float x = this->pos.x, y = this->pos.y, h = this->dim.y;
-        float sw, m[4], b[4];
-        glm::vec2 ps;
-        GLuint temp;
-        if (pixel_pos < 0)
-            pixel_pos = this->get_cursor_pixel_pos();
+    glm::vec3 dest;
+    glm::mat4 new_trans;
 
-        this->parent->get(ui::element::pixel_size, ui::size::all, &ps);
-        ps.y = -ps.y;
-        sw = ps.x * (float)pixel_pos;
-        m[0] = this->margin[0] * ps.y;  b[0] = this->border[0] * ps.y;
-        m[1] = this->margin[1] * ps.x;  b[1] = this->border[1] * ps.x;
-        m[2] = this->margin[2] * ps.x;  b[2] = this->border[2] * ps.x;
-        m[3] = this->margin[3] * ps.y;  b[3] = this->border[3] * ps.y;
-
-        vertex[0] = x * ps.x - 1.0f + m[1] + b[1] + sw + ps.x;
-        vertex[1] = y * ps.y + 1.0f + m[0] + b[0] + ps.y;
-        memcpy(&vertex[2],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[6] = vertex[7] = ui::panel::no_texture;
-
-        vertex[8] = vertex[0];
-        vertex[9] = vertex[1] + (h * ps.y) - m[0] - b[0] - m[3] - b[3] - ps.y - ps.y;
-        memcpy(&vertex[10],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[14] = vertex[15] = ui::panel::no_texture;
-
-        vertex[16] = vertex[0] + ps.x;
-        vertex[17] = vertex[1];
-        memcpy(&vertex[18],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[22] = vertex[23] = ui::panel::no_texture;
-
-        vertex[24] = vertex[0];
-        vertex[25] = vertex[9];
-        memcpy(&vertex[26],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[30] = vertex[31] = ui::panel::no_texture;
-
-        vertex[32] = vertex[16];
-        vertex[33] = vertex[9];
-        memcpy(&vertex[34],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[38] = vertex[39] = ui::panel::no_texture;
-
-        vertex[40] = vertex[16];
-        vertex[41] = vertex[1];
-        memcpy(&vertex[42],
-               glm::value_ptr(this->foreground), sizeof(float) * 4);
-        vertex[46] = vertex[47] = ui::panel::no_texture;
-
-        glBindVertexArray(this->cursor_vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
-    }
+    this->parent->get(ui::element::pixel_size, ui::size::all, &dest);
+    dest.x *= this->margin[1] + this->border[1] + 1 + pixel_pos;
+    dest.y = -(dest.y * (this->margin[0] + this->border[0] + 1));
+    this->cursor_transform = glm::translate(new_trans, dest);
 }
 
 void ui::text_field::populate_buffers(void)

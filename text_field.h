@@ -75,6 +75,7 @@ namespace ui
 
         virtual void get_string_size(const std::u32string&, std::vector<int>&);
         virtual int get_cursor_pixel_pos(void);
+        void set_cursor_transform(int);
 
         void generate_cursor(int = -1);
         virtual void populate_buffers(void);
