@@ -47,7 +47,7 @@ namespace ui
         static void show(active *, void *, void *);
         static void hide(active *, void *, void *);
 
-        void populate_buffers(void);
+        virtual vertex_buffer *generate_points(void);
 
       public:
         pie_menu(composite *, GLuint, GLuint);
