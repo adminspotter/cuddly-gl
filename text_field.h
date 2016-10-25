@@ -74,7 +74,7 @@ namespace ui
         void remove_next_char(void);
 
         virtual void get_string_size(const std::u32string&, std::vector<int>&);
-        virtual int get_cursor_pixel_pos(void);
+        virtual int get_raw_cursor_pos(void);
         void set_cursor_transform(int);
         int calculate_field_length(void);
 

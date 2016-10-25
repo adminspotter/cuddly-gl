@@ -252,7 +252,7 @@ void ui::text_field::get_string_size(const std::u32string& str,
         this->font->get_string_size(str, sz);
 }
 
-int ui::text_field::get_cursor_pixel_pos(void)
+int ui::text_field::get_raw_cursor_pos(void)
 {
     int ret = 0;
 
@@ -292,7 +292,7 @@ void ui::text_field::generate_string_image(void)
 
     std::vector<int> string_max = {0, 0, 0};
     ui::image tmp_img = this->img;
-    int pixel_pos = this->get_cursor_pixel_pos();
+    int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
 
     this->get_string_size(this->str, string_max);
