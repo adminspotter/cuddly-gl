@@ -42,6 +42,7 @@ namespace ui
       protected:
         GLuint cursor_pos, blink, max_length;
         GLuint cursor_vao, cursor_vbo, cursor_ebo;
+        glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
@@ -85,7 +86,7 @@ namespace ui
         virtual int get(GLuint, GLuint, void *);
         virtual void set(GLuint, GLuint, void *);
 
-        virtual void draw(void);
+        virtual void draw(GLuint, const glm::mat4&) override;
     };
 }
 

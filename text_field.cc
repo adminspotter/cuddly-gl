@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <ratio>
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ui_defs.h"
@@ -420,7 +421,7 @@ void ui::text_field::populate_buffers(void)
 }
 
 ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h), ui::rect::rect(w, h)
+    : ui::label::label(c, w, h), ui::rect::rect(w, h), cursor_transform()
 {
     GLuint pos_attr, color_attr, texture_attr;
 
@@ -497,9 +498,9 @@ void ui::text_field::set(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::text_field::draw(void)
+void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
-    this->label::draw();
+    this->label::draw(trans_uniform, parent_trans);
     if (this->cursor_active)
     {
         if (this->blink > 0)
@@ -518,9 +519,15 @@ void ui::text_field::draw(void)
         }
         if (this->cursor_visible)
         {
+            glm::mat4 trans = cursor_transform * parent_trans;
+
             glBindVertexArray(this->cursor_vao);
             glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->cursor_ebo);
+            glUniformMatrix4fv(trans_uniform, 1, GL_FALSE,
+                               glm::value_ptr(trans));
+            glDrawElements(GL_TRIANGLES, this->cursor_element_count,
+                           GL_UNSIGNED_INT, 0);
         }
     }
 }
