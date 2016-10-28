@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Oct 2016, 08:07:57 tquirk
+ *   last updated 28 Oct 2016, 07:55:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -56,12 +56,14 @@ namespace ui
         virtual void set_string(GLuint, void *);
         int get_image(GLuint, void *);
         virtual void set_image(GLuint, void *);
+        virtual void set_border(GLuint, void *) override;
+        virtual void set_margin(GLuint, void *) override;
 
         static std::u32string utf8tou32str(const std::string&);
         static std::string u32strtoutf8(const std::u32string&);
 
         virtual void generate_string_image(void);
-        virtual void calculate_widget_size(int, int);
+        virtual void calculate_widget_size(void);
         virtual vertex_buffer *generate_points(void) override;
         virtual void populate_buffers(void) override;
 

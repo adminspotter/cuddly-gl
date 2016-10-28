@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Oct 2016, 08:23:59 tquirk
+ *   last updated 28 Oct 2016, 07:21:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -79,6 +79,7 @@ namespace ui
         int calculate_field_length(void);
 
         virtual void generate_string_image(void) override;
+        virtual void calculate_widget_size(void) override;
         void generate_cursor(void);
 
       public:

@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Oct 2016, 09:05:13 tquirk
+ *   last updated 28 Oct 2016, 07:56:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,7 +55,6 @@ void ui::label::set_font(GLuint t, void *v)
     if (this->str.size() > 0)
     {
         this->generate_string_image();
-        this->calculate_widget_size(this->img.width, this->img.height);
         this->populate_buffers();
     }
 }
@@ -72,9 +71,11 @@ void ui::label::set_string(GLuint t, void *v)
 {
     this->use_text = true;
     this->str = utf8tou32str(*((std::string *)v));
-    this->generate_string_image();
-    this->calculate_widget_size(this->img.width, this->img.height);
-    this->populate_buffers();
+    if (this->font != NULL)
+    {
+        this->generate_string_image();
+        this->populate_buffers();
+    }
 }
 
 /* ARGSUSED */
@@ -90,7 +91,21 @@ void ui::label::set_image(GLuint t, void *v)
     this->use_text = false;
     this->str.clear();
     this->img = *(ui::image *)v;
-    this->calculate_widget_size(this->img.width, this->img.height);
+    this->calculate_widget_size();
+    this->populate_buffers();
+}
+
+void ui::label::set_border(GLuint t, void *v)
+{
+    this->widget::set_border(t, v);
+    this->calculate_widget_size();
+    this->populate_buffers();
+}
+
+void ui::label::set_margin(GLuint t, void *v)
+{
+    this->widget::set_margin(t, v);
+    this->calculate_widget_size();
     this->populate_buffers();
 }
 
@@ -212,21 +227,24 @@ void ui::label::generate_string_image(void)
 {
     if (this->use_text == true && this->font != NULL)
         this->font->render_string(this->str, this->img);
+    this->calculate_widget_size();
 }
 
-void ui::label::calculate_widget_size(int w, int h)
+void ui::label::calculate_widget_size(void)
 {
+    glm::ivec2 size;
+
     /* We want an extra pixel of space between the string and each
      * side, even if there is no border or margin, thus the
      * literal 2s.
      */
-    this->dim.x = w
+    size.x = this->img.width
         + this->margin[1] + this->margin[2]
         + this->border[1] + this->border[2] + 2;
-    this->dim.y = h
+    size.y = this->img.height
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3] + 2;
-    this->parent->move_child(this);
+    this->set_size(ui::size::all, &size);
 }
 
 ui::vertex_buffer *ui::label::generate_points(void)

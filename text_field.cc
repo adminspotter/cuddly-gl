@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Oct 2016, 08:22:24 tquirk
+ *   last updated 28 Oct 2016, 07:31:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -79,14 +79,9 @@ void ui::text_field::set_cursor(GLuint t, void *v)
 
 void ui::text_field::set_font(GLuint t, void *v)
 {
-    std::vector<int> font_max = {0, 0, 0};
-
     this->label::set_font(t, v);
 
-    this->font->max_cell_size(font_max);
-    font_max[0] *= this->max_length;
-    this->calculate_widget_size(font_max[0], font_max[1] + font_max[2]);
-
+    this->calculate_widget_size();
     this->generate_cursor();
     this->reset_cursor();
 }
@@ -324,6 +319,22 @@ void ui::text_field::generate_string_image(void)
     }
 
     this->set_cursor_transform(pixel_pos);
+}
+
+void ui::text_field::calculate_widget_size(void)
+{
+    std::vector<int> font_max = {0, 0, 0};
+    glm::ivec2 size;
+
+    this->font->max_cell_size(font_max);
+    font_max[0] *= this->max_length;
+    size.x = font_max[0]
+        + this->border[1] + this->border[2]
+        + this->margin[1] + this->margin[2] + 2;
+    size.y = font_max[1] + font_max[2]
+        + this->border[0] + this->border[3]
+        + this->margin[0] + this->margin[3] + 2;
+    this->set_size(ui::size::all, &size);
 }
 
 void ui::text_field::generate_cursor(void)
