@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 08:01:29 tquirk
+ *   last updated 29 Oct 2016, 11:50:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,6 +55,8 @@ namespace ui
         static void motion_callback(active *, void *, void *);
         static void button_callback(active *, void *, void *);
         static void keypress_callback(active *, void *, void *);
+
+        virtual void recalculate_transformation_matrix(void) override;
 
       public:
         manager(composite *, GLuint, GLuint);

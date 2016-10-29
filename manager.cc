@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 09:48:11 tquirk
+ *   last updated 29 Oct 2016, 12:00:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -183,6 +183,17 @@ void ui::manager::keypress_callback(active *a, void *call, void *client)
 
         m->key_callback(kcd->key, kcd->character, kcd->state, kcd->mods);
     }
+}
+
+/* When the UI context resizes, the flow comes through this function,
+ * which is why we do our child regeneration.  It's not likely the
+ * ideal way to do it, as it seems a little bit magic, but we'll at
+ * least note it here, so somebody knows what's going on.
+ */
+void ui::manager::recalculate_transformation_matrix(void)
+{
+    this->widget::recalculate_transformation_matrix();
+    this->composite::regenerate_children();
 }
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
