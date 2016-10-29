@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Oct 2016, 17:56:47 tquirk
+ *   last updated 29 Oct 2016, 09:35:25 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -434,7 +434,7 @@ ui::vertex_buffer *ui::widget::generate_points(void)
                          this->foreground);
     if (this->border[3] != 0)
         vb->generate_box(glm::vec2(vb->vertex[0] + m[1],
-                                   vb->vertex[17] + m[3] - b[3]),
+                                   vb->vertex[17] - m[3] - b[3]),
                          glm::vec2(vb->vertex[8] - m[2],
                                    vb->vertex[17] - m[3]),
                          this->foreground);
