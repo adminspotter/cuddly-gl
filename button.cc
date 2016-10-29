@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Oct 2016, 21:54:38 tquirk
+ *   last updated 29 Oct 2016, 09:33:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,6 +85,7 @@ void ui::button::set_margin(GLuint s, void *v)
             if (s & ui::side::right)
                 this->margin[2] = std::max(new_v, min_val);
         }
+    this->populate_buffers();
 }
 
 int ui::button::get_active_state(bool *v)
