@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 09:35:25 tquirk
+ *   last updated 29 Oct 2016, 09:56:09 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -246,15 +246,7 @@ void ui::widget::set_position(GLuint t, void *v)
     }
 
     this->parent->move_child(this);
-
-    /* Recalculate position translation matrix */
-    glm::vec3 pixel_sz;
-    glm::mat4 new_trans;
-
-    this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
-    pixel_sz.x *= this->pos.x;
-    pixel_sz.y = -(pixel_sz.y * this->pos.y);
-    this->pos_transform = glm::translate(new_trans, pixel_sz);
+    this->recalculate_transformation_matrix();
 }
 
 int ui::widget::get_state(GLuint t, void *v)
@@ -393,6 +385,17 @@ void ui::widget::set_size(GLuint t, void *v)
     this->rect::set_size(t, v);
     this->populate_buffers();
     this->parent->move_child(this);
+}
+
+void ui::widget::recalculate_transformation_matrix(void)
+{
+    glm::vec3 pixel_sz;
+    glm::mat4 new_trans;
+
+    this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
+    pixel_sz.x *= this->pos.x;
+    pixel_sz.y = -(pixel_sz.y * this->pos.y);
+    this->pos_transform = glm::translate(new_trans, pixel_sz);
 }
 
 ui::vertex_buffer *ui::widget::generate_points(void)

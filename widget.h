@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 06:59:43 tquirk
+ *   last updated 29 Oct 2016, 09:54:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -85,6 +85,7 @@ namespace ui
         void set_color(GLuint, void *);
         virtual void set_size(GLuint, void *) override;
 
+        void recalculate_transformation_matrix(void);
         virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
 
