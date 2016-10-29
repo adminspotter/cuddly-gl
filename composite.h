@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 08:00:47 tquirk
+ *   last updated 29 Oct 2016, 11:59:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -60,6 +60,7 @@ namespace ui
         virtual void set_resize(GLuint, void *);
         virtual int get_pixel_size(GLuint, void *);
 
+        void regenerate_children(void);
         void regenerate_search_tree(void);
 
       public:

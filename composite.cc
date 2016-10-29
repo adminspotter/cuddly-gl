@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Oct 2016, 09:01:43 tquirk
+ *   last updated 29 Oct 2016, 11:59:30 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -59,6 +59,7 @@ void ui::composite::set_size(GLuint d, void *v)
       case ui::size::width:   this->dim.x = *(int *)v;       break;
       case ui::size::height:  this->dim.y = *(int *)v;       break;
     }
+    this->regenerate_children();
     this->regenerate_search_tree();
 }
 
@@ -96,6 +97,15 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
       default:                ret = 1;
     }
     return ret;
+}
+
+void ui::composite::regenerate_children(void)
+{
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    {
+        (*i)->recalculate_transformation_matrix();
+        (*i)->populate_buffers();
+    }
 }
 
 void ui::composite::regenerate_search_tree(void)
