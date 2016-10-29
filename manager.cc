@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 07:56:34 tquirk
+ *   last updated 29 Oct 2016, 09:48:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -108,7 +108,6 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 void ui::manager::set_desired_size(void)
 {
     glm::ivec2 max_pt(0, 0);
-    GLuint zero = 0;
 
     if (this->resize == ui::resize::none)
         return;
@@ -138,7 +137,7 @@ void ui::manager::set_desired_size(void)
         if (max_pt.y > this->dim.y)
             this->dim.y = max_pt.y;
     }
-    this->composite::set_size(0, &zero);
+    this->regenerate_search_tree();
     this->populate_buffers();
 }
 
