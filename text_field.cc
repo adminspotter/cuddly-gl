@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Oct 2016, 16:20:42 tquirk
+ *   last updated 30 Oct 2016, 16:25:39 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -190,6 +190,7 @@ void ui::text_field::deactivate_cursor(void)
 void ui::text_field::first_char(void)
 {
     this->cursor_pos = 0;
+    this->generate_string_image();
     this->populate_buffers();
 }
 
@@ -198,6 +199,7 @@ void ui::text_field::previous_char(void)
     if (this->cursor_pos > 0)
     {
         --this->cursor_pos;
+        this->generate_string_image();
         this->populate_buffers();
     }
 }
@@ -205,12 +207,14 @@ void ui::text_field::previous_char(void)
 void ui::text_field::next_char(void)
 {
     this->cursor_pos = std::min((GLuint)this->str.size(), this->cursor_pos + 1);
+    this->generate_string_image();
     this->populate_buffers();
 }
 
 void ui::text_field::last_char(void)
 {
     this->cursor_pos = this->str.size();
+    this->generate_string_image();
     this->populate_buffers();
 }
 
