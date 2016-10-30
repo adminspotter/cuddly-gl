@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Oct 2016, 07:31:14 tquirk
+ *   last updated 29 Oct 2016, 15:43:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -365,7 +365,7 @@ void ui::text_field::generate_cursor(void)
         glBufferData(GL_ARRAY_BUFFER,
                      vb->vertex_size(), vb->vertex,
                      GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->cursor_ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      vb->element_size(), vb->element,
                      GL_DYNAMIC_DRAW);
@@ -384,6 +384,7 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
     this->cursor_active = false;
+    this->cursor_element_count = 0;
 
     this->parent->get_va(ui::element::attribute,
                          ui::attribute::position,
@@ -472,7 +473,7 @@ void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         }
         if (this->cursor_visible)
         {
-            glm::mat4 trans = cursor_transform * parent_trans;
+            glm::mat4 trans = this->cursor_transform * parent_trans;
 
             glBindVertexArray(this->cursor_vao);
             glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
