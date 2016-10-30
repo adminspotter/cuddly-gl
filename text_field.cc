@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 15:43:18 tquirk
+ *   last updated 30 Oct 2016, 16:20:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -342,21 +342,19 @@ void ui::text_field::generate_cursor(void)
     if (this->font != NULL)
     {
         ui::vertex_buffer *vb = new ui::vertex_buffer(32, 6);
-        float h = this->dim.y, m[4], b[4];
+        float h, m[2], b[2];
         glm::vec2 psz;
 
         this->parent->get(ui::element::pixel_size, ui::size::all, &psz);
         psz.y = -psz.y;
-        h *= psz.y;
-        m[0] = this->margin[0] * psz.y;  b[0] = this->border[0] * psz.y;
-        m[1] = this->margin[1] * psz.x;  b[1] = this->border[1] * psz.x;
-        m[2] = this->margin[2] * psz.x;  b[2] = this->border[2] * psz.x;
-        m[3] = this->margin[3] * psz.y;  b[3] = this->border[3] * psz.y;
+        h = ((float)this->dim.y) * psz.y;
+        m[0] = this->margin[0] * psz.y;  m[1] = this->margin[3] * psz.y;
+        b[0] = this->border[0] * psz.y;  b[1] = this->border[3] * psz.y;
 
         vb->generate_box(glm::vec2(-1.0f, 1.0f),
                          glm::vec2(-1.0f + psz.x,
-                                   1.0f + h - m[0] - b[0] - m[3]
-                                   - b[3] - psz.y - psz.y),
+                                   1.0f + h - m[0] - b[0] - m[1]
+                                   - b[1] - psz.y - psz.y),
                          this->foreground);
 
         this->cursor_element_count = vb->element_index;
@@ -473,7 +471,8 @@ void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         }
         if (this->cursor_visible)
         {
-            glm::mat4 trans = this->cursor_transform * parent_trans;
+            glm::mat4 trans
+                = this->cursor_transform * this->pos_transform * parent_trans;
 
             glBindVertexArray(this->cursor_vao);
             glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
