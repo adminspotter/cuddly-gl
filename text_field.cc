@@ -49,7 +49,9 @@ void ui::text_field::set_size(GLuint t, void *v)
 {
     switch (t)
     {
-      case ui::size::max_width:  this->max_length = *(int *)v;  break;
+      case ui::size::max_width:  this->max_length = *(int *)v;
+                                 this->populate_buffers();
+                                 this->reset_cursor();  break;
       default:                   this->label::set_size(t, v);   break;
     }
 }
@@ -75,6 +77,8 @@ void ui::text_field::set_cursor(GLuint t, void *v)
       case ui::cursor::position:  this->set_cursor_pos(val);    break;
       case ui::cursor::blink:     this->set_cursor_blink(val);  break;
     }
+    this->generate_string_image();
+    this->reset_cursor();
 }
 
 void ui::text_field::set_font(GLuint t, void *v)
