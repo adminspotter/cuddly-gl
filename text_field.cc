@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Oct 2016, 16:25:39 tquirk
+ *   last updated 31 Oct 2016, 08:03:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -291,7 +291,6 @@ void ui::text_field::generate_string_image(void)
     this->label::generate_string_image();
 
     std::vector<int> string_max = {0, 0, 0};
-    ui::image tmp_img = this->img;
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
 
@@ -303,13 +302,15 @@ void ui::text_field::generate_string_image(void)
          * to pick a starting chunk such that the cursor is in the
          * second half of the widget.
          */
+        ui::image tmp_img;
         int chunk = field_len / 2;
         int which = std::max((pixel_pos / chunk) - 1, 0);
         int start = chunk * which;
 
         /* Take the appropriate portion of the string image */
         tmp_img.width = std::min(field_len, string_max[0] - start);
-        delete[] tmp_img.data;
+        tmp_img.height = this->img.height;
+        tmp_img.per_pixel = this->img.per_pixel;
         tmp_img.data = new unsigned char[tmp_img.width
                                          * tmp_img.height
                                          * tmp_img.per_pixel];
@@ -317,6 +318,7 @@ void ui::text_field::generate_string_image(void)
             memcpy(&tmp_img.data[r * tmp_img.width],
                    &this->img.data[r * this->img.width + start],
                    tmp_img.width);
+        this->img = tmp_img;
 
         /* Fix the cursor's position */
         pixel_pos -= start;
