@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 09:56:09 tquirk
+ *   last updated 06 Nov 2016, 09:57:18 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -561,4 +561,10 @@ void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         glUniformMatrix4fv(trans_uniform, 1, GL_FALSE, glm::value_ptr(trans));
         glDrawElements(GL_TRIANGLES, this->element_count, GL_UNSIGNED_INT, 0);
     }
+}
+
+void ui::widget::close(void)
+{
+    this->visible = false;
+    this->parent->close_child(this);
 }

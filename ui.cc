@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Oct 2016, 07:36:39 tquirk
+ *   last updated 06 Nov 2016, 10:12:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -102,9 +102,22 @@ int ui::context::get(GLuint e, GLuint t, void *v)
     }
 }
 
+void ui::context::close_child(ui::widget *w)
+{
+    this->composite::close_child(w);
+    this->to_close.push_back(w);
+}
+
 void ui::context::draw(void)
 {
     glm::mat4 basic_trans;
+
+    /* Clean up our to_close list */
+    while (!this->to_close.empty())
+    {
+        delete this->to_close.front();
+        this->to_close.pop_front();
+    }
 
     glUseProgram(this->shader_pgm);
     for (auto i = this->children.begin(); i != this->children.end(); ++i)

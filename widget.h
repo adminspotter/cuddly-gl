@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 12:01:06 tquirk
+ *   last updated 06 Nov 2016, 09:57:20 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -97,6 +97,8 @@ namespace ui
         virtual void set(GLuint, GLuint, void *) override;
 
         virtual void draw(GLuint, const glm::mat4&);
+
+        void close(void);
 
         friend class composite;
     };
