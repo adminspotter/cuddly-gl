@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Oct 2016, 08:03:00 tquirk
+ *   last updated 08 Nov 2016, 07:11:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -50,6 +50,7 @@ void ui::text_field::set_size(GLuint t, void *v)
     switch (t)
     {
       case ui::size::max_width:  this->max_length = *(int *)v;
+                                 this->calculate_widget_size();
                                  this->populate_buffers();
                                  this->reset_cursor();  break;
       default:                   this->label::set_size(t, v);   break;
