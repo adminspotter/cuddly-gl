@@ -1,6 +1,6 @@
 /* password.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Aug 2016, 13:57:05 tquirk
+ *   last updated 29 Oct 2016, 15:54:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -39,10 +39,11 @@ namespace ui
     class password : public text_field
     {
       protected:
-        virtual void generate_string_image(void);
+        virtual void generate_string_image(void) override;
 
-        virtual void get_string_size(const std::u32string&, std::vector<int>&);
-        virtual int get_cursor_pixel_pos(void);
+        virtual void get_string_size(const std::u32string&,
+                                     std::vector<int>&) override;
+        virtual int get_raw_cursor_pos(void) override;
 
       public:
         password(composite *, GLuint, GLuint);

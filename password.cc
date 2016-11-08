@@ -1,6 +1,6 @@
 /* password.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:40:27 tquirk
+ *   last updated 30 Oct 2016, 16:38:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -33,26 +33,29 @@ void ui::password::generate_string_image(void)
 {
     if (this->font != NULL)
     {
+        std::u32string save = this->str;
         std::u32string visible;
 
         visible.insert(0, this->str.size(), '*');
-        this->font->render_string(visible, this->img);
+        this->str = visible;
+        this->text_field::generate_string_image();
+        this->str = save;
     }
 }
 
-void ui::password::get_string_size(const std::u32string& str,
+void ui::password::get_string_size(const std::u32string& s,
                                    std::vector<int>& sz)
 {
     if (this->font != NULL)
     {
         std::u32string visible;
 
-        visible.insert(0, this->cursor_pos, '*');
+        visible.insert(0, s.size(), '*');
         this->font->get_string_size(visible, sz);
     }
 }
 
-int ui::password::get_cursor_pixel_pos(void)
+int ui::password::get_raw_cursor_pos(void)
 {
     int ret = 0;
 
