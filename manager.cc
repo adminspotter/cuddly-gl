@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 12:00:43 tquirk
+ *   last updated 10 Nov 2016, 07:39:43 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -244,11 +244,6 @@ void ui::manager::set(GLuint e, GLuint t, void *v)
       case ui::element::child_spacing:
         this->set_child_spacing(t, v);
         this->populate_buffers();
-        break;
-
-      case ui::element::size:
-        this->widget::set(e, t, v);
-        this->composite::set(e, t, v);
         break;
 
       default:
