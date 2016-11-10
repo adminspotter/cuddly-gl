@@ -58,6 +58,9 @@ void ui::manager::set_child_spacing(GLuint t, void *v)
       case ui::size::width:   this->child_spacing.x = *(int *)v;       break;
       case ui::size::height:  this->child_spacing.y = *(int *)v;       break;
     }
+    this->reposition_children();
+    this->regenerate_search_tree();
+    this->populate_buffers();
 }
 
 void ui::manager::set_resize(GLuint t, void *v)
@@ -232,6 +235,7 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
         return this->widget::parent->get(e, t, v);
 
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
+      case ui::element::resize:         return this->composite::get(e, t, v);
       default:                          return this->widget::get(e, t, v);
     }
     return 1;
@@ -241,14 +245,10 @@ void ui::manager::set(GLuint e, GLuint t, void *v)
 {
     switch (e)
     {
-      case ui::element::child_spacing:
-        this->set_child_spacing(t, v);
-        this->populate_buffers();
-        break;
-
-      default:
-        this->widget::set(e, t, v);
-        break;
+      case ui::element::child_spacing:  this->set_child_spacing(t, v);  break;
+      case ui::element::resize:
+      case ui::element::pixel_size:     this->composite::set(e, t, v);  break;
+      default:                          this->widget::set(e, t, v);     break;
     }
 }
 
