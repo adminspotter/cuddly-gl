@@ -164,9 +164,6 @@ void ui::composite::set(GLuint e, GLuint t, void *v)
       case ui::element::resize:  this->set_resize(t, v);  break;
       default:                   return;
     }
-
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->populate_buffers();
 }
 
 void ui::composite::add_child(ui::widget *w)

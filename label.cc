@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Oct 2016, 07:56:41 tquirk
+ *   last updated 09 Nov 2016, 19:47:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,10 +53,7 @@ void ui::label::set_font(GLuint t, void *v)
         this->shared_font = false;
     this->font = (ui::font *)v;
     if (this->str.size() > 0)
-    {
         this->generate_string_image();
-        this->populate_buffers();
-    }
 }
 
 /* ARGSUSED */
@@ -72,10 +69,7 @@ void ui::label::set_string(GLuint t, void *v)
     this->use_text = true;
     this->str = utf8tou32str(*((std::string *)v));
     if (this->font != NULL)
-    {
         this->generate_string_image();
-        this->populate_buffers();
-    }
 }
 
 /* ARGSUSED */
@@ -92,21 +86,18 @@ void ui::label::set_image(GLuint t, void *v)
     this->str.clear();
     this->img = *(ui::image *)v;
     this->calculate_widget_size();
-    this->populate_buffers();
 }
 
 void ui::label::set_border(GLuint t, void *v)
 {
     this->widget::set_border(t, v);
     this->calculate_widget_size();
-    this->populate_buffers();
 }
 
 void ui::label::set_margin(GLuint t, void *v)
 {
     this->widget::set_margin(t, v);
     this->calculate_widget_size();
-    this->populate_buffers();
 }
 
 /* We need to be able to convert from UTF-8 representation to
