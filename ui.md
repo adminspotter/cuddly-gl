@@ -295,6 +295,8 @@ callback handling is available.
 * `ui::element::color`
   * `ui::color::foreground` (`glm::vec4`)
   * `ui::color::background` (`glm::vec4`)
+* `ui::element::state`
+  * `ui::state::visible` (`bool`)
 
 The side subtypes for border and margin will function as masks, and
 can be combined arbitrarily.
@@ -348,6 +350,7 @@ font will not.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 
 #### Button ####
 
@@ -363,6 +366,7 @@ pressed, the button becomes armed.
 * `ui::element::state`
   * `ui::element::active` (`bool`)
   * `ui::element::armed` (`bool`)
+  * `ui::element::visible` (`bool`)
 
 ###### Button inherited resources ######
 
@@ -404,6 +408,7 @@ set but will be ignored.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 
@@ -425,6 +430,7 @@ The password field does not add any new resources.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 * `ui::element::cursor` ([`ui::text_field`](#text_field))
@@ -535,6 +541,7 @@ and the edges of the manager, for purposes of grow/shrink.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 
 #### Pie Menu ####
 
@@ -547,9 +554,7 @@ widget, except for the names it recognizes.  "left" and "right" don't
 have a lot of meaning for an ellipse with a hole in the middle of it,
 so we instead use "inner" and "outer".
 
-The popup resources control a couple of different aspects of the popup
-menu.  The visible resource controls whether the menu is visible, and
-the button resource controls which mouse button will cause the menu to
+The popup resource controls which mouse button will cause the menu to
 pop up.  Any of the button constants within `ui::mouse` are
 satisfactory for this resource.
 
@@ -562,7 +567,6 @@ satisfactory for this resource.
   * `ui::side::inner` (`GLuint`)
   * `ui::side::outer` (`GLuint`)
 * `ui::element::popup`
-  * `ui::popup::visible` (`bool`)
   * `ui::popup::button` (`int`)
 
 ###### Pie menu inherited resources ######
@@ -573,6 +577,7 @@ satisfactory for this resource.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 
 #### Row Column ####
 
@@ -613,6 +618,7 @@ widget to include the spacing between its grid elements.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
 * `ui::element::child_spacing` ([`ui::manager`](#manager))
 
 ### Support classes ###
