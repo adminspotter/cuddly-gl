@@ -242,6 +242,23 @@ It provides the `va_get` and `va_set` methods for all other classes.
   * `ui::size::height` (`int`)
   * `ui::size::all` (`glm::ivec2`)
 
+#### Active ####
+
+The `ui::active` class ([active.h](../client/ui/active.h) and
+[active.cc](../client/ui/active.cc)) is a descendent of the
+[`ui::rect`](#rect) class, and adds callback lists and methods to
+manage them.  See the [Callbacks](#callbacks) section above for a
+complete description of the callback lists and methods.
+
+##### Active resources #####
+
+The `ui::active` class doesn't add any resources which are managed by
+the typical `get` and `set` methods.
+
+##### Active inherited resources #####
+
+* `ui::element::size` (`ui::rect`)
+
 ### Widget-derived widgets ###
 
 #### Widget ####
@@ -411,8 +428,11 @@ The password field does not add any new resources.
 #### Composite ####
 
 The `ui::composite` class ([composite.h](../client/ui/composite.h) and
-[composite.cc](../client/ui/composite.cc)) acts as a parent to other
-widgets, and handles the event propagation through the toolkit.
+[composite.cc](../client/ui/composite.cc)) is a descendent of the
+[`ui::active`](#active) class, and adds the ability to act as a parent
+to other widgets.  It also handles the event propagation through the
+toolkit.  It lacks any OpenGL handling, so it would not be
+instantiated directly.
 
 ##### Resources #####
 
