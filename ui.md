@@ -520,18 +520,18 @@ upper-left corner of the manager.
 The new child spacing resource controls the spacing between elements
 and the edges of the manager, for purposes of grow/shrink.
 
-##### Resources #####
+##### Manager resources #####
 
 * `ui::element::child_spacing`
   * `ui::size::width` (`int`)
   * `ui::size::height` (`int`)
   * `ui::size::all` (`glm::ivec2`)
 
-###### Inherited resources ######
+###### Manager inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
-* `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` (`ui::widget`)
+* `ui::element::pixel_size` ([`ui::composite`](#composite))
+* `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
