@@ -264,15 +264,17 @@ the typical `get` and `set` methods.
 #### Widget ####
 
 The `ui::widget` class ([widget.h](../client/ui/widget.h) and
-[widget.cc](../client/ui/widget.cc)) isn't really a functional widget on
-its own, but provides a basic set of pieces for other widgets:
-border, margin, size, position, color.  It also handles general setup
-and cleanup of the OpenGL VAO and VBO for each widget.
+[widget.cc](../client/ui/widget.cc)) is derived from the
+[`ui::active`](#active) widget, and though it is the simplest object
+which should be instantiated, it isn't really a functional widget on
+its own.  It provides a basic set of pieces for other widgets:
+border, margin, position, color.  It also handles general setup and
+cleanup of the OpenGL VAO, VBO, and EBO for each widget.
 
-The widget is also derived from `ui::active`, so the standard
+Since the `ui::widget` is derived from `ui::active`, the standard
 callback handling is available.
 
-##### Resources #####
+##### Widget Resources #####
 
 * `ui::element::position`
   * `ui::position::x` (`int`)
@@ -305,7 +307,7 @@ GLuint all_but_top = ui::side::left | ui::side::right | ui::side::bottom;
 This allows flexibility in margins and borders, in that they do not
 all need to be the same.  Each is independent of the others.
 
-##### Inherited resources #####
+##### Widget inherited resources #####
 
 * `ui::element::size` (`ui::rect`)
 
