@@ -536,10 +536,10 @@ and the edges of the manager, for purposes of grow/shrink.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 
-#### Popup Menu ####
+#### Pie Menu ####
 
-The `ui::popupmenu` class ([popupmenu.h](../client/ui/popupmenu.h) and
-[popupmenu.cc](../client/ui/popupmenu.cc)) inherits from the
+The `ui::pie_menu` class ([pie_menu.h](../client/ui/pie_menu.h) and
+[pie_menu.cc](../client/ui/pie_menu.cc)) inherits from the
 [`ui::manager`](#manager), and implements a popup pie menu.
 
 The border and margin function the same as the resources from the
@@ -553,7 +553,7 @@ the button resource controls which mouse button will cause the menu to
 pop up.  Any of the button constants within `ui::mouse` are
 satisfactory for this resource.
 
-##### Resources #####
+##### Pie menu resources #####
 
 * `ui::element::border`
   * `ui::side::inner` (`GLuint`)
@@ -565,10 +565,10 @@ satisfactory for this resource.
   * `ui::popup::visible` (`bool`)
   * `ui::popup::button` (`int`)
 
-###### Inherited resources ######
+###### Pie menu inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
-* `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::pixel_size` ([`ui::composite`](#composite))
 * `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
