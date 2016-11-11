@@ -219,7 +219,28 @@ p->close();
 There are a couple classes of widgets.  The composite-derived widgets
 may have children, and are mostly considered manager-type widgets.
 The widget-derived widgets are most of the "regular" things:  buttons,
-text fields, etc.
+text fields, etc.  We also have a couple of base classes which provide
+specific behaviours, from which all other widget types inherit.
+
+### Base widget classes ###
+
+There are a couple of basic classes from which all of the toolkit
+derives:  `ui::rect` and `ui::active`.  They would never be
+instantiated, but serve to add basic functionality in a layered way.
+
+#### Rect ####
+
+The `ui::rect` class ([rect.h](../client/ui/rect.h) and
+[rect.cc](../client/ui/rect.cc)) provides a rectangle of a given size.
+All the wiget classes in the R9 UI toolkit derive from the `ui::rect`.
+It provides the `va_get` and `va_set` methods for all other classes.
+
+##### Rect Resources #####
+
+* `ui::element::size`
+  * `ui::size::width` (`int`)
+  * `ui::size::height` (`int`)
+  * `ui::size::all` (`glm::ivec2`)
 
 ### Widget-derived widgets ###
 
@@ -240,10 +261,6 @@ callback handling is available.
   * `ui::position::x` (`int`)
   * `ui::position::y` (`int`)
   * `ui::position::all` (`glm::ivec2`)
-* `ui::element::size`
-  * `ui::size::width` (`int`)
-  * `ui::size::height` (`int`)
-  * `ui::size::all` (`glm::ivec2`)
 * `ui::element::border`
   * `ui::side::top` (`GLuint`)
   * `ui::side::bottom` (`GLuint`)
@@ -270,6 +287,10 @@ GLuint all_but_top = ui::side::left | ui::side::right | ui::side::bottom;
 
 This allows flexibility in margins and borders, in that they do not
 all need to be the same.  Each is independent of the others.
+
+##### Inherited resources #####
+
+* `ui::element::size` (`ui::rect`)
 
 #### Label ####
 
@@ -298,8 +319,8 @@ Images use the [`ui::image`](#image) support type.
 
 ###### Inherited resources ######
 
+* `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::position` ([`ui::widget`](#widget))
-* `ui::element::size` (`ui::widget`)
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
@@ -321,8 +342,8 @@ pressed, the button becomes armed.
 
 ###### Inherited resources ######
 
+* `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::position` ([`ui::widget`](#widget))
-* `ui::element::size` (`ui::widget`)
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
@@ -398,16 +419,16 @@ widgets, and handles the event propagation through the toolkit.
 The size resources are read-write, but the transform and pixel_size
 elements are read-only.
 
-* `ui::element::size`
-  * `ui::size::width` (`int`)
-  * `ui::size::height` (`int`)
-  * `ui::size::all` (`glm::ivec2`)
 * `ui::element::transform`
   * `ui::transform::translate` (`glm::mat4`)
 * `ui::element::pixel_size`
   * `ui::size::width` (`float`)
   * `ui::size::height` (`float`)
   * `ui::size::all` (`glm::vec2`)
+
+##### Inherited resources #####
+
+* `ui::element::size` ([`ui::rect`](#rect))
 
 #### Context ####
 
@@ -443,8 +464,8 @@ controlled via the OpenGL rendering program contained in
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#composite))
-* `ui::element::transform` (`ui::composite`)
+* `ui::element::size` ([`ui::rect`](#rect))
+* `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
 
 #### Manager ####
@@ -479,7 +500,7 @@ or grow independently.  `ui::resize::all` is the same as
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#composite), [`ui::widget`](#widget))
+* `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
 * `ui::element::position` (`ui::widget`)
@@ -518,10 +539,10 @@ satisfactory for this resource.
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#composite), [`ui::widget`](#widget))
-* `ui::element::transform` (`ui::composite`)
+* `ui::element::size` ([`ui::rect`](#rect))
+* `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` (`ui::widget`)
+* `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
