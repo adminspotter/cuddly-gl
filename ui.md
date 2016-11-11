@@ -441,19 +441,31 @@ to other widgets.  It also handles the event propagation through the
 toolkit.  It lacks any OpenGL handling, so it would not be
 instantiated directly.
 
-##### Resources #####
+##### Composite resources #####
 
-The size resources are read-write, but the transform and pixel_size
+The size and resize resources are read-write, but the pixel_size
 elements are read-only.
 
-* `ui::element::transform`
-  * `ui::transform::translate` (`glm::mat4`)
 * `ui::element::pixel_size`
   * `ui::size::width` (`float`)
   * `ui::size::height` (`float`)
   * `ui::size::all` (`glm::vec2`)
+* `ui::element::resize`
+  * No subtypes, but defined value arguments (`GLuint`)
+    * `ui::resize::none`
+    * `ui::resize::shrink`
+    * `ui::resize::grow`
+    * `ui::resize::all`
 
-##### Inherited resources #####
+The resize value arguments function as a mask, so that we can shrink
+or grow independently.  `ui::resize::all` is the same as
+`ui::resize::shrink | ui::resize::grow`.  Also, each screen dimension
+is considered independently of the others, e.g. if a composite widget
+needs to shrink in the x dimension and grow in the y dimension, each
+will be compared against the resize resource to see if the required
+size change should be allowed.
+
+##### Composite inherited resources #####
 
 * `ui::element::size` ([`ui::rect`](#rect))
 
@@ -492,8 +504,8 @@ controlled via the OpenGL rendering program contained in
 ###### Inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
-* `ui::element::transform` ([`ui::composite`](#composite))
-* `ui::element::pixel_size` (`ui::composite`)
+* `ui::element::pixel_size` ([`ui::composite`](#composite))
+* `ui::element::resize` (`ui::composite`)
 
 #### Manager ####
 
@@ -514,21 +526,10 @@ and the edges of the manager, for purposes of grow/shrink.
   * `ui::size::width` (`int`)
   * `ui::size::height` (`int`)
   * `ui::size::all` (`glm::ivec2`)
-* `ui::element::resize`
-  * No subtypes, but defined value arguments (`GLuint`)
-    * `ui::resize::none`
-    * `ui::resize::shrink`
-    * `ui::resize::grow`
-    * `ui::resize::all`
-
-The resize value arguments function as a mask, so that we can shrink
-or grow independently.  `ui::resize::all` is the same as
-`ui::resize::shrink | ui::resize::grow`.
 
 ###### Inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
-* `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
 * `ui::element::position` (`ui::widget`)
 * `ui::element::border` (`ui::widget`)
@@ -567,7 +568,6 @@ satisfactory for this resource.
 ###### Inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
-* `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
 * `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
