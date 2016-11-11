@@ -358,13 +358,13 @@ The `ui::button` class ([button.h](../client/ui/button.h) and
 enters the button, it becomes active, and when the mouse button is
 pressed, the button becomes armed.
 
-##### Resources #####
+##### Button resources #####
 
 * `ui::element::state`
   * `ui::element::active` (`bool`)
   * `ui::element::armed` (`bool`)
 
-###### Inherited resources ######
+###### Button inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::position` ([`ui::widget`](#widget))
@@ -387,7 +387,7 @@ desired width of the field.  The standard height is 1 character.  The
 inherited width and height subtypes can be retrieved, and can also be
 set but will be ignored.
 
-##### Resources #####
+##### Text field resources #####
 
 * `ui::element::cursor`
   * `ui::cursor::position` (`GLuint`)
@@ -398,7 +398,7 @@ set but will be ignored.
   * `ui::size::all` (`GLuint`)
   * `ui::size::max_width` (`GLuint`)
 
-###### Inherited resources ######
+###### Text field inherited resources ######
 
 * `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
@@ -415,11 +415,11 @@ The `ui::password` class ([password.h](../client/ui/password.h) and
 same behaviour, but displays a series of '*' characters, rather than
 the actual string.
 
-##### Resources #####
+##### Password resources #####
 
 The password field does not add any new resources.
 
-###### Inherited resources ######
+###### Password inherited resources ######
 
 * `ui::element::position` ([`ui::widget`](#widget))
 * `ui::element::border` (`ui::widget`)
@@ -485,7 +485,7 @@ context.
 ui::context *ctx = new ui::context(800, 600);
 ```
 
-##### Resources #####
+##### Context resources #####
 
 All of the new resources which the context adds are read-only, and are
 controlled via the OpenGL rendering program contained in
@@ -501,7 +501,7 @@ controlled via the OpenGL rendering program contained in
   * `ui::attribute::text_bgnd` (`GLuint`)
   * `ui::attribute::translate` (`GLuint`)
 
-###### Inherited resources ######
+###### Context inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::pixel_size` ([`ui::composite`](#composite))
@@ -594,7 +594,7 @@ to the grid in row-major or column-major order.
 The row column extends the child spacing resource from the manager
 widget to include the spacing between its grid elements.
 
-##### Resources #####
+##### Row column resources #####
 
 * `ui::element::size`
   * `ui::size::rows` (`int`)
@@ -605,7 +605,7 @@ widget to include the spacing between its grid elements.
     * `ui::order::row`
     * `ui::order::column`
 
-###### Inherited resources ######
+###### Row column inherited resources ######
 
 * `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
