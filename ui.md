@@ -327,16 +327,21 @@ converted into `std::u32string`.  Font handling is done via the
 
 Images use the [`ui::image`](#image) support type.
 
-##### Resources #####
+##### Label resources #####
 
 * `ui::element::font`
-  * No subtypes ([`ui::font`](#font))
+  * `ui::ownership::shared` ([`ui::font`](#font))
+  * `ui::ownership::owned` ([`ui::font`](#font))
 * `ui::element::string`
   * No subtypes (`std::string`)
 * `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 
-###### Inherited resources ######
+The font element's subtypes change only the behaviour at widget close.
+A font noted as `owned` will be deleted at widget close; a `shared`
+font will not.
+
+###### Label inherited resources ######
 
 * `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::position` ([`ui::widget`](#widget))
