@@ -100,7 +100,7 @@ motion, enter, leave, mouse button down, mouse button up, key down,
 and key up.  They, as with the get and set, have a consistent
 interfaces.  A callback routine has a standard signature:
 
-* widget (`ui::event_target *`)  
+* widget (`ui::active *`)  
   This is the widget which is processing the event.
 * call data (`void *`)  
   This is (usually) an event-dependent structure, detailed below.
@@ -109,7 +109,7 @@ interfaces.  A callback routine has a standard signature:
   the callback, and is completely implementation-defined.
 
 The `cb_fptr` type, defined in
-[callback.h](../client/ui/callback.h), defines the required
+[active.h](../client/ui/active.h), defines the required
 signature for a callback routine.
 
 Adding to and removing from a callback list also has a consistent
@@ -124,7 +124,7 @@ interface:
 
 Examples:
 ```c++
-void some_callback(ui::event_target *t, void *call, void *client)
+void some_callback(ui::active *t, void *call, void *client)
 {
     /* ... */
 }
@@ -197,10 +197,10 @@ address that it points to.  It is used as a secondary key, because we
 may use the same callback routine multiple times in a single callback
 list, differing only in the client data we pass.
 
-The `ui::event_target` class, which is used by all types of widgets,
-adds callback lists and handling.  The full implementation is found in
-[callback.h](../client/ui/callback.h) and
-[callback.cc](../client/ui/callback.cc).
+The `ui::active` class, which is used by all types of widgets, adds
+callback lists and handling.  The full implementation is found in
+[active.h](../client/ui/active.h) and
+[active.cc](../client/ui/active.cc).
 
 ### Closing ###
 
@@ -231,7 +231,7 @@ its own, but provides a basic set of pieces for other widgets:
 border, margin, size, position, color.  It also handles general setup
 and cleanup of the OpenGL VAO and VBO for each widget.
 
-The widget is also derived from `ui::event_target`, so the standard
+The widget is also derived from `ui::active`, so the standard
 callback handling is available.
 
 ##### Resources #####
