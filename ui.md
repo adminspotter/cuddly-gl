@@ -34,7 +34,7 @@ All our widgets take the same set of arguments to create:
 
 Examples:
 ```c++
-ui::panel *p = new ui::panel(parent, 200, 100);
+ui::widget *p = new ui::widget(parent, 200, 100);
 ui::button *b = new ui::button(NULL, 60, 30);
 ```
 
@@ -56,7 +56,7 @@ interface for both is identical:
 
 Examples:
 ```c++
-ui::panel *p = new ui::panel(parent, 200, 100);
+ui::widget *p = new ui::widget(parent, 200, 100);
 int w = 300;
 p->set(ui::element::size, ui::size::width, &w);
 
@@ -64,7 +64,7 @@ w = 937;
 p->get(ui::element::size, ui::size::width, &w);
 /* w is now 300 */
 
-ui::button *b = new ui::panel(parent, 10, 10);
+ui::button *b = new ui::button(parent, 10, 10);
 std::string some_string = "Howdy!";
 b->set(ui::element::string, 0, &some_string);
 
@@ -79,7 +79,7 @@ element/type/value, and ends with an extra 0.
 
 Examples:
 ```c++
-ui::panel *p = new ui::panel(parent, 100, 100);
+ui::widget *p = new ui::widget(parent, 100, 100);
 int margin = 5, border = 1;
 p->set_va(ui::element::margin, ui::side::all, &margin,
           ui::element::border, ui::side::top, &border, 0);
@@ -204,10 +204,10 @@ adds callback lists and handling.  The full implementation is found in
 
 ### Closing ###
 
-There is a single call to close any panel-derived widget:
+There is a single call to close any widget-derived widget:
 
 ```c++
-ui::panel *p = new ui::panel(context, 123, 456);
+ui::widget *p = new ui::widget(context, 123, 456);
 
 /* ... */
 
@@ -218,20 +218,20 @@ p->close();
 
 There are a couple classes of widgets.  The composite-derived widgets
 may have children, and are mostly considered manager-type widgets.
-The panel-derived widgets are most of the "regular" things:  buttons,
+The widget-derived widgets are most of the "regular" things:  buttons,
 text fields, etc.
 
-### Panel-derived widgets ###
+### Widget-derived widgets ###
 
-#### Panel ####
+#### Widget ####
 
-The `ui::panel` class ([panel.h](../client/ui/panel.h) and
-[panel.cc](../client/ui/panel.cc)) isn't really a functional widget on
+The `ui::widget` class ([widget.h](../client/ui/widget.h) and
+[widget.cc](../client/ui/widget.cc)) isn't really a functional widget on
 its own, but provides a basic set of pieces for other widgets:
 border, margin, size, position, color.  It also handles general setup
 and cleanup of the OpenGL VAO and VBO for each widget.
 
-The panel is also derived from `ui::event_target`, so the standard
+The widget is also derived from `ui::event_target`, so the standard
 callback handling is available.
 
 ##### Resources #####
@@ -275,7 +275,7 @@ all need to be the same.  Each is independent of the others.
 
 The `ui::label` class ([label.h](../client/ui/label.h) and
 [label.cc](../client/ui/label.cc)) is a descendent of the
-[`ui::panel`](#panel) widget class, and adds either a string or an
+[`ui::widget`](#widget) widget class, and adds either a string or an
 image.  The string and image are mutually exclusive; setting an image
 removes any configured string, and setting a string removes any
 configured image.
@@ -298,11 +298,11 @@ Images use the [`ui::image`](#image) support type.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::size` (`ui::panel`)
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::size` (`ui::widget`)
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 
 #### Button ####
 
@@ -321,11 +321,11 @@ pressed, the button becomes armed.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::size` (`ui::panel`)
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::size` (`ui::widget`)
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 * `ui::element::image` (`ui::label`)
@@ -355,10 +355,10 @@ set but will be ignored.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 
@@ -376,10 +376,10 @@ The password field does not add any new resources.
 
 ###### Inherited resources ######
 
-* `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
 * `ui::element::string` (`ui::label`)
 * `ui::element::cursor` ([`ui::text_field`](#text_field))
@@ -451,7 +451,7 @@ controlled via the OpenGL rendering program contained in
 
 The `ui::manager` class ([manager.h](../client/ui/manager.h) and
 [manager.cc](../client/ui/manager.cc)) inherits from both the
-[`ui::composite`](#composite) and the [`ui::panel`](#panel), and
+[`ui::composite`](#composite) and the [`ui::widget`](#widget), and
 functions as a very basic "bulletin board" widget.  Its children are
 positioned independently within the confines of the manager, which can
 grow and shrink to fit.  Each child's position is relative to the
@@ -479,13 +479,13 @@ or grow independently.  `ui::resize::all` is the same as
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
+* `ui::element::size` ([`ui::composite`](#composite), [`ui::widget`](#widget))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` (`ui::panel`)
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` (`ui::widget`)
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 
 #### Popup Menu ####
 
@@ -494,7 +494,7 @@ The `ui::popupmenu` class ([popupmenu.h](../client/ui/popupmenu.h) and
 [`ui::manager`](#manager), and implements a popup pie menu.
 
 The border and margin function the same as the resources from the
-panel, except for the names it recognizes.  "left" and "right" don't
+widget, except for the names it recognizes.  "left" and "right" don't
 have a lot of meaning for an ellipse with a hole in the middle of it,
 so we instead use "inner" and "outer".
 
@@ -518,13 +518,13 @@ satisfactory for this resource.
 
 ###### Inherited resources ######
 
-* `ui::element::size` ([`ui::composite`](#composite), [`ui::panel`](#panel))
+* `ui::element::size` ([`ui::composite`](#composite), [`ui::widget`](#widget))
 * `ui::element::transform` (`ui::composite`)
 * `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` (`ui::panel`)
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` (`ui::widget`)
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 
 #### Row Column ####
 
@@ -561,10 +561,10 @@ widget to include the spacing between its grid elements.
 
 * `ui::element::transform` ([`ui::composite`](#composite))
 * `ui::element::pixel_size` (`ui::composite`)
-* `ui::element::position` ([`ui::panel`](#panel))
-* `ui::element::border` (`ui::panel`)
-* `ui::element::margin` (`ui::panel`)
-* `ui::element::color` (`ui::panel`)
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
 * `ui::element::child_spacing` ([`ui::manager`](#manager))
 
 ### Support classes ###
@@ -599,4 +599,4 @@ area for children.  Almost all of the event handling routines use this
 tree to locate the child which should be sent the event in question.
 
 The interface is very simple; insert, search, remove, and clear.  It
-deals only with `ui::panel` objects and descendents.
+deals only with `ui::widget` objects and descendents.
