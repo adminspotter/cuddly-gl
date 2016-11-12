@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Oct 2016, 07:21:49 tquirk
+ *   last updated 12 Nov 2016, 07:21:25 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -81,6 +81,7 @@ namespace ui
         virtual void generate_string_image(void) override;
         virtual void calculate_widget_size(void) override;
         void generate_cursor(void);
+        virtual vertex_buffer *generate_points(void) override;
 
       public:
         text_field(composite *, GLuint = 0, GLuint = 0);

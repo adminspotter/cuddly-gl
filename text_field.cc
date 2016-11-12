@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Nov 2016, 07:01:08 tquirk
+ *   last updated 12 Nov 2016, 08:17:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -384,6 +384,37 @@ void ui::text_field::generate_cursor(void)
                      GL_DYNAMIC_DRAW);
         delete vb;
     }
+}
+
+/* The ui::label's generate_points() assumes that we want to wrap our
+ * images as tightly as possible.  In this widget we use the cell
+ * size, which is constant for any font, as the sizing for our widget,
+ * and we want the baselines for our strings to always be in the same
+ * place in the widget.  We only need to adjust the image s/t values
+ * along the y-axis.
+ */
+ui::vertex_buffer *ui::text_field::generate_points(void)
+{
+    ui::vertex_buffer *vb = this->label::generate_points();
+    std::vector<int> font_max = {0, 0, 0}, string_max = {0, 0, 0};
+    float ph;
+
+    if (this->img.data == NULL)
+        return vb;
+
+    this->font->max_cell_size(font_max);
+    this->get_string_size(this->str, string_max);
+
+    ph = 1.0f / (float)this->img.height;
+
+    vb->vertex[7] = 1.0f + ((this->margin[0] + this->border[0] + 1
+                             + font_max[1] - string_max[1]) * ph);
+    vb->vertex[15] = vb->vertex[7];
+    vb->vertex[23] = 0.0f - ((this->margin[3] + this->border[3] + 1
+                              + font_max[2] - string_max[2]) * ph);
+    vb->vertex[31] = vb->vertex[23];
+
+    return vb;
 }
 
 ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
