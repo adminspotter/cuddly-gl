@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 08:27:12 tquirk
+ *   last updated 12 Nov 2016, 06:31:40 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -126,7 +126,6 @@ glm::ivec2 ui::row_column::calculate_grid_size(void)
 void ui::row_column::set_desired_size(void)
 {
     glm::ivec2 cell_size(0, 0), grid_size(0, 0);
-    GLuint zero = 0;
 
     cell_size = this->calculate_cell_size();
     grid_size = this->calculate_grid_size();
@@ -138,7 +137,7 @@ void ui::row_column::set_desired_size(void)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
-    this->composite::set_size(0, &zero);
+    this->regenerate_search_tree();
     this->composite::parent->move_child(this);
     this->populate_buffers();
 
