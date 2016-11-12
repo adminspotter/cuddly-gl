@@ -212,9 +212,12 @@ void ui::text_field::previous_char(void)
 
 void ui::text_field::next_char(void)
 {
-    this->cursor_pos = std::min((GLuint)this->str.size(), this->cursor_pos + 1);
-    this->generate_string_image();
-    this->populate_buffers();
+    if (this->cursor_pos < this->str.size())
+    {
+        ++this->cursor_pos;
+        this->generate_string_image();
+        this->populate_buffers();
+    }
 }
 
 void ui::text_field::last_char(void)
