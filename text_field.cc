@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Nov 2016, 07:11:26 tquirk
+ *   last updated 12 Nov 2016, 07:01:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -88,6 +88,7 @@ void ui::text_field::set_font(GLuint t, void *v)
 
     this->calculate_widget_size();
     this->generate_cursor();
+    this->generate_string_image();
     this->reset_cursor();
 }
 
