@@ -240,12 +240,13 @@ void ui::label::calculate_widget_size(void)
 
 ui::vertex_buffer *ui::label::generate_points(void)
 {
-    if (this->img.data == NULL)
-        return NULL;
-
     ui::vertex_buffer *vb = this->widget::generate_points();
     float pw, ph, m[4], b[4];
 
+    if (this->img.data == NULL)
+        return vb;
+
+    /* TODO: take the cell size into account */
     pw = 1.0f / (float)this->img.width;
     ph = 1.0f / (float)this->img.height;
     m[0] = this->margin[0] * ph;  b[0] = this->border[0] * ph;
