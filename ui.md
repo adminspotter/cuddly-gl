@@ -345,15 +345,9 @@ Images use the [`ui::image`](#image) support type.
 * `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 
-<<<<<<< HEAD
-###### Label inherited resources ######
-||||||| merged common ancestors
-###### Inherited resources ######
-=======
 The font element's subtypes change only the behaviour at widget close.
 A font noted as `owned` will be deleted at widget close; a `shared`
 font will not.
->>>>>>> gl-ui
 
 ###### Label inherited resources ######
 
@@ -570,13 +564,7 @@ The popup resource controls which mouse button will cause the menu to
 pop up.  Any of the button constants within `ui::mouse` are
 satisfactory for this resource.
 
-<<<<<<< HEAD
-##### Popup menu resources #####
-||||||| merged common ancestors
-##### Resources #####
-=======
 ##### Pie menu resources #####
->>>>>>> gl-ui
 
 * `ui::element::border`
   * `ui::side::inner` (`GLuint`)
@@ -587,13 +575,7 @@ satisfactory for this resource.
 * `ui::element::popup`
   * `ui::popup::button` (`int`)
 
-<<<<<<< HEAD
-###### Popup menu inherited resources ######
-||||||| merged common ancestors
-###### Inherited resources ######
-=======
 ###### Pie menu inherited resources ######
->>>>>>> gl-ui
 
 * `ui::element::size` ([`ui::rect`](#rect))
 * `ui::element::pixel_size` ([`ui::composite`](#composite))
