@@ -1,6 +1,6 @@
 /* active.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:32:49 tquirk
+ *   last updated 19 Nov 2016, 08:42:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -65,6 +65,7 @@ namespace ui
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
         std::list<cb_list_elem> btn_down_cb, btn_up_cb;
         std::list<cb_list_elem> key_down_cb, key_up_cb;
+        std::list<cb_list_elem> resize_cb;
 
         std::list<cb_list_elem>& which_cb_list(GLuint);
 

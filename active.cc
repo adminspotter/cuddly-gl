@@ -1,6 +1,6 @@
 /* active.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Oct 2016, 11:00:48 tquirk
+ *   last updated 19 Nov 2016, 08:43:06 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,13 +42,14 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
       case ui::callback::motion:    return this->motion_cb;
       case ui::callback::key_down:  return this->key_down_cb;
       case ui::callback::key_up:    return this->key_up_cb;
+      case ui::callback::resize:    return this->resize_cb;
     }
 }
 
 ui::active::active(GLuint w, GLuint h)
     : ui::rect(w, h),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
-      key_down_cb(), key_up_cb()
+      key_down_cb(), key_up_cb(), resize_cb()
 {
 }
 

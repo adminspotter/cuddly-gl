@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Oct 2016, 09:02:30 tquirk
+ *   last updated 19 Nov 2016, 08:47:36 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -62,6 +62,13 @@ namespace ui
     }
     key_call_data;
 
+    /* Resize callback routines */
+    typedef struct resize_callback_call
+    {
+        glm::ivec2 new_size;
+    }
+    resize_call_data;
+
     namespace element
     {
         const GLuint size = 1, attribute = 2;
@@ -115,7 +122,7 @@ namespace ui
     namespace callback
     {
         const GLuint enter = 1, leave = 2, btn_down = 3, btn_up = 4;
-        const GLuint motion = 5, key_down = 6, key_up = 7;
+        const GLuint motion = 5, key_down = 6, key_up = 7, resize = 8;
     }
 
     namespace mouse
