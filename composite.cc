@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Nov 2016, 07:38:07 tquirk
+ *   last updated 19 Nov 2016, 11:03:42 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -53,6 +53,8 @@ int ui::composite::get_size(GLuint t, void *v)
 
 void ui::composite::set_size(GLuint d, void *v)
 {
+    ui::resize_call_data call_data;
+
     switch (d)
     {
       case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
@@ -61,6 +63,9 @@ void ui::composite::set_size(GLuint d, void *v)
     }
     this->regenerate_children();
     this->regenerate_search_tree();
+    call_data.new_size = this->dim;
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        (*i)->call_callbacks(ui::callback::resize, &call_data);
 }
 
 int ui::composite::get_resize(GLuint t, void *v)
