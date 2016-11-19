@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Nov 2016, 09:34:13 tquirk
+ *   last updated 06 Nov 2016, 10:10:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -48,7 +48,6 @@ namespace ui
         std::list<widget *> to_close;
 
       protected:
-        virtual void set_size(GLuint, void *) override;
         int get_attribute(GLuint, void *);
 
       public:

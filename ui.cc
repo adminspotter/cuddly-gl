@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Nov 2016, 10:28:54 tquirk
+ *   last updated 06 Nov 2016, 10:12:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,16 +34,6 @@
 
 #include "ui.h"
 #include "shader.h"
-
-void ui::context::set_size(GLuint t, void *v)
-{
-    ui::resize_call_data call_data;
-
-    this->composite::set_size(t, v);
-    call_data.new_size = this->dim;
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->call_callbacks(ui::callback::resize, &call_data);
-}
 
 int ui::context::get_attribute(GLuint t, void *v)
 {
