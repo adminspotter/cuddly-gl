@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2016, 08:40:49 tquirk
+ *   last updated 26 Nov 2016, 11:03:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -29,6 +29,7 @@
  *
  */
 
+#include "ui_defs.h"
 #include "multi_label.h"
 
 /* The "string" which contains all the whitespace characters that
@@ -151,7 +152,7 @@ void ui::multi_label::split_string_to_width(GLuint width,
 
 void ui::multi_label::generate_string_image(void)
 {
-    if (this->font != NULL)
+    if (this->font != NULL && this->str.size() > 0)
     {
         std::list<std::u32string> strs;
         std::vector<std::u32string> str_vec;
@@ -161,18 +162,24 @@ void ui::multi_label::generate_string_image(void)
         this->split_string_to_width(width, strs);
         str_vec.insert(str_vec.begin(), strs.begin(), strs.end());
         this->font->render_multiline_string(str_vec, this->img);
+        this->calculate_widget_size();
     }
 }
 
-void ui::multi_label::calculate_widget_size(int w, int h)
+void ui::multi_label::calculate_widget_size(void)
 {
-    /* We'll leave the x size as-is, since it's what we used to
-     * generate the string image.
-     */
-    this->dim.y = h
-        + this->margin[0] + this->border[0]
-        + this->border[3] + this->margin[3] + 2;
-    this->parent->move_child(this);
+    GLuint y;
+
+    if (this->img.width > 0 && this->img.height > 0)
+    {
+        /* We'll leave the x size as-is, since it's what we used to
+         * generate the string image.
+         */
+        y = this->img.height
+            + this->margin[0] + this->border[0]
+            + this->border[3] + this->margin[3] + 2;
+        this->set_size(ui::size::height, &y);
+    }
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
