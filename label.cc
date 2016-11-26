@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Nov 2016, 07:19:17 tquirk
+ *   last updated 25 Nov 2016, 18:11:54 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -225,17 +225,20 @@ void ui::label::calculate_widget_size(void)
 {
     glm::ivec2 size;
 
-    /* We want an extra pixel of space between the string and each
-     * side, even if there is no border or margin, thus the
-     * literal 2s.
-     */
-    size.x = this->img.width
-        + this->margin[1] + this->margin[2]
-        + this->border[1] + this->border[2] + 2;
-    size.y = this->img.height
-        + this->margin[0] + this->margin[3]
-        + this->border[0] + this->border[3] + 2;
-    this->set_size(ui::size::all, &size);
+    if (this->img.width > 0 && this->img.height > 0)
+    {
+        /* We want an extra pixel of space between the string and each
+         * side, even if there is no border or margin, thus the
+         * literal 2s.
+         */
+        size.x = this->img.width
+            + this->margin[1] + this->margin[2]
+            + this->border[1] + this->border[2] + 2;
+        size.y = this->img.height
+            + this->margin[0] + this->margin[3]
+            + this->border[0] + this->border[3] + 2;
+        this->set_size(ui::size::all, &size);
+    }
 }
 
 ui::vertex_buffer *ui::label::generate_points(void)
