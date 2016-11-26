@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Nov 2016, 18:11:54 tquirk
+ *   last updated 26 Nov 2016, 10:43:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -52,8 +52,7 @@ void ui::label::set_font(GLuint t, void *v)
     else
         this->shared_font = false;
     this->font = (ui::font *)v;
-    if (this->str.size() > 0)
-        this->generate_string_image();
+    this->generate_string_image();
 }
 
 /* ARGSUSED */
@@ -68,8 +67,7 @@ void ui::label::set_string(GLuint t, void *v)
 {
     this->use_text = true;
     this->str = utf8tou32str(*((std::string *)v));
-    if (this->font != NULL)
-        this->generate_string_image();
+    this->generate_string_image();
 }
 
 /* ARGSUSED */
@@ -216,9 +214,11 @@ std::string ui::label::u32strtoutf8(const std::u32string& str)
 
 void ui::label::generate_string_image(void)
 {
-    if (this->use_text == true && this->font != NULL)
+    if (this->use_text == true && this->font != NULL && this->str.size() > 0)
+    {
         this->font->render_string(this->str, this->img);
-    this->calculate_widget_size();
+        this->calculate_widget_size();
+    }
 }
 
 void ui::label::calculate_widget_size(void)
