@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Nov 2016, 06:31:40 tquirk
+ *   last updated 28 Nov 2016, 07:31:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -110,10 +110,8 @@ glm::ivec2 ui::row_column::calculate_grid_size(void)
             && actual.x * actual.y >= num_children))
         return actual;
 
-    /* Check if we only have a prescribed number of columns, or are in
-     * column-major order and need to spill.
-     */
-    if (actual.x == 0 || this->pack_order == ui::order::column)
+    /* Check if we only have a prescribed number of columns. */
+    if (actual.x == 0)
         actual.x = (num_children / actual.y)
             + (num_children % actual.y > 0 ? 1 : 0);
     else
