@@ -1,6 +1,6 @@
 /* active.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Nov 2016, 08:42:24 tquirk
+ *   last updated 29 Nov 2016, 08:16:26 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file adds the callback role to our rect class, to try to
- * reduce multiple inheritance.
+ * This file adds the callback and timeout roles to our rect class, to
+ * try to reduce multiple inheritance.
  *
  * Things to do
  *
@@ -31,6 +31,7 @@
 #define __INC_R9_ACTIVE_H__
 
 #include <list>
+#include <chrono>
 
 #include "rect.h"
 
@@ -41,6 +42,13 @@ namespace ui
 
     /* Callback function pointer */
     typedef void (*cb_fptr)(active *, void *, void *);
+    typedef void (*to_fptr)(active *, void *);
+
+    typedef std::chrono::steady_clock to_time;
+    typedef std::chrono::time_point<typename ui::to_time> to_point;
+    typedef ui::to_time::duration to_until;
+
+    static const to_point zero_time;
 
     typedef struct cb_list_tag
     {
@@ -66,6 +74,9 @@ namespace ui
         std::list<cb_list_elem> btn_down_cb, btn_up_cb;
         std::list<cb_list_elem> key_down_cb, key_up_cb;
         std::list<cb_list_elem> resize_cb;
+        to_point timeout;
+        to_fptr timeout_func;
+        void *timeout_arg;
 
         std::list<cb_list_elem>& which_cb_list(GLuint);
 
@@ -76,6 +87,10 @@ namespace ui
         virtual void add_callback(GLuint, cb_fptr, void *);
         virtual void remove_callback(GLuint, cb_fptr, void *);
         virtual void call_callbacks(GLuint, void *);
+
+        void add_timeout(to_until, to_fptr, void *);
+        void remove_timeout(void);
+        void call_timeout(void);
     };
 }
 

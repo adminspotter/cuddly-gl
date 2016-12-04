@@ -1,6 +1,6 @@
 /* active.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Nov 2016, 08:43:06 tquirk
+ *   last updated 04 Dec 2016, 16:57:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -30,6 +30,8 @@
 #include "ui_defs.h"
 #include "active.h"
 
+const ui::to_point zero_time(std::chrono::seconds(0));
+
 std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
 {
     switch (which)
@@ -51,6 +53,9 @@ ui::active::active(GLuint w, GLuint h)
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
       key_down_cb(), key_up_cb(), resize_cb()
 {
+    this->timeout = ui::zero_time;
+    this->timeout_func = NULL;
+    this->timeout_arg = NULL;
 }
 
 ui::active::~active()
@@ -85,3 +90,29 @@ void ui::active::call_callbacks(GLuint cb_list, void *call_data)
     for (i = l.begin(); i != l.end(); ++i)
         (*i)(this, call_data);
 }
+
+void ui::active::add_timeout(ui::to_until until, ui::to_fptr fp, void *a)
+{
+    this->timeout = ui::to_time::now() + until;
+    this->timeout_func = fp;
+    this->timeout_arg = a;
+}
+
+void ui::active::remove_timeout(void)
+{
+    this->timeout = ui::zero_time;
+    this->timeout_func = NULL;
+    this->timeout_arg = NULL;
+}
+
+void ui::active::call_timeout(void)
+{
+    if (this->timeout != ui::zero_time
+        && this->timeout <= ui::to_time::now())
+    {
+        if (this->timeout_func != NULL)
+            (*this->timeout_func)(this, this->timeout_arg);
+        this->remove_timeout();
+    }
+}
+
