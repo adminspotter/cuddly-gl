@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Nov 2016, 09:57:18 tquirk
+ *   last updated 29 Nov 2016, 08:20:11 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -551,6 +551,8 @@ void ui::widget::set(GLuint e, GLuint t, void *v)
 
 void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
+    this->call_timeout();
+
     if (this->visible == true)
     {
         glm::mat4 trans = pos_transform * parent_trans;
