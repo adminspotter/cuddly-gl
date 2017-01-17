@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Nov 2016, 10:12:15 tquirk
+ *   last updated 15 Jan 2017, 10:48:28 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -100,12 +100,6 @@ int ui::context::get(GLuint e, GLuint t, void *v)
       case ui::element::attribute:  return this->get_attribute(t, v);
       default:                      return this->composite::get(e, t, v);
     }
-}
-
-void ui::context::close_child(ui::widget *w)
-{
-    this->composite::close_child(w);
-    this->to_close.push_back(w);
 }
 
 void ui::context::draw(void)

@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Nov 2016, 10:10:24 tquirk
+ *   last updated 15 Jan 2017, 10:48:08 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -55,8 +55,6 @@ namespace ui
         ~context();
 
         virtual int get(GLuint, GLuint, void *) override;
-
-        virtual void close_child(widget *) override;
 
         void draw(void);
     };

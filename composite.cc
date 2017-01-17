@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 Nov 2016, 11:03:42 tquirk
+ *   last updated 16 Jan 2017, 20:35:24 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -193,14 +193,6 @@ void ui::composite::move_child(ui::widget *w)
     this->tree->remove(w);
     if (w->visible == true)
         this->tree->insert(w);
-}
-
-void ui::composite::close_child(ui::widget *w)
-{
-    this->remove_child(w);
-    /* The UI context will handle the collection and closing of children */
-    if (this->parent != NULL)
-        this->parent->close_child(w);
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)
