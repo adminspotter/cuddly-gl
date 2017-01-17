@@ -45,7 +45,7 @@ namespace ui
     {
       protected:
         composite *parent;
-        std::list<widget *> children;
+        std::list<widget *> children, to_remove;
         quadtree *tree;
         GLuint resize;
 
@@ -60,9 +60,13 @@ namespace ui
         virtual void set_resize(GLuint, void *);
         virtual int get_pixel_size(GLuint, void *);
 
+        virtual void set_desired_size(void);
+
         void reposition_children(void);
         void regenerate_children(void);
         void regenerate_search_tree(void);
+
+        void clear_removed_children(void);
 
       public:
         composite(composite *, GLuint, GLuint);

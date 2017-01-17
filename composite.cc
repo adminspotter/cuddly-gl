@@ -104,6 +104,10 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
     return ret;
 }
 
+void ui::composite::set_desired_size(void)
+{
+}
+
 void ui::composite::reposition_children(void)
 {
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
@@ -133,8 +137,24 @@ void ui::composite::regenerate_search_tree(void)
             this->tree->insert(*i);
 }
 
+void ui::composite::clear_removed_children(void)
+{
+    ui::widget *w;
+
+    if (this->to_remove.size() != 0)
+    {
+        for (auto i = this->to_remove.begin(); i != this->to_remove.end(); ++i)
+        {
+            w = *i;
+            this->children.remove(w);
+        }
+        this->to_remove.clear();
+        this->set_desired_size();
+    }
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : ui::rect::rect(w, h), children(), old_pos(0, 0)
+    : ui::rect::rect(w, h), children(), to_remove(), old_pos(0, 0)
 {
     this->parent = c;
     this->tree = NULL;
@@ -184,8 +204,9 @@ void ui::composite::add_child(ui::widget *w)
 
 void ui::composite::remove_child(ui::widget *w)
 {
-    this->children.remove(w);
-    this->tree->remove(w);
+    auto found = std::find(this->children.begin(), this->children.end(), w);
+    if (found != this->children.end())
+        this->to_remove.push_back(w);
 }
 
 void ui::composite::move_child(ui::widget *w)

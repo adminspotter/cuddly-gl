@@ -106,13 +106,6 @@ void ui::context::draw(void)
 {
     glm::mat4 basic_trans;
 
-    /* Clean up our to_close list */
-    while (!this->to_close.empty())
-    {
-        delete this->to_close.front();
-        this->to_close.pop_front();
-    }
-
     glUseProgram(this->shader_pgm);
     for (auto i = this->children.begin(); i != this->children.end(); ++i)
         (*i)->draw(this->translate_uniform, basic_trans);

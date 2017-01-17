@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Jan 2017, 10:48:08 tquirk
+ *   last updated 16 Jan 2017, 21:24:15 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,8 +44,6 @@ namespace ui
         GLuint pos_attr, norm_attr, color_attr, texture_attr;
         GLuint use_text_uniform, text_bgnd_uniform;
         GLuint translate_uniform;
-
-        std::list<widget *> to_close;
 
       protected:
         int get_attribute(GLuint, void *);
