@@ -145,9 +145,9 @@ ui::composite::composite(composite *c, GLuint w, GLuint h)
 ui::composite::~composite()
 {
     delete this->tree;
-
-    while (!this->children.empty())
-        delete this->children.front();
+    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+        delete (*i);
+    this->children.clear();
 }
 
 int ui::composite::get(GLuint e, GLuint t, void *v)

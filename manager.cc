@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Nov 2016, 07:39:43 tquirk
+ *   last updated 16 Jan 2017, 20:35:22 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -221,8 +221,6 @@ ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
 
 ui::manager::~manager()
 {
-    while (this->children.size())
-        delete this->children.front();
 }
 
 int ui::manager::get(GLuint e, GLuint t, void *v)
