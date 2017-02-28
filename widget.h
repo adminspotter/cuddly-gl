@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Nov 2016, 09:57:20 tquirk
+ *   last updated 26 Feb 2017, 09:36:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -34,6 +34,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "ui_defs.h"
 #include "active.h"
 #include "composite.h"
 
@@ -98,7 +99,7 @@ namespace ui
 
         virtual void draw(GLuint, const glm::mat4&);
 
-        void close(void);
+        void close(GLuint = ui::child::sync);
 
         friend class composite;
     };
