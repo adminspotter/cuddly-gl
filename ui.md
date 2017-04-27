@@ -93,7 +93,7 @@ margin = 123;
 border = 456;
 p->get_va(ui::element::margin, ui::side::right, &margin,
           ui::element::border, ui::side::bottom, &border, 0);
-/* margin is now 5, and border is now 0 */
+/* margin is now 5, and border is now 1 */
 ```
 
 ### Callbacks ###
@@ -135,7 +135,7 @@ void some_callback(ui::active *t, void *call, void *client)
     /* ... */
 }
 
-stuct something
+struct something
 {
     /* ... */
 }
@@ -238,7 +238,7 @@ instantiated, but serve to add basic functionality in a layered way.
 
 The `ui::rect` class ([rect.h](../client/ui/rect.h) and
 [rect.cc](../client/ui/rect.cc)) provides a rectangle of a given size.
-All the wiget classes in the R9 UI toolkit derive from the `ui::rect`.
+All the widget classes in the R9 UI toolkit derive from the `ui::rect`.
 It provides the `va_get` and `va_set` methods for all other classes.
 
 ##### Rect Resources #####
@@ -274,8 +274,8 @@ The `ui::widget` class ([widget.h](../client/ui/widget.h) and
 [`ui::active`](#active) widget, and though it is the simplest object
 which should be instantiated, it isn't really a functional widget on
 its own.  It provides a basic set of pieces for other widgets:
-border, margin, position, color.  It also handles general setup and
-cleanup of the OpenGL VAO, VBO, and EBO for each widget.
+`border`, `margin`, `position`, `color`.  It also handles general
+setup and cleanup of the OpenGL VAO, VBO, and EBO for each widget.
 
 Since the `ui::widget` is derived from `ui::active`, the standard
 callback handling is available.
@@ -304,8 +304,8 @@ callback handling is available.
 * `ui::element::state`
   * `ui::state::visible` (`bool`)
 
-The side subtypes for border and margin will function as masks, and
-can be combined arbitrarily.
+The side subtypes for `border` and `margin` will function as masks,
+and can be combined arbitrarily.
 
 ``` c++
 GLuint left_and_right = ui::side::left | ui::side::right;
@@ -363,7 +363,7 @@ font will not.
 The `ui::button` class ([button.h](../client/ui/button.h) and
 [button.cc](../client/ui/button.cc)) is a descendent of the
 [`ui::label`](#label) widget class.  It adds some state resources,
-`active` and `armed` and some default callbacks.  When the cursor
+`active` and `armed`, and some default callbacks.  When the cursor
 enters the button, it becomes active, and when the mouse button is
 pressed, the button becomes armed.
 
@@ -392,10 +392,10 @@ and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
 the [`ui::label`](#label) widget class.  It adds the ability to edit
 the string.
 
-The text field adds a size subtype of max_width, which indicates the
+The text field adds a size subtype of `max_width`, which indicates the
 desired width of the field.  The standard height is 1 character.  The
-inherited width and height subtypes can be retrieved, and can also be
-set but will be ignored.
+inherited `width` and `height` subtypes can be retrieved, and can also
+be set but will be ignored.
 
 ##### Text field resources #####
 
@@ -455,7 +455,7 @@ instantiated directly.
 
 ##### Composite resources #####
 
-The size and resize resources are read-write, but the pixel_size
+The `size` and `resize` resources are read-write, but the `pixel_size`
 elements are read-only.
 
 * `ui::element::pixel_size`
@@ -489,9 +489,9 @@ most of the other classes.  It functions as the top-level "window",
 and manages the OpenGL shaders which we use to draw our widgets.
 
 The context's constructor also has a different signature, and only
-takes width and height.  It has no parent because it is the ultimate
-parent; all toolkit elements are owned, directly or indirectly, by the
-context.
+takes `width` and `height`.  It has no parent because it is the
+ultimate parent; all toolkit elements are owned, directly or
+indirectly, by the context.
 
 ```c++
 ui::context *ctx = new ui::context(800, 600);
@@ -529,7 +529,7 @@ positioned independently within the confines of the manager, which can
 grow and shrink to fit.  Each child's position is relative to the
 upper-left corner of the manager.
 
-The new child spacing resource controls the spacing between elements
+The new `child_spacing` resource controls the spacing between elements
 and the edges of the manager, for purposes of grow/shrink.
 
 ##### Manager resources #####
@@ -555,13 +555,13 @@ The `ui::pie_menu` class ([pie_menu.h](../client/ui/pie_menu.h) and
 [pie_menu.cc](../client/ui/pie_menu.cc)) inherits from the
 [`ui::manager`](#manager), and implements a popup pie menu.
 
-The border and margin function the same as the resources from the
+The `border` and `margin` function the same as the resources from the
 widget, except for the names it recognizes.  "left" and "right" don't
 have a lot of meaning for an ellipse with a hole in the middle of it,
 so we instead use "inner" and "outer".
 
-The popup resource controls which mouse button will cause the menu to
-pop up.  Any of the button constants within `ui::mouse` are
+The `popup` resource controls which mouse button will cause the menu
+to pop up.  Any of the button constants within `ui::mouse` are
 satisfactory for this resource.
 
 ##### Pie menu resources #####
@@ -595,12 +595,12 @@ layout.
 The inherited size resources are taken over by the grid, and can be
 specified as a certain number of rows and columns.  Objects in excess
 of the grid's size will cause the prescribed size to spill out along
-the appropriate order (see order resource below).  One dimension may
+the appropriate order (see `order` resource below).  One dimension may
 be specified as 0, which indicates that the only constraint is the
 other dimension.
 
-There is an order resource, which indicates whether objects are added
-to the grid in row-major or column-major order.
+There is an `order` resource, which indicates whether objects are
+added to the grid in row-major or column-major order.
 
 The row column extends the child spacing resource from the manager
 widget to include the spacing between its grid elements.
@@ -658,5 +658,5 @@ the `ui::composite` and its descendents use to quickly search their
 area for children.  Almost all of the event handling routines use this
 tree to locate the child which should be sent the event in question.
 
-The interface is very simple; insert, search, remove, and clear.  It
-deals only with `ui::widget` objects and descendents.
+The interface is very simple; `insert`, `search`, `remove`, and
+`clear`.  It deals only with `ui::widget` objects and descendents.
