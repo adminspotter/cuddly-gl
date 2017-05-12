@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jan 2017, 20:35:24 tquirk
+ *   last updated 12 May 2017, 07:30:49 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,7 +32,6 @@
 
 #include <glm/vec3.hpp>
 
-#include "ui_defs.h"
 #include "composite.h"
 
 const int ui::composite::tree_max_depth = 4;
@@ -139,17 +138,21 @@ void ui::composite::regenerate_search_tree(void)
 
 void ui::composite::clear_removed_children(void)
 {
-    ui::widget *w;
-
-    if (this->to_remove.size() != 0)
+    if (this->dirty == true)
     {
-        for (auto i = this->to_remove.begin(); i != this->to_remove.end(); ++i)
+        if (this->to_remove.size() != 0)
         {
-            w = *i;
-            this->children.remove(w);
+            for (auto i = this->to_remove.begin();
+                 i != this->to_remove.end();
+                 ++i)
+            {
+                this->children.remove(*i);
+                this->tree->remove(*i);
+            }
+            this->to_remove.clear();
         }
-        this->to_remove.clear();
         this->set_desired_size();
+        this->dirty = false;
     }
 }
 
@@ -159,6 +162,7 @@ ui::composite::composite(composite *c, GLuint w, GLuint h)
     this->parent = c;
     this->tree = NULL;
     this->old_child = NULL;
+    this->dirty = false;
     this->regenerate_search_tree();
 }
 
@@ -191,7 +195,7 @@ void ui::composite::set(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::composite::add_child(ui::widget *w)
+void ui::composite::add_child(ui::widget *w, GLuint sync)
 {
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found == this->children.end())
@@ -199,21 +203,41 @@ void ui::composite::add_child(ui::widget *w)
         this->children.push_back(w);
         if (w->visible == true)
             this->tree->insert(w);
+        if (sync == ui::child::sync)
+            this->set_desired_size();
+        else
+            this->dirty = true;
     }
 }
 
-void ui::composite::remove_child(ui::widget *w)
+void ui::composite::remove_child(ui::widget *w, GLuint sync)
 {
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found != this->children.end())
-        this->to_remove.push_back(w);
+    {
+        if (sync == ui::child::sync)
+        {
+            this->children.remove(w);
+            this->tree->remove(w);
+            this->set_desired_size();
+        }
+        else
+        {
+            this->to_remove.push_back(w);
+            this->dirty = true;
+        }
+    }
 }
 
-void ui::composite::move_child(ui::widget *w)
+void ui::composite::move_child(ui::widget *w, GLuint sync)
 {
     this->tree->remove(w);
     if (w->visible == true)
         this->tree->insert(w);
+    if (sync == ui::child::sync)
+        this->set_desired_size();
+    else
+        this->dirty = true;
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)

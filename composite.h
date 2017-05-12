@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Jan 2017, 10:53:45 tquirk
+ *   last updated 12 May 2017, 07:32:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -32,6 +32,7 @@
 
 #include <list>
 
+#include "ui_defs.h"
 #include "rect.h"
 #include "quadtree.h"
 #include "widget.h"
@@ -48,6 +49,7 @@ namespace ui
         std::list<widget *> children, to_remove;
         quadtree *tree;
         GLuint resize;
+        bool dirty;
 
         glm::ivec2 old_pos;
         widget *old_child;
@@ -75,9 +77,9 @@ namespace ui
         virtual int get(GLuint, GLuint, void *) override;
         virtual void set(GLuint, GLuint, void *) override;
 
-        virtual void add_child(widget *);
-        virtual void remove_child(widget *);
-        virtual void move_child(widget *);
+        virtual void add_child(widget *, GLuint = ui::child::sync);
+        virtual void remove_child(widget *, GLuint = ui::child::sync);
+        virtual void move_child(widget *, GLuint = ui::child::sync);
 
         void mouse_pos_callback(int, int);
         virtual void mouse_btn_callback(int, int);
