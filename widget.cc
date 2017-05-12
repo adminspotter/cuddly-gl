@@ -568,5 +568,5 @@ void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 void ui::widget::close(GLuint sync)
 {
     this->visible = false;
-    this->parent->remove_child(this);
+    this->parent->remove_child(this, sync);
 }
