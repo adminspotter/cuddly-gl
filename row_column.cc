@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Nov 2016, 07:31:14 tquirk
+ *   last updated 26 Feb 2017, 09:21:16 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -203,12 +203,4 @@ void ui::row_column::set(GLuint e, GLuint t, void *v)
         this->set_order(t, v);
     else
         this->manager::set(e, t, v);
-}
-
-/* The manager's move_child behaviour will put us into an infinite
- * recursion due to the set_desired_size call at the end.
- */
-void ui::row_column::move_child(ui::widget *w)
-{
-    this->composite::move_child(w);
 }

@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Oct 2016, 16:49:35 tquirk
+ *   last updated 26 Feb 2017, 09:25:07 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -224,16 +224,4 @@ void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     if (this->visible)
         this->manager::draw(trans_uniform, parent_trans);
-}
-
-void ui::pie_menu::add_child(ui::widget *p)
-{
-    this->manager::add_child(p);
-    this->populate_buffers();
-}
-
-void ui::pie_menu::remove_child(ui::widget *p)
-{
-    this->manager::remove_child(p);
-    this->populate_buffers();
 }

@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2016, 07:38:28 tquirk
+ *   last updated 26 Feb 2017, 09:25:12 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -57,9 +57,6 @@ namespace ui
         virtual void set(GLuint, GLuint, void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
-
-        virtual void add_child(widget *) override;
-        virtual void remove_child(widget *) override;
     };
 }
 
