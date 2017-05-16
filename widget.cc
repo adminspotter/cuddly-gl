@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Feb 2017, 08:57:12 tquirk
+ *   last updated 16 May 2017, 17:35:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -565,8 +565,8 @@ void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
     }
 }
 
-void ui::widget::close(GLuint sync)
+void ui::widget::close(void)
 {
     this->visible = false;
-    this->parent->remove_child(this, sync);
+    this->parent->remove_child(this);
 }
