@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 18:03:43 tquirk
+ *   last updated 16 May 2017, 18:12:00 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -140,10 +140,6 @@ void ui::row_column::set_desired_size(void)
     this->composite::parent->move_child(this);
     this->populate_buffers();
 
-    /* Setting the dirty flag here will turn off any calls back into
-     * this method from the ui::composite::move_child method.
-     */
-    this->dirty = true;
     if (this->pack_order == ui::order::row)
         this->insert_row_major(grid_size, cell_size);
     else
