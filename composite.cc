@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 17:36:53 tquirk
+ *   last updated 16 May 2017, 18:02:44 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -105,6 +105,7 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
 
 void ui::composite::set_desired_size(void)
 {
+    this->clear_removed_children();
 }
 
 void ui::composite::reposition_children(void)
