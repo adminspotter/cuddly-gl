@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 May 2017, 07:30:49 tquirk
+ *   last updated 16 May 2017, 17:36:53 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -195,7 +195,7 @@ void ui::composite::set(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::composite::add_child(ui::widget *w, GLuint sync)
+void ui::composite::add_child(ui::widget *w)
 {
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found == this->children.end())
@@ -203,10 +203,7 @@ void ui::composite::add_child(ui::widget *w, GLuint sync)
         this->children.push_back(w);
         if (w->visible == true)
             this->tree->insert(w);
-        if (sync == ui::child::sync)
-            this->set_desired_size();
-        else
-            this->dirty = true;
+        this->dirty = true;
     }
 }
 

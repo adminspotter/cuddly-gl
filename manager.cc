@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Feb 2017, 09:30:22 tquirk
+ *   last updated 16 May 2017, 17:37:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -262,9 +262,4 @@ void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         for (auto i = this->children.begin(); i != this->children.end(); ++i)
             (*i)->draw(trans_uniform, trans);
     }
-}
-
-void ui::manager::add_child(ui::widget *w, GLuint sync)
-{
-    this->composite::add_child(w, sync);
 }

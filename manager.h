@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Feb 2017, 09:36:21 tquirk
+ *   last updated 16 May 2017, 17:37:44 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -66,8 +66,6 @@ namespace ui
         virtual void set(GLuint, GLuint, void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
-
-        virtual void add_child(widget *, GLuint = ui::child::async) override;
     };
 }
 

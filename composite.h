@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 May 2017, 07:32:21 tquirk
+ *   last updated 16 May 2017, 17:37:10 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -77,7 +77,7 @@ namespace ui
         virtual int get(GLuint, GLuint, void *) override;
         virtual void set(GLuint, GLuint, void *) override;
 
-        virtual void add_child(widget *, GLuint = ui::child::sync);
+        virtual void add_child(widget *);
         virtual void remove_child(widget *, GLuint = ui::child::sync);
         virtual void move_child(widget *, GLuint = ui::child::sync);
 
