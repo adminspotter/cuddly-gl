@@ -79,7 +79,7 @@ namespace ui
 
         virtual void add_child(widget *);
         virtual void remove_child(widget *);
-        virtual void move_child(widget *, GLuint = ui::child::sync);
+        virtual void move_child(widget *);
 
         void mouse_pos_callback(int, int);
         virtual void mouse_btn_callback(int, int);

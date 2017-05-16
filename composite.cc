@@ -217,15 +217,12 @@ void ui::composite::remove_child(ui::widget *w)
     }
 }
 
-void ui::composite::move_child(ui::widget *w, GLuint sync)
+void ui::composite::move_child(ui::widget *w)
 {
     this->tree->remove(w);
     if (w->visible == true)
         this->tree->insert(w);
-    if (sync == ui::child::sync)
-        this->set_desired_size();
-    else
-        this->dirty = true;
+    this->dirty = true;
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)
