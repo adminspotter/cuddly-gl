@@ -78,7 +78,7 @@ namespace ui
         virtual void set(GLuint, GLuint, void *) override;
 
         virtual void add_child(widget *);
-        virtual void remove_child(widget *, GLuint = ui::child::sync);
+        virtual void remove_child(widget *);
         virtual void move_child(widget *, GLuint = ui::child::sync);
 
         void mouse_pos_callback(int, int);

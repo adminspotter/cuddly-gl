@@ -207,22 +207,13 @@ void ui::composite::add_child(ui::widget *w)
     }
 }
 
-void ui::composite::remove_child(ui::widget *w, GLuint sync)
+void ui::composite::remove_child(ui::widget *w)
 {
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found != this->children.end())
     {
-        if (sync == ui::child::sync)
-        {
-            this->children.remove(w);
-            this->tree->remove(w);
-            this->set_desired_size();
-        }
-        else
-        {
-            this->to_remove.push_back(w);
-            this->dirty = true;
-        }
+        this->to_remove.push_back(w);
+        this->dirty = true;
     }
 }
 
