@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Feb 2017, 09:21:16 tquirk
+ *   last updated 16 May 2017, 17:28:32 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -125,6 +125,7 @@ void ui::row_column::set_desired_size(void)
 {
     glm::ivec2 cell_size(0, 0), grid_size(0, 0);
 
+    this->clear_removed_children();
     cell_size = this->calculate_cell_size();
     grid_size = this->calculate_grid_size();
     this->dim.x = ((cell_size.x + this->child_spacing.x) * grid_size.x)
@@ -135,14 +136,18 @@ void ui::row_column::set_desired_size(void)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
-    this->regenerate_search_tree();
     this->composite::parent->move_child(this);
     this->populate_buffers();
 
+    /* Setting the dirty flag here will turn off any calls back into
+     * this method from the ui::composite::move_child method.
+     */
+    this->dirty = true;
     if (this->pack_order == ui::order::row)
         this->insert_row_major(grid_size, cell_size);
     else
         this->insert_column_major(grid_size, cell_size);
+    this->dirty = false;
 }
 
 void ui::row_column::insert_row_major(glm::ivec2& grid, glm::ivec2& cell)

@@ -151,8 +151,6 @@ void ui::composite::clear_removed_children(void)
             }
             this->to_remove.clear();
         }
-        this->set_desired_size();
-        this->dirty = false;
     }
 }
 

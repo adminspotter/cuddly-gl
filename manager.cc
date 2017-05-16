@@ -252,7 +252,8 @@ void ui::manager::set(GLuint e, GLuint t, void *v)
 
 void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
-    this->clear_removed_children();
+    if (this->dirty == true)
+        this->set_desired_size();
 
     if (this->visible == true)
     {
