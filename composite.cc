@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 18:02:44 tquirk
+ *   last updated 17 May 2017, 18:20:14 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -222,6 +222,11 @@ void ui::composite::move_child(ui::widget *w)
     if (w->visible == true)
         this->tree->insert(w);
     this->dirty = true;
+}
+
+void ui::composite::manage_children(void)
+{
+    this->set_desired_size();
 }
 
 void ui::composite::mouse_pos_callback(int x, int y)

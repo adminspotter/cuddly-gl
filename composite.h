@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 17:37:10 tquirk
+ *   last updated 17 May 2017, 18:19:44 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -80,6 +80,8 @@ namespace ui
         virtual void add_child(widget *);
         virtual void remove_child(widget *);
         virtual void move_child(widget *);
+
+        void manage_children(void);
 
         void mouse_pos_callback(int, int);
         virtual void mouse_btn_callback(int, int);
