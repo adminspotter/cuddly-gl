@@ -30,7 +30,7 @@ void char_callback(GLFWwindow *, unsigned int, int);
 void create_image(int, int);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
-void clicky_callback(ui::active *, void *, void *);
+void print_sizes(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -157,8 +157,8 @@ int main(int argc, char **argv)
                 ui::element::size, ui::size::max_width, &max_len, 0);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx, 200, 200);
-    xpos = 350;
-    ypos = 150;
+    xpos = 250;
+    ypos = 35;
     border = 1;
     spacing = 10;
     m1->set_va(ui::element::border, ui::side::all, &border,
@@ -196,11 +196,11 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx, 10, 10);
-    xpos = 350;
-    ypos = 350;
+    xpos = 600;
+    ypos = 35;
     border = 1;
-    gridx = 2;
-    gridy = 3;
+    gridx = 1;
+    gridy = 0;
     spacing = 10;
     r1->set_va(ui::element::border, ui::side::all, &border,
                ui::element::size, ui::size::columns, &gridx,
@@ -217,16 +217,17 @@ int main(int argc, char **argv)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::button *b = new ui::button(r1, 0, 0);
+        ui::multi_label *l = new ui::multi_label(r1, 0, 0);
 
-        s << "Button " << q;
+        s << "Label " << q << "\n" << greeting;
         std::string str = s.str();
         border = 1;
-        b->set_va(ui::element::font, ui::ownership::shared, std_font,
+        wid = 100;
+        l->set_va(ui::element::font, ui::ownership::shared, std_font,
                   ui::element::string, 0, &str,
-                  ui::element::border, ui::side::all, &border, 0);
-        b->add_callback(ui::callback::enter, enter_callback, NULL);
-        b->add_callback(ui::callback::leave, leave_callback, NULL);
+                  ui::element::border, ui::side::all, &border,
+                  ui::element::size, ui::size::width, &wid, 0);
+        l->add_callback(ui::callback::btn_down, print_sizes, NULL);
     }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx, 200, 125);
@@ -382,19 +383,41 @@ void create_image(int width, int height)
 }
 
 /* ARGSUSED */
-void enter_callback(ui::active *p, void *client, void *call)
+void enter_callback(ui::active *a, void *client, void *call)
 {
     std::cout << "we're in!" << std::endl;
 }
 
 /* ARGSUSED */
-void leave_callback(ui::active *p, void *client, void *call)
+void leave_callback(ui::active *a, void *client, void *call)
 {
     std::cout << "out, baby!" << std::endl;
 }
 
 /* ARGSUSED */
-void clicky_callback(ui::active *p, void *client, void *call)
+void print_sizes(ui::active *a, void *client, void *call)
 {
-    std::cout << "clicky clicky!" << std::endl;
+    glm::ivec2 pos, size;
+    GLuint border[4], margin[4];
+    ui::widget *w = dynamic_cast<ui::widget *>(a);
+
+    if (w == NULL)
+        return;
+
+    w->get_va(ui::element::position, ui::position::all, &pos,
+              ui::element::size, ui::size::all, &size,
+              ui::element::border, ui::side::top, &border[0],
+              ui::element::border, ui::side::left, &border[1],
+              ui::element::border, ui::side::right, &border[2],
+              ui::element::border, ui::side::bottom, &border[3],
+              ui::element::margin, ui::side::top, &margin[0],
+              ui::element::margin, ui::side::left, &margin[1],
+              ui::element::margin, ui::side::right, &margin[2],
+              ui::element::margin, ui::side::bottom, &margin[3], 0);
+    std::cout << "pos <" << pos.x << ", " << pos.y << ">" << std::endl;
+    std::cout << "size <" << size.x << ", " << size.y << ">" << std::endl;
+    std::cout << "border <" << border[0] << ", " << border[1] << ", "
+              << border[2] << ", " << border[3] << ">" << std::endl;
+    std::cout << "margin <" << margin[0] << ", " << margin[1] << ", "
+              << margin[2] << ", " << margin[3] << ">" << std::endl;
 }
