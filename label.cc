@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Nov 2016, 10:43:32 tquirk
+ *   last updated 21 May 2017, 16:18:21 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -73,7 +73,7 @@ void ui::label::set_string(GLuint t, void *v)
 /* ARGSUSED */
 int ui::label::get_image(GLuint t, void *v)
 {
-    v = (void *)&this->img;
+    *(ui::image *)v = this->img;
     return 0;
 }
 
