@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 17:35:10 tquirk
+ *   last updated 21 May 2017, 17:04:19 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -287,23 +287,10 @@ void ui::widget::set_border(GLuint t, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
-    if (t & ui::side::top || t & ui::side::bottom)
-        if (this->margin[0] + this->margin[3]
-            + (t & ui::side::top ? new_v : this->border[0])
-            + (t & ui::side::bottom ? new_v : this->border[3]) <= this->dim.y)
-        {
-            if (t & ui::side::top)     this->border[0] = new_v;
-            if (t & ui::side::bottom)  this->border[3] = new_v;
-        }
-
-    if (t & ui::side::left || t & ui::side::right)
-        if (this->margin[1] + this->margin[2]
-            + (t & ui::side::left ? new_v : this->border[1])
-            + (t & ui::side::right ? new_v : this->border[2]) <= this->dim.x)
-        {
-            if (t & ui::side::left)    this->border[1] = new_v;
-            if (t & ui::side::right)   this->border[2] = new_v;
-        }
+    if (t & ui::side::top)     this->border[0] = new_v;
+    if (t & ui::side::left)    this->border[1] = new_v;
+    if (t & ui::side::right)   this->border[2] = new_v;
+    if (t & ui::side::bottom)  this->border[3] = new_v;
 
     this->populate_buffers();
 }
@@ -327,23 +314,10 @@ void ui::widget::set_margin(GLuint t, void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
-    if (t & ui::side::top || t & ui::side::bottom)
-        if (this->border[0] + this->border[3]
-            + (t & ui::side::top ? new_v : this->margin[0])
-            + (t & ui::side::bottom ? new_v : this->margin[3]) <= this->dim.y)
-        {
-            if (t & ui::side::top)     this->margin[0] = new_v;
-            if (t & ui::side::bottom)  this->margin[3] = new_v;
-        }
-
-    if (t & ui::side::left || t & ui::side::right)
-        if (this->border[1] + this->border[2]
-            + (t & ui::side::left ? new_v : this->margin[1])
-            + (t & ui::side::right ? new_v : this->margin[2]) <= this->dim.x)
-        {
-            if (t & ui::side::left)    this->margin[1] = new_v;
-            if (t & ui::side::right)   this->margin[2] = new_v;
-        }
+    if (t & ui::side::top)     this->margin[0] = new_v;
+    if (t & ui::side::left)    this->margin[1] = new_v;
+    if (t & ui::side::right)   this->margin[2] = new_v;
+    if (t & ui::side::bottom)  this->margin[3] = new_v;
 
     this->populate_buffers();
 }
