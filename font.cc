@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Sep 2016, 17:18:03 tquirk
+ *   last updated 21 May 2017, 13:12:37 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -410,18 +410,22 @@ void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
     /* Now copy everything into place in the main image.  We're still
      * producing upside-down images, so we'll copy bottom-to-top.
      */
-    GLuint row_offset = (img.height - 1) * img.width;
-    GLuint prev_desc = req_size[2];
+    GLuint row_num = img.height - 1;
+    GLuint row_offset, prev_descender;
 
     for (int i = 0; i < str_count; ++i)
     {
-        for (int j = imgs[i].height - 1; j >= 0; --j, row_offset -= img.width)
+        this->get_string_size(strs[i], req_size);
+        if (i != 0)
+            row_num -= line_height - prev_descender - req_size[1];
+        row_offset = row_num * img.width;
+        for (int j = imgs[i].height - 1;
+             j >= 0;
+             --j, --row_num, row_offset -= img.width)
             memcpy(&(img.data[row_offset]),
                    &(imgs[i].data[j * imgs[i].width]),
                    imgs[i].width);
-        this->get_string_size(strs[i], req_size);
-        row_offset -= (line_height - prev_desc - req_size[1]) * img.width;
-        prev_desc = req_size[2];
+        prev_descender = req_size[2];
     }
 
     delete[] imgs;
