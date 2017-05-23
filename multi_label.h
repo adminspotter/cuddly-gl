@@ -1,6 +1,6 @@
 /* multi_label.h                                           -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Nov 2016, 10:53:13 tquirk
+ *   last updated 22 May 2017, 18:56:59 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -47,7 +47,6 @@ namespace ui
         std::u32string::size_type hard_split_string(GLuint, std::u32string&);
         void split_string_to_width(GLuint, std::list<std::u32string>&);
         virtual void generate_string_image(void) override;
-        virtual void calculate_widget_size(void) override;
 
       public:
         multi_label(composite *, GLuint, GLuint);

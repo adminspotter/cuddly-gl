@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 May 2017, 08:36:37 tquirk
+ *   last updated 22 May 2017, 18:57:01 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -163,22 +163,6 @@ void ui::multi_label::generate_string_image(void)
         str_vec.insert(str_vec.begin(), strs.begin(), strs.end());
         this->font->render_multiline_string(str_vec, this->img);
         this->calculate_widget_size();
-    }
-}
-
-void ui::multi_label::calculate_widget_size(void)
-{
-    glm::ivec2 sz;
-
-    if (this->img.width > 0 && this->img.height > 0)
-    {
-        sz.x = this->img.width
-            + this->margin[1] + this->margin[2]
-            + this->border[1] + this->border[2] + 2;
-        sz.y = this->img.height
-            + this->margin[0] + this->border[0]
-            + this->border[3] + this->margin[3] + 2;
-        this->set_size(ui::size::all, &sz);
     }
 }
 
