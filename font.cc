@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Jul 2017, 23:48:33 tquirk
+ *   last updated 14 Jul 2017, 09:34:41 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -150,11 +150,13 @@ std::string ui::font::search_path(std::string& font_name,
          */
         if ((pos = path.find('~')) != std::string::npos)
         {
-            std::string home = getenv("HOME");
+            char *home;
+            std::string home_str;
 
-            if (home.size() == 0)
+            if ((home = getenv("HOME")) == NULL)
                 throw std::runtime_error(_("Could not find home directory"));
-            path.replace(pos, 1, home);
+            home_str = home;
+            path.replace(pos, 1, home_str);
         }
         path += '/' + font_name;
         if (stat(path.c_str(), &st) != -1)
