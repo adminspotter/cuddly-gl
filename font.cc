@@ -1,9 +1,9 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2017, 13:12:37 tquirk
+ *   last updated 13 Jul 2017, 23:31:45 tquirk
  *
  * Revision IX game client
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,6 +70,43 @@
  */
 static FT_Library ft_lib;
 static int ft_lib_count = 0;
+
+/* Instead of having a giant if-condition, we'll do some sensible
+ * searching with a set.  There are a handful of single code points
+ * which are r-to-l, and a number of ranges.  We'll make ranges out of
+ * the single points, with the same beginning and end, and our
+ * comparisons should still hold.
+ */
+struct range
+{
+    uint32_t start, end;
+
+    range(uint32_t a, uint32_t b) { this->start = a; this->end = b; };
+};
+
+static bool operator<(const range& a, const range& b)
+{
+    if (a.end < b.start)
+        return true;
+    return false;
+}
+
+static bool operator==(const range& a, const range& b)
+{
+    if (a.start == a.end)
+    {
+        if (a.start >= b.start && a.start <= b.end)
+            return true;
+    }
+    else if (b.start == b.end)
+    {
+        if (b.start >= a.start && b.start <= b.end)
+            return true;
+    }
+    else if (a.start == b.start && a.end == b.end)
+        return true;
+    return false;
+}
 
 static FT_Library *init_freetype(void)
 {
