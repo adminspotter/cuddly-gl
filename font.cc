@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Jul 2017, 23:31:45 tquirk
+ *   last updated 13 Jul 2017, 23:48:33 tquirk
  *
  * Revision IX game client
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -88,23 +88,6 @@ struct range
 static bool operator<(const range& a, const range& b)
 {
     if (a.end < b.start)
-        return true;
-    return false;
-}
-
-static bool operator==(const range& a, const range& b)
-{
-    if (a.start == a.end)
-    {
-        if (a.start >= b.start && a.start <= b.end)
-            return true;
-    }
-    else if (b.start == b.end)
-    {
-        if (b.start >= a.start && b.start <= b.end)
-            return true;
-    }
-    else if (a.start == b.start && a.end == b.end)
         return true;
     return false;
 }
