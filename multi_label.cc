@@ -1,9 +1,9 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 May 2017, 18:57:01 tquirk
+ *   last updated 31 Aug 2017, 22:09:44 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -167,7 +167,7 @@ void ui::multi_label::generate_string_image(void)
 }
 
 ui::multi_label::multi_label(ui::composite *p, GLuint w, GLuint h)
-    : ui::label::label(p, w, h), ui::rect::rect(w, h)
+    : ui::label::label(p, w, h), ui::active::active(w, h), ui::rect::rect(w, h)
 {
 }
 

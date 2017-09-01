@@ -1,9 +1,9 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 18:03:14 tquirk
+ *   last updated 31 Aug 2017, 22:13:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -203,7 +203,7 @@ void ui::manager::recalculate_transformation_matrix(void)
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
     : ui::widget::widget(c, w, h), ui::composite::composite(c, w, h),
-      ui::rect::rect(w, h), child_spacing(0, 0)
+      ui::active::active(w, h), ui::rect::rect(w, h), child_spacing(0, 0)
 {
     this->resize = ui::resize::all;
 
