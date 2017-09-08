@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2017, 09:24:53 tquirk
+ *   last updated 05 Oct 2017, 09:26:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -242,14 +242,16 @@ void ui::composite::manage_children(void)
 
 void ui::composite::mouse_pos_callback(int x, int y)
 {
-    glm::ivec2 pos = {x, y}, obj;
-    ui::mouse_call_data call_data;
+    glm::ivec2 pos = {x, y};
+    ui::mouse_call_data call_data = {pos};
     ui::widget *w = this->tree->search(pos);
 
     if (w != NULL)
     {
+        glm::ivec2 obj;
+
         w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = pos - obj;
+        call_data.location -= obj;
         if (this->old_child != w)
         {
             if (this->old_child != NULL)
@@ -258,9 +260,11 @@ void ui::composite::mouse_pos_callback(int x, int y)
         }
         w->call_callbacks(ui::callback::motion, &call_data);
     }
-    else if (this->old_child != NULL)
+    else
     {
-        this->leave_child(this->old_child, pos);
+        if (this->old_child != NULL)
+            this->leave_child(this->old_child, pos);
+        this->call_callbacks(ui::callback::motion, &call_data);
     }
 
     /* w might no longer exist at this position.  Let's search again,
