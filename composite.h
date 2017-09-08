@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 21:50:47 tquirk
+ *   last updated 05 Oct 2017, 09:22:17 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -69,6 +69,8 @@ namespace ui
         void regenerate_search_tree(void);
 
         void clear_removed_children(void);
+
+        void leave_child(widget *, glm::ivec2&);
 
       public:
         composite(composite *, GLuint, GLuint);

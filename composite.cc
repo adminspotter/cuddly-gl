@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 21:53:05 tquirk
+ *   last updated 05 Oct 2017, 09:24:53 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -155,6 +155,16 @@ void ui::composite::clear_removed_children(void)
     }
 }
 
+void ui::composite::leave_child(ui::widget *w, glm::ivec2& pos)
+{
+    glm::ivec2 obj;
+    ui::mouse_call_data call_data = {pos};
+
+    w->get(ui::element::position, ui::position::all, &obj);
+    call_data.location -= obj;
+    w->call_callbacks(ui::callback::leave, &call_data);
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
     : ui::active::active(w, h), ui::rect::rect(w, h),
       children(), to_remove(), old_pos(0, 0)
@@ -241,16 +251,16 @@ void ui::composite::mouse_pos_callback(int x, int y)
         w->get(ui::element::position, ui::position::all, &obj);
         call_data.location = pos - obj;
         if (this->old_child != w)
+        {
+            if (this->old_child != NULL)
+                this->leave_child(this->old_child, pos);
             w->call_callbacks(ui::callback::enter, &call_data);
-        if (this->old_child != NULL && this->old_child != w)
-            this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        }
         w->call_callbacks(ui::callback::motion, &call_data);
     }
     else if (this->old_child != NULL)
     {
-        this->old_child->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = pos - obj;
-        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        this->leave_child(this->old_child, pos);
     }
 
     /* w might no longer exist at this position.  Let's search again,
