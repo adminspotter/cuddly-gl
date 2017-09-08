@@ -276,22 +276,22 @@ void ui::composite::mouse_pos_callback(int x, int y)
 
 void ui::composite::mouse_btn_callback(int btn, int state)
 {
+    ui::btn_call_data call_data = {this->old_pos, (GLuint)btn, (GLuint)state};
+    GLuint which = (state == ui::mouse::up
+                    ? ui::callback::btn_up
+                    : ui::callback::btn_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
     if (w != NULL)
     {
         glm::ivec2 obj;
-        ui::btn_call_data call_data;
-        GLuint which = (state == ui::mouse::up
-                        ? ui::callback::btn_up
-                        : ui::callback::btn_down);
 
         w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = this->old_pos - obj;
-        call_data.button = btn;
-        call_data.state = state;
+        call_data.location -= obj;
         w->call_callbacks(which, &call_data);
     }
+    else
+        this->call_callbacks(which, &call_data);
 
     /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
@@ -301,26 +301,25 @@ void ui::composite::mouse_btn_callback(int btn, int state)
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
 {
+    ui::key_call_data call_data = {this->old_pos, c, (GLuint)key,
+                                   (GLuint)state, (GLuint)mods};
+    GLuint which = (state == ui::key::up
+                    ? ui::callback::key_up
+                    : ui::callback::key_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
     if (w != NULL)
     {
         glm::ivec2 obj;
-        ui::key_call_data call_data;
-        GLuint which = (state == ui::key::up
-                        ? ui::callback::key_up
-                        : ui::callback::key_down);
 
         w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = this->old_pos - obj;
-        call_data.key = key;
-        call_data.character = c;
-        call_data.state = state;
-        call_data.mods = mods;
+        call_data.location -= obj;
         w->call_callbacks(which, &call_data);
     }
+    else
+        this->call_callbacks(which, &call_data);
 
-    /* p might no longer exist at this position.  Let's search again,
+    /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
      */
     this->old_child = this->tree->search(this->old_pos);
