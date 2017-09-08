@@ -1,9 +1,9 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 17:39:02 tquirk
+ *   last updated 31 Aug 2017, 07:54:24 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -138,7 +138,7 @@ namespace ui
         const int no_key = 0;
         const int l_arrow = 1, r_arrow = 2, u_arrow = 3, d_arrow = 4;
         const int pg_up = 5, pg_down = 6, home = 7, end = 8;
-        const int bkspc = 9, del = 10;
+        const int bkspc = 9, del = 10, esc = 11;
         const int down = 254, up = 255;
     }
 
