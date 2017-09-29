@@ -1,9 +1,9 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Sep 2016, 17:06:24 tquirk
+ *   last updated 29 Sep 2017, 17:58:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,7 +55,7 @@
 #include <string>
 #include <vector>
 
-#include "../cache.h"
+#include "cache.h"
 #include "image.h"
 
 namespace ui
