@@ -1,4 +1,4 @@
-# r9 User Interface library #
+# CuddlyGL User Interface library #
 
 We want a lightweight, C++-specific, OpenGL-only toolkit, that makes
 sense to call, is internally consistent, and doesn't force us to use
@@ -238,8 +238,9 @@ instantiated, but serve to add basic functionality in a layered way.
 
 The `ui::rect` class ([rect.h](../client/ui/rect.h) and
 [rect.cc](../client/ui/rect.cc)) provides a rectangle of a given size.
-All the widget classes in the R9 UI toolkit derive from the `ui::rect`.
-It provides the `va_get` and `va_set` methods for all other classes.
+All the widget classes in the CuddlyGL UI toolkit derive from the
+`ui::rect`.  It provides the `va_get` and `va_set` methods for all
+other classes.
 
 ##### Rect Resources #####
 

@@ -20,7 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains namespace definitions for the R9 ui classes.
+ * This file contains namespace definitions for the CuddlyGL UI
+ * classes.
  *
  * Things to do
  *

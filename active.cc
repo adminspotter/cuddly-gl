@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the callback list method definitions for the R9
- * UI widget set.
+ * This file contains the callback list method definitions for the
+ * CuddlyGL UI widget set.
  *
  * Things to do
  *
