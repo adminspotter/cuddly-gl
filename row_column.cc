@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *   last updated 16 May 2017, 18:12:00 tquirk
  *
- * Revision IX game client
+ * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
