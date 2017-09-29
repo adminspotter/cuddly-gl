@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Jul 2017, 09:34:41 tquirk
+ *   last updated 29 Sep 2017, 18:01:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -61,9 +61,6 @@
 
 #include "font.h"
 #include FT_GLYPH_H
-
-#include "../configdata.h"
-#include "../l10n.h"
 
 /* We'll keep a single library handle, and a refcount.  This will all
  * be handled within the same thread, so no multi-thread weirdness
@@ -154,7 +151,7 @@ std::string ui::font::search_path(std::string& font_name,
             std::string home_str;
 
             if ((home = getenv("HOME")) == NULL)
-                throw std::runtime_error(_("Could not find home directory"));
+                throw std::runtime_error("Could not find home directory");
             home_str = home;
             path.replace(pos, 1, home_str);
         }
@@ -162,7 +159,7 @@ std::string ui::font::search_path(std::string& font_name,
         if (stat(path.c_str(), &st) != -1)
             return path;
     }
-    throw std::runtime_error(_("Could not find font ") + font_name);
+    throw std::runtime_error("Could not find font " + font_name);
 }
 
 void ui::font::load_glyph(FT_ULong code)
@@ -229,7 +226,7 @@ ui::font::font(std::string& font_name,
     std::string font_path = this->search_path(font_name, paths);
 
     if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
-        throw std::runtime_error(_("Could not load font ") + font_name);
+        throw std::runtime_error("Could not load font " + font_name);
     FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
     this->get_max_glyph_box();
 }
@@ -283,7 +280,7 @@ void ui::font::get_string_size(const std::u32string& str,
         ui::glyph& g = (*this)[*i];
 
         if (g.x_advance == 0 && g.y_advance != 0)
-            throw std::runtime_error(_("This font is not supported."));
+            throw std::runtime_error("This font is not supported.");
         if (i != str.begin())
             this->kern(*(i - 1), *i, &kerning);
 

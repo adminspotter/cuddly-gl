@@ -1,9 +1,9 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Mar 2016, 10:36:56 tquirk
+ *   last updated 29 Sep 2017, 18:02:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,8 +38,6 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#include "../l10n.h"
-
 #include "shader.h"
 
 GLuint load_shader(GLenum type, const std::string& file)
@@ -51,7 +49,7 @@ GLuint load_shader(GLenum type, const std::string& file)
     {
         std::ostringstream s;
 
-        s << _("could not open file ") << file;
+        s << "could not open file " << file;
         throw std::runtime_error(s.str());
     }
     infile.seekg(0, std::ios::end);
@@ -74,7 +72,7 @@ GLuint create_shader(GLenum type, const std::string& src)
 
     if (shader == 0)
     {
-        s << _("could not create shader: ") << GLenum_to_string(glGetError());
+        s << "could not create shader: " << GLenum_to_string(glGetError());
         throw std::runtime_error(s.str());
     }
 
@@ -117,7 +115,7 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
 
     if (pgm == 0)
     {
-        s << _("could not create GL program: ")
+        s << "could not create GL program: "
           << GLenum_to_string(glGetError());
         throw std::runtime_error(s.str());
     }
@@ -131,7 +129,7 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
         glAttachShader(pgm, frag);
     if ((err = glGetError()) != GL_NO_ERROR)
     {
-        s << _("Could not attach shaders to the shader program: ")
+        s << "Could not attach shaders to the shader program: "
           << GLenum_to_string(err);
         glDeleteProgram(pgm);
         throw std::runtime_error(s.str());
