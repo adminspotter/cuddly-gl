@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef __INC_R9_MANAGER_H__
-#define __INC_R9_MANAGER_H__
+#ifndef __INC_CUDDLY_MANAGER_H__
+#define __INC_CUDDLY_MANAGER_H__
 
 #include "widget.h"
 #include "composite.h"
@@ -69,4 +69,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_MANAGER_H__ */
+#endif /* __INC_CUDDLY_MANAGER_H__ */

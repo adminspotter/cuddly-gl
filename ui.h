@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __INC_R9_UI_H__
-#define __INC_R9_UI_H__
+#ifndef __INC_CUDDLY_UI_H__
+#define __INC_CUDDLY_UI_H__
 
 #include "ui_defs.h"
 #include "composite.h"
@@ -58,4 +58,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_UI_H__ */
+#endif /* __INC_CUDDLY_UI_H__ */

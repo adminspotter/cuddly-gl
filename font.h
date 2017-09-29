@@ -45,8 +45,8 @@
  *
  */
 
-#ifndef __INC_R9_FONT_H__
-#define __INC_R9_FONT_H__
+#ifndef __INC_CUDDLY_FONT_H__
+#define __INC_CUDDLY_FONT_H__
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -109,4 +109,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_FONT_H__ */
+#endif /* __INC_CUDDLY_FONT_H__ */

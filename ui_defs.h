@@ -26,8 +26,8 @@
  *
  */
 
-#ifndef __INC_R9_UI_DEFS_H__
-#define __INC_R9_UI_DEFS_H__
+#ifndef __INC_CUDDLY_UI_DEFS_H__
+#define __INC_CUDDLY_UI_DEFS_H__
 
 #include <GL/gl.h>
 
@@ -183,4 +183,4 @@ namespace ui
     }
 }
 
-#endif /* __INC_R9_UI_DEFS_H__ */
+#endif /* __INC_CUDDLY_UI_DEFS_H__ */

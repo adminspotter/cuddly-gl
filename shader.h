@@ -26,8 +26,8 @@
  *
  */
 
-#ifndef __INC_R9_SHADER_H__
-#define __INC_R9_SHADER_H__
+#ifndef __INC_CUDDLY_SHADER_H__
+#define __INC_CUDDLY_SHADER_H__
 
 #include <string>
 
@@ -38,4 +38,4 @@ GLuint create_shader(GLenum, const std::string&);
 GLuint create_program(GLuint, GLuint, GLuint, const char *);
 std::string GLenum_to_string(GLenum);
 
-#endif /* __INC_R9_SHADER_H__ */
+#endif /* __INC_CUDDLY_SHADER_H__ */

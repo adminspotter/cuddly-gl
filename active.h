@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef __INC_R9_ACTIVE_H__
-#define __INC_R9_ACTIVE_H__
+#ifndef __INC_CUDDLY_ACTIVE_H__
+#define __INC_CUDDLY_ACTIVE_H__
 
 #include <list>
 #include <chrono>
@@ -94,4 +94,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_ACTIVE_H__ */
+#endif /* __INC_CUDDLY_ACTIVE_H__ */

@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef __INC_R9_RECT_H__
-#define __INC_R9_RECT_H__
+#ifndef __INC_CUDDLY_RECT_H__
+#define __INC_CUDDLY_RECT_H__
 
 #include <stdarg.h>
 
@@ -57,4 +57,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_RECT_H__ */
+#endif /* __INC_CUDDLY_RECT_H__ */

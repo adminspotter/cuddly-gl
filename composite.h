@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef __INC_R9_COMPOSITE_H__
-#define __INC_R9_COMPOSITE_H__
+#ifndef __INC_CUDDLY_COMPOSITE_H__
+#define __INC_CUDDLY_COMPOSITE_H__
 
 #include <list>
 
@@ -89,4 +89,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_COMPOSITE_H__ */
+#endif /* __INC_CUDDLY_COMPOSITE_H__ */

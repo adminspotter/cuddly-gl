@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef __INC_R9_TEXT_FIELD_H__
-#define __INC_R9_TEXT_FIELD_H__
+#ifndef __INC_CUDDLY_TEXT_FIELD_H__
+#define __INC_CUDDLY_TEXT_FIELD_H__
 
 #include <chrono>
 
@@ -94,4 +94,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_TEXT_FIELD_H__ */
+#endif /* __INC_CUDDLY_TEXT_FIELD_H__ */

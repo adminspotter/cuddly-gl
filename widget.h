@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef __INC_R9_WIDGET_H__
-#define __INC_R9_WIDGET_H__
+#ifndef __INC_CUDDLY_WIDGET_H__
+#define __INC_CUDDLY_WIDGET_H__
 
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
@@ -105,4 +105,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_WIDGET_H__ */
+#endif /* __INC_CUDDLY_WIDGET_H__ */

@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __INC_R9_LABEL_H__
-#define __INC_R9_LABEL_H__
+#ifndef __INC_CUDDLY_LABEL_H__
+#define __INC_CUDDLY_LABEL_H__
 
 #include <string.h>
 
@@ -78,4 +78,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_LABEL_H__ */
+#endif /* __INC_CUDDLY_LABEL_H__ */

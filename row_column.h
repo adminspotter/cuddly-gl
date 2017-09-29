@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef __INC_R9_ROW_COLUMN_H__
-#define __INC_R9_ROW_COLUMN_H__
+#ifndef __INC_CUDDLY_ROW_COLUMN_H__
+#define __INC_CUDDLY_ROW_COLUMN_H__
 
 #include "manager.h"
 
@@ -59,4 +59,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_ROW_COLUMN_H__ */
+#endif /* __INC_CUDDLY_ROW_COLUMN_H__ */

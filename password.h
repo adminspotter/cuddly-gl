@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef __INC_R9_PASSWORD_H__
-#define __INC_R9_PASSWORD_H__
+#ifndef __INC_CUDDLY_PASSWORD_H__
+#define __INC_CUDDLY_PASSWORD_H__
 
 #include "text_field.h"
 
@@ -51,4 +51,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_R9_PASSWORD_H__ */
+#endif /* __INC_CUDDLY_PASSWORD_H__ */
