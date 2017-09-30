@@ -1,0 +1,44 @@
+*.[ao]
+*.l[ao]
+*.so
+*.dylib
+*.gcda
+*.gcno
+*.gcov
+#*#
+.#*
+.DS_Store
+*~
+TAGS
+.deps/
+.gear/
+.libs/
+old/
+
+# Automake
+Makefile
+Makefile.in
+Makefile.orig
+
+# Autoconf
+.dirstamp
+aclocal.m4
+ar-lib
+autom4te.cache
+autoscan.log
+compile
+config.*
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+libtool.m4
+lt*.m4
+missing
+stamp-h
+stamp-h1
+test-driver
+
+# Xcode
+*.xcodeproj/
