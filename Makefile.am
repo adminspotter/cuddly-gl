@@ -1,3 +1,14 @@
+ACLOCAL_AMFLAGS = -I m4
+
+SD = . test
+SD_INST = . shaders
+
+SUBDIRS = $(SD)
+
+install-recursive: SUBDIRS = $(SD_INST)
+
+EXTRA_DIST = autogen.sh doc
+
 lib_LTLIBRARIES = libcuddly_gl.la
 
 shaderdir = @datadir@/$(PACKAGE)/shaders
