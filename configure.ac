@@ -129,6 +129,7 @@ AC_TYPE_UINT32_T
 AC_CHECK_FUNCS([memcpy memmove memset])
 
 AC_CONFIG_FILES([Makefile
-                 test/Makefile])
+                 test/Makefile
+                 shaders/Makefile])
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
 AC_OUTPUT
