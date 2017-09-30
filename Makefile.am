@@ -1,22 +1,16 @@
 noinst_PROGRAMS = uitest fonttest
 
-lib_LTLIBRARIES = libr9_client_ui.la
+lib_LTLIBRARIES = libcuddly_gl.la
 
 shaderdir = @datadir@/$(PACKAGE)/shaders
 
-uitest_SOURCES = uitest.cc libr9_client_ui.la
-uitest_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
-	-DSTORE_PREFIX=\".\"
-uitest_LDFLAGS = $(CLIENT_LDFLAGS)
-uitest_LDADD = libr9_client_ui.la $(CLIENT_LDLIBS)
+uitest_SOURCES = uitest.cc libcuddly_gl.la
+uitest_LDADD = libcuddly_gl.la $(LDLIBS)
 
-fonttest_SOURCES = fonttest.cc libr9_client_ui.la
-fonttest_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
-	-DSTORE_PREFIX=\".\"
-fonttest_LDFLAGS = $(CLIENT_LDFLAGS)
-fonttest_LDADD = libr9_client_ui.la $(CLIENT_LDLIBS)
+fonttest_SOURCES = fonttest.cc libcuddly_gl.la
+fonttest_LDADD = libcuddly_gl.la $(LDLIBS)
 
-libr9_client_ui_la_SOURCES = ui_defs.h image.h \
+libcuddly_gl_la_SOURCES = ui_defs.h image.h \
 	font.cc font.h \
 	shader.cc shader.h \
 	rect.cc rect.h \
@@ -33,11 +27,10 @@ libr9_client_ui_la_SOURCES = ui_defs.h image.h \
 	manager.cc manager.h \
 	row_column.cc row_column.h \
 	pie_menu.cc pie_menu.h
-libr9_client_ui_la_CXXFLAGS = $(CLIENT_CXXFLAGS) $(CLIENT_INCLUDES) \
-	-DSTORE_PREFIX=\"@datadir@/$(PACKAGE)\" \
+libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \
 	-DGL_GLEXT_PROTOTYPES
-libr9_client_ui_la_LIBADD = $(CLIENT_LDLIBS)
+libcuddly_gl_la_LIBADD = $(LDLIBS)
 
 clean-local:
 	rm -f *.gcno *.gcda *.gcov
