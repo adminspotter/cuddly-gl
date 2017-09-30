@@ -1,14 +1,6 @@
-noinst_PROGRAMS = uitest fonttest
-
 lib_LTLIBRARIES = libcuddly_gl.la
 
 shaderdir = @datadir@/$(PACKAGE)/shaders
-
-uitest_SOURCES = uitest.cc libcuddly_gl.la
-uitest_LDADD = libcuddly_gl.la $(LDLIBS)
-
-fonttest_SOURCES = fonttest.cc libcuddly_gl.la
-fonttest_LDADD = libcuddly_gl.la $(LDLIBS)
 
 libcuddly_gl_la_SOURCES = ui_defs.h image.h \
 	font.cc font.h \
