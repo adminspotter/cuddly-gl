@@ -53,22 +53,23 @@ AS_IF([test "$enable_profile" == "yes"],
       [AX_ENABLE_PROFILE])
 
 # OpenGL libs
-case $host_os in
-  darwin*)
+AS_CASE([$host_os],
+        [darwin*],
+        [
     LDLIBS="$LDLIBS -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo"
-    ;;
-  *)
-    AC_SEARCH_LIBS([glBindVertexArray], [GL],
-        [LDLIBS="$ac_cv_search_glBindVertexArray $LDLIBS"],
-        [AC_MSG_ERROR([libGL not valid, can not build library.])],
-        [$LDFLAGS])
-
+    CXXFLAGS="$CXXFLAGS -I/opt/X11/include"
+        ],
+        [
     AC_SEARCH_LIBS([gluPerspective], [GLU],
         [LDLIBS="$ac_cv_search_gluPerspective $LDLIBS"],
         [AC_MSG_ERROR([libGLU not valid, can not build library.])],
         [$LDFLAGS])
-    ;;
-esac
+
+    AC_SEARCH_LIBS([glBindVertexArray], [GL],
+        [LDLIBS="$ac_cv_search_glBindVertexArray $LDLIBS"],
+        [AC_MSG_ERROR([libGL not valid, can not build library.])],
+        [$LDFLAGS])
+        ])
 
 # Check for Freetype2
 FREETYPE_CPPFLAGS_SAVE="$CPPFLAGS"
