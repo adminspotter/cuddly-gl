@@ -54,6 +54,9 @@ AC_ARG_WITH([freetype-libraries],
             [],
             [with_freetype_libraries="no"])
 
+AC_ARG_WITH([glm-includes],
+            AS_HELP_STRING([--with-glm-includes=<path>], [GLM include path]))
+
 # Development flags (debugging, profiling)
 AS_IF([test "$enable_debug" == "yes"],
       [
@@ -110,13 +113,16 @@ AX_RESTORE_FLAGS_WITH_PREFIX([FREETYPE],
                              [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
 
 # We use the GLM for our GL-related mathematics
-GLM_CPPFLAGS_SAVE="$CPPFLAGS"
+AX_SAVE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
+GLM_INCLUDES="-DGLM_FORCE_RADIANS"
+AS_IF([test "x$with_glm_includes" != "xno"],
+      [GLM_INCLUDES="-I$with_glm_includes $GLM_INCLUDES"])
+CXXFLAGS="$CXXFLAGS $GLM_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp], [], [AC_MSG_ERROR([no valid GLM installation found, can not continue])])
-CPPFLAGS="$GLM_CPPFLAGS_SAVE"
-CXXFLAGS="$CXXFLAGS -DGLM_FORCE_RADIANS"
+AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 
-CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $FREETYPE_INCLUDES $CXXFLAGS"
+CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $GLM_INCLUDES $FREETYPE_INCLUDES $CXXFLAGS"
 LDFLAGS="$DEBUG_LDFLAGS $PROFILE_LDFLAGS $FREETYPE_LDFLAGS $LDFLAGS"
 LIBS="$LIBS $FREETYPE_LDLIBS $PROFILE_LDLIBS"
 
