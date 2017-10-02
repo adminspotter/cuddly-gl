@@ -33,6 +33,7 @@ libcuddly_gl_la_SOURCES = ui_defs.h image.h \
 libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \
 	-DGL_GLEXT_PROTOTYPES
+libcuddly_gl_la_LDFLAGS = $(LDFLAGS)
 libcuddly_gl_la_LIBADD = $(LDLIBS)
 
 clean-local:
