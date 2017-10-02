@@ -57,6 +57,17 @@ AC_ARG_WITH([freetype-libraries],
 AC_ARG_WITH([glm-includes],
             AS_HELP_STRING([--with-glm-includes=<path>], [GLM include path]))
 
+AC_ARG_WITH([glfw],
+            AS_HELP_STRING([--without-glfw], [Disable GLFW for test suite]))
+AC_ARG_WITH([glfw-includes],
+            AS_HELP_STRING([--with-glfw-includes=<path>], [Test suite includes]),
+            [with_glfw="yes"],
+            [with_glfw_includes="no"])
+AC_ARG_WITH([glfw-libraries],
+            AS_HELP_STRING([--with-glfw-libraries=<path>], [Test suite libraries]),
+            [with_glfw="yes"],
+            [with_glfw_libraries="no"])
+
 # Development flags (debugging, profiling)
 AS_IF([test "$enable_debug" == "yes"],
       [
@@ -121,6 +132,45 @@ CXXFLAGS="$CXXFLAGS $GLM_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp], [], [AC_MSG_ERROR([no valid GLM installation found, can not continue])])
 AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
+
+# GLFW for the test suite
+want_tests="no"
+GLFW_INCLUDES=""
+GLFW_LDFLAGS=""
+GLFW_LDLIBS=""
+AS_IF([test "x$with_glfw" != "xno"],
+      [
+        AX_SAVE_FLAGS_WITH_PREFIX([GLFW],
+                                  [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
+        AS_IF([test "x$with_glfw_includes" != "xno"],
+              [GLFW_INCLUDES="-I$with_glfw_includes"],
+              [test "x$with_glfw" != "xyes"],
+              [GLFW_INCLUDES="-I$with_glfw/include"])
+        CXXFLAGS="$CXXFLAGS $GLFW_INCLUDES"
+        CPPFLAGS="$CXXFLAGS"
+        AC_CHECK_HEADERS([GLFW/glfw3.h],
+                         [want_tests="yes"],
+                         [AC_MSG_NOTICE([no GLFW headers found, not building test suite])])
+
+        AS_IF([test "x$want_tests" == "xyes"],
+              [
+                AS_IF([test "x$with_glfw_libraries" != "xno"],
+                      [GLFW_LDFLAGS="-L$with_glfw_libraries"],
+                      [test "x$with_glfw" != "xyes"],
+                      [GLFW_LDFLAGS="-L$with_glfw/lib"])
+                LDFLAGS="$LDFLAGS $GLFW_LDFLAGS"
+                AC_SEARCH_LIBS([glfwInit], [glfw],
+                               [GLFW_LDLIBS="$ac_cv_search_glfwInit"],
+                               [
+                                 AC_MSG_NOTICE([no GLFW libraries found, not building test suite])
+                                 want_tests="no"
+                               ])])
+        AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
+                                     [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])])
+AM_CONDITIONAL([WANT_TESTS], [test "x$want_tests" == "xyes"])
+AC_SUBST(GLFW_INCLUDES)
+AC_SUBST(GLFW_LDFLAGS)
+AC_SUBST(GLFW_LDLIBS)
 
 CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $GLM_INCLUDES $FREETYPE_INCLUDES $CXXFLAGS"
 LDFLAGS="$DEBUG_LDFLAGS $PROFILE_LDFLAGS $FREETYPE_LDFLAGS $LDFLAGS"

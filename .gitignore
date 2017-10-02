@@ -14,6 +14,8 @@ TAGS
 .gear/
 .libs/
 old/
+test/fonttest
+test/uitest
 
 # Automake
 Makefile
