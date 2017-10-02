@@ -1,0 +1,31 @@
+language: cpp
+os:
+- linux
+sudo: required
+dist: trusty
+compiler:
+- clang
+- gcc
+addons:
+  apt:
+    packages:
+    - autopoint
+    - cmake
+    - gettext
+    - libgl1-mesa-dev
+    - libglm-dev
+    - libfreetype6-dev
+    - python3-pip
+    - xorg-dev
+before_script:
+- wget https://github.com/glfw/glfw/releases/download/3.2/glfw-3.2.zip -O /tmp/glfw-3.2.zip
+- unzip /tmp/glfw-3.2.zip
+- pushd glfw-3.2 && cmake -DBUILD_SHARED_LIBS=ON -DLIB_SUFFIX=64 -DGLFW_BUILD_EXAMPLES=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF && make && sudo make install && popd && rm -rf glfw-3.2
+- sudo pip3 install codecov
+script:
+- ./autogen.sh
+- CXXFLAGS='-I/usr/include/freetype2' ./configure --prefix=$HOME --enable-profile
+- make
+- make check
+after_success:
+- codecov
