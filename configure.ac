@@ -42,12 +42,12 @@ AC_ARG_ENABLE([profile],
               [enable_profile="no"])
 
 # Development flags (debugging, profiling)
-if test "$enable_debug" == "yes"
-then
-  AC_MSG_NOTICE([building with debug enabled])
-  DEBUG_CXXFLAGS="-g"
-  DEBUG_LDFLAGS="-g"
-fi
+AS_IF([test "$enable_debug" == "yes"],
+      [
+        AC_MSG_NOTICE([building with debug enabled])
+        DEBUG_CXXFLAGS="-g"
+        DEBUG_LDFLAGS="-g"
+      ])
 
 if test "$enable_profile" == "yes"
 then
