@@ -49,30 +49,8 @@ AS_IF([test "$enable_debug" == "yes"],
         DEBUG_LDFLAGS="-g"
       ])
 
-if test "$enable_profile" == "yes"
-then
-  if test "$CXX" == "clang++"
-  then
-    AC_SEARCH_LIBS([llvm_start_basic_block_tracing], [profile_rt],
-        [
-          if test "x$ac_cv_search_llvm_start_basic_block_tracing" == "xnone required"
-          then
-            AC_MSG_NOTICE([libprofile_rt not needed])
-          else
-            PROFILE_LDLIBS="$ac_cv_search_llvm_start_basic_block_tracing"
-          fi
-          PROFILE_CXXFLAGS="-fprofile-arcs -ftest-coverage"
-          PROFILE_LDFLAGS="--coverage"
-          AC_MSG_NOTICE([building with profiling enabled])
-        ],
-        [AC_MSG_NOTICE([no libprofile_rt available, not enabling profiling])])
-  else
-    PROFILE_CXXFLAGS="-fprofile-arcs -ftest-coverage"
-    PROFILE_LDFLAGS="--coverage"
-    PROFILE_LDLIBS="-lgcov"
-    AC_MSG_NOTICE([building with profiling enabled])
-  fi
-fi
+AS_IF([test "$enable_profile" == "yes"],
+      [AX_ENABLE_PROFILE])
 
 # OpenGL libs
 case $host_os in
