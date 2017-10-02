@@ -41,6 +41,19 @@ AC_ARG_ENABLE([profile],
               [],
               [enable_profile="no"])
 
+AC_ARG_WITH([freetype],
+            AS_HELP_STRING([--with-freetype=<path>], [Freetype2 install root]),
+            [],
+            [with_freetype="no"])
+AC_ARG_WITH([freetype-includes],
+            AS_HELP_STRING([--with-freetype-includes=<path>], [Freetype2 include path]),
+            [],
+            [with_freetype_includes="no"])
+AC_ARG_WITH([freetype-libraries],
+            AS_HELP_STRING([--with-freetype-libraries=<path>], [Freetype2 library path]),
+            [],
+            [with_freetype_libraries="no"])
+
 # Development flags (debugging, profiling)
 AS_IF([test "$enable_debug" == "yes"],
       [
@@ -72,21 +85,29 @@ AS_CASE([$host_os],
         ])
 
 # Check for Freetype2
-FREETYPE_CPPFLAGS_SAVE="$CPPFLAGS"
+FREETYPE_INCLUDES=""
+FREETYPE_LDFLAGS=""
+FREETYPE_LDLIBS=""
+AX_SAVE_FLAGS_WITH_PREFIX([FREETYPE],
+                          [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
+AS_IF([test "x$with_freetype_includes" != "xno"],
+      [FREETYPE_INCLUDES="-I$with_freetype_includes"],
+      [test "x$with_freetype" != "xno"],
+      [FREETYPE_INCLUDES="-I$with_freetype/include"])
+CXXFLAGS="$CXXFLAGS $FREETYPE_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([ft2build.h], [], [AC_MSG_ERROR([no valid Freetype2 headers found, can not continue])])
-CPPFLAGS="$FREETYPE_CPPFLAGS_SAVE"
+AS_IF([test "x$with_freetype_libraries" != "xno"],
+      [FREETYPE_LDFLAGS="-L$with_freetype_libraries"],
+      [test "x$with_freetype" != "xno"],
+      [FREETYPE_LDFLAGS="-L$with_freetype/lib"])
+LDFLAGS="$LDFLAGS $FREETYPE_LDFLAGS"
 AC_SEARCH_LIBS([FT_Init_FreeType], [freetype],
-    [
-        FREETYPE_LDLIBS="$ac_cv_search_FT_Init_FreeType"
-        LDLIBS="$FREETYPE_LDLIBS $LDLIBS"
-    ],
+    [FREETYPE_LDLIBS="$ac_cv_search_FT_Init_FreeType"],
     [AC_MSG_ERROR([ not valid, can not build library.])],
     [$LDFLAGS])
-
-CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $CXXFLAGS"
-LDFLAGS="$DEBUG_LDFLAGS $PROFILE_LDFLAGS $LDFLAGS"
-LDLIBS="$LDLIBS $PROFILE_LDLIBS"
+AX_RESTORE_FLAGS_WITH_PREFIX([FREETYPE],
+                             [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
 
 # We use the GLM for our GL-related mathematics
 GLM_CPPFLAGS_SAVE="$CPPFLAGS"
@@ -95,9 +116,9 @@ AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp
 CPPFLAGS="$GLM_CPPFLAGS_SAVE"
 CXXFLAGS="$CXXFLAGS -DGLM_FORCE_RADIANS"
 
-CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $CXXFLAGS"
-LDFLAGS="$DEBUG_LDFLAGS $PROFILE_LDFLAGS $LDFLAGS"
-LIBS="$LIBS $PROFILE_LDLIBS"
+CXXFLAGS="$DEBUG_CXXFLAGS $PROFILE_CXXFLAGS $FREETYPE_INCLUDES $CXXFLAGS"
+LDFLAGS="$DEBUG_LDFLAGS $PROFILE_LDFLAGS $FREETYPE_LDFLAGS $LDFLAGS"
+LIBS="$LIBS $FREETYPE_LDLIBS $PROFILE_LDLIBS"
 
 AC_CHECK_HEADERS([math.h stdarg.h stdlib.h string.h sys/stat.h sys/types.h unistd.h])
 
