@@ -9,27 +9,43 @@ install-recursive: SUBDIRS = $(SD_INST)
 
 EXTRA_DIST = autogen.sh doc
 
+pkginclude_HEADERS = active.h \
+	button.h \
+	composite.h \
+	font.h\
+	image.h \
+	label.h \
+	manager.h \
+	multi_label.h \
+	password.h \
+	pie_menu.h \
+	quadtree.h \
+	rect.h \
+	row_column.h \
+	text_field.h \
+	ui.h \
+	ui_defs.h \
+	widget.h
 lib_LTLIBRARIES = libcuddly_gl.la
 
 shaderdir = @datadir@/$(PACKAGE)/shaders
 
-libcuddly_gl_la_SOURCES = ui_defs.h image.h \
-	font.cc font.h \
-	shader.cc shader.h \
-	rect.cc rect.h \
-	active.cc active.h \
-	widget.cc widget.h \
-	label.cc label.h \
-	button.cc button.h \
-	text_field.cc text_field.h \
-	password.cc password.h \
-	multi_label.cc multi_label.h \
-	ui.cc ui.h \
-	quadtree.cc quadtree.h \
-	composite.cc composite.h \
-	manager.cc manager.h \
-	row_column.cc row_column.h \
-	pie_menu.cc pie_menu.h
+libcuddly_gl_la_SOURCES = active.cc \
+	button.cc \
+	composite.cc \
+	font.cc \
+	label.cc \
+	manager.cc \
+	multi_label.cc \
+	password.cc \
+	pie_menu.cc \
+	quadtree.cc \
+	rect.cc \
+	row_column.cc \
+	shader.cc \
+	text_field.cc \
+	ui.cc \
+	widget.cc
 libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \
 	-DGL_GLEXT_PROTOTYPES
