@@ -198,13 +198,61 @@ void test_va_get(void)
     }
 }
 
+void test_va_set(void)
+{
+    std::string test = "va_set: ", st;
+    test_rect *r = NULL;
+    GLuint dim = 42;
+    glm::ivec2 sz = {6, 5};
+
+    try
+    {
+        r = new test_rect(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    st = "single: ";
+    r->set_va(ui::element::size, ui::size::width, &dim,
+              ui::element::size, ui::size::height, &dim, 0);
+    is(r->dim.x, dim, test + st + "expected width");
+    is(r->dim.y, dim, test + st + "expected height");
+
+    st = "vector: ";
+    r->set_va(ui::element::size, ui::size::all, &sz, 0);
+    is(r->dim.x, sz.x, test + st + "expected width");
+    is(r->dim.y, sz.y, test + st + "expected height");
+
+    st = "bad element type: ";
+    r->set_va(99999, ui::size::width, &dim, 0);
+    isnt(r->dim.x, dim, test + st + "width unchanged");
+
+    st = "bad element subtype: ";
+    r->set_va(ui::element::size, 99999, &dim, 0);
+    isnt(r->dim.x, dim, test + st + "width unchanged");
+    isnt(r->dim.y, dim, test + st + "height unchanged");
+
+    try
+    {
+        delete r;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 int main(int argc, char **argv)
 {
-    plan(25);
+    plan(32);
 
     test_create_delete();
     test_get_size();
     test_set_size();
     test_va_get();
+    test_va_set();
     return 0;
 }
