@@ -3,6 +3,8 @@ if WANT_TESTS
 PROG += uitest fonttest
 endif
 
+SUBDIRS = tap++
+
 check_PROGRAMS = $(PROG)
 
 uitest_SOURCES = uitest.cc ../libcuddly_gl.la
@@ -14,6 +16,8 @@ fonttest_SOURCES = fonttest.cc ../libcuddly_gl.la
 fonttest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
 fonttest_LDFLAGS = $(LDFLAGS) $(GLFW_LDFLAGS)
 fonttest_LDADD = ../libcuddly_gl.la $(GLFW_LDLIBS) $(LDLIBS)
+
+install-recursive: SUBDIRS =
 
 clean-local:
 	rm -f *.gcno *.gcda *.gcov
