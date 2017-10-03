@@ -6,8 +6,9 @@ AC_INIT([CuddlyGL], [0.1], [], [cuddly-gl], [])
 AC_CONFIG_SRCDIR([rect.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 
 AC_GNU_SOURCE
 AC_SYS_LARGEFILE
@@ -192,4 +193,5 @@ AC_CONFIG_FILES([Makefile
                  test/tap++/Makefile
                  shaders/Makefile])
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AC_OUTPUT
