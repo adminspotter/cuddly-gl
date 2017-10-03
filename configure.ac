@@ -127,7 +127,7 @@ AX_RESTORE_FLAGS_WITH_PREFIX([FREETYPE],
 # We use the GLM for our GL-related mathematics
 AX_SAVE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 GLM_INCLUDES="-DGLM_FORCE_RADIANS"
-AS_IF([test "x$with_glm_includes" != "xno"],
+AS_IF([test "x$with_glm_includes" != "xno" && test "x$with_glm_includes" != "x"],
       [GLM_INCLUDES="-I$with_glm_includes $GLM_INCLUDES"])
 CXXFLAGS="$CXXFLAGS $GLM_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
