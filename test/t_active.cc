@@ -102,5 +102,5 @@ int main(int argc, char **argv)
 
     test_create_delete();
     test_callback();
-    return 0;
+    return exit_status();
 }

@@ -254,5 +254,5 @@ int main(int argc, char **argv)
     test_set_size();
     test_va_get();
     test_va_set();
-    return 0;
+    return exit_status();
 }
