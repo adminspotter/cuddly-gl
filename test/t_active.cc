@@ -10,6 +10,8 @@ class test_active : public ui::active
   public:
     using ui::rect::dim;
     using ui::active::enter_cb;
+    using ui::active::timeout_func;
+    using ui::active::timeout_arg;
 
     test_active(GLuint w, GLuint h) : ui::rect(w, h), ui::active(w, h) {};
     virtual ~test_active() {};
@@ -20,6 +22,13 @@ int callback_calls = 0;
 void fake_callback(ui::active *a, void *call, void *client)
 {
     ++callback_calls;
+}
+
+int timeout_calls = 0;
+
+void fake_timeout(ui::active *a, void *client)
+{
+    ++timeout_calls;
 }
 
 void test_create_delete(void)
@@ -96,11 +105,54 @@ void test_callback(void)
     }
 }
 
+void test_timeout(void)
+{
+    std::string test = "timeout: ", st;
+    test_active *a = NULL;
+
+    try
+    {
+        a = new test_active(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    st = "add: ";
+    a->add_timeout(ui::to_until::zero(), fake_timeout, (void *)1);
+    is(a->timeout_func, fake_timeout, test + st + "expected timeout func");
+    is(a->timeout_arg, (void *)1, test + st + "expected timeout arg");
+
+    st = "remove: ";
+    a->remove_timeout();
+    is(a->timeout_func, (ui::to_fptr)NULL, test + st + "timeout func unset");
+    is(a->timeout_arg, (void *)NULL, test + st + "timeout arg unset");
+
+    st = "call: ";
+    a->add_timeout(ui::to_until::zero(), fake_timeout, (void *)1);
+    a->call_timeout();
+    is(timeout_calls, 1, test + st + "timeout function called");
+    is(a->timeout_func, (ui::to_fptr)NULL, test + st + "timeout func unset");
+    is(a->timeout_arg, (void *)NULL, test + st + "timeout arg unset");
+
+    try
+    {
+        delete a;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 int main(int argc, char **argv)
 {
-    plan(9);
+    plan(16);
 
     test_create_delete();
     test_callback();
+    test_timeout();
     return exit_status();
 }
