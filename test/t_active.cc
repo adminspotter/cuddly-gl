@@ -10,6 +10,13 @@ class test_active : public ui::active
   public:
     using ui::rect::dim;
     using ui::active::enter_cb;
+    using ui::active::leave_cb;
+    using ui::active::motion_cb;
+    using ui::active::btn_down_cb;
+    using ui::active::btn_up_cb;
+    using ui::active::key_down_cb;
+    using ui::active::key_up_cb;
+    using ui::active::resize_cb;
     using ui::active::timeout_func;
     using ui::active::timeout_arg;
 
@@ -109,6 +116,58 @@ void test_callback(void)
     }
 }
 
+void test_which_callback(void)
+{
+    std::string test = "which callback: ";
+    test_active *a = NULL;
+
+    try
+    {
+        a = new test_active(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    a->add_callback(ui::callback::enter, fake_callback, NULL);
+    is(a->enter_cb.size(), 1, test + "picked enter");
+
+    a->add_callback(ui::callback::leave, fake_callback, NULL);
+    is(a->leave_cb.size(), 1, test + "picked leave");
+
+    a->add_callback(ui::callback::motion, fake_callback, NULL);
+    is(a->motion_cb.size(), 1, test + "picked motion");
+
+    a->add_callback(ui::callback::btn_down, fake_callback, NULL);
+    is(a->btn_down_cb.size(), 1, test + "picked btn_down");
+
+    a->add_callback(ui::callback::btn_up, fake_callback, NULL);
+    is(a->btn_up_cb.size(), 1, test + "picked btn_up");
+
+    a->add_callback(ui::callback::key_down, fake_callback, NULL);
+    is(a->key_down_cb.size(), 1, test + "picked key_down");
+
+    a->add_callback(ui::callback::key_up, fake_callback, NULL);
+    is(a->key_up_cb.size(), 1, test + "picked key_up");
+
+    a->add_callback(ui::callback::resize, fake_callback, NULL);
+    is(a->resize_cb.size(), 1, test + "picked resize");
+
+    a->add_callback(99999, fake_callback, NULL);
+    is(a->btn_down_cb.size(), 2, test + "default picked btn_down");
+
+    try
+    {
+        delete a;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 void test_timeout(void)
 {
     std::string test = "timeout: ", st;
@@ -162,10 +221,11 @@ void test_timeout(void)
 
 int main(int argc, char **argv)
 {
-    plan(19);
+    plan(28);
 
     test_create_delete();
     test_callback();
+    test_which_callback();
     test_timeout();
     return exit_status();
 }
