@@ -75,6 +75,10 @@ void test_callback(void)
         return;
     }
 
+    st = "call empty: ";
+    a->call_callbacks(ui::callback::enter, NULL);
+    is(callback_calls, 0, test + st + "didn't call anything");
+
     st = "add: ";
     a->add_callback(ui::callback::enter, fake_callback, NULL);
     is(a->enter_cb.size(), 1, test + st + "expected list size");
@@ -120,6 +124,10 @@ void test_timeout(void)
         return;
     }
 
+    st = "call empty: ";
+    a->call_timeout();
+    is(timeout_calls, 0, test + st + "didn't call anything");
+
     st = "add: ";
     a->add_timeout(ui::to_until::zero(), fake_timeout, (void *)1);
     is(a->timeout_func, fake_timeout, test + st + "expected timeout func");
@@ -137,6 +145,11 @@ void test_timeout(void)
     is(a->timeout_func, (ui::to_fptr)NULL, test + st + "timeout func unset");
     is(a->timeout_arg, (void *)NULL, test + st + "timeout arg unset");
 
+    st = "call NULL func: ";
+    a->add_timeout(ui::to_until::zero(), (ui::to_fptr)NULL, (void *)1);
+    a->call_timeout();
+    is(a->timeout_arg, (void *)NULL, test + st + "timeout arg unset");
+
     try
     {
         delete a;
@@ -149,7 +162,7 @@ void test_timeout(void)
 
 int main(int argc, char **argv)
 {
-    plan(16);
+    plan(19);
 
     test_create_delete();
     test_callback();
