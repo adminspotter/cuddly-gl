@@ -1,4 +1,5 @@
 *.log
 *.trs
 
+t_active
 t_rect

@@ -1,5 +1,7 @@
-PROG = t_rect
-TC = t_rect
+PROG = t_active \
+	t_rect
+TC = t_active \
+	t_rect
 if WANT_TESTS
 PROG += uitest fonttest
 endif
@@ -12,6 +14,10 @@ TESTS = $(TC)
 
 check_PROGRAMS = $(TC)
 noinst_PROGRAMS = $(PROG)
+
+t_active_SOURCES = t_active.cc
+t_active_CXXFLAGS = -Itap++
+t_active_LDADD = tap++/libtap++.la ../libcuddly_gl.la
 
 t_rect_SOURCES = t_rect.cc ../rect.h ../rect.cc
 t_rect_CXXFLAGS = -Itap++
