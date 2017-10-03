@@ -16,9 +16,39 @@ class test_active : public ui::active
     virtual ~test_active() {};
 };
 
+void test_create_delete(void)
+{
+    std::string test = "create/delete: ";
+    test_active *a = NULL;
+
+    try
+    {
+        a = new test_active(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    is(a->dim.x, 9, test + "expected width");
+    is(a->dim.y, 87, test + "expected height");
+    is(a->enter_cb.size(), 0, test + "empty callback list");
+
+    try
+    {
+        delete a;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 int main(int argc, char **argv)
 {
-    plan(0);
+    plan(3);
 
+    test_create_delete();
     return 0;
 }
