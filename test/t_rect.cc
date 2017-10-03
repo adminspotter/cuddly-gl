@@ -16,9 +16,38 @@ class test_rect : public ui::rect
     virtual ~test_rect() {};
 };
 
+void test_create_delete(void)
+{
+    std::string test = "create/delete: ";
+    test_rect *r = NULL;
+
+    try
+    {
+        r = new test_rect(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    is(r->dim.x, 9, test + "expected width");
+    is(r->dim.y, 87, test + "expected height");
+
+    try
+    {
+        delete r;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 int main(int argc, char **argv)
 {
-    plan(0);
+    plan(2);
 
+    test_create_delete();
     return 0;
 }
