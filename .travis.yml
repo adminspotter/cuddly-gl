@@ -12,6 +12,7 @@ addons:
     - autopoint
     - cmake
     - gettext
+    - libboost-all-dev
     - libgl1-mesa-dev
     - libglm-dev
     - libfreetype6-dev

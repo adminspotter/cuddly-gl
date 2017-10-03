@@ -1,5 +1,7 @@
 # cuddly-gl #
 
+[![Build Status](https://travis-ci.org/adminspotter/cuddly-gl.svg?branch=master)](https://travis-ci.org/adminspotter/cuddly-gl) [![codecov](https://codecov.io/gh/adminspotter/cuddly-gl/branch/master/graph/badge.svg)](https://codecov.io/gh/adminspotter/cuddly-gl)
+
 CuddlyGL is a platform-agnostic OpenGL UI toolkit written in C++.
 
 This toolkit was initially written because we weren't quite satisfied
@@ -68,4 +70,4 @@ being changed, and if there's a relevant issue or other relevant
 commit, tag it into the commit message.  Add yourself to the AUTHORS
 file, and the comment block at the top of files you change.
 
-Code is licensed GLP2.
+Code is licensed GPL2.

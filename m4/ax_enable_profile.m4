@@ -7,7 +7,7 @@ AC_MSG_CHECKING([compiler type for profiling])
 is_gcc=$($CC --version 2>/dev/null | grep -io gcc)
 is_clang=$($CC --version 2>/dev/null | grep -io clang)
 AS_IF([test "x$CC" == "xclang" || test "x$is_clang" != "x"],
-      [PROFILE_COMPILER_TYPE=clang]
+      [PROFILE_COMPILER_TYPE=clang],
       [test "x$CC" == "xgcc" || test "x$is_gcc" != "x"],
       [PROFILE_COMPILER_TYPE=gcc],
       [PROFILE_COMPILER_TYPE=unknown])

@@ -6,8 +6,9 @@ AC_INIT([CuddlyGL], [0.1], [], [cuddly-gl], [])
 AC_CONFIG_SRCDIR([rect.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 
 AC_GNU_SOURCE
 AC_SYS_LARGEFILE
@@ -126,7 +127,7 @@ AX_RESTORE_FLAGS_WITH_PREFIX([FREETYPE],
 # We use the GLM for our GL-related mathematics
 AX_SAVE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 GLM_INCLUDES="-DGLM_FORCE_RADIANS"
-AS_IF([test "x$with_glm_includes" != "xno"],
+AS_IF([test "x$with_glm_includes" != "xno" && test "x$with_glm_includes" != "x"],
       [GLM_INCLUDES="-I$with_glm_includes $GLM_INCLUDES"])
 CXXFLAGS="$CXXFLAGS $GLM_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
@@ -189,6 +190,8 @@ AC_CHECK_FUNCS([memcpy memmove memset])
 
 AC_CONFIG_FILES([Makefile
                  test/Makefile
+                 test/tap++/Makefile
                  shaders/Makefile])
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AC_OUTPUT
