@@ -44,10 +44,67 @@ void test_create_delete(void)
     }
 }
 
+void test_get_size(void)
+{
+    std::string test = "get_size: ", st;
+    test_rect *r = NULL;
+    GLuint dim;
+    glm::ivec2 sz;
+    int ret;
+
+    try
+    {
+        r = new test_rect(9, 87);
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+        return;
+    }
+
+    st = "get_size single: ";
+    ret = r->get_size(ui::size::width, &dim);
+    is(ret, 0, test + st + "expected return");
+    is(dim, 9, test + st + "expected width");
+
+    st = "get_size vector: ";
+    ret = r->get_size(ui::size::all, &sz);
+    is(ret, 0, test + st + "expected return");
+    is(sz.x, 9, test + st + "expected x-dim");
+    is(sz.y, 87, test + st + "expected y-dim");
+
+    st = "get_size bad element subtype: ";
+    dim = 9876;
+    ret = r->get_size(-1, &dim);
+    is(ret, 1, test + st + "expected return");
+    is(dim, 9876, test + st + "value unchanged");
+
+    st = "get single: ";
+    ret = r->get(ui::element::size, ui::size::height, &dim);
+    is(ret, 0, test + st + "expected return");
+    is(dim, 87, test + st + "expected height");
+
+    st = "get bad element type: ";
+    dim = 9876;
+    ret = r->get(-1, ui::size::width, &dim);
+    is(ret, 1, test + st + "expected return");
+    is(dim, 9876, test + st + "value unchanged");
+
+    try
+    {
+        delete r;
+    }
+    catch (...)
+    {
+        fail(test + "destructor exception");
+    }
+}
+
 int main(int argc, char **argv)
 {
-    plan(2);
+    plan(13);
 
     test_create_delete();
+    test_get_size();
     return 0;
 }
