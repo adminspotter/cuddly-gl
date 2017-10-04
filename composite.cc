@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2017, 09:26:00 tquirk
+ *   last updated 04 Oct 2017, 08:49:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -155,6 +155,27 @@ void ui::composite::clear_removed_children(void)
     }
 }
 
+void ui::composite::enter_child(ui::widget *w, glm::ivec2& pos)
+{
+    glm::ivec2 obj;
+    ui::mouse_call_data call_data = {pos};
+
+    w->get(ui::element::position, ui::position::all, &obj);
+    call_data.location -= obj;
+    w->call_callbacks(ui::callback::enter, &call_data);
+}
+
+void ui::composite::motion_in_child(ui::widget *w, glm::ivec2& pos)
+{
+    ui::mouse_call_data call_data = {pos};
+    ui::composite *c = dynamic_cast<ui::composite *>(w);
+
+    if (c != NULL)
+        c->mouse_pos_callback(call_data.location);
+    else
+        w->call_callbacks(ui::callback::motion, &call_data);
+}
+
 void ui::composite::leave_child(ui::widget *w, glm::ivec2& pos)
 {
     glm::ivec2 obj;
@@ -243,22 +264,23 @@ void ui::composite::manage_children(void)
 void ui::composite::mouse_pos_callback(int x, int y)
 {
     glm::ivec2 pos = {x, y};
+    this->mouse_pos_callback(pos);
+}
+
+void ui::composite::mouse_pos_callback(glm::ivec2& pos)
+{
     ui::mouse_call_data call_data = {pos};
     ui::widget *w = this->tree->search(pos);
 
     if (w != NULL)
     {
-        glm::ivec2 obj;
-
-        w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location -= obj;
         if (this->old_child != w)
         {
             if (this->old_child != NULL)
                 this->leave_child(this->old_child, pos);
-            w->call_callbacks(ui::callback::enter, &call_data);
+            this->enter_child(w, pos);
         }
-        w->call_callbacks(ui::callback::motion, &call_data);
+        this->motion_in_child(w, pos);
     }
     else
     {

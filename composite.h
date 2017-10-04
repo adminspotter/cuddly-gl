@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2017, 09:22:17 tquirk
+ *   last updated 04 Oct 2017, 08:49:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -70,6 +70,8 @@ namespace ui
 
         void clear_removed_children(void);
 
+        void enter_child(widget *, glm::ivec2&);
+        void motion_in_child(widget *, glm::ivec2&);
         void leave_child(widget *, glm::ivec2&);
 
       public:
@@ -86,6 +88,7 @@ namespace ui
         void manage_children(void);
 
         void mouse_pos_callback(int, int);
+        void mouse_pos_callback(glm::ivec2&);
         virtual void mouse_btn_callback(int, int);
         void key_callback(int, uint32_t, int, int);
     };
