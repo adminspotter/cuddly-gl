@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Oct 2017, 08:49:49 tquirk
+ *   last updated 05 Oct 2017, 08:59:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -299,7 +299,12 @@ void ui::composite::mouse_pos_callback(glm::ivec2& pos)
 void ui::composite::mouse_btn_callback(int btn, int state)
 {
     ui::btn_call_data call_data = {this->old_pos, (GLuint)btn, (GLuint)state};
-    GLuint which = (state == ui::mouse::up
+    this->mouse_btn_callback(call_data);
+}
+
+void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
+{
+    GLuint which = (call_data.state == ui::mouse::up
                     ? ui::callback::btn_up
                     : ui::callback::btn_down);
     ui::widget *w = this->tree->search(this->old_pos);
@@ -325,7 +330,12 @@ void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
 {
     ui::key_call_data call_data = {this->old_pos, c, (GLuint)key,
                                    (GLuint)state, (GLuint)mods};
-    GLuint which = (state == ui::key::up
+    this->key_callback(call_data);
+}
+
+void ui::composite::key_callback(ui::key_call_data& call_data)
+{
+    GLuint which = (call_data.state == ui::key::up
                     ? ui::callback::key_up
                     : ui::callback::key_down);
     ui::widget *w = this->tree->search(this->old_pos);
