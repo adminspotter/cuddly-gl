@@ -159,10 +159,14 @@ void ui::composite::enter_child(ui::widget *w, glm::ivec2& pos)
 {
     glm::ivec2 obj;
     ui::mouse_call_data call_data = {pos};
+    ui::composite *c = dynamic_cast<ui::composite *>(w);
 
     w->get(ui::element::position, ui::position::all, &obj);
     call_data.location -= obj;
-    w->call_callbacks(ui::callback::enter, &call_data);
+    if (c != NULL)
+        c->mouse_pos_callback(call_data.location);
+    else
+        w->call_callbacks(ui::callback::enter, &call_data);
 }
 
 void ui::composite::motion_in_child(ui::widget *w, glm::ivec2& pos)
@@ -180,10 +184,14 @@ void ui::composite::leave_child(ui::widget *w, glm::ivec2& pos)
 {
     glm::ivec2 obj;
     ui::mouse_call_data call_data = {pos};
+    ui::composite *c = dynamic_cast<ui::composite *>(w);
 
     w->get(ui::element::position, ui::position::all, &obj);
     call_data.location -= obj;
-    w->call_callbacks(ui::callback::leave, &call_data);
+    if (c != NULL)
+        c->mouse_pos_callback(call_data.location);
+    else
+        w->call_callbacks(ui::callback::leave, &call_data);
 }
 
 ui::composite::composite(composite *c, GLuint w, GLuint h)
@@ -312,10 +320,14 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
     if (w != NULL)
     {
         glm::ivec2 obj;
+        ui::composite *c = dynamic_cast<ui::composite *>(w);
 
         w->get(ui::element::position, ui::position::all, &obj);
         call_data.location -= obj;
-        w->call_callbacks(which, &call_data);
+        if (c != NULL)
+            c->mouse_btn_callback(call_data);
+        else
+            w->call_callbacks(which, &call_data);
     }
     else
         this->call_callbacks(which, &call_data);
@@ -343,10 +355,14 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
     if (w != NULL)
     {
         glm::ivec2 obj;
+        ui::composite *c = dynamic_cast<ui::composite *>(w);
 
         w->get(ui::element::position, ui::position::all, &obj);
         call_data.location -= obj;
-        w->call_callbacks(which, &call_data);
+        if (c != NULL)
+            c->key_callback(call_data);
+        else
+            w->call_callbacks(which, &call_data);
     }
     else
         this->call_callbacks(which, &call_data);
