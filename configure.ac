@@ -13,6 +13,10 @@ AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 AC_GNU_SOURCE
 AC_SYS_LARGEFILE
 
+# Default to empty CFLAGS/CXXFLAGS
+:${CFLAGS=""}
+:${CXXFLAGS=""}
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -70,15 +74,15 @@ AC_ARG_WITH([glfw-libraries],
             [with_glfw_libraries="no"])
 
 # Development flags (debugging, profiling)
-AS_IF([test "$enable_debug" == "yes"],
-      [
-        AC_MSG_NOTICE([building with debug enabled])
-        DEBUG_CXXFLAGS="-g"
-        DEBUG_LDFLAGS="-g"
-      ])
-
 AS_IF([test "$enable_profile" == "yes"],
       [AX_ENABLE_PROFILE])
+
+AS_IF([test "$enable_debug" == "yes" || test "x$PROFILE_CFLAGS" != "x"],
+      [
+        AC_MSG_NOTICE([building with debug enabled])
+        DEBUG_CXXFLAGS="-g -O0"
+        DEBUG_LDFLAGS="-g -O0"
+      ])
 
 # OpenGL libs
 AS_CASE([$host_os],
