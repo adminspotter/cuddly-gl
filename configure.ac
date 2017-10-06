@@ -13,6 +13,10 @@ AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 AC_GNU_SOURCE
 AC_SYS_LARGEFILE
 
+# Default to empty CFLAGS/CXXFLAGS
+:${CFLAGS=""}
+:${CXXFLAGS=""}
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
