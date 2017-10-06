@@ -23,7 +23,7 @@ t_rect_SOURCES = t_rect.cc
 t_rect_CXXFLAGS = -Itap++
 t_rect_LDADD = tap++/libtap++.la ../libcuddly_gl.la
 
-uitest_SOURCES = uitest.cc
+uitest_SOURCES = uitest.cc ../connect_glfw.cc
 uitest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
 uitest_LDFLAGS = $(LDFLAGS) $(GLFW_LDFLAGS)
 uitest_LDADD = ../libcuddly_gl.la $(GLFW_LDLIBS) $(LDLIBS)
