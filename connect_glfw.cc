@@ -4,6 +4,10 @@
 #include <map>
 
 static int convert_glfw_mods(int);
+void key_callback(GLFWwindow *, int, int, int, int);
+void char_callback(GLFWwindow *, unsigned int, int);
+void mouse_position_callback(GLFWwindow *, double, double);
+void mouse_button_callback(GLFWwindow *, int, int, int);
 
 static std::map<int, int> glfw_key_map =
 {
@@ -39,6 +43,11 @@ static ui::context *context = NULL;
 void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
 {
     context = ctx;
+
+    glfwSetKeyCallback(w, key_callback);
+    glfwSetCharModsCallback(w, char_callback);
+    glfwSetMouseButtonCallback(w, mouse_button_callback);
+    glfwSetCursorPosCallback(w, mouse_position_callback);
 }
 
 int convert_glfw_mods(int mods)
@@ -54,4 +63,40 @@ int convert_glfw_mods(int mods)
     if (mods & GLFW_MOD_SUPER)
         retval |= ui::key_mod::super;
     return retval;
+}
+
+void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
+{
+    int ui_key = 0, ui_state, ui_mods;
+
+    if (glfw_key_map.find(key) == glfw_key_map.end())
+        return;
+
+    ui_key = glfw_key_map[key];
+    ui_state = glfw_key_map[action];
+    ui_mods = convert_glfw_mods(mods);
+
+    context->key_callback(ui_key, 0, ui_state, ui_mods);
+}
+
+void char_callback(GLFWwindow *w, unsigned int c, int mods)
+{
+    int ui_mods = convert_glfw_mods(mods);
+
+    context->key_callback(ui::key::no_key, c, ui::key::down, ui_mods);
+}
+
+void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
+{
+    context->mouse_pos_callback((int)xpos, (int)ypos);
+}
+
+void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
+{
+    int btn, act;
+
+    btn = glfw_mouse_map[button];
+    act = glfw_mouse_map[action];
+
+    context->mouse_btn_callback(btn, act);
 }
