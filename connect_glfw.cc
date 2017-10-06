@@ -2,6 +2,8 @@
 
 #include <map>
 
+static int convert_glfw_mods(int);
+
 static std::map<int, int> glfw_key_map =
 {
     { GLFW_KEY_LEFT, ui::key::l_arrow },
@@ -30,3 +32,18 @@ static std::map<int, int> glfw_mouse_map =
     { GLFW_PRESS, ui::mouse::down },
     { GLFW_RELEASE, ui::mouse::up }
 };
+
+int convert_glfw_mods(int mods)
+{
+    int retval = 0;
+
+    if (mods & GLFW_MOD_SHIFT)
+        retval |= ui::key_mod::shift;
+    if (mods & GLFW_MOD_CONTROL)
+        retval |= ui::key_mod::ctrl;
+    if (mods & GLFW_MOD_ALT)
+        retval |= ui::key_mod::alt;
+    if (mods & GLFW_MOD_SUPER)
+        retval |= ui::key_mod::super;
+    return retval;
+}
