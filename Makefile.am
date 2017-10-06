@@ -29,6 +29,9 @@ pkginclude_HEADERS = active.h \
 lib_LTLIBRARIES = libcuddly_gl.la
 
 shaderdir = @datadir@/$(PACKAGE)/shaders
+connectordir = @datadir@/$(PACKAGE)/connectors
+
+connector_DATA = connect_glfw.cc connect_glfw.h
 
 libcuddly_gl_la_SOURCES = active.cc \
 	button.cc \
