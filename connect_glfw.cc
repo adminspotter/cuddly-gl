@@ -1,4 +1,5 @@
 #include "ui_defs.h"
+#include "connect_glfw.h"
 
 #include <map>
 
@@ -32,6 +33,13 @@ static std::map<int, int> glfw_mouse_map =
     { GLFW_PRESS, ui::mouse::down },
     { GLFW_RELEASE, ui::mouse::up }
 };
+
+static ui::context *context = NULL;
+
+void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
+{
+    context = ctx;
+}
 
 int convert_glfw_mods(int mods)
 {
