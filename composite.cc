@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2017, 08:59:57 tquirk
+ *   last updated 08 Oct 2017, 11:41:54 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -155,7 +155,7 @@ void ui::composite::clear_removed_children(void)
     }
 }
 
-void ui::composite::enter_child(ui::widget *w, glm::ivec2& pos)
+void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
 {
     glm::ivec2 obj;
     ui::mouse_call_data call_data = {pos};
@@ -166,32 +166,7 @@ void ui::composite::enter_child(ui::widget *w, glm::ivec2& pos)
     if (c != NULL)
         c->mouse_pos_callback(call_data.location);
     else
-        w->call_callbacks(ui::callback::enter, &call_data);
-}
-
-void ui::composite::motion_in_child(ui::widget *w, glm::ivec2& pos)
-{
-    ui::mouse_call_data call_data = {pos};
-    ui::composite *c = dynamic_cast<ui::composite *>(w);
-
-    if (c != NULL)
-        c->mouse_pos_callback(call_data.location);
-    else
-        w->call_callbacks(ui::callback::motion, &call_data);
-}
-
-void ui::composite::leave_child(ui::widget *w, glm::ivec2& pos)
-{
-    glm::ivec2 obj;
-    ui::mouse_call_data call_data = {pos};
-    ui::composite *c = dynamic_cast<ui::composite *>(w);
-
-    w->get(ui::element::position, ui::position::all, &obj);
-    call_data.location -= obj;
-    if (c != NULL)
-        c->mouse_pos_callback(call_data.location);
-    else
-        w->call_callbacks(ui::callback::leave, &call_data);
+        w->call_callbacks(type, &call_data);
 }
 
 ui::composite::composite(composite *c, GLuint w, GLuint h)
@@ -285,15 +260,15 @@ void ui::composite::mouse_pos_callback(glm::ivec2& pos)
         if (this->old_child != w)
         {
             if (this->old_child != NULL)
-                this->leave_child(this->old_child, pos);
-            this->enter_child(w, pos);
+                this->child_motion(this->old_child, ui::callback::leave, pos);
+            this->child_motion(w, ui::callback::enter, pos);
         }
-        this->motion_in_child(w, pos);
+        this->child_motion(w, ui::callback::motion, pos);
     }
     else
     {
         if (this->old_child != NULL)
-            this->leave_child(this->old_child, pos);
+            this->child_motion(this->old_child, ui::callback::leave, pos);
         this->call_callbacks(ui::callback::motion, &call_data);
     }
 
