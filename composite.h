@@ -1,9 +1,9 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 May 2017, 18:19:44 tquirk
+ *   last updated 08 Oct 2017, 11:41:38 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@
 #include <list>
 
 #include "ui_defs.h"
-#include "rect.h"
+#include "active.h"
 #include "quadtree.h"
 #include "widget.h"
 
@@ -42,7 +42,7 @@ namespace ui
     class quadtree;
     class widget;
 
-    class composite : public virtual rect
+    class composite : public virtual active
     {
       protected:
         composite *parent;
@@ -70,6 +70,8 @@ namespace ui
 
         void clear_removed_children(void);
 
+        void child_motion(widget *, GLuint, glm::ivec2&);
+
       public:
         composite(composite *, GLuint, GLuint);
         virtual ~composite();
@@ -84,8 +86,11 @@ namespace ui
         void manage_children(void);
 
         void mouse_pos_callback(int, int);
+        void mouse_pos_callback(glm::ivec2&);
         virtual void mouse_btn_callback(int, int);
+        virtual void mouse_btn_callback(ui::btn_call_data&);
         void key_callback(int, uint32_t, int, int);
+        void key_callback(ui::key_call_data&);
     };
 }
 

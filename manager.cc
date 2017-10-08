@@ -1,9 +1,9 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2017, 18:03:14 tquirk
+ *   last updated 05 Oct 2017, 08:35:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,50 +146,6 @@ void ui::manager::set_desired_size(void)
     this->populate_buffers();
 }
 
-void ui::manager::leave_callback(active *a, void *call, void *client)
-{
-    ui::manager *m = dynamic_cast<ui::manager *>(a);
-
-    if (m != NULL && m->old_child != NULL)
-        m->old_child->call_callbacks(ui::callback::leave, NULL);
-}
-
-void ui::manager::motion_callback(active *a, void *call, void *client)
-{
-    ui::manager *m = dynamic_cast<ui::manager *>(a);
-
-    if (m != NULL)
-    {
-        ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
-
-        m->mouse_pos_callback(mcd->location.x, mcd->location.y);
-    }
-}
-
-void ui::manager::button_callback(active *a, void *call, void *client)
-{
-    ui::manager *m = dynamic_cast<ui::manager *>(a);
-
-    if (m != NULL)
-    {
-        ui::btn_call_data *bcd = (ui::btn_call_data *)call;
-
-        m->mouse_btn_callback(bcd->button, bcd->state);
-    }
-}
-
-void ui::manager::keypress_callback(active *a, void *call, void *client)
-{
-    ui::manager *m = dynamic_cast<ui::manager *>(a);
-
-    if (m != NULL)
-    {
-        ui::key_call_data *kcd = (ui::key_call_data *)call;
-
-        m->key_callback(kcd->key, kcd->character, kcd->state, kcd->mods);
-    }
-}
-
 /* When the UI context resizes, the flow comes through this function,
  * which is why we do our child regeneration.  It's not likely the
  * ideal way to do it, as it seems a little bit magic, but we'll at
@@ -203,22 +159,9 @@ void ui::manager::recalculate_transformation_matrix(void)
 
 ui::manager::manager(ui::composite *c, GLuint w, GLuint h)
     : ui::widget::widget(c, w, h), ui::composite::composite(c, w, h),
-      ui::rect::rect(w, h), child_spacing(0, 0)
+      ui::active::active(w, h), ui::rect::rect(w, h), child_spacing(0, 0)
 {
     this->resize = ui::resize::all;
-
-    this->add_callback(ui::callback::leave,
-                       ui::manager::leave_callback, NULL);
-    this->add_callback(ui::callback::motion,
-                       ui::manager::motion_callback, NULL);
-    this->add_callback(ui::callback::btn_down,
-                       ui::manager::button_callback, NULL);
-    this->add_callback(ui::callback::btn_up,
-                       ui::manager::button_callback, NULL);
-    this->add_callback(ui::callback::key_down,
-                       ui::manager::keypress_callback, NULL);
-    this->add_callback(ui::callback::key_up,
-                       ui::manager::keypress_callback, NULL);
 }
 
 ui::manager::~manager()

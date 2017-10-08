@@ -1,9 +1,9 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 May 2017, 18:20:14 tquirk
+ *   last updated 08 Oct 2017, 11:41:54 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -155,8 +155,23 @@ void ui::composite::clear_removed_children(void)
     }
 }
 
+void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
+{
+    glm::ivec2 obj;
+    ui::mouse_call_data call_data = {pos};
+    ui::composite *c = dynamic_cast<ui::composite *>(w);
+
+    w->get(ui::element::position, ui::position::all, &obj);
+    call_data.location -= obj;
+    if (c != NULL)
+        c->mouse_pos_callback(call_data.location);
+    else
+        w->call_callbacks(type, &call_data);
+}
+
 ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : ui::rect::rect(w, h), children(), to_remove(), old_pos(0, 0)
+    : ui::active::active(w, h), ui::rect::rect(w, h),
+      children(), to_remove(), old_pos(0, 0)
 {
     this->parent = c;
     this->tree = NULL;
@@ -231,25 +246,30 @@ void ui::composite::manage_children(void)
 
 void ui::composite::mouse_pos_callback(int x, int y)
 {
-    glm::ivec2 pos = {x, y}, obj;
-    ui::mouse_call_data call_data;
+    glm::ivec2 pos = {x, y};
+    this->mouse_pos_callback(pos);
+}
+
+void ui::composite::mouse_pos_callback(glm::ivec2& pos)
+{
+    ui::mouse_call_data call_data = {pos};
     ui::widget *w = this->tree->search(pos);
 
     if (w != NULL)
     {
-        w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = pos - obj;
         if (this->old_child != w)
-            w->call_callbacks(ui::callback::enter, &call_data);
-        if (this->old_child != NULL && this->old_child != w)
-            this->old_child->call_callbacks(ui::callback::leave, &call_data);
-        w->call_callbacks(ui::callback::motion, &call_data);
+        {
+            if (this->old_child != NULL)
+                this->child_motion(this->old_child, ui::callback::leave, pos);
+            this->child_motion(w, ui::callback::enter, pos);
+        }
+        this->child_motion(w, ui::callback::motion, pos);
     }
-    else if (this->old_child != NULL)
+    else
     {
-        this->old_child->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = pos - obj;
-        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        if (this->old_child != NULL)
+            this->child_motion(this->old_child, ui::callback::leave, pos);
+        this->call_callbacks(ui::callback::motion, &call_data);
     }
 
     /* w might no longer exist at this position.  Let's search again,
@@ -261,22 +281,31 @@ void ui::composite::mouse_pos_callback(int x, int y)
 
 void ui::composite::mouse_btn_callback(int btn, int state)
 {
+    ui::btn_call_data call_data = {this->old_pos, (GLuint)btn, (GLuint)state};
+    this->mouse_btn_callback(call_data);
+}
+
+void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
+{
+    GLuint which = (call_data.state == ui::mouse::up
+                    ? ui::callback::btn_up
+                    : ui::callback::btn_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
     if (w != NULL)
     {
         glm::ivec2 obj;
-        ui::btn_call_data call_data;
-        GLuint which = (state == ui::mouse::up
-                        ? ui::callback::btn_up
-                        : ui::callback::btn_down);
+        ui::composite *c = dynamic_cast<ui::composite *>(w);
 
         w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = this->old_pos - obj;
-        call_data.button = btn;
-        call_data.state = state;
-        w->call_callbacks(which, &call_data);
+        call_data.location -= obj;
+        if (c != NULL)
+            c->mouse_btn_callback(call_data);
+        else
+            w->call_callbacks(which, &call_data);
     }
+    else
+        this->call_callbacks(which, &call_data);
 
     /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
@@ -286,26 +315,34 @@ void ui::composite::mouse_btn_callback(int btn, int state)
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
 {
+    ui::key_call_data call_data = {this->old_pos, c, (GLuint)key,
+                                   (GLuint)state, (GLuint)mods};
+    this->key_callback(call_data);
+}
+
+void ui::composite::key_callback(ui::key_call_data& call_data)
+{
+    GLuint which = (call_data.state == ui::key::up
+                    ? ui::callback::key_up
+                    : ui::callback::key_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
     if (w != NULL)
     {
         glm::ivec2 obj;
-        ui::key_call_data call_data;
-        GLuint which = (state == ui::key::up
-                        ? ui::callback::key_up
-                        : ui::callback::key_down);
+        ui::composite *c = dynamic_cast<ui::composite *>(w);
 
         w->get(ui::element::position, ui::position::all, &obj);
-        call_data.location = this->old_pos - obj;
-        call_data.key = key;
-        call_data.character = c;
-        call_data.state = state;
-        call_data.mods = mods;
-        w->call_callbacks(which, &call_data);
+        call_data.location -= obj;
+        if (c != NULL)
+            c->key_callback(call_data);
+        else
+            w->call_callbacks(which, &call_data);
     }
+    else
+        this->call_callbacks(which, &call_data);
 
-    /* p might no longer exist at this position.  Let's search again,
+    /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
      */
     this->old_child = this->tree->search(this->old_pos);

@@ -1,9 +1,9 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2017, 16:18:21 tquirk
+ *   last updated 31 Aug 2017, 22:06:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -311,7 +311,8 @@ void ui::label::populate_buffers(void)
 }
 
 ui::label::label(ui::composite *c, GLuint w, GLuint h)
-    : ui::widget::widget(c, w, h), ui::rect::rect(w, h), str(), img()
+    : ui::widget::widget(c, w, h), ui::active::active(w, h),
+      ui::rect::rect(w, h), str(), img()
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
