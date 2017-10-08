@@ -1,6 +1,7 @@
 #include "ui_defs.h"
 #include "connect_glfw.h"
 
+#include <iostream>
 #include <map>
 
 static int convert_glfw_mods(int);
@@ -24,7 +25,7 @@ static std::map<int, int> glfw_key_map =
     { GLFW_RELEASE, ui::key::up }
 };
 
-static std::map<int, int> glfw_mouse_map =
+static std::map<int, int> glfw_mouse_button_map =
 {
     { GLFW_MOUSE_BUTTON_1, ui::mouse::button0 },
     { GLFW_MOUSE_BUTTON_2, ui::mouse::button1 },
@@ -33,7 +34,11 @@ static std::map<int, int> glfw_mouse_map =
     { GLFW_MOUSE_BUTTON_5, ui::mouse::button4 },
     { GLFW_MOUSE_BUTTON_6, ui::mouse::button5 },
     { GLFW_MOUSE_BUTTON_7, ui::mouse::button6 },
-    { GLFW_MOUSE_BUTTON_8, ui::mouse::button7 },
+    { GLFW_MOUSE_BUTTON_8, ui::mouse::button7 }
+};
+
+static std::map<int, int> glfw_mouse_action_map =
+{
     { GLFW_PRESS, ui::mouse::down },
     { GLFW_RELEASE, ui::mouse::up }
 };
@@ -95,8 +100,8 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
 {
     int btn, act;
 
-    btn = glfw_mouse_map[button];
-    act = glfw_mouse_map[action];
+    btn = glfw_mouse_button_map[button];
+    act = glfw_mouse_action_map[action];
 
     context->mouse_btn_callback(btn, act);
 }
