@@ -1,7 +1,7 @@
 PROG =
 TC = t_active \
 	t_rect
-if WANT_TESTS
+if HAVE_TEST_PREREQS
 PROG += uitest fonttest
 endif
 
