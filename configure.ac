@@ -173,6 +173,12 @@ AS_IF([test "x$with_glfw" != "xno"],
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
                                      [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
         AC_CHECK_PROG([XVFB], [Xvfb], ["$as_dir/Xvfb"], [""], [/usr/bin /usr/local/bin /usr/X11R5/bin /usr/X11R6/bin /opt/X11/bin])
+        AX_PROG_PERL_MODULES([X11::GUITest],
+                             [],
+                             [
+                               AC_MSG_NOTICE([no X11::GUITest perl module found, not building test suite])
+                               want_tests="no"
+                             ])
       ])
 AM_CONDITIONAL([WANT_TESTS],
                [test "x$want_tests" == "xyes" && test "x$XVFB" != "x"])
