@@ -180,7 +180,7 @@ AS_IF([test "x$with_glfw" != "xno"],
                                can_do_tests="no"
                              ])
       ])
-AM_CONDITIONAL([WANT_TESTS],
+AM_CONDITIONAL([HAVE_TEST_PREREQS],
                [test "x$can_do_tests" == "xyes" && test "x$XVFB" != "x"])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
