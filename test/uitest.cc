@@ -26,6 +26,7 @@
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
 void create_image(int, int);
+void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
 void print_sizes(ui::active *, void *, void *);
@@ -102,6 +103,7 @@ int main(int argc, char **argv)
     std::cout << "creating context" << std::endl;
     ctx = new ui::context(800, 600);
     ui_connect_glfw(ctx, w);
+    ctx->add_callback(ui::callback::key_down, close_key_callback, w);
 
     std::cout << "creating widget 1" << std::endl;
     w1 = new ui::widget(ctx, 50, 50);
@@ -298,6 +300,15 @@ void create_image(int width, int height)
                 memcpy(&img.data[((height - 1 - (i * 8) - j) * width + k) * 4],
                        colors[i],
                        sizeof(unsigned char) * 4);
+}
+
+void close_key_callback(ui::active *a, void *call, void *client)
+{
+    ui::key_call_data *call_data = (ui::key_call_data *)call;
+    GLFWwindow *w = (GLFWwindow *)client;
+
+    if (call_data->key == ui::key::esc && call_data->state == ui::key::down)
+        glfwSetWindowShouldClose(w, GL_TRUE);
 }
 
 /* ARGSUSED */
