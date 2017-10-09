@@ -139,7 +139,7 @@ AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp
 AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 
 # GLFW for the test suite
-want_tests="no"
+can_do_tests="no"
 GLFW_INCLUDES=""
 GLFW_LDFLAGS=""
 GLFW_LDLIBS=""
@@ -154,10 +154,10 @@ AS_IF([test "x$with_glfw" != "xno"],
         CXXFLAGS="$CXXFLAGS $GLFW_INCLUDES"
         CPPFLAGS="$CXXFLAGS"
         AC_CHECK_HEADERS([GLFW/glfw3.h],
-                         [want_tests="yes"],
+                         [can_do_tests="yes"],
                          [AC_MSG_NOTICE([no GLFW headers found, not building test suite])])
 
-        AS_IF([test "x$want_tests" == "xyes"],
+        AS_IF([test "x$can_do_tests" == "xyes"],
               [
                 AS_IF([test "x$with_glfw_libraries" != "xno"],
                       [GLFW_LDFLAGS="-L$with_glfw_libraries"],
@@ -168,7 +168,7 @@ AS_IF([test "x$with_glfw" != "xno"],
                                [GLFW_LDLIBS="$ac_cv_search_glfwInit"],
                                [
                                  AC_MSG_NOTICE([no GLFW libraries found, not building test suite])
-                                 want_tests="no"
+                                 can_do_tests="no"
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
                                      [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
@@ -177,11 +177,11 @@ AS_IF([test "x$with_glfw" != "xno"],
                              [],
                              [
                                AC_MSG_NOTICE([no X11::GUITest perl module found, not building test suite])
-                               want_tests="no"
+                               can_do_tests="no"
                              ])
       ])
 AM_CONDITIONAL([WANT_TESTS],
-               [test "x$want_tests" == "xyes" && test "x$XVFB" != "x"])
+               [test "x$can_do_tests" == "xyes" && test "x$XVFB" != "x"])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
 AC_SUBST(GLFW_LDLIBS)
