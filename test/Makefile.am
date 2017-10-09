@@ -1,5 +1,4 @@
-PROG = t_active \
-	t_rect
+PROG =
 TC = t_active \
 	t_rect
 if WANT_TESTS
