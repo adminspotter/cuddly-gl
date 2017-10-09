@@ -171,8 +171,11 @@ AS_IF([test "x$with_glfw" != "xno"],
                                  want_tests="no"
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
-                                     [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])])
-AM_CONDITIONAL([WANT_TESTS], [test "x$want_tests" == "xyes"])
+                                     [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
+        AC_CHECK_PROG([XVFB], [Xvfb], ["$as_dir/Xvfb"], [""], [/usr/bin /usr/local/bin /usr/X11R5/bin /usr/X11R6/bin /opt/X11/bin])
+      ])
+AM_CONDITIONAL([WANT_TESTS],
+               [test "x$want_tests" == "xyes" && test "x$XVFB" != "x"])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
 AC_SUBST(GLFW_LDLIBS)
