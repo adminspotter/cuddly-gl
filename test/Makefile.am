@@ -1,7 +1,9 @@
-TC = fonttest\
+TC = fonttest \
 	t_active \
 	t_rect
-TS = $(TC)
+TS = fonttest \
+	t_active \
+	t_rect
 
 if HAVE_TEST_PREREQS
 TC += uitest
