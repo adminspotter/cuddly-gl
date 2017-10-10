@@ -5,6 +5,8 @@ if HAVE_TEST_PREREQS
 PROG += uitest fonttest
 endif
 
+XVFB_DISPLAY ?= :99
+
 SUBDIRS = tap++
 
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
@@ -13,6 +15,9 @@ TESTS = $(TC)
 
 check_PROGRAMS = $(TC)
 noinst_PROGRAMS = $(PROG)
+
+xvfb:
+	$(XVFB) $(XVFB_DISPLAY) -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r &
 
 t_active_SOURCES = t_active.cc
 t_active_CXXFLAGS = -Itap++
