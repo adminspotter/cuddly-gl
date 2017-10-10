@@ -15,6 +15,7 @@ XVFB_DISPLAY ?= :99
 xvfb:
 	$(XVFB) $(XVFB_DISPLAY) -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r &
 	DISPLAY=$(XVFB_DISPLAY)
+	sleep 1
 endif
 
 SUBDIRS = tap++
