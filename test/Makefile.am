@@ -7,7 +7,7 @@ TS = fonttest \
 
 if HAVE_TEST_PREREQS
 TC += uitest
-TS += xvfb run-uitest
+TS += run-uitest
 XVFB_DISPLAY ?= :99
 
 .PHONY: xvfb
@@ -38,6 +38,7 @@ uitest_SOURCES = uitest.cc ../connect_glfw.cc
 uitest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
 uitest_LDFLAGS = $(LDFLAGS) $(GLFW_LDFLAGS)
 uitest_LDADD = ../libcuddly_gl.la $(GLFW_LDLIBS) $(LDLIBS)
+EXTRA_uitest_DEPENDENCIES = xvfb
 
 fonttest_SOURCES = fonttest.cc
 fonttest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
