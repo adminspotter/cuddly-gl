@@ -46,6 +46,7 @@ std::string font_name("techover.ttf"), greeting("Howdy!");
 std::string multiline("Hi this is     adm1nspotter, and I like    cheese!\nHowdy!\nabcdefghijklmnopqrstuvwxyz");
 std::vector<std::string> paths =
 {
+    ".",
     "./test",
     "~/Library/Fonts",
     "/Library/Fonts",
