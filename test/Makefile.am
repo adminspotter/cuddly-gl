@@ -1,10 +1,11 @@
-PROG =
 TC = fonttest\
 	t_active \
 	t_rect
-if HAVE_TEST_PREREQS
-PROG += uitest
+TS = $(TC)
 
+if HAVE_TEST_PREREQS
+TC += uitest
+TS += xvfb run-uitest
 XVFB_DISPLAY ?= :99
 
 .PHONY: xvfb
@@ -18,10 +19,9 @@ SUBDIRS = tap++
 
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 	$(top_srcdir)/build-aux/tap-driver.sh
-TESTS = $(TC)
+TESTS = $(TS)
 
 check_PROGRAMS = $(TC)
-noinst_PROGRAMS = $(PROG)
 
 t_active_SOURCES = t_active.cc
 t_active_CXXFLAGS = -Itap++
