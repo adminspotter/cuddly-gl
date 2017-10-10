@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "font.h"
+#include "../font.h"
 
 std::string font_name = "techover.ttf";
 std::vector<std::string> paths =

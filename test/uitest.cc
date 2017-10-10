@@ -9,19 +9,19 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ui.h"
-#include "font.h"
-#include "widget.h"
-#include "label.h"
-#include "button.h"
-#include "text_field.h"
-#include "password.h"
-#include "manager.h"
-#include "row_column.h"
-#include "pie_menu.h"
-#include "multi_label.h"
+#include "../ui.h"
+#include "../font.h"
+#include "../widget.h"
+#include "../label.h"
+#include "../button.h"
+#include "../text_field.h"
+#include "../password.h"
+#include "../manager.h"
+#include "../row_column.h"
+#include "../pie_menu.h"
+#include "../multi_label.h"
 
-#include "connect_glfw.h"
+#include "../connect_glfw.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
