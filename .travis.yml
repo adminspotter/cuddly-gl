@@ -31,5 +31,7 @@ script:
 - CXXFLAGS='-I/usr/include/freetype2' ./configure --prefix=$HOME --enable-profile
 - make
 - make check
+after_script:
+- for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done
 after_success:
 - codecov
