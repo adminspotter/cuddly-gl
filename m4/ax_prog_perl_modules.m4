@@ -65,42 +65,39 @@ if test -z "$PERLDOC"; then
   fi
 fi
 
+ax_perl_modules_count=0
+ax_perl_modules_missing=0
+ax_perl_modules_failed=0
+
 for ax_perl_module in $ax_perl_modules; do
-  if test "x$PERLDOC" != x; then
-    ax_perl_modules_missing=0
-    AC_MSG_CHECKING(for installed perl module $ax_perl_module)
-    $PERLDOC -l $ax_perl_module >&AS_MESSAGE_LOG_FD 2>&1
-    if test $? -ne 0; then
-      AC_MSG_RESULT(no);
-      ax_perl_modules_missing=1
-   else
-      AC_MSG_RESULT(ok);
-    fi
-  fi
+  ax_perl_modules_count=`expr $ax_perl_modules_count + 1`
 
-  if test "x$PERL" != x; then
-    ax_perl_modules_failed=0
-    AC_MSG_CHECKING(for working perl module $ax_perl_module)
+  AS_IF([test "x$PERLDOC" != x],
+        [
+          AC_MSG_CHECKING($ax_perl_module presence)
+          $PERLDOC -l $ax_perl_module >&AS_MESSAGE_LOG_FD 2>&1
+          AS_IF([test $? -ne 0],
+                [
+                  AC_MSG_RESULT(no)
+                  ax_perl_modules_missing=`expr $ax_perl_modules_missing + 1`
+                ],
+                [AC_MSG_RESULT(yes)])])
 
-    $PERL -e 1 -M$ax_perl_module >&AS_MESSAGE_LOG_FD 2>&1
-    if test $? -ne 0; then
-      AC_MSG_RESULT(no);
-      ax_perl_modules_failed=1
-    else
-      AC_MSG_RESULT(ok);
-    fi
-  fi
+  AS_IF([test "x$PERL" != x],
+        [
+          AC_MSG_CHECKING($ax_perl_module usability)
+          $PERL -e "use $ax_perl_module;" >&AS_MESSAGE_LOG_FD 2>&1
+          AS_IF([test $? -ne 0],
+                [
+                  AC_MSG_RESULT(no)
+                  ax_perl_modules_failed=`expr $ax_perl_modules_missing + 1`
+                ],
+                [AC_MSG_RESULT(yes)])])
 done
 
 # Run optional shell commands
-if test "$ax_perl_modules_failed" = 0; then
-  :
-  $2
-elif test "$ax_perl_modules_missing" = 0; then
-  :
-  $3
-else
-  :
-  $4
-fi
+AS_IF([test $ax_perl_modules_count -gt 0],
+      [AS_IF([test "$ax_perl_modules_failed" -eq 0], [$2],
+             [test "$ax_perl_modules_missing" -eq 0], [$3],
+             [$4])])
 ])dnl
