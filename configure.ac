@@ -14,8 +14,8 @@ AC_GNU_SOURCE
 AC_SYS_LARGEFILE
 
 # Default to empty CFLAGS/CXXFLAGS
-:${CFLAGS=""}
-:${CXXFLAGS=""}
+: ${CFLAGS=""}
+: ${CXXFLAGS=""}
 
 # Checks for programs.
 AC_PROG_CXX
