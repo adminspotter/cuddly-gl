@@ -17,6 +17,7 @@ addons:
     - libglm-dev
     - libfreetype6-dev
     - libx11-guitest-perl
+    - perl-doc
     - python3-pip
     - xorg-dev
     - xvfb
