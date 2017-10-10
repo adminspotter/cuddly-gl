@@ -1,8 +1,9 @@
 PROG =
-TC = t_active \
+TC = fonttest\
+	t_active \
 	t_rect
 if HAVE_TEST_PREREQS
-PROG += uitest fonttest
+PROG += uitest
 
 XVFB_DISPLAY ?= :99
 
