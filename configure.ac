@@ -92,14 +92,14 @@ AS_CASE([$host_os],
     CXXFLAGS="$CXXFLAGS -I/opt/X11/include"
         ],
         [
-    AC_SEARCH_LIBS([gluPerspective], [GLU],
-        [LDLIBS="$ac_cv_search_gluPerspective $LDLIBS"],
-        [AC_MSG_ERROR([libGLU not valid, can not build library.])],
+    AC_SEARCH_LIBS([glBindVertexArray], [GL],
+        [],
+        [AC_MSG_ERROR([libGL not valid, can not build library.])],
         [$LDFLAGS])
 
-    AC_SEARCH_LIBS([glBindVertexArray], [GL],
-        [LDLIBS="$ac_cv_search_glBindVertexArray $LDLIBS"],
-        [AC_MSG_ERROR([libGL not valid, can not build library.])],
+    AC_SEARCH_LIBS([gluPerspective], [GLU],
+        [],
+        [AC_MSG_ERROR([libGLU not valid, can not build library.])],
         [$LDFLAGS])
         ])
 
