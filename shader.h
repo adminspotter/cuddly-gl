@@ -33,7 +33,7 @@
 
 #include <GL/gl.h>
 
-std::string shader_path(void);
+std::string shader_path(const std::string&);
 GLuint load_shader(GLenum, const std::string&);
 GLuint create_shader(GLenum, const std::string&);
 GLuint create_program(GLuint, GLuint, GLuint, const char *);
