@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 18:29:03 tquirk
+ *   last updated 11 Oct 2017, 18:36:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -44,25 +44,28 @@
 
 static std::string default_shader_path = SHADER_SRC_PATH;
 
-std::string shader_path(void)
+std::string shader_path(const std::string& type)
 {
     char *env_path = getenv("CUDDLY_SHADER_PATH");
-    std::string fname;
+    std::string path;
 
     if (env_path != NULL)
-        fname = env_path;
+        path = env_path;
     else
-        fname = default_shader_path;
+        path = default_shader_path;
 
-    if (fname.find_last_of('/') != fname.size() - 1)
-        fname += "/";
-    return fname;
+    if (path.find_last_of('/') != path.size() - 1)
+        path += "/";
+
+    path += "ui_" + type + '.' + GLSL_version() + ".glsl";
+
+    return path;
 }
 
-GLuint load_shader(GLenum type, const std::string& file)
+GLuint load_shader(GLenum type, const std::string& shader_type)
 {
     std::string src;
-    std::string fname = shader_path() + file;
+    std::string fname = shader_path(shader_type);
     std::ifstream infile(fname, std::ios::in | std::ios::binary);
 
     if (!infile)
