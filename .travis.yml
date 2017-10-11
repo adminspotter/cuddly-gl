@@ -12,7 +12,7 @@ addons:
     - autopoint
     - cmake
     - gettext
-    - libboost-all-dev
+    - libboost-dev
     - libgl1-mesa-dev
     - libglm-dev
     - libfreetype6-dev
@@ -32,6 +32,7 @@ script:
 - make
 - Xvfb :99 -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r 2>/dev/null &
 - export DISPLAY=:99
+- export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib:$HOME/lib
 - make check
 after_script:
 - for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done
