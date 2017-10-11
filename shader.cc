@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 17:12:10 tquirk
+ *   last updated 11 Oct 2017, 18:29:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include <string>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -201,4 +202,32 @@ std::string GLenum_to_string(GLenum e)
         break;
     }
     return s;
+}
+
+std::map<std::string, std::string> GL_to_GLSL_version =
+{
+    { "2.0", "110" },
+    { "2.1", "120" },
+    { "3.0", "130" },
+    { "3.1", "140" },
+    { "3.2", "150" },
+    { "3.3", "330" },
+    { "4.0", "400" },
+    { "4.1", "410" },
+    { "4.2", "420" },
+    { "4.3", "430" },
+    { "4.4", "440" },
+    { "4.5", "450" },
+    { "4.6", "460" }
+};
+
+std::string GLSL_version(void)
+{
+    GLint major, minor;
+    std::ostringstream version;
+
+    glGetIntegerv(GL_MAJOR_VERSION, &major);
+    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    version << major << '.' << minor;
+    return GL_to_GLSL_version[version.str()];
 }
