@@ -11,7 +11,7 @@ use X11::GUITest qw(PressReleaseKey SetInputFocus
 {
     my $test = 'run program';
 
-    StartApp('uitest');
+    StartApp('./uitest');
     my $uitest = WaitWindowViewable('uitest');
 
     ok($uitest, "$test: found window");
