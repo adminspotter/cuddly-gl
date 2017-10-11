@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:02:33 tquirk
+ *   last updated 11 Oct 2017, 17:12:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -27,6 +27,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <string.h>
 
 #include <string>
@@ -40,16 +41,34 @@
 
 #include "shader.h"
 
+static std::string default_shader_path = SHADER_SRC_PATH;
+
+std::string shader_path(void)
+{
+    char *env_path = getenv("CUDDLY_SHADER_PATH");
+    std::string fname;
+
+    if (env_path != NULL)
+        fname = env_path;
+    else
+        fname = default_shader_path;
+
+    if (fname.find_last_of('/') != fname.size() - 1)
+        fname += "/";
+    return fname;
+}
+
 GLuint load_shader(GLenum type, const std::string& file)
 {
     std::string src;
-    std::ifstream infile(file, std::ios::in | std::ios::binary);
+    std::string fname = shader_path() + file;
+    std::ifstream infile(fname, std::ios::in | std::ios::binary);
 
     if (!infile)
     {
         std::ostringstream s;
 
-        s << "could not open file " << file;
+        s << "could not open file " << fname;
         throw std::runtime_error(s.str());
     }
     infile.seekg(0, std::ios::end);
