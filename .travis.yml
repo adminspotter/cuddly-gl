@@ -28,8 +28,10 @@ before_script:
 - sudo pip3 install codecov
 script:
 - ./autogen.sh
-- CXXFLAGS='-I/usr/include/freetype2' ./configure --prefix=$HOME --enable-profile
+- ./configure --prefix=$HOME --enable-profile --with-glfw=/usr/local --with-freetype-includes=/usr/include/freetype2
 - make
+- Xvfb :99 -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r 2>/dev/null &
+- export DISPLAY=:99
 - make check
 after_script:
 - for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done

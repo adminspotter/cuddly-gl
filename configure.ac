@@ -172,7 +172,6 @@ AS_IF([test "x$with_glfw" != "xno"],
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
                                      [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
-        AC_CHECK_PROG([XVFB], [Xvfb], ["$as_dir/Xvfb"], [], [/usr/bin /usr/local/bin /usr/X11R5/bin /usr/X11R6/bin /opt/X11/bin])
         AX_PROG_PERL_MODULES([Test::More X11::GUITest],
                              [],
                              [AC_MSG_NOTICE([X11::GUITest is installed enough for our purposes])],
@@ -181,8 +180,7 @@ AS_IF([test "x$with_glfw" != "xno"],
                                can_do_tests="no"
                              ])
       ])
-AM_CONDITIONAL([HAVE_TEST_PREREQS],
-               [test "x$can_do_tests" == "xyes" && test "x$XVFB" != "x"])
+AM_CONDITIONAL([HAVE_TEST_PREREQS], [test "x$can_do_tests" == "xyes"])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
 AC_SUBST(GLFW_LDLIBS)

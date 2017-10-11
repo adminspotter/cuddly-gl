@@ -8,14 +8,6 @@ TS = fonttest \
 if HAVE_TEST_PREREQS
 TC += uitest
 TS += run-uitest
-XVFB_DISPLAY ?= :99
-
-.PHONY: xvfb
-
-xvfb:
-	$(XVFB) $(XVFB_DISPLAY) -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r &
-	DISPLAY=$(XVFB_DISPLAY)
-	sleep 1
 endif
 
 SUBDIRS = tap++
@@ -38,7 +30,6 @@ uitest_SOURCES = uitest.cc ../connect_glfw.cc
 uitest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
 uitest_LDFLAGS = $(LDFLAGS) $(GLFW_LDFLAGS)
 uitest_LDADD = ../libcuddly_gl.la $(GLFW_LDLIBS) $(LDLIBS)
-EXTRA_uitest_DEPENDENCIES = xvfb
 
 fonttest_SOURCES = fonttest.cc
 fonttest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
