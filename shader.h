@@ -1,9 +1,9 @@
 /* shader.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Mar 2016, 10:34:49 tquirk
+ *   last updated 11 Oct 2017, 15:57:23 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2017  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,7 @@
 
 #include <GL/gl.h>
 
+std::string shader_path(void);
 GLuint load_shader(GLenum, const std::string&);
 GLuint create_shader(GLenum, const std::string&);
 GLuint create_program(GLuint, GLuint, GLuint, const char *);
