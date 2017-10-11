@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 18:36:33 tquirk
+ *   last updated 11 Oct 2017, 18:41:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -44,7 +44,7 @@
 
 static std::string default_shader_path = SHADER_SRC_PATH;
 
-std::string shader_path(const std::string& type)
+std::string shader_path(GLenum type)
 {
     char *env_path = getenv("CUDDLY_SHADER_PATH");
     std::string path;
@@ -57,15 +57,15 @@ std::string shader_path(const std::string& type)
     if (path.find_last_of('/') != path.size() - 1)
         path += "/";
 
-    path += "ui_" + type + '.' + GLSL_version() + ".glsl";
+    path += "ui_" + shader_string(type) + '.' + GLSL_version() + ".glsl";
 
     return path;
 }
 
-GLuint load_shader(GLenum type, const std::string& shader_type)
+GLuint load_shader(GLenum type)
 {
     std::string src;
-    std::string fname = shader_path(shader_type);
+    std::string fname = shader_path(type);
     std::ifstream infile(fname, std::ios::in | std::ios::binary);
 
     if (!infile)
@@ -205,6 +205,18 @@ std::string GLenum_to_string(GLenum e)
         break;
     }
     return s;
+}
+
+std::map<GLenum, std::string> shader_types =
+{
+    { GL_VERTEX_SHADER, "vertex" },
+    { GL_GEOMETRY_SHADER, "geometry" },
+    { GL_FRAGMENT_SHADER, "fragment" }
+};
+
+std::string shader_string(GLenum e)
+{
+    return shader_types[e];
 }
 
 std::map<std::string, std::string> GL_to_GLSL_version =
