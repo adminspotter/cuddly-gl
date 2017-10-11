@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 18:10:59 tquirk
+ *   last updated 11 Oct 2017, 18:43:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -71,8 +71,8 @@ ui::context::context(GLuint w, GLuint h)
     : ui::composite::composite(NULL, w, h), ui::active::active(w, h),
       ui::rect::rect(w, h)
 {
-    this->vert_shader = load_shader(GL_VERTEX_SHADER, "vertex");
-    this->frag_shader = load_shader(GL_FRAGMENT_SHADER, "fragment");
+    this->vert_shader = load_shader(GL_VERTEX_SHADER);
+    this->frag_shader = load_shader(GL_FRAGMENT_SHADER);
     this->shader_pgm = create_program(vert_shader, 0, frag_shader, "fcolor");
     glUseProgram(this->shader_pgm);
     this->pos_attr = glGetAttribLocation(shader_pgm, "position");
