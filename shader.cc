@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2017, 08:52:14 tquirk
+ *   last updated 13 Oct 2017, 13:42:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -30,12 +30,9 @@
  * in the way that fragment shaders assigned a color to a given
  * fragment.
  *
- * We might be able to get away with a 2.x shader and a 3.x shader
- * (possibly with another for the layout qualifier changes that
- * appeared in 3.3), or it may be advantageous to provide shaders for
- * every version.  Currently we provide a mechanism for the latter,
- * but the former would be simpler from a lots-of-shaders-to-write
- * standpoint.
+ * We should be able to get away with a 2.x shader, a 3.x shader, and
+ * one for the layout qualifier changes that appeared in 3.3.  We'll
+ * call these versions 2, 3, and 4 respectively.
  *
  * See http://io7m.com/documents/fso-tta/
  *
@@ -73,7 +70,7 @@ std::string shader_path(GLenum type)
     if (path.find_last_of('/') != path.size() - 1)
         path += "/";
 
-    path += "ui_" + shader_string(type) + '.' + GLSL_version() + ".glsl";
+    path += "ui_" + shader_string(type) + '.' + shader_version() + ".glsl";
 
     return path;
 }
@@ -242,30 +239,17 @@ std::string shader_string(GLenum e)
     return shader_types[e];
 }
 
-std::map<std::string, std::string> GL_to_GLSL_version =
+std::string shader_version(void)
 {
-    { "2.0", "110" },
-    { "2.1", "120" },
-    { "3.0", "130" },
-    { "3.1", "140" },
-    { "3.2", "150" },
-    { "3.3", "330" },
-    { "4.0", "400" },
-    { "4.1", "410" },
-    { "4.2", "420" },
-    { "4.3", "430" },
-    { "4.4", "440" },
-    { "4.5", "450" },
-    { "4.6", "460" }
-};
-
-std::string GLSL_version(void)
-{
-    GLint major, minor;
+    GLint major = 0, minor = 0;
     std::ostringstream version;
 
     glGetIntegerv(GL_MAJOR_VERSION, &major);
     glGetIntegerv(GL_MINOR_VERSION, &minor);
-    version << major << '.' << minor;
-    return GL_to_GLSL_version[version.str()];
+    if (major < 3)
+        return "2";
+    else if (major == 3 && minor < 3)
+        return "3";
+    else
+        return "4";
 }
