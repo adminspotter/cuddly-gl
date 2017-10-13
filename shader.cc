@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2017, 13:42:20 tquirk
+ *   last updated 13 Oct 2017, 14:57:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -142,7 +142,7 @@ GLuint create_shader(GLenum type, const std::string& src)
 GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
 {
     GLenum err;
-    GLint res = GL_FALSE, major;
+    GLint res = GL_FALSE, major, minor;
     int len = 0;
     std::ostringstream s;
     GLuint pgm = glCreateProgram();
@@ -173,11 +173,13 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
 
     /* Starting in OpenGL 3.0 (GLSL version 130), passing output from
      * the fragment shaders is expected to be done by us, and not
-     * written to gl_FragColor.  So we'll make sure we've got a new
-     * enough version to handle this particular item.
+     * written to gl_FragColor.  In OpenGL 3.3 (GLSL 330), we can use
+     * layout specifiers to forgo the requirement to bind the output
+     * location.  So we only need to do this for a few versions.
      */
     glGetIntegerv(GL_MAJOR_VERSION, &major);
-    if (major >= 3)
+    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    if (major == 3 && minor < 3)
         glBindFragDataLocation(pgm, 0, out);
     glLinkProgram(pgm);
 
