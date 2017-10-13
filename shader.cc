@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 18:41:37 tquirk
+ *   last updated 13 Oct 2017, 08:52:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -22,6 +22,22 @@
  *
  * This file contains the function definitions for OpenGL shader and
  * program handling.
+ *
+ *
+ * In attempt to support as much as we possibly can, we've got to be
+ * able to handle multiple versions of OpenGL, and of course that's a
+ * moving target.  There were significant changes between 2.x and 3.x
+ * in the way that fragment shaders assigned a color to a given
+ * fragment.
+ *
+ * We might be able to get away with a 2.x shader and a 3.x shader
+ * (possibly with another for the layout qualifier changes that
+ * appeared in 3.3), or it may be advantageous to provide shaders for
+ * every version.  Currently we provide a mechanism for the latter,
+ * but the former would be simpler from a lots-of-shaders-to-write
+ * standpoint.
+ *
+ * See http://io7m.com/documents/fso-tta/
  *
  * Things to do
  *
@@ -129,7 +145,7 @@ GLuint create_shader(GLenum type, const std::string& src)
 GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
 {
     GLenum err;
-    GLint res = GL_FALSE;
+    GLint res = GL_FALSE, major;
     int len = 0;
     std::ostringstream s;
     GLuint pgm = glCreateProgram();
@@ -158,7 +174,14 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
         throw std::runtime_error(s.str());
     }
 
-    glBindFragDataLocation(pgm, 0, out);
+    /* Starting in OpenGL 3.0 (GLSL version 130), passing output from
+     * the fragment shaders is expected to be done by us, and not
+     * written to gl_FragColor.  So we'll make sure we've got a new
+     * enough version to handle this particular item.
+     */
+    glGetIntegerv(GL_MAJOR_VERSION, &major);
+    if (major >= 3)
+        glBindFragDataLocation(pgm, 0, out);
     glLinkProgram(pgm);
 
     glGetProgramiv(pgm, GL_INFO_LOG_LENGTH, &len);
