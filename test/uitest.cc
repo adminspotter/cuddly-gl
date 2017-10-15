@@ -1,3 +1,5 @@
+#include <config.h>
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -84,12 +86,14 @@ int main(int argc, char **argv)
     }
     glfwSetErrorCallback(error_callback);
 
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+#if NEED_GL_FORWARD_COMPAT
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif /* NEED_GL_FORWARD_COMPAT */
 
     if ((w = glfwCreateWindow(800, 600, "ui-test", NULL, NULL)) == NULL)
     {

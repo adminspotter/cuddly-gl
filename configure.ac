@@ -181,6 +181,10 @@ AS_IF([test "x$with_glfw" != "xno"],
                              ])
       ])
 AM_CONDITIONAL([HAVE_TEST_PREREQS], [test "x$can_do_tests" == "xyes"])
+AS_IF([test "x$can_do_tests" == "xyes"],
+      [AS_CASE([$host_os],
+               [darwin*],
+               [AC_DEFINE(NEED_GL_FORWARD_COMPAT, [1], [MacOS needs the OpenGL Forward Compatibility bit set])])])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
 AC_SUBST(GLFW_LDLIBS)
