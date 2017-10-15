@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Oct 2017, 14:57:10 tquirk
+ *   last updated 16 Oct 2017, 08:19:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -177,8 +177,7 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
      * layout specifiers to forgo the requirement to bind the output
      * location.  So we only need to do this for a few versions.
      */
-    glGetIntegerv(GL_MAJOR_VERSION, &major);
-    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    opengl_version(&major, &minor);
     if (major == 3 && minor < 3)
         glBindFragDataLocation(pgm, 0, out);
     glLinkProgram(pgm);
@@ -246,12 +245,32 @@ std::string shader_version(void)
     GLint major = 0, minor = 0;
     std::ostringstream version;
 
-    glGetIntegerv(GL_MAJOR_VERSION, &major);
-    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    opengl_version(&major, &minor);
     if (major < 3)
         return "2";
     else if (major == 3 && minor < 3)
         return "3";
     else
         return "4";
+}
+
+void opengl_version(GLint *major, GLint *minor)
+{
+    *major = *minor = 0;
+
+    glGetIntegerv(GL_MAJOR_VERSION, major);
+    glGetIntegerv(GL_MINOR_VERSION, minor);
+    if (*major == 0 && *minor == 0)
+    {
+        std::string str((const char *)glGetString(GL_VERSION));
+        std::string::size_type found;
+
+        if ((found = str.find_first_of('.')) != std::string::npos)
+        {
+            *major = std::stoi(str.substr(0, found));
+            str.replace(0, found + 1, "");
+            found = str.find_first_not_of("0123456789");
+            *minor = std::stoi(str.substr(0, found));
+        }
+    }
 }
