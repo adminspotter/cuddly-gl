@@ -1,9 +1,9 @@
 #version 330 core
 
-layout(location = 0) in vec4 vcolor;
-layout(location = 4) in vec2 tex_coord;
+in vec4 vcolor;
+in vec2 tex_coord;
 
-layout(location = 0) out vec4 fcolor;
+layout(location = 0, index = 0) out vec4 fcolor;
 
 uniform sampler2D tex;
 uniform uint use_text;
