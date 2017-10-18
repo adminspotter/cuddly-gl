@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Oct 2017, 11:41:54 tquirk
+ *   last updated 18 Oct 2017, 09:05:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -35,20 +35,6 @@
 #include "composite.h"
 
 const int ui::composite::tree_max_depth = 4;
-
-int ui::composite::get_size(GLuint t, void *v)
-{
-    int ret = 0;
-
-    switch (t)
-    {
-      case ui::size::all:    *(glm::ivec2 *)v = this->dim;  break;
-      case ui::size::width:  *(int *)v = this->dim.x;       break;
-      case ui::size::height: *(int *)v = this->dim.y;       break;
-      default:               ret = 1;                       break;
-    }
-    return ret;
-}
 
 void ui::composite::set_size(GLuint d, void *v)
 {
