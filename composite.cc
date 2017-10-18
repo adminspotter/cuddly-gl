@@ -40,12 +40,7 @@ void ui::composite::set_size(GLuint d, void *v)
 {
     ui::resize_call_data call_data;
 
-    switch (d)
-    {
-      case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
-      case ui::size::width:   this->dim.x = *(int *)v;       break;
-      case ui::size::height:  this->dim.y = *(int *)v;       break;
-    }
+    this->rect::set_size(d, v);
     this->regenerate_children();
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
