@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Oct 2017, 11:41:38 tquirk
+ *   last updated 18 Oct 2017, 09:03:34 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -56,7 +56,6 @@ namespace ui
 
         const static int tree_max_depth;
 
-        virtual int get_size(GLuint, void *) override;
         virtual void set_size(GLuint, void *) override;
         virtual int get_resize(GLuint, void *);
         virtual void set_resize(GLuint, void *);
