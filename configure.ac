@@ -14,8 +14,8 @@ AC_GNU_SOURCE
 AC_SYS_LARGEFILE
 
 # Default to empty CFLAGS/CXXFLAGS
-:${CFLAGS=""}
-:${CXXFLAGS=""}
+: ${CFLAGS=""}
+: ${CXXFLAGS=""}
 
 # Checks for programs.
 AC_PROG_CXX
@@ -92,14 +92,14 @@ AS_CASE([$host_os],
     CXXFLAGS="$CXXFLAGS -I/opt/X11/include"
         ],
         [
-    AC_SEARCH_LIBS([gluPerspective], [GLU],
-        [LDLIBS="$ac_cv_search_gluPerspective $LDLIBS"],
-        [AC_MSG_ERROR([libGLU not valid, can not build library.])],
+    AC_SEARCH_LIBS([glBindVertexArray], [GL],
+        [],
+        [AC_MSG_ERROR([libGL not valid, can not build library.])],
         [$LDFLAGS])
 
-    AC_SEARCH_LIBS([glBindVertexArray], [GL],
-        [LDLIBS="$ac_cv_search_glBindVertexArray $LDLIBS"],
-        [AC_MSG_ERROR([libGL not valid, can not build library.])],
+    AC_SEARCH_LIBS([gluPerspective], [GLU],
+        [],
+        [AC_MSG_ERROR([libGLU not valid, can not build library.])],
         [$LDFLAGS])
         ])
 
@@ -139,7 +139,7 @@ AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp
 AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 
 # GLFW for the test suite
-want_tests="no"
+can_do_tests="no"
 GLFW_INCLUDES=""
 GLFW_LDFLAGS=""
 GLFW_LDLIBS=""
@@ -154,10 +154,10 @@ AS_IF([test "x$with_glfw" != "xno"],
         CXXFLAGS="$CXXFLAGS $GLFW_INCLUDES"
         CPPFLAGS="$CXXFLAGS"
         AC_CHECK_HEADERS([GLFW/glfw3.h],
-                         [want_tests="yes"],
+                         [can_do_tests="yes"],
                          [AC_MSG_NOTICE([no GLFW headers found, not building test suite])])
 
-        AS_IF([test "x$want_tests" == "xyes"],
+        AS_IF([test "x$can_do_tests" == "xyes"],
               [
                 AS_IF([test "x$with_glfw_libraries" != "xno"],
                       [GLFW_LDFLAGS="-L$with_glfw_libraries"],
@@ -168,11 +168,23 @@ AS_IF([test "x$with_glfw" != "xno"],
                                [GLFW_LDLIBS="$ac_cv_search_glfwInit"],
                                [
                                  AC_MSG_NOTICE([no GLFW libraries found, not building test suite])
-                                 want_tests="no"
+                                 can_do_tests="no"
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
-                                     [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])])
-AM_CONDITIONAL([WANT_TESTS], [test "x$want_tests" == "xyes"])
+                                     [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
+        AX_PROG_PERL_MODULES([Test::More X11::GUITest],
+                             [],
+                             [AC_MSG_NOTICE([X11::GUITest is installed enough for our purposes])],
+                             [
+                               AC_MSG_NOTICE([missing perl modules, not building test suite])
+                               can_do_tests="no"
+                             ])
+      ])
+AM_CONDITIONAL([HAVE_TEST_PREREQS], [test "x$can_do_tests" == "xyes"])
+AS_IF([test "x$can_do_tests" == "xyes"],
+      [AS_CASE([$host_os],
+               [darwin*],
+               [AC_DEFINE(NEED_GL_FORWARD_COMPAT, [1], [MacOS needs the OpenGL Forward Compatibility bit set])])])
 AC_SUBST(GLFW_INCLUDES)
 AC_SUBST(GLFW_LDFLAGS)
 AC_SUBST(GLFW_LDLIBS)

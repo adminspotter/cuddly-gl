@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 17:12:10 tquirk
+ *   last updated 16 Oct 2017, 08:19:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -23,6 +23,19 @@
  * This file contains the function definitions for OpenGL shader and
  * program handling.
  *
+ *
+ * In attempt to support as much as we possibly can, we've got to be
+ * able to handle multiple versions of OpenGL, and of course that's a
+ * moving target.  There were significant changes between 2.x and 3.x
+ * in the way that fragment shaders assigned a color to a given
+ * fragment.
+ *
+ * We should be able to get away with a 2.x shader, a 3.x shader, and
+ * one for the layout qualifier changes that appeared in 3.3.  We'll
+ * call these versions 2, 3, and 4 respectively.
+ *
+ * See http://io7m.com/documents/fso-tta/
+ *
  * Things to do
  *
  */
@@ -31,6 +44,7 @@
 #include <string.h>
 
 #include <string>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -43,25 +57,28 @@
 
 static std::string default_shader_path = SHADER_SRC_PATH;
 
-std::string shader_path(void)
+std::string shader_path(GLenum type)
 {
     char *env_path = getenv("CUDDLY_SHADER_PATH");
-    std::string fname;
+    std::string path;
 
     if (env_path != NULL)
-        fname = env_path;
+        path = env_path;
     else
-        fname = default_shader_path;
+        path = default_shader_path;
 
-    if (fname.find_last_of('/') != fname.size() - 1)
-        fname += "/";
-    return fname;
+    if (path.find_last_of('/') != path.size() - 1)
+        path += "/";
+
+    path += "ui_" + shader_string(type) + '.' + shader_version() + ".glsl";
+
+    return path;
 }
 
-GLuint load_shader(GLenum type, const std::string& file)
+GLuint load_shader(GLenum type)
 {
     std::string src;
-    std::string fname = shader_path() + file;
+    std::string fname = shader_path(type);
     std::ifstream infile(fname, std::ios::in | std::ios::binary);
 
     if (!infile)
@@ -125,7 +142,7 @@ GLuint create_shader(GLenum type, const std::string& src)
 GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
 {
     GLenum err;
-    GLint res = GL_FALSE;
+    GLint res = GL_FALSE, major, minor;
     int len = 0;
     std::ostringstream s;
     GLuint pgm = glCreateProgram();
@@ -154,7 +171,15 @@ GLuint create_program(GLuint vert, GLuint geom, GLuint frag, const char *out)
         throw std::runtime_error(s.str());
     }
 
-    glBindFragDataLocation(pgm, 0, out);
+    /* Starting in OpenGL 3.0 (GLSL version 130), passing output from
+     * the fragment shaders is expected to be done by us, and not
+     * written to gl_FragColor.  In OpenGL 3.3 (GLSL 330), we can use
+     * layout specifiers to forgo the requirement to bind the output
+     * location.  So we only need to do this for a few versions.
+     */
+    opengl_version(&major, &minor);
+    if (major == 3 && minor < 3)
+        glBindFragDataLocation(pgm, 0, out);
     glLinkProgram(pgm);
 
     glGetProgramiv(pgm, GL_INFO_LOG_LENGTH, &len);
@@ -201,4 +226,51 @@ std::string GLenum_to_string(GLenum e)
         break;
     }
     return s;
+}
+
+std::map<GLenum, std::string> shader_types =
+{
+    { GL_VERTEX_SHADER, "vertex" },
+    { GL_GEOMETRY_SHADER, "geometry" },
+    { GL_FRAGMENT_SHADER, "fragment" }
+};
+
+std::string shader_string(GLenum e)
+{
+    return shader_types[e];
+}
+
+std::string shader_version(void)
+{
+    GLint major = 0, minor = 0;
+    std::ostringstream version;
+
+    opengl_version(&major, &minor);
+    if (major < 3)
+        return "2";
+    else if (major == 3 && minor < 3)
+        return "3";
+    else
+        return "4";
+}
+
+void opengl_version(GLint *major, GLint *minor)
+{
+    *major = *minor = 0;
+
+    glGetIntegerv(GL_MAJOR_VERSION, major);
+    glGetIntegerv(GL_MINOR_VERSION, minor);
+    if (*major == 0 && *minor == 0)
+    {
+        std::string str((const char *)glGetString(GL_VERSION));
+        std::string::size_type found;
+
+        if ((found = str.find_first_of('.')) != std::string::npos)
+        {
+            *major = std::stoi(str.substr(0, found));
+            str.replace(0, found + 1, "");
+            found = str.find_first_not_of("0123456789");
+            *minor = std::stoi(str.substr(0, found));
+        }
+    }
 }

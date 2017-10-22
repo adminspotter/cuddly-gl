@@ -1,3 +1,5 @@
+#include <config.h>
+
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -9,19 +11,19 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ui.h"
-#include "font.h"
-#include "widget.h"
-#include "label.h"
-#include "button.h"
-#include "text_field.h"
-#include "password.h"
-#include "manager.h"
-#include "row_column.h"
-#include "pie_menu.h"
-#include "multi_label.h"
+#include "../ui.h"
+#include "../font.h"
+#include "../widget.h"
+#include "../label.h"
+#include "../button.h"
+#include "../text_field.h"
+#include "../password.h"
+#include "../manager.h"
+#include "../row_column.h"
+#include "../pie_menu.h"
+#include "../multi_label.h"
 
-#include "connect_glfw.h"
+#include "../connect_glfw.h"
 
 void error_callback(int, const char *);
 void window_size_callback(GLFWwindow *w, int, int);
@@ -46,6 +48,7 @@ std::string font_name("techover.ttf"), greeting("Howdy!");
 std::string multiline("Hi this is     adm1nspotter, and I like    cheese!\nHowdy!\nabcdefghijklmnopqrstuvwxyz");
 std::vector<std::string> paths =
 {
+    ".",
     "./test",
     "~/Library/Fonts",
     "/Library/Fonts",
@@ -83,12 +86,14 @@ int main(int argc, char **argv)
     }
     glfwSetErrorCallback(error_callback);
 
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+#if NEED_GL_FORWARD_COMPAT
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif /* NEED_GL_FORWARD_COMPAT */
 
     if ((w = glfwCreateWindow(800, 600, "ui-test", NULL, NULL)) == NULL)
     {

@@ -1,15 +1,12 @@
 #include <iostream>
 
-#include "font.h"
+#include "../font.h"
 
-std::string font_name = "Times New Roman.ttf";
+std::string font_name = "techover.ttf";
 std::vector<std::string> paths =
 {
-    "~/Library/Fonts",
-    "/Library/Fonts",
-    "/Network/Library/Fonts",
-    "/System/Library/Fonts",
-    "/System/Folder/Fonts",
+    ".",
+    "./test"
 };
 
 int main(int argc, char **argv)

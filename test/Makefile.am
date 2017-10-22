@@ -1,19 +1,22 @@
-PROG = t_active \
+TC = fonttest \
+	t_active \
 	t_rect
-TC = t_active \
+TS = fonttest \
+	t_active \
 	t_rect
-if WANT_TESTS
-PROG += uitest fonttest
+
+if HAVE_TEST_PREREQS
+TC += uitest
+TS += run-uitest
 endif
 
 SUBDIRS = tap++
 
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 	$(top_srcdir)/build-aux/tap-driver.sh
-TESTS = $(TC)
+TESTS = $(TS)
 
 check_PROGRAMS = $(TC)
-noinst_PROGRAMS = $(PROG)
 
 t_active_SOURCES = t_active.cc
 t_active_CXXFLAGS = -Itap++

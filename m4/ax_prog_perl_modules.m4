@@ -1,10 +1,14 @@
 # ===========================================================================
 #   http://www.gnu.org/software/autoconf-archive/ax_prog_perl_modules.html
+#      modified by tquirk
 # ===========================================================================
 #
 # SYNOPSIS
 #
-#   AX_PROG_PERL_MODULES([MODULES], [ACTION-IF-TRUE], [ACTION-IF-FALSE])
+#   AX_PROG_PERL_MODULES([MODULES],
+#                        [ACTION-IF-WORKING],
+#                        [ACTION-IF-INSTALLED],
+#                        [ACTION-IF-MISSING])
 #
 # DESCRIPTION
 #
@@ -46,32 +50,54 @@ m4_foreach([ax_perl_module], m4_split(m4_normalize([$1])),
 
 # Make sure we have perl
 if test -z "$PERL"; then
-AC_CHECK_PROG(PERL,perl,perl)
+  AC_CHECK_PROG(PERL,perl,perl)
 fi
 
-if test "x$PERL" != x; then
-  ax_perl_modules_failed=0
-  for ax_perl_module in ax_perl_modules; do
-    AC_MSG_CHECKING(for perl module $ax_perl_module)
-
-    # Would be nice to log result here, but can't rely on autoconf internals
-    $PERL -e "use $ax_perl_module; exit" > /dev/null 2>&1
+if test -z "$PERLDOC"; then
+  AC_CHECK_PROG(PERLDOC,perldoc,perldoc)
+  # Make sure perldoc doesn't just always fail
+  if test -n "$PERLDOC"; then
+    $PERLDOC CORE >/dev/null 2>&AS_MESSAGE_LOG_FD
     if test $? -ne 0; then
-      AC_MSG_RESULT(no);
-      ax_perl_modules_failed=1
-   else
-      AC_MSG_RESULT(ok);
+      AC_MSG_NOTICE($PERLDOC does not seem to work)
+      PERLDOC=''
     fi
-  done
-
-  # Run optional shell commands
-  if test "$ax_perl_modules_failed" = 0; then
-    :
-    $2
-  else
-    :
-    $3
   fi
-else
-  AC_MSG_WARN(could not find perl)
-fi])dnl
+fi
+
+ax_perl_modules_count=0
+ax_perl_modules_missing=0
+ax_perl_modules_failed=0
+
+for ax_perl_module in $ax_perl_modules; do
+  ax_perl_modules_count=`expr $ax_perl_modules_count + 1`
+
+  AS_IF([test "x$PERLDOC" != x],
+        [
+          AC_MSG_CHECKING($ax_perl_module presence)
+          $PERLDOC -l $ax_perl_module >&AS_MESSAGE_LOG_FD 2>&1
+          AS_IF([test $? -ne 0],
+                [
+                  AC_MSG_RESULT(no)
+                  ax_perl_modules_missing=`expr $ax_perl_modules_missing + 1`
+                ],
+                [AC_MSG_RESULT(yes)])])
+
+  AS_IF([test "x$PERL" != x],
+        [
+          AC_MSG_CHECKING($ax_perl_module usability)
+          $PERL -e "use $ax_perl_module;" >&AS_MESSAGE_LOG_FD 2>&1
+          AS_IF([test $? -ne 0],
+                [
+                  AC_MSG_RESULT(no)
+                  ax_perl_modules_failed=`expr $ax_perl_modules_missing + 1`
+                ],
+                [AC_MSG_RESULT(yes)])])
+done
+
+# Run optional shell commands
+AS_IF([test $ax_perl_modules_count -gt 0],
+      [AS_IF([test "$ax_perl_modules_failed" -eq 0], [$2],
+             [test "$ax_perl_modules_missing" -eq 0], [$3],
+             [$4])])
+])dnl

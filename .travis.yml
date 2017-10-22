@@ -12,12 +12,19 @@ addons:
     - autopoint
     - cmake
     - gettext
-    - libboost-all-dev
+    - libboost-dev
     - libgl1-mesa-dev
     - libglm-dev
     - libfreetype6-dev
+    - libx11-guitest-perl
+    - perl-doc
     - python3-pip
+    - x11-apps
     - xorg-dev
+    - xvfb
+  artifacts:
+    paths:
+    - $PWD/test/uitest.xwd
 before_script:
 - wget https://github.com/glfw/glfw/releases/download/3.2/glfw-3.2.zip -O /tmp/glfw-3.2.zip
 - unzip /tmp/glfw-3.2.zip
@@ -25,8 +32,14 @@ before_script:
 - sudo pip3 install codecov
 script:
 - ./autogen.sh
-- CXXFLAGS='-I/usr/include/freetype2' ./configure --prefix=$HOME --enable-profile
+- ./configure --prefix=$HOME --enable-profile --with-glfw=/usr/local --with-freetype-includes=/usr/include/freetype2
 - make
+- Xvfb :99 -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r 2>/dev/null &
+- export DISPLAY=:99
+- export CUDDLY_SHADER_PATH=$PWD/shaders
+- export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib:$HOME/lib
 - make check
+after_script:
+- for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done
 after_success:
 - codecov
