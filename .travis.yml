@@ -19,8 +19,12 @@ addons:
     - libx11-guitest-perl
     - perl-doc
     - python3-pip
+    - x11-apps
     - xorg-dev
     - xvfb
+  artifacts:
+    paths:
+    - $PWD/test/uitest.xwd
 before_script:
 - wget https://github.com/glfw/glfw/releases/download/3.2/glfw-3.2.zip -O /tmp/glfw-3.2.zip
 - unzip /tmp/glfw-3.2.zip

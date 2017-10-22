@@ -16,6 +16,7 @@ use X11::GUITest qw(PressReleaseKey SetInputFocus
 
     ok($uitest, "$test: found window");
 
+    system('xwd -root -out uitest.xwd');
     SetInputFocus($uitest);
     WaitSeconds(0.5);
     PressReleaseKey('{ESC}');
