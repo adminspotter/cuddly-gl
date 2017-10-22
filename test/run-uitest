@@ -3,21 +3,27 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 1;
+use Test::More 'tests' => 4;
 
-use X11::GUITest qw(PressReleaseKey SetInputFocus
-                    StartApp WaitSeconds WaitWindowViewable);
+use X11::GUITest qw(SendKeys SetInputFocus StartApp
+                    WaitSeconds WaitWindowClose WaitWindowViewable);
 
 {
     my $test = 'run program';
 
     StartApp('./uitest');
-    my $uitest = WaitWindowViewable('ui-test');
-
+    my ($uitest) = WaitWindowViewable('ui-test');
     ok($uitest, "$test: found window");
 
-    system('xwd -root -out uitest.xwd');
-    SetInputFocus($uitest);
+    #system('xwd -name ui-test -out uitest.xwd');
+
+    my $status = SetInputFocus($uitest);
+    ok($status, "$test: set input focus");
+
     WaitSeconds(0.5);
-    PressReleaseKey('{ESC}');
+    $status = SendKeys('{ESC}');
+    ok($status, "$test: escape key sent");
+
+    $status = WaitWindowClose($uitest);
+    ok($status, "$test: window is gone");
 }
