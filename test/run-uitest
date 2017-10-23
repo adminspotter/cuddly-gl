@@ -7,6 +7,7 @@ use Test::More 'tests' => 6;
 
 use X11::GUITest qw(:ALL :CONST);
 
+my $uitest;
 my $screenshot_count = 0;
 
 sub take_screenshot
@@ -15,22 +16,37 @@ sub take_screenshot
     ++$screenshot_count;
 }
 
+sub run_program
 {
     my $test = 'run program';
 
     StartApp('./uitest');
-    my ($uitest) = WaitWindowViewable('ui-test');
+    ($uitest) = WaitWindowViewable('ui-test');
     ok($uitest, "$test: found window");
+}
 
+sub interact_with_button
+{
+    my $test = 'button';
 
     my $status = ClickWindow($uitest, 60, 185, M_BTN1);
     ok($status, "$test: clicked button 1");
+}
 
-    $status = ClickWindow($uitest, 521, 36, M_BTN1);
+sub interact_with_row_column
+{
+    my $test = 'row-column';
+
+    my $status = ClickWindow($uitest, 521, 36, M_BTN1);
     ok($status, "$test: reoriented row-column 1");
+}
+
+sub close_window
+{
+    my $test = 'close';
 
     my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
-    $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
+    my $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
     ok($status, "$test: moved mouse to upper left");
 
     $status = SendKeys('{ESC}');
@@ -39,3 +55,9 @@ sub take_screenshot
     $status = WaitWindowClose($uitest);
     ok($status, "$test: window is gone");
 }
+
+run_program();
+BAIL_OUT("no window created, can't test anything else") if !$uitest;
+interact_with_button();
+interact_with_row_column();
+close_window();
