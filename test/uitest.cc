@@ -31,6 +31,7 @@ void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
+void reorient_callback(ui::active *, void *, void *);
 void print_sizes(ui::active *, void *, void *);
 
 ui::context *ctx;
@@ -198,7 +199,7 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx, 10, 10);
-    xpos = 600;
+    xpos = 520;
     ypos = 35;
     border = 1;
     gridx = 1;
@@ -215,6 +216,7 @@ int main(int argc, char **argv)
                ui::element::child_spacing, ui::size::height, &spacing, 0);
     r1->add_callback(ui::callback::enter, enter_callback, NULL);
     r1->add_callback(ui::callback::leave, leave_callback, NULL);
+    r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
@@ -326,6 +328,22 @@ void enter_callback(ui::active *a, void *call, void *client)
 void leave_callback(ui::active *a, void *call, void *client)
 {
     std::cout << "out, baby!" << std::endl;
+}
+
+void reorient_callback(ui::active *a, void *call, void *client)
+{
+    ui::row_column *r = dynamic_cast<ui::row_column *>(a);
+    ui::btn_call_data *call_data = (ui::btn_call_data *)call;
+
+    if (r != NULL && call_data->button == ui::mouse::button0)
+    {
+        glm::ivec2 grid(2, 4);
+        GLuint orient = ui::order::column;
+
+        r->set_va(ui::element::size, ui::size::grid, &grid,
+                  ui::element::order, 0, &orient, 0);
+        r->manage_children();
+    }
 }
 
 /* ARGSUSED */
