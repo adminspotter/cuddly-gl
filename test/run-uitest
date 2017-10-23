@@ -7,6 +7,14 @@ use Test::More 'tests' => 6;
 
 use X11::GUITest qw(:ALL :CONST);
 
+my $screenshot_count = 0;
+
+sub take_screenshot
+{
+    system("xwd -name ui-test -out uitest${screenshot_count}.xwd");
+    ++$screenshot_count;
+}
+
 {
     my $test = 'run program';
 
@@ -14,7 +22,6 @@ use X11::GUITest qw(:ALL :CONST);
     my ($uitest) = WaitWindowViewable('ui-test');
     ok($uitest, "$test: found window");
 
-    #system('xwd -name ui-test -out uitest.xwd');
 
     my $status = ClickWindow($uitest, 60, 185, M_BTN1);
     ok($status, "$test: clicked button 1");
