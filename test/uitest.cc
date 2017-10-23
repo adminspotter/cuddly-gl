@@ -317,19 +317,19 @@ void close_key_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void enter_callback(ui::active *a, void *client, void *call)
+void enter_callback(ui::active *a, void *call, void *client)
 {
     std::cout << "we're in!" << std::endl;
 }
 
 /* ARGSUSED */
-void leave_callback(ui::active *a, void *client, void *call)
+void leave_callback(ui::active *a, void *call, void *client)
 {
     std::cout << "out, baby!" << std::endl;
 }
 
 /* ARGSUSED */
-void print_sizes(ui::active *a, void *client, void *call)
+void print_sizes(ui::active *a, void *call, void *client)
 {
     glm::ivec2 pos, size;
     GLuint border[4], margin[4];
