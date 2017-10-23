@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 4;
+use Test::More 'tests' => 5;
 
-use X11::GUITest qw(SendKeys SetInputFocus StartApp
-                    WaitSeconds WaitWindowClose WaitWindowViewable);
+use X11::GUITest qw(:ALL :CONST);
 
 {
     my $test = 'run program';
@@ -17,10 +16,13 @@ use X11::GUITest qw(SendKeys SetInputFocus StartApp
 
     #system('xwd -name ui-test -out uitest.xwd');
 
-    my $status = SetInputFocus($uitest);
-    ok($status, "$test: set input focus");
+    my $status = ClickWindow($uitest, 60, 185, M_BTN1);
+    ok($status, "$test: clicked button 1");
 
-    WaitSeconds(0.5);
+    my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
+    $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
+    ok($status, "$test: moved mouse to upper left");
+
     $status = SendKeys('{ESC}');
     ok($status, "$test: escape key sent");
 
