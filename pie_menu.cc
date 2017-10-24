@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:15:01 tquirk
+ *   last updated 24 Oct 2017, 08:07:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -179,15 +179,14 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), ui::active::active(w, h), ui::rect(w, h)
 {
-    ui::active *a = dynamic_cast<ui::active *>(c);
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
     this->visible = false;
 
-    if (a != NULL)
+    if (c != NULL)
     {
-        a->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        c->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+        c->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     }
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
@@ -196,12 +195,14 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
 
 ui::pie_menu::~pie_menu()
 {
-    ui::active *a;
-
-    if ((a = dynamic_cast<ui::active *>(this->composite::parent)) != NULL)
+    if (this->composite::parent != NULL)
     {
-        a->remove_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->remove_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        this->composite::parent->remove_callback(ui::callback::btn_down,
+                                                 ui::pie_menu::show,
+                                                 this);
+        this->composite::parent->remove_callback(ui::callback::btn_up,
+                                                 ui::pie_menu::hide,
+                                                 this);
     }
 }
 
