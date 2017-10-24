@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 21:56:46 tquirk
+ *   last updated 24 Oct 2017, 07:20:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -198,6 +198,13 @@ ui::row_column::row_column(ui::composite *c, GLuint w, GLuint h)
 
 ui::row_column::~row_column()
 {
+}
+
+int ui::row_column::get(GLuint e, GLuint t, void *v)
+{
+    if (e == ui::element::order)
+        return this->get_order(t, v);
+    return this->manager::get(e, t, v);
 }
 
 void ui::row_column::set(GLuint e, GLuint t, void *v)

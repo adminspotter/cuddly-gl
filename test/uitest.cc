@@ -337,12 +337,18 @@ void reorient_callback(ui::active *a, void *call, void *client)
 
     if (r != NULL && call_data->button == ui::mouse::button0)
     {
-        glm::ivec2 grid(2, 4);
-        GLuint orient = ui::order::column;
+        static glm::ivec2 grid(2, 4);
+        static GLuint orient = ui::order::column;
+        glm::ivec2 old_grid;
+        GLuint old_orient;
 
+        r->get_va(ui::element::size, ui::size::grid, &old_grid,
+                  ui::element::order, 0, &old_orient, 0);
         r->set_va(ui::element::size, ui::size::grid, &grid,
                   ui::element::order, 0, &orient, 0);
         r->manage_children();
+        grid = old_grid;
+        orient = old_orient;
     }
 }
 
