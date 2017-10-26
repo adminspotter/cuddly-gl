@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2017, 08:07:58 tquirk
+ *   last updated 26 Oct 2017, 09:43:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -100,6 +100,36 @@ void ui::pie_menu::hide(ui::active *a, void *call, void *client)
     }
 }
 
+void ui::pie_menu::set_desired_size(void)
+{
+    this->composite::set_desired_size();
+
+    if (this->children.size() > 0)
+    {
+        int increment;
+        auto child = this->children.begin();
+        glm::ivec2 child_pos, child_size;
+        glm::ivec2 middle = this->dim / 4;
+
+        increment = M_PI * 2.0f / this->children.size();
+
+        for (int i = 0; i < this->children.size(); ++i, ++child)
+        {
+            float angle = increment * (i + 0.5);
+
+            /* Reposition each child to be in the middle of its
+             * sector.
+             */
+            (*child)->get(ui::element::size, ui::size::all, &child_size);
+            child_pos.x = (int)truncf((float)middle.x * cos(angle))
+                + this->pos.x - (child_size.x / 2);
+            child_pos.y = (int)truncf((float)middle.y * sin(angle))
+                + this->pos.y - (child_size.y / 2);
+            (*child)->set(ui::element::position, ui::position::all, &child_pos);
+        }
+    }
+}
+
 ui::vertex_buffer *ui::pie_menu::generate_points(void)
 {
     glm::vec2 pixel_sz;
@@ -147,29 +177,15 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 
     if (this->children.size() > 0)
     {
-        auto child = this->children.begin();
-        glm::ivec2 middle = this->dim / 4;
-        glm::ivec2 child_pos, child_size;
         int increment = M_PI * 2.0f / this->children.size();
 
-        for (int i = 0; i < this->children.size(); ++i, ++child)
+        for (int i = 0; i < this->children.size(); ++i)
         {
             float angle = increment * i;
 
             pct = m3.x / m0.x;
             vb->generate_ellipse_divider(center, m0, pct, angle,
                                          this->foreground);
-
-            /* Reposition each child to be in the middle of its
-             * sector.
-             */
-            angle += increment / 2.0f;
-            (*child)->get(ui::element::size, ui::size::all, &child_size);
-            child_pos.x = (int)truncf((float)middle.x * cos(angle))
-                + this->pos.x - (child_size.x / 2);
-            child_pos.y = (int)truncf((float)middle.y * sin(angle))
-                + this->pos.y - (child_size.y / 2);
-            (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
     }
 
