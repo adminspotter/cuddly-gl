@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2017, 08:35:35 tquirk
+ *   last updated 30 Oct 2017, 08:20:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -142,6 +142,7 @@ void ui::manager::set_desired_size(void)
         if (max_pt.y > this->dim.y)
             this->dim.y = max_pt.y;
     }
+    this->dirty = false;
     this->regenerate_search_tree();
     this->populate_buffers();
 }

@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Oct 2017, 09:43:16 tquirk
+ *   last updated 30 Oct 2017, 09:19:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -128,6 +128,7 @@ void ui::pie_menu::set_desired_size(void)
             (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
     }
+    this->dirty = false;
 }
 
 ui::vertex_buffer *ui::pie_menu::generate_points(void)
