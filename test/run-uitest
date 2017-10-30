@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 7;
+use Test::More 'tests' => 12;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -29,8 +29,17 @@ sub interact_with_button
 {
     my $test = 'button';
 
-    my $status = ClickWindow($uitest, 60, 185, M_BTN1);
-    ok($status, "$test: clicked button 1");
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    my $status = MoveMouseAbs($x + 60, $y + 185);
+    ok($status, "$test: moved mouse to right spot");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: pressed button 1");
+    $status = MoveMouseAbs($x + 100, $y + 185);
+    ok($status, "$test: moved mouse again");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: released button 1");
 }
 
 sub interact_with_row_column
