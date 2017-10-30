@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:15:01 tquirk
+ *   last updated 30 Oct 2017, 09:28:25 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -100,6 +100,38 @@ void ui::pie_menu::hide(ui::active *a, void *call, void *client)
     }
 }
 
+void ui::pie_menu::set_desired_size(void)
+{
+    this->composite::set_desired_size();
+
+    if (this->children.size() > 0)
+    {
+        float increment;
+        auto child = this->children.begin();
+        glm::ivec2 child_pos, child_size;
+        glm::ivec2 middle = this->dim / 4;
+
+        increment = M_PI * 2.0f / this->children.size();
+
+        for (int i = 0; i < this->children.size(); ++i, ++child)
+        {
+            float angle = increment * (i + 0.5);
+
+            /* Reposition each child to be in the middle of its
+             * sector.
+             */
+            (*child)->get(ui::element::size, ui::size::all, &child_size);
+            child_pos.x = (int)truncf((float)middle.x * cos(angle))
+                - (child_size.x / 2);
+            child_pos.y = (int)truncf((float)middle.y * sin(angle))
+                - (child_size.y / 2);
+            (*child)->set(ui::element::position, ui::position::all, &child_pos);
+        }
+    }
+    this->dirty = false;
+    this->populate_buffers();
+}
+
 ui::vertex_buffer *ui::pie_menu::generate_points(void)
 {
     glm::vec2 pixel_sz;
@@ -147,29 +179,15 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 
     if (this->children.size() > 0)
     {
-        auto child = this->children.begin();
-        glm::ivec2 middle = this->dim / 4;
-        glm::ivec2 child_pos, child_size;
-        int increment = M_PI * 2.0f / this->children.size();
+        float increment = M_PI * 2.0f / this->children.size();
 
-        for (int i = 0; i < this->children.size(); ++i, ++child)
+        for (int i = 0; i < this->children.size(); ++i)
         {
             float angle = increment * i;
 
             pct = m3.x / m0.x;
             vb->generate_ellipse_divider(center, m0, pct, angle,
                                          this->foreground);
-
-            /* Reposition each child to be in the middle of its
-             * sector.
-             */
-            angle += increment / 2.0f;
-            (*child)->get(ui::element::size, ui::size::all, &child_size);
-            child_pos.x = (int)truncf((float)middle.x * cos(angle))
-                + this->pos.x - (child_size.x / 2);
-            child_pos.y = (int)truncf((float)middle.y * sin(angle))
-                + this->pos.y - (child_size.y / 2);
-            (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
     }
 
@@ -179,15 +197,14 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), ui::active::active(w, h), ui::rect(w, h)
 {
-    ui::active *a = dynamic_cast<ui::active *>(c);
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
     this->visible = false;
 
-    if (a != NULL)
+    if (c != NULL)
     {
-        a->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        c->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+        c->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     }
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
@@ -196,12 +213,14 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
 
 ui::pie_menu::~pie_menu()
 {
-    ui::active *a;
-
-    if ((a = dynamic_cast<ui::active *>(this->composite::parent)) != NULL)
+    if (this->composite::parent != NULL)
     {
-        a->remove_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->remove_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        this->composite::parent->remove_callback(ui::callback::btn_down,
+                                                 ui::pie_menu::show,
+                                                 this);
+        this->composite::parent->remove_callback(ui::callback::btn_up,
+                                                 ui::pie_menu::hide,
+                                                 this);
     }
 }
 

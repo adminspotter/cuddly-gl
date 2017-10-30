@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Feb 2017, 09:25:12 tquirk
+ *   last updated 26 Oct 2017, 08:48:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -46,6 +46,8 @@ namespace ui
 
         static void show(active *, void *, void *);
         static void hide(active *, void *, void *);
+
+        virtual void set_desired_size(void) override;
 
         virtual vertex_buffer *generate_points(void) override;
 
