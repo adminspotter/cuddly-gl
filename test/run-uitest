@@ -52,6 +52,13 @@ sub interact_with_row_column
     $status = ClickWindow($uitest, 521, 36, M_BTN1);
     ok($status, "$test: re-reoriented row-column 1");
 }
+sub interact_with_pie_menu
+{
+    my $test = 'pie menu';
+
+    my $status = ClickWindow($uitest, 350, 300, M_BTN1);
+    ok($status, "$test: popped up pie menu");
+}
 
 sub close_window
 {
@@ -72,4 +79,5 @@ run_program();
 BAIL_OUT("no window created, can't test anything else") if !$uitest;
 interact_with_button();
 interact_with_row_column();
+interact_with_pie_menu();
 close_window();
