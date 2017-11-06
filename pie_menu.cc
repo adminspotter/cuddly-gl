@@ -266,6 +266,30 @@ void ui::pie_menu::set(GLuint e, GLuint t, void *v)
         this->manager::set(e, t, v);
 }
 
+void ui::pie_menu::mouse_btn_callback(ui::btn_call_data& call_data)
+{
+    GLuint which_list = (call_data.state == ui::mouse::up
+                         ? ui::callback::btn_up
+                         : ui::callback::btn_down);
+    int which_sector = this->which_sector(call_data.location);
+
+    if (which_sector != -1)
+    {
+        /* There's no index operator for the std::list, which is how our
+         * children are held, so we'll have to sort of fake one.
+         */
+        std::list<ui::widget *>::iterator child = this->children.begin();
+        for (int i = 0; i < which_sector; ++i, ++child)
+            ;
+        (*child)->call_callbacks(which_list, &call_data);
+    }
+
+    /* We'll have the hide callback in our list, which is likely
+     * appropriate.
+     */
+    this->call_callbacks(which_list, &call_data);
+}
+
 void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     if (this->visible)
