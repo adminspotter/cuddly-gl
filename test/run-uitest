@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 13;
+use Test::More 'tests' => 18;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -56,8 +56,17 @@ sub interact_with_pie_menu
 {
     my $test = 'pie menu';
 
-    my $status = ClickWindow($uitest, 350, 300, M_BTN1);
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    my $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot");
+    $status = PressMouseButton(M_BTN1);
     ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 375, $y + 335);
+    ok($status, "$test: moved into sector 1");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
 }
 
 sub close_window
