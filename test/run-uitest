@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 18;
+use Test::More 'tests' => 30;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -65,6 +65,33 @@ sub interact_with_pie_menu
     ok($status, "$test: popped up pie menu");
     $status = MoveMouseAbs($x + 375, $y + 335);
     ok($status, "$test: moved into sector 1");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot again");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 375, $y + 285);
+    ok($status, "$test: moved into sector 6");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot yet again");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 350, $y + 299);
+    ok($status, "$test: moved inside pie menu");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot once more");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 251, $y + 240);
+    ok($status, "$test: moved outside pie menu");
     $status = ReleaseMouseButton(M_BTN1);
     ok($status, "$test: popped down pie menu");
 }
