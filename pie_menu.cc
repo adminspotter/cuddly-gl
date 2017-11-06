@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Nov 2017, 08:50:47 tquirk
+ *   last updated 06 Nov 2017, 08:24:39 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -32,6 +32,7 @@
 #include <algorithm>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/detail/func_geometric.hpp>
 
 #include "ui_defs.h"
 #include "ui.h"
@@ -199,6 +200,25 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
     }
 
     return vb;
+}
+
+int ui::pie_menu::which_sector(glm::ivec2& loc)
+{
+    glm::vec2 sector_pos(loc.x - (this->dim.x / 2), loc.y - (this->dim.y / 2));
+    float length = glm::length(sector_pos);
+    float angle = atan2(sector_pos.y, sector_pos.x);
+    glm::vec2 radius(this->dim.x / 2.0f * cosf(angle),
+                     this->dim.y / 2.0f * sinf(angle));
+    float outer_length = glm::length(radius);
+
+    if (length < outer_length * INNER_PCT || length > outer_length)
+        return -1;
+
+    if (angle < 0.0f)
+        angle += TWO_PI;
+    float increment = TWO_PI / this->children.size();
+
+    return truncf(angle / increment);
 }
 
 ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
