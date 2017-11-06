@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Nov 2017, 08:24:39 tquirk
+ *   last updated 06 Nov 2017, 08:39:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -110,13 +110,11 @@ void ui::pie_menu::set_desired_size(void)
 
     if (this->children.size() > 0)
     {
-        float increment;
+        float increment = TWO_PI / this->children.size();
         auto child = this->children.begin();
         glm::ivec2 child_pos, child_size;
         glm::ivec2 middle = this->dim / 4;
         glm::ivec2 center = this->dim / 2;
-
-        increment = TWO_PI / this->children.size();
 
         for (int i = 0; i < this->children.size(); ++i, ++child)
         {
