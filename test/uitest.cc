@@ -31,6 +31,7 @@ void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
+void menu_callback(ui::active *, void *, void *);
 void reorient_callback(ui::active *, void *, void *);
 void print_sizes(ui::active *, void *, void *);
 
@@ -251,8 +252,7 @@ int main(int argc, char **argv)
         std::string str = s.str();
         pul->set_va(ui::element::font, ui::ownership::shared, tiny_font,
                     ui::element::string, 0, &str, 0);
-        pul->add_callback(ui::callback::enter, enter_callback, NULL);
-        pul->add_callback(ui::callback::leave, leave_callback, NULL);
+        pul->add_callback(ui::callback::btn_up, menu_callback, (void *)q);
     }
     std::cout << "creating multi_label" << std::endl;
     ml1 = new ui::multi_label(ctx, 200, 10);
@@ -328,6 +328,11 @@ void enter_callback(ui::active *a, void *call, void *client)
 void leave_callback(ui::active *a, void *call, void *client)
 {
     std::cout << "out, baby!" << std::endl;
+}
+
+void menu_callback(ui::active *a, void *call, void *client)
+{
+    std::cout << "menu sector " << (int64_t)client << std::endl;
 }
 
 void reorient_callback(ui::active *a, void *call, void *client)
