@@ -23,11 +23,6 @@
  * This file contains the method definitions for the popup menu.  Our
  * long-desired pie menus are finally implemented!
  *
- * When not visible, the menu lives outside of the screen coordinates,
- * so that it doesn't get found when its parent searches its area.
- * Otherwise, it turns into a dead zone which is the size of the
- * menu's bounding box.
- *
  * Things to do
  *
  */
