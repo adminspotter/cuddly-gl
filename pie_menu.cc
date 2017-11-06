@@ -42,6 +42,8 @@
 #include "ui.h"
 #include "pie_menu.h"
 
+#define INNER_PCT  0.1f
+
 int ui::pie_menu::get_popup(GLuint t, void *v)
 {
     int ret = 0;
@@ -142,7 +144,7 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
     glm::vec2 pixel_sz;
     glm::vec2 center(-1.0f, 1.0f), m0, m3;
     glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
-    float inner_pct = 0.1f, pct;
+    float inner_pct = INNER_PCT, pct;
     int count = std::max(this->dim.x / 3, 15);
 
     /* We need room for 6 sets of points - inner and outer edges, plus
