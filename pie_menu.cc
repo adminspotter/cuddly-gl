@@ -37,6 +37,8 @@
 #include "ui.h"
 #include "pie_menu.h"
 
+#define TWO_PI  M_PI * 2.0f
+
 #define INNER_PCT  0.1f
 
 int ui::pie_menu::get_popup(GLuint t, void *v)
@@ -113,7 +115,7 @@ void ui::pie_menu::set_desired_size(void)
         glm::ivec2 middle = this->dim / 4;
         glm::ivec2 center = this->dim / 2;
 
-        increment = M_PI * 2.0f / this->children.size();
+        increment = TWO_PI / this->children.size();
 
         for (int i = 0; i < this->children.size(); ++i, ++child)
         {
@@ -184,7 +186,7 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 
     if (this->children.size() > 0)
     {
-        float increment = M_PI * 2.0f / this->children.size();
+        float increment = TWO_PI / this->children.size();
 
         for (int i = 0; i < this->children.size(); ++i)
         {
