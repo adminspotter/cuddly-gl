@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Oct 2017, 09:28:25 tquirk
+ *   last updated 05 Nov 2017, 08:50:47 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -79,8 +79,12 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
     {
         bool t = true;
-        pm->set_va(ui::element::position, ui::position::all, &(bcd->location),
+        glm::ivec2 new_loc(bcd->location);
+        new_loc.x -= pm->dim.x / 2;
+        new_loc.y -= pm->dim.y / 2;
+        pm->set_va(ui::element::position, ui::position::all, &new_loc,
                    ui::element::state, ui::state::visible, &t, 0);
+        pm->composite::parent->move_child(pm);
     }
 }
 
@@ -110,6 +114,7 @@ void ui::pie_menu::set_desired_size(void)
         auto child = this->children.begin();
         glm::ivec2 child_pos, child_size;
         glm::ivec2 middle = this->dim / 4;
+        glm::ivec2 center = this->dim / 2;
 
         increment = M_PI * 2.0f / this->children.size();
 
@@ -121,9 +126,9 @@ void ui::pie_menu::set_desired_size(void)
              * sector.
              */
             (*child)->get(ui::element::size, ui::size::all, &child_size);
-            child_pos.x = (int)truncf((float)middle.x * cos(angle))
+            child_pos.x = center.x + (int)truncf((float)middle.x * cos(angle))
                 - (child_size.x / 2);
-            child_pos.y = (int)truncf((float)middle.y * sin(angle))
+            child_pos.y = center.y + (int)truncf((float)middle.y * sin(angle))
                 - (child_size.y / 2);
             (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
@@ -155,6 +160,9 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
                                  &pixel_sz);
     radius.x *= pixel_sz.x;
     radius.y *= pixel_sz.y;
+    center.x += this->dim.x / 2.0 * pixel_sz.x;
+    center.y -= this->dim.y / 2.0 * pixel_sz.y;
+
     m0 = radius - glm::vec2(this->margin[0] * pixel_sz.x,
                             this->margin[0] * pixel_sz.y);
     m3 = (radius * inner_pct)
