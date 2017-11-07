@@ -215,8 +215,6 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos,
                ui::element::child_spacing, ui::size::width, &spacing,
                ui::element::child_spacing, ui::size::height, &spacing, 0);
-    r1->add_callback(ui::callback::enter, enter_callback, NULL);
-    r1->add_callback(ui::callback::leave, leave_callback, NULL);
     r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
@@ -253,6 +251,8 @@ int main(int argc, char **argv)
         pul->set_va(ui::element::font, ui::ownership::shared, tiny_font,
                     ui::element::string, 0, &str, 0);
         pul->add_callback(ui::callback::btn_up, menu_callback, (void *)q);
+        pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
+        pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
     }
     std::cout << "creating multi_label" << std::endl;
     ml1 = new ui::multi_label(ctx, 200, 10);
@@ -321,13 +321,13 @@ void close_key_callback(ui::active *a, void *call, void *client)
 /* ARGSUSED */
 void enter_callback(ui::active *a, void *call, void *client)
 {
-    std::cout << "we're in!" << std::endl;
+    std::cout << "we're in " << (intptr_t)client << '!' << std::endl;
 }
 
 /* ARGSUSED */
 void leave_callback(ui::active *a, void *call, void *client)
 {
-    std::cout << "out, baby!" << std::endl;
+    std::cout << "out of " << (intptr_t)client << ", baby!" << std::endl;
 }
 
 void menu_callback(ui::active *a, void *call, void *client)
