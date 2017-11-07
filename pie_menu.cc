@@ -280,6 +280,35 @@ void ui::pie_menu::set(GLuint e, GLuint t, void *v)
         this->manager::set(e, t, v);
 }
 
+void ui::pie_menu::mouse_pos_callback(glm::ivec2& pos)
+{
+    ui::mouse_call_data call_data = {pos};
+    ui::widget *w = this->which_child(pos);
+
+    if (w != NULL)
+    {
+        if (this->old_child != w)
+        {
+            if (this->old_child != NULL)
+                this->old_child->call_callbacks(ui::callback::leave,
+                                                &call_data);
+            w->call_callbacks(ui::callback::enter, &call_data);
+        }
+        w->call_callbacks(ui::callback::motion, &call_data);
+    }
+    else if (this->old_child != NULL)
+        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+
+    /* The composite's callbacks all search again at the end of
+     * execution, in case the widget we worked on disappeared or was
+     * deleted during the callback.  A menu which changes while you're
+     * using it would be strange, and searching the pie menu is kind
+     * of expensive, so we won't do that here.
+     */
+    this->old_child = w;
+    this->old_pos = pos;
+}
+
 void ui::pie_menu::mouse_btn_callback(ui::btn_call_data& call_data)
 {
     GLuint which = (call_data.state == ui::mouse::up

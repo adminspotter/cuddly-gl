@@ -61,6 +61,7 @@ namespace ui
         virtual int get(GLuint, GLuint, void *) override;
         virtual void set(GLuint, GLuint, void *) override;
 
+        virtual void mouse_pos_callback(glm::ivec2&) override;
         virtual void mouse_btn_callback(ui::btn_call_data&) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
