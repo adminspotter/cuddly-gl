@@ -242,7 +242,7 @@ int main(int argc, char **argv)
                 ui::element::margin, ui::side::outer, &border,
                 ui::element::border, ui::side::inner, &border,
                 ui::element::popup, ui::popup::button, &button, 0);
-    for (int q = 0; q < 7; ++q)
+    for (intptr_t q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
@@ -332,7 +332,7 @@ void leave_callback(ui::active *a, void *call, void *client)
 
 void menu_callback(ui::active *a, void *call, void *client)
 {
-    std::cout << "menu sector " << (int64_t)client << std::endl;
+    std::cout << "menu sector " << (intptr_t)client << std::endl;
 }
 
 void reorient_callback(ui::active *a, void *call, void *client)
