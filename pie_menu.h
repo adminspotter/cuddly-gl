@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Nov 2017, 08:46:52 tquirk
+ *   last updated 07 Nov 2017, 08:23:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -52,6 +52,7 @@ namespace ui
         virtual vertex_buffer *generate_points(void) override;
 
         int which_sector(glm::ivec2&);
+        ui::widget *which_child(glm::ivec2&);
 
       public:
         pie_menu(composite *, GLuint, GLuint);
