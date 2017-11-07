@@ -3,27 +3,119 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 4;
+use Test::More 'tests' => 31;
 
-use X11::GUITest qw(SendKeys SetInputFocus StartApp
-                    WaitSeconds WaitWindowClose WaitWindowViewable);
+use X11::GUITest qw(:ALL :CONST);
 
+my $uitest;
+my $screenshot_count = 0;
+
+sub take_screenshot
+{
+    system("xwd -name ui-test -out uitest${screenshot_count}.xwd");
+    ++$screenshot_count;
+}
+
+sub run_program
 {
     my $test = 'run program';
 
     StartApp('./uitest');
-    my ($uitest) = WaitWindowViewable('ui-test');
+    ($uitest) = WaitWindowViewable('ui-test');
     ok($uitest, "$test: found window");
+}
 
-    #system('xwd -name ui-test -out uitest.xwd');
+sub interact_with_button
+{
+    my $test = 'button';
 
-    my $status = SetInputFocus($uitest);
-    ok($status, "$test: set input focus");
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    my $status = MoveMouseAbs($x + 60, $y + 185);
+    ok($status, "$test: moved mouse to right spot");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: pressed button 1");
+    $status = MoveMouseAbs($x + 100, $y + 185);
+    ok($status, "$test: moved mouse again");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: released button 1");
+}
 
-    WaitSeconds(0.5);
+sub interact_with_row_column
+{
+    my $test = 'row-column';
+
+    my $status = ClickWindow($uitest, 521, 36, M_BTN1);
+    ok($status, "$test: reoriented row-column 1");
+
+    $status = ClickWindow($uitest, 521, 36, M_BTN1);
+    ok($status, "$test: re-reoriented row-column 1");
+}
+sub interact_with_pie_menu
+{
+    my $test = 'pie menu';
+
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    my $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 375, $y + 335);
+    ok($status, "$test: moved into sector 0");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot again");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 375, $y + 335);
+    ok($status, "$test: moved into sector 0");
+    $status = MoveMouseAbs($x + 375, $y + 285);
+    ok($status, "$test: moved into sector 6");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot yet again");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 350, $y + 299);
+    ok($status, "$test: moved inside pie menu");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+
+    $status = MoveMouseAbs($x + 350, $y + 300);
+    ok($status, "$test: moved mouse to right spot once more");
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: popped up pie menu");
+    $status = MoveMouseAbs($x + 251, $y + 240);
+    ok($status, "$test: moved outside pie menu");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: popped down pie menu");
+}
+
+sub close_window
+{
+    my $test = 'close';
+
+    my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
+    my $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
+    ok($status, "$test: moved mouse to upper left");
+
     $status = SendKeys('{ESC}');
     ok($status, "$test: escape key sent");
 
     $status = WaitWindowClose($uitest);
     ok($status, "$test: window is gone");
 }
+
+run_program();
+BAIL_OUT("no window created, can't test anything else") if !$uitest;
+interact_with_button();
+interact_with_row_column();
+interact_with_pie_menu();
+close_window();

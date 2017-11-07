@@ -31,6 +31,8 @@ void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
+void menu_callback(ui::active *, void *, void *);
+void reorient_callback(ui::active *, void *, void *);
 void print_sizes(ui::active *, void *, void *);
 
 ui::context *ctx;
@@ -198,7 +200,7 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx, 10, 10);
-    xpos = 600;
+    xpos = 520;
     ypos = 35;
     border = 1;
     gridx = 1;
@@ -213,8 +215,7 @@ int main(int argc, char **argv)
                ui::element::position, ui::position::y, &ypos,
                ui::element::child_spacing, ui::size::width, &spacing,
                ui::element::child_spacing, ui::size::height, &spacing, 0);
-    r1->add_callback(ui::callback::enter, enter_callback, NULL);
-    r1->add_callback(ui::callback::leave, leave_callback, NULL);
+    r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
@@ -239,7 +240,7 @@ int main(int argc, char **argv)
                 ui::element::margin, ui::side::outer, &border,
                 ui::element::border, ui::side::inner, &border,
                 ui::element::popup, ui::popup::button, &button, 0);
-    for (int q = 0; q < 7; ++q)
+    for (intptr_t q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
@@ -249,8 +250,9 @@ int main(int argc, char **argv)
         std::string str = s.str();
         pul->set_va(ui::element::font, ui::ownership::shared, tiny_font,
                     ui::element::string, 0, &str, 0);
-        pul->add_callback(ui::callback::enter, enter_callback, NULL);
-        pul->add_callback(ui::callback::leave, leave_callback, NULL);
+        pul->add_callback(ui::callback::btn_up, menu_callback, (void *)q);
+        pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
+        pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
     }
     std::cout << "creating multi_label" << std::endl;
     ml1 = new ui::multi_label(ctx, 200, 10);
@@ -317,19 +319,46 @@ void close_key_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void enter_callback(ui::active *a, void *client, void *call)
+void enter_callback(ui::active *a, void *call, void *client)
 {
-    std::cout << "we're in!" << std::endl;
+    std::cout << "we're in " << (intptr_t)client << '!' << std::endl;
 }
 
 /* ARGSUSED */
-void leave_callback(ui::active *a, void *client, void *call)
+void leave_callback(ui::active *a, void *call, void *client)
 {
-    std::cout << "out, baby!" << std::endl;
+    std::cout << "out of " << (intptr_t)client << ", baby!" << std::endl;
+}
+
+void menu_callback(ui::active *a, void *call, void *client)
+{
+    std::cout << "menu sector " << (intptr_t)client << std::endl;
+}
+
+void reorient_callback(ui::active *a, void *call, void *client)
+{
+    ui::row_column *r = dynamic_cast<ui::row_column *>(a);
+    ui::btn_call_data *call_data = (ui::btn_call_data *)call;
+
+    if (r != NULL && call_data->button == ui::mouse::button0)
+    {
+        static glm::ivec2 grid(2, 4);
+        static GLuint orient = ui::order::column;
+        glm::ivec2 old_grid;
+        GLuint old_orient;
+
+        r->get_va(ui::element::size, ui::size::grid, &old_grid,
+                  ui::element::order, 0, &old_orient, 0);
+        r->set_va(ui::element::size, ui::size::grid, &grid,
+                  ui::element::order, 0, &orient, 0);
+        r->manage_children();
+        grid = old_grid;
+        orient = old_orient;
+    }
 }
 
 /* ARGSUSED */
-void print_sizes(ui::active *a, void *client, void *call)
+void print_sizes(ui::active *a, void *call, void *client)
 {
     glm::ivec2 pos, size;
     GLuint border[4], margin[4];

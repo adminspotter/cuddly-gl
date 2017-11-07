@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:15:01 tquirk
+ *   last updated 07 Nov 2017, 08:31:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -23,11 +23,6 @@
  * This file contains the method definitions for the popup menu.  Our
  * long-desired pie menus are finally implemented!
  *
- * When not visible, the menu lives outside of the screen coordinates,
- * so that it doesn't get found when its parent searches its area.
- * Otherwise, it turns into a dead zone which is the size of the
- * menu's bounding box.
- *
  * Things to do
  *
  */
@@ -37,10 +32,15 @@
 #include <algorithm>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/detail/func_geometric.hpp>
 
 #include "ui_defs.h"
 #include "ui.h"
 #include "pie_menu.h"
+
+#define TWO_PI  M_PI * 2.0f
+
+#define INNER_PCT  0.1f
 
 int ui::pie_menu::get_popup(GLuint t, void *v)
 {
@@ -79,8 +79,12 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
     {
         bool t = true;
-        pm->set_va(ui::element::position, ui::position::all, &(bcd->location),
+        glm::ivec2 new_loc(bcd->location);
+        new_loc.x -= pm->dim.x / 2;
+        new_loc.y -= pm->dim.y / 2;
+        pm->set_va(ui::element::position, ui::position::all, &new_loc,
                    ui::element::state, ui::state::visible, &t, 0);
+        pm->composite::parent->move_child(pm);
     }
 }
 
@@ -100,12 +104,43 @@ void ui::pie_menu::hide(ui::active *a, void *call, void *client)
     }
 }
 
+void ui::pie_menu::set_desired_size(void)
+{
+    this->composite::set_desired_size();
+
+    if (this->children.size() > 0)
+    {
+        float increment = TWO_PI / this->children.size();
+        auto child = this->children.begin();
+        glm::ivec2 child_pos, child_size;
+        glm::ivec2 middle = this->dim / 4;
+        glm::ivec2 center = this->dim / 2;
+
+        for (int i = 0; i < this->children.size(); ++i, ++child)
+        {
+            float angle = increment * (i + 0.5);
+
+            /* Reposition each child to be in the middle of its
+             * sector.
+             */
+            (*child)->get(ui::element::size, ui::size::all, &child_size);
+            child_pos.x = center.x + (int)truncf((float)middle.x * cos(angle))
+                - (child_size.x / 2);
+            child_pos.y = center.y + (int)truncf((float)middle.y * sin(angle))
+                - (child_size.y / 2);
+            (*child)->set(ui::element::position, ui::position::all, &child_pos);
+        }
+    }
+    this->dirty = false;
+    this->populate_buffers();
+}
+
 ui::vertex_buffer *ui::pie_menu::generate_points(void)
 {
     glm::vec2 pixel_sz;
     glm::vec2 center(-1.0f, 1.0f), m0, m3;
     glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
-    float inner_pct = 0.1f, pct;
+    float inner_pct = INNER_PCT, pct;
     int count = std::max(this->dim.x / 3, 15);
 
     /* We need room for 6 sets of points - inner and outer edges, plus
@@ -123,6 +158,9 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
                                  &pixel_sz);
     radius.x *= pixel_sz.x;
     radius.y *= pixel_sz.y;
+    center.x += this->dim.x / 2.0 * pixel_sz.x;
+    center.y -= this->dim.y / 2.0 * pixel_sz.y;
+
     m0 = radius - glm::vec2(this->margin[0] * pixel_sz.x,
                             this->margin[0] * pixel_sz.y);
     m3 = (radius * inner_pct)
@@ -147,47 +185,67 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 
     if (this->children.size() > 0)
     {
-        auto child = this->children.begin();
-        glm::ivec2 middle = this->dim / 4;
-        glm::ivec2 child_pos, child_size;
-        int increment = M_PI * 2.0f / this->children.size();
+        float increment = TWO_PI / this->children.size();
 
-        for (int i = 0; i < this->children.size(); ++i, ++child)
+        for (int i = 0; i < this->children.size(); ++i)
         {
             float angle = increment * i;
 
             pct = m3.x / m0.x;
             vb->generate_ellipse_divider(center, m0, pct, angle,
                                          this->foreground);
-
-            /* Reposition each child to be in the middle of its
-             * sector.
-             */
-            angle += increment / 2.0f;
-            (*child)->get(ui::element::size, ui::size::all, &child_size);
-            child_pos.x = (int)truncf((float)middle.x * cos(angle))
-                + this->pos.x - (child_size.x / 2);
-            child_pos.y = (int)truncf((float)middle.y * sin(angle))
-                + this->pos.y - (child_size.y / 2);
-            (*child)->set(ui::element::position, ui::position::all, &child_pos);
         }
     }
 
     return vb;
 }
 
+int ui::pie_menu::which_sector(glm::ivec2& loc)
+{
+    glm::vec2 sector_pos(loc.x - (this->dim.x / 2), loc.y - (this->dim.y / 2));
+    float length = glm::length(sector_pos);
+    float angle = atan2(sector_pos.y, sector_pos.x);
+    glm::vec2 radius(this->dim.x / 2.0f * cosf(angle),
+                     this->dim.y / 2.0f * sinf(angle));
+    float outer_length = glm::length(radius);
+
+    if (length < outer_length * INNER_PCT || length > outer_length)
+        return -1;
+
+    if (angle < 0.0f)
+        angle += TWO_PI;
+    float increment = TWO_PI / this->children.size();
+
+    return truncf(angle / increment);
+}
+
+ui::widget *ui::pie_menu::which_child(glm::ivec2& loc)
+{
+    int sector = this->which_sector(loc);
+
+    if (sector == -1)
+        return NULL;
+
+    /* There's no index operator for the std::list, which is how our
+     * children are held, so we'll have to sort of fake one.
+     */
+    std::list<ui::widget *>::iterator child = this->children.begin();
+    for (int i = 0; i < sector; ++i, ++child)
+        ;
+    return (*child);
+}
+
 ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     : ui::manager::manager(c, w, h), ui::active::active(w, h), ui::rect(w, h)
 {
-    ui::active *a = dynamic_cast<ui::active *>(c);
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
     this->visible = false;
 
-    if (a != NULL)
+    if (c != NULL)
     {
-        a->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        c->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+        c->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     }
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
@@ -196,12 +254,14 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
 
 ui::pie_menu::~pie_menu()
 {
-    ui::active *a;
-
-    if ((a = dynamic_cast<ui::active *>(this->composite::parent)) != NULL)
+    if (this->composite::parent != NULL)
     {
-        a->remove_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        a->remove_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
+        this->composite::parent->remove_callback(ui::callback::btn_down,
+                                                 ui::pie_menu::show,
+                                                 this);
+        this->composite::parent->remove_callback(ui::callback::btn_up,
+                                                 ui::pie_menu::hide,
+                                                 this);
     }
 }
 
@@ -218,6 +278,51 @@ void ui::pie_menu::set(GLuint e, GLuint t, void *v)
         this->set_popup(t, v);
     else
         this->manager::set(e, t, v);
+}
+
+void ui::pie_menu::mouse_pos_callback(glm::ivec2& pos)
+{
+    ui::mouse_call_data call_data = {pos};
+    ui::widget *w = this->which_child(pos);
+
+    if (w != NULL)
+    {
+        if (this->old_child != w)
+        {
+            if (this->old_child != NULL)
+                this->old_child->call_callbacks(ui::callback::leave,
+                                                &call_data);
+            w->call_callbacks(ui::callback::enter, &call_data);
+        }
+        w->call_callbacks(ui::callback::motion, &call_data);
+    }
+    else if (this->old_child != NULL)
+        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+
+    /* The composite's callbacks all search again at the end of
+     * execution, in case the widget we worked on disappeared or was
+     * deleted during the callback.  A menu which changes while you're
+     * using it would be strange, and searching the pie menu is kind
+     * of expensive, so we won't do that here.
+     */
+    this->old_child = w;
+    this->old_pos = pos;
+}
+
+void ui::pie_menu::mouse_btn_callback(ui::btn_call_data& call_data)
+{
+    GLuint which = (call_data.state == ui::mouse::up
+                    ? ui::callback::btn_up
+                    : ui::callback::btn_down);
+    ui::widget *w = this->which_child(call_data.location);
+
+    if (w != NULL)
+        w->call_callbacks(which, &call_data);
+
+    /* We'll have the hide callback in our list, which is likely
+     * appropriate.
+     */
+    this->call_callbacks(which, &call_data);
 }
 
 void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
