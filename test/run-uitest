@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 31;
+use Test::More 'tests' => 42;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -52,6 +52,34 @@ sub interact_with_row_column
     $status = ClickWindow($uitest, 521, 36, M_BTN1);
     ok($status, "$test: re-reoriented row-column 1");
 }
+
+sub interact_with_text_field
+{
+    my $test = 'text field';
+
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    my $status = MoveMouseAbs($x + 265, $y + 140);
+    ok($status, "$test: moved mouse to text field");
+    $status = SendKeys('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    ok($status, "$test: lots of text");
+    $status = SendKeys('{LEF}' x 62);
+    ok($status, "$test: lots of left arrows");
+    $status = SendKeys('{RIG}' x 62);
+    ok($status, "$test: lots of right arrows");
+    $status = SendKeys('{HOM}');
+    ok($status, "$test: home key");
+    $status = SendKeys('{END}');
+    ok($status, "$test: end key");
+    $status = SendKeys('{LEF}' x 20 . '{BAC}' x 30 . '{DEL}' x 5);
+    ok($status, "$test: deleted stuff in the middle");
+    $status = SendKeys('{LEF}' x 20);
+    ok($status, "$test: beginning of string");
+    $status = SendKeys('some more text');
+    ok($status, "$test: inserted text at beginning");
+}
+
 sub interact_with_pie_menu
 {
     my $test = 'pie menu';
@@ -117,5 +145,6 @@ run_program();
 BAIL_OUT("no window created, can't test anything else") if !$uitest;
 interact_with_button();
 interact_with_row_column();
+interact_with_text_field();
 interact_with_pie_menu();
 close_window();

@@ -507,12 +507,10 @@ controlled via the OpenGL rendering program contained in
 
 * `ui::element::attribute`
   * `ui::attribute::position` (`GLuint`)
-  * `ui::attribute::normal` (`GLuint`)
   * `ui::attribute::color` (`GLuint`)
   * `ui::attribute::texture` (`GLuint`)
   * `ui::attribute::use_text` (`GLuint`)
   * `ui::attribute::text_bgnd` (`GLuint`)
-  * `ui::attribute::translate` (`GLuint`)
 
 ###### Context inherited resources ######
 
