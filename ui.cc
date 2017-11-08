@@ -44,9 +44,6 @@ int ui::context::get_attribute(GLuint t, void *v)
       case ui::attribute::position:
         *((GLuint *)v) = this->pos_attr;
         break;
-      case ui::attribute::normal:
-        *((GLuint *)v) = this->norm_attr;
-        break;
       case ui::attribute::color:
         *((GLuint *)v) = this->color_attr;
         break;
@@ -73,7 +70,6 @@ ui::context::context(GLuint w, GLuint h)
     this->shader_pgm = create_program(vert_shader, 0, frag_shader, "fcolor");
     glUseProgram(this->shader_pgm);
     this->pos_attr = glGetAttribLocation(shader_pgm, "position");
-    this->norm_attr = glGetAttribLocation(shader_pgm, "normal");
     this->color_attr = glGetAttribLocation(shader_pgm, "color");
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
     this->use_text_uniform = glGetUniformLocation(shader_pgm, "use_text");

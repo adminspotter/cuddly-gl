@@ -93,8 +93,8 @@ namespace ui
 
     namespace attribute
     {
-        const GLuint position = 1, normal = 2, color = 3, texture = 4;
-        const GLuint use_text = 5, text_bgnd = 6;
+        const GLuint position = 1, color = 2, texture = 3;
+        const GLuint use_text = 4, text_bgnd = 5;
     }
 
     namespace side
