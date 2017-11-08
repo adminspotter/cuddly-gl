@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Oct 2017, 18:43:26 tquirk
+ *   last updated 08 Nov 2017, 06:47:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -58,9 +58,6 @@ int ui::context::get_attribute(GLuint t, void *v)
         break;
       case ui::attribute::text_bgnd:
         *((GLuint *)v) = this->text_bgnd_uniform;
-        break;
-      case ui::attribute::translate:
-        *((GLuint *)v) = this->translate_uniform;
         break;
       default: ret = 1; break;
     }
