@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 40;
+use Test::More 'tests' => 42;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -68,7 +68,11 @@ sub interact_with_text_field
     ok($status, "$test: lots of left arrows");
     $status = SendKeys('{RIG}' x 62);
     ok($status, "$test: lots of right arrows");
-    $status = SendKeys('{LEF}' x 20 . '{BAC}' x 30);
+    $status = SendKeys('{HOM}');
+    ok($status, "$test: home key");
+    $status = SendKeys('{END}');
+    ok($status, "$test: end key");
+    $status = SendKeys('{LEF}' x 20 . '{BAC}' x 30 . '{DEL}' x 5);
     ok($status, "$test: deleted stuff in the middle");
     $status = SendKeys('{LEF}' x 20);
     ok($status, "$test: beginning of string");
