@@ -76,4 +76,4 @@ methods.
 
 ## RELATED ##
 
-[ui::active](ui::active)(3)
+[ui::active](ui::active.md)(3)
