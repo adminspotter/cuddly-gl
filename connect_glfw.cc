@@ -98,10 +98,11 @@ void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
 
 void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
 {
-    int btn, act;
+    int btn, act, ui_mods;
 
     btn = glfw_mouse_button_map[button];
     act = glfw_mouse_action_map[action];
+    ui_mods = convert_glfw_mods(mods);
 
-    context->mouse_btn_callback(btn, act);
+    context->mouse_btn_callback(btn, act, ui_mods);
 }

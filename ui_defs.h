@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Nov 2017, 06:52:36 tquirk
+ *   last updated 13 Nov 2017, 06:52:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -49,6 +49,7 @@ namespace ui
         glm::ivec2 location;
         GLuint button;
         GLuint state;
+        GLuint mods;
     }
     btn_call_data;
 
