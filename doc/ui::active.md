@@ -12,6 +12,13 @@ ui::active
 
 ui::active *a = new ui::active(x, y);
 
+a->add_callback(ui::callback::enter, enter_callback, NULL);
+a->add_callback(ui::callback::leave, leave_callback, (void *)5);
+
+a->call_callbacks(ui::callback::btn_down, btn_call_data);
+
+a->remove_callback(ui::callback::enter, enter_callback, NULL);
+
 ui::to_until<Gluint, std::milli> expire(500);
 
 a->add_timeout(until, timeout_callback, NULL);
@@ -49,7 +56,15 @@ the TYPES section for individual event types.
 
 Callback functions also receive a *client_data* argument, which is an
 arbitrary piece of data provided when a function is added to a
-callback list.
+callback list.  The argument is kept in the list with the function
+pointer, and is passed verbatim to the callback function.  If the
+argument is a pointer itself, whatever is referenced by the pointer
+will be available at invocation time.
+
+Callback lists may contain any number of callbacks; the functions are
+called in order of addition.  A callback list may contain multiple
+invocations of the same function, with varying, or even the same,
+*client_data* arguments.
 
 ## TIMEOUTS ##
 
@@ -164,7 +179,24 @@ mappings to the underlying types, but with shorter names.
 
 * **remove_callback(list, func_ptr, client_data)**
 
+  Removes a callback to the provided `list` which has the provided
+  `client_data`.
+
+  If a given `func_ptr`/`client_data` pair are contained in a callback
+  list more than once, a call to `remove_callback` will remove the
+  *first* instance.
+
+  If no matching callback is found in a list, the list will be
+  unchanged.
+
 * **call_callbacks(list, call_data)**
+
+  Calls the callbacks in the provided `list`, passing `call_data` in
+  the second argument to each.  The `list` argument is an element from
+  the `ui::callback` namespace, and `call_data` is a `void *`.
+
+  This is the method which is used internally by the event-handling
+  mechanism to trigger a set of callbacks.
 
 * **add_timeout(until, func_ptr, client_data)**
 
