@@ -11,6 +11,15 @@ ui::active
 #include <active.h>
 
 ui::active *a = new ui::active(x, y);
+
+ui::to_until<Gluint, std::milli> expire(500);
+
+a->add_timeout(until, timeout_callback, NULL);
+
+a->call_timeout();
+
+a->add_timeout(until, timeout_callback, NULL);
+a->remove_timeout();
 ```
 
 ## DESCRIPTION ##
@@ -44,12 +53,14 @@ callback list.
 
 ## TIMEOUTS ##
 
-A *timeout* is an event that will occur at some point in the future.
-When setting a timeout, the `ui::active` takes the function to be
-executed, an argument to pass to the function, and the time delay
-until the function is executed.  Timeouts are **not** a hard realtime
-mechanism; any true realtime needs should be handled outside of the
-CuddlyGL toolkit.
+A *timeout* is an event that will occur after some interval.  When
+setting a timeout, the `ui::active` takes the function to be executed,
+an argument to pass to the function, and the time delay until the
+function is executed.  Timeouts are **not** a hard realtime mechanism;
+any true realtime needs should be handled outside of the CuddlyGL
+toolkit.  Timeouts are also **not** alarms.  They cause widgets to
+perform some action after an interval.  Alarms which go off at some
+arbitrary local time should also be handled outside the toolkit.
 
 Timeouts are handled internally to each widget, so each `ui::active`
 widget or subclass may have its own active timeout running
@@ -111,9 +122,33 @@ void timeout_func(ui::active *a, void *client_data)
   ```
 
 * `ui::to_time`
+
+  A typedef of `std::chrono::steady_clock`.  This is a monotonic clock
+  which will never be adjusted (for daylight savings, leap seconds,
+  etc.), so we can count on it being consistent, and providing us with
+  accurate intervals.
+
 * `ui::to_point`
+
+  A typedef of `std::chrono::time_point<std::chrono::steady_clock>`.
+  This is used internally to keep track of the expiration time of a
+  timeout.
+
 * `ui::to_until`
+
+  A typedef of `std::chrono::steady_clock::duration`.  It uses all the
+  same helper types (`std::chrono::milliseconds`, etc.), templates,
+  and operators as the underlying classes.  This type is used in the
+  time argument for setting a timeout.
+
 * `ui::zero_time`
+
+  A constant which represents epoch time 0.  The `ui::active` uses
+  this constant internally to denote that a timeout is not set.
+
+Most of the timeout-related typedefs are an effort to conquer the
+excessive verbosity of the `std::chrono` library.  They are all direct
+mappings to the underlying types, but with shorter names.
 
 ## METHODS ##
 
@@ -144,7 +179,17 @@ void timeout_func(ui::active *a, void *client_data)
 
 * **remove_timeout()**
 
+  Removes a pending timeout.  The function, client data, and time
+  interval are all cleared, and no function call is made.
+
 * **call_timeout()**
+
+  Calls the pending timeout.  The timeout data is cleared and the
+  function call to the configured callback is made.
+
+  This is the actual method that the timeout mechanism uses internally
+  to fire the timeout call, but in the general case, this method would
+  probably not be used very often in user code.
 
 * **get(type, subtype, obj_ptr)**
 * **set(type, subtype, obj_ptr)**
