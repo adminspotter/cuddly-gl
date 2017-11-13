@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Oct 2017, 09:05:05 tquirk
+ *   last updated 13 Nov 2017, 06:59:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -260,9 +260,10 @@ void ui::composite::mouse_pos_callback(glm::ivec2& pos)
     this->old_pos = pos;
 }
 
-void ui::composite::mouse_btn_callback(int btn, int state)
+void ui::composite::mouse_btn_callback(int btn, int state, int mods)
 {
-    ui::btn_call_data call_data = {this->old_pos, (GLuint)btn, (GLuint)state};
+    ui::btn_call_data call_data =
+        {this->old_pos, (GLuint)btn, (GLuint)state, (GLuint)mods};
     this->mouse_btn_callback(call_data);
 }
 

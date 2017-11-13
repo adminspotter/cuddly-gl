@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Nov 2017, 07:54:29 tquirk
+ *   last updated 13 Nov 2017, 06:59:04 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -86,7 +86,7 @@ namespace ui
 
         void mouse_pos_callback(int, int);
         virtual void mouse_pos_callback(glm::ivec2&);
-        virtual void mouse_btn_callback(int, int);
+        void mouse_btn_callback(int, int, int);
         virtual void mouse_btn_callback(ui::btn_call_data&);
         void key_callback(int, uint32_t, int, int);
         void key_callback(ui::key_call_data&);

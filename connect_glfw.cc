@@ -1,3 +1,32 @@
+/* connect_glfw.cc
+ *   by Trinity Quirk <tquirk@ymb.net>
+ *   last updated 13 Nov 2017, 06:57:37 tquirk
+ *
+ * CuddlyGL OpenGL widget toolkit
+ * Copyright (C) 2017  Trinity Annabelle Quirk
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ *
+ * This file contains connector callbacks to be able to use the
+ * CuddlyGL widget toolkit under GLFW.
+ *
+ * Things to do
+ *
+ */
+
 #include "ui_defs.h"
 #include "connect_glfw.h"
 
@@ -98,10 +127,11 @@ void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
 
 void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
 {
-    int btn, act;
+    int btn, act, ui_mods;
 
     btn = glfw_mouse_button_map[button];
     act = glfw_mouse_action_map[action];
+    ui_mods = convert_glfw_mods(mods);
 
-    context->mouse_btn_callback(btn, act);
+    context->mouse_btn_callback(btn, act, ui_mods);
 }

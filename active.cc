@@ -1,6 +1,6 @@
 /* active.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Dec 2016, 16:57:41 tquirk
+ *   last updated 13 Nov 2017, 07:15:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -110,9 +110,15 @@ void ui::active::call_timeout(void)
     if (this->timeout != ui::zero_time
         && this->timeout <= ui::to_time::now())
     {
-        if (this->timeout_func != NULL)
-            (*this->timeout_func)(this, this->timeout_arg);
+        ui::to_fptr func = this->timeout_func;
+        void *arg = this->timeout_arg;
+
+        /* Clear the timeout *first*, so the timeout func can add
+         * itself back in, for repeating actions.
+         */
         this->remove_timeout();
+        if (func != NULL)
+            (*func)(this, arg);
     }
 }
 
