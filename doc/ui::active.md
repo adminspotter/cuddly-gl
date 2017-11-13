@@ -153,6 +153,11 @@ void timeout_func(ui::active *a, void *client_data)
   }
   ```
 
+  The `button` field will contain a constant from the `ui::mouse`
+  namespace.  The state field will contain either `ui::mouse::down` or
+  `ui::mouse::up`.  The `mods` field will contain a bitmask of
+  constants from `ui::key_mod`.
+
 * `ui::key_call_data`
 
   The call-data structure which is passed to *key_down* and *key_up*
@@ -168,6 +173,14 @@ void timeout_func(ui::active *a, void *client_data)
   }
   ```
 
+  The `character` field will contain the textual character which is
+  associated with the event, where the `key` field will contain a
+  constant from the `ui::key` namespace.  If the event does have a
+  textual character, the `key` field will contain `ui::key::no_key`.
+  The `state` field will contain either `ui::key::down` or
+  `ui::key::up`.  The `mods` field will contain a bitmask of constants
+  from `ui::key_mod`.
+
 * `ui::resize_call_data`
 
   The call-data structure which is passed to *resize* callback
@@ -178,6 +191,9 @@ void timeout_func(ui::active *a, void *client_data)
       glm::ivec2 new_size;
   }
   ```
+
+  The *resize* callbacks are mostly meant for handling resizes in the
+  top-level UI context, but could be used in other widgets.
 
 * `ui::to_fptr`
 
