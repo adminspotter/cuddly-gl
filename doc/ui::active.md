@@ -66,43 +66,7 @@ called in order of addition.  A callback list may contain multiple
 invocations of the same function, with varying, or even the same,
 *client_data* arguments.
 
-## TIMEOUTS ##
-
-A *timeout* is an event that will occur after some interval.  When
-setting a timeout, the `ui::active` takes the function to be executed,
-an argument to pass to the function, and the time delay until the
-function is executed.  Timeouts are **not** a hard realtime mechanism;
-any true realtime needs should be handled outside of the CuddlyGL
-toolkit.  Timeouts are also **not** alarms.  They cause widgets to
-perform some action after an interval.  Alarms which go off at some
-arbitrary local time should also be handled outside the toolkit.
-
-Timeouts are handled internally to each widget, so each `ui::active`
-widget or subclass may have its own active timeout running
-simultaneously.  However, each widget only has one timeout slot, so
-only one timeout may be active for a single widget at any time.
-Adding a timeout while another timeout is set will clear the previous
-timeout.
-
-When a timeout expires and the function is called, the function and
-its argument are cleared.  For a repeating timed event, add a new
-timeout at the end of the timeout function.
-
-```cpp
-ui::active *a = new ui::active(x, y);
-ui::to_until<Gluint, std::milli> expire(500);
-
-a->add_timeout(expire, timeout_func, NULL);
-
-void timeout_func(ui::active *a, void *client_data)
-{
-    /* Do some operations */
-
-    a->add_timeout(expire, timeout_func, NULL);
-}
-```
-
-## TYPES ##
+## CALLBACK TYPES ##
 
 * `ui::cb_fptr`
 
@@ -194,6 +158,44 @@ void timeout_func(ui::active *a, void *client_data)
 
   The *resize* callbacks are mostly meant for handling resizes in the
   top-level UI context, but could be used in other widgets.
+
+## TIMEOUTS ##
+
+A *timeout* is an event that will occur after some interval.  When
+setting a timeout, the `ui::active` takes the function to be executed,
+an argument to pass to the function, and the time delay until the
+function is executed.  Timeouts are **not** a hard realtime mechanism;
+any true realtime needs should be handled outside of the CuddlyGL
+toolkit.  Timeouts are also **not** alarms.  They cause widgets to
+perform some action after an interval.  Alarms which go off at some
+arbitrary local time should also be handled outside the toolkit.
+
+Timeouts are handled internally to each widget, so each `ui::active`
+widget or subclass may have its own active timeout running
+simultaneously.  However, each widget only has one timeout slot, so
+only one timeout may be active for a single widget at any time.
+Adding a timeout while another timeout is set will clear the previous
+timeout.
+
+When a timeout expires and the function is called, the function and
+its argument are cleared.  For a repeating timed event, add a new
+timeout at the end of the timeout function.
+
+```cpp
+ui::active *a = new ui::active(x, y);
+ui::to_until<Gluint, std::milli> expire(500);
+
+a->add_timeout(expire, timeout_func, NULL);
+
+void timeout_func(ui::active *a, void *client_data)
+{
+    /* Do some operations */
+
+    a->add_timeout(expire, timeout_func, NULL);
+}
+```
+
+## TIMEOUT TYPES ##
 
 * `ui::to_fptr`
 
