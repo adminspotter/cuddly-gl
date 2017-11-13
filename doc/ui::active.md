@@ -128,6 +128,57 @@ void timeout_func(ui::active *a, void *client_data)
   | ui::callback::key_up   |
   | ui::callback::resize   |
 
+* `ui::mouse_call_data`
+
+  The call-data structure which is passed to *enter*, *motion*, and
+  *leave* callback functions.
+
+  ```cpp
+  struct {
+      glm::ivec2 location;
+  }
+  ```
+
+* `ui::btn_call_data`
+
+  The call-data structure which is passed to *btn_down* and *btn_up*
+  callback functions.
+
+  ```cpp
+  struct {
+      glm::ivec2 location;
+      GLuint button;
+      GLuint state;
+      GLuint mods;
+  }
+  ```
+
+* `ui::key_call_data`
+
+  The call-data structure which is passed to *key_down* and *key_up*
+  callback functions.
+
+  ```cpp
+  struct {
+      glm::ivec2 location;
+      uint32_t character;
+      GLuint key;
+      GLuint state;
+      GLuint mods;
+  }
+  ```
+
+* `ui::resize_call_data`
+
+  The call-data structure which is passed to *resize* callback
+  functions.
+
+  ```cpp
+  struct {
+      glm::ivec2 new_size;
+  }
+  ```
+
 * `ui::to_fptr`
 
   A function pointer for a timeout function.
