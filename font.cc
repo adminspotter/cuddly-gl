@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 14:41:14 tquirk
+ *   last updated 18 Nov 2017, 17:25:24 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -249,6 +249,11 @@ ui::base_font::~base_font()
 {
 }
 
+int ui::font::line_height(void)
+{
+    return this->face->metrics.height >> 6;
+}
+
 ui::font::font(std::string& font_name,
            int pixel_size,
            std::vector<std::string>& paths)
@@ -414,7 +419,7 @@ void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
 {
     std::vector<int> req_size = {0, 0, 0};
     ui::image *imgs = new ui::image[strs.size()];
-    int str_count = 0, line_height = this->face->size->metrics.height >> 6;
+    int str_count = 0, line_height = this->line_height();
 
     img.reset();
     img.width = 0;

@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 14:55:16 tquirk
+ *   last updated 18 Nov 2017, 17:25:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -92,6 +92,7 @@ namespace ui
 
         void load_glyph(FT_Face, FT_ULong);
         void kern(FT_ULong, FT_ULong, FT_Vector *);
+        virtual int line_height(void) = 0;
 
         void get_max_glyph_box(FT_Face, int *, int *, int *);
 
@@ -105,6 +106,8 @@ namespace ui
       private:
         FT_Face face;
         int bbox_w, bbox_a, bbox_d;
+
+        virtual int line_height(void) override;
 
       public:
         font(std::string&, int, std::vector<std::string>&);
