@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 12:59:27 tquirk
+ *   last updated 18 Nov 2017, 14:41:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -162,6 +162,12 @@ std::string ui::base_font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
+void ui::base_font::cleanup_face(FT_Face face)
+{
+    FT_Done_Face(face);
+    cleanup_freetype();
+}
+
 void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
 {
     FT_GlyphSlot slot = face->glyph;
@@ -244,8 +250,7 @@ ui::font::font(std::string& font_name,
 
 ui::font::~font()
 {
-    FT_Done_Face(this->face);
-    cleanup_freetype();
+    this->cleanup_face(this->face);
 }
 
 void ui::font::max_cell_size(std::vector<int>& v)
