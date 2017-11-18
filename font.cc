@@ -249,42 +249,6 @@ ui::base_font::~base_font()
 {
 }
 
-int ui::font::line_height(void)
-{
-    return this->face->metrics.height >> 6;
-}
-
-ui::font::font(std::string& font_name,
-           int pixel_size,
-           std::vector<std::string>& paths)
-    : ui::base_font(font_name)
-{
-    this->face = this->init_face(font_name, pixel_size, paths);
-    this->get_max_glyph_box(this->face,
-                            &this->bbox_w, &this->bbox_a, &this->bbox_d);
-}
-
-ui::font::~font()
-{
-    this->cleanup_face(this->face);
-}
-
-void ui::font::max_cell_size(std::vector<int>& v)
-{
-    v[0] = this->bbox_w;
-    v[1] = this->bbox_a;
-    v[2] = this->bbox_d;
-}
-
-struct ui::glyph& ui::font::operator[](FT_ULong code)
-{
-    ui::glyph& g = this->glyphs[code];
-
-    if (g.bitmap == NULL)
-        this->load_glyph(this->face, code);
-    return g;
-}
-
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -300,8 +264,8 @@ struct ui::glyph& ui::font::operator[](FT_ULong code)
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
  */
-void ui::font::get_string_size(const std::u32string& str,
-                           std::vector<int>& req_size)
+void ui::base_font::get_string_size(const std::u32string& str,
+                                    std::vector<int>& req_size)
 {
     std::u32string::const_iterator i;
 
@@ -329,7 +293,7 @@ void ui::font::get_string_size(const std::u32string& str,
     }
 }
 
-void ui::font::render_string(const std::u32string& str, ui::image& img)
+void ui::base_font::render_string(const std::u32string& str, ui::image& img)
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
@@ -414,8 +378,8 @@ void ui::font::render_string(const std::u32string& str, ui::image& img)
     }
 }
 
-void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                       ui::image& img)
+void ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
+                                            ui::image& img)
 {
     std::vector<int> req_size = {0, 0, 0};
     ui::image *imgs = new ui::image[strs.size()];
@@ -467,4 +431,40 @@ void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
     }
 
     delete[] imgs;
+}
+
+int ui::font::line_height(void)
+{
+    return this->face->size->metrics.height >> 6;
+}
+
+ui::font::font(std::string& font_name,
+           int pixel_size,
+           std::vector<std::string>& paths)
+    : ui::base_font(font_name)
+{
+    this->face = this->init_face(font_name, pixel_size, paths);
+    this->get_max_glyph_box(this->face,
+                            &this->bbox_w, &this->bbox_a, &this->bbox_d);
+}
+
+ui::font::~font()
+{
+    this->cleanup_face(this->face);
+}
+
+void ui::font::max_cell_size(std::vector<int>& v)
+{
+    v[0] = this->bbox_w;
+    v[1] = this->bbox_a;
+    v[2] = this->bbox_d;
+}
+
+struct ui::glyph& ui::font::operator[](FT_ULong code)
+{
+    ui::glyph& g = this->glyphs[code];
+
+    if (g.bitmap == NULL)
+        this->load_glyph(this->face, code);
+    return g;
 }

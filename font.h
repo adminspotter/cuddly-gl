@@ -99,6 +99,15 @@ namespace ui
       public:
         base_font(std::string&);
         virtual ~base_font();
+
+        virtual void max_cell_size(std::vector<int>&) = 0;
+
+        virtual struct glyph& operator[](FT_ULong) = 0;
+
+        void get_string_size(const std::u32string&, std::vector<int>&);
+        void render_string(const std::u32string&, image&);
+        void render_multiline_string(const std::vector<std::u32string>&,
+                                     image&);
     };
 
     class font : public base_font
@@ -113,14 +122,10 @@ namespace ui
         font(std::string&, int, std::vector<std::string>&);
         virtual ~font();
 
-        void max_cell_size(std::vector<int>&);
+        virtual void max_cell_size(std::vector<int>&) override;
 
-        struct glyph& operator[](FT_ULong);
+        virtual struct glyph& operator[](FT_ULong) override;
 
-        void get_string_size(const std::u32string&, std::vector<int>&);
-        void render_string(const std::u32string&, image&);
-        void render_multiline_string(const std::vector<std::u32string>&,
-                                     image&);
     };
 }
 
