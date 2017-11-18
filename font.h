@@ -87,6 +87,7 @@ namespace ui
 
         std::string search_path(std::string&, std::vector<std::string>&);
 
+        FT_Face init_face(std::string&, int, std::vector<std::string>&);
         void cleanup_face(FT_Face);
 
         void load_glyph(FT_Face, FT_ULong);

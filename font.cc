@@ -162,6 +162,20 @@ std::string ui::base_font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
+FT_Face ui::base_font::init_face(std::string& fname,
+                                 int pixel_size,
+                                 std::vector<std::string>& paths)
+{
+    FT_Library *lib = init_freetype();
+    FT_Face face;
+    std::string font_path = this->search_path(fname, paths);
+
+    if (FT_New_Face(*lib, font_path.c_str(), 0, &face))
+        throw std::runtime_error("Could not load font " + fname);
+    FT_Set_Pixel_Sizes(face, 0, pixel_size);
+    return face;
+}
+
 void ui::base_font::cleanup_face(FT_Face face)
 {
     FT_Done_Face(face);
@@ -239,12 +253,7 @@ ui::font::font(std::string& font_name,
            std::vector<std::string>& paths)
     : ui::base_font(font_name)
 {
-    FT_Library *lib = init_freetype();
-    std::string font_path = this->search_path(font_name, paths);
-
-    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
-        throw std::runtime_error("Could not load font " + font_name);
-    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
+    this->face = this->init_face(font_name, pixel_size, paths);
     this->get_max_glyph_box();
 }
 
