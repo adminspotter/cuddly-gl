@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 12:37:21 tquirk
+ *   last updated 18 Nov 2017, 12:59:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -184,9 +184,10 @@ void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
-void ui::font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
+void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 {
-    if (FT_Get_Kerning(this->face, a, b, FT_KERNING_DEFAULT, k))
+    if (this->glyphs[a].face != this->glyphs[b].face
+        || FT_Get_Kerning(this->glyphs[a].face, a, b, FT_KERNING_DEFAULT, k))
         k->x = k->y = 0;
     /* Kerning in default mode is 26.6 format */
     k->x >>= 6;
