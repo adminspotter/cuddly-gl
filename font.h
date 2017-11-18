@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 11:02:35 tquirk
+ *   last updated 18 Nov 2017, 12:37:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -62,6 +62,7 @@ namespace ui
 {
     struct glyph
     {
+        FT_Face face;
         uint32_t code_point;
         int x_advance, y_advance, width, height;
         int top, left;
