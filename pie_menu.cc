@@ -186,12 +186,12 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
     if (this->children.size() > 0)
     {
         float increment = TWO_PI / this->children.size();
+        float angle = 0.0f;
 
+        pct = m3.x / m0.x;
         for (int i = 0; i < this->children.size(); ++i)
         {
-            float angle = increment * i;
-
-            pct = m3.x / m0.x;
+            angle += increment;
             vb->generate_ellipse_divider(center, m0, pct, angle,
                                          this->foreground);
         }
