@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:01:10 tquirk
+ *   last updated 18 Nov 2017, 09:55:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -217,10 +217,19 @@ void ui::font::get_max_glyph_box(void)
     this->bbox_d = -((int)d);
 }
 
+ui::base_font::base_font(std::string& name)
+    : glyphs(name + " glyphs")
+{
+}
+
+ui::base_font::~base_font()
+{
+}
+
 ui::font::font(std::string& font_name,
            int pixel_size,
            std::vector<std::string>& paths)
-    : glyphs(font_name + " glyphs")
+    : ui::base_font(font_name)
 {
     FT_Library *lib = init_freetype();
     std::string font_path = this->search_path(font_name, paths);
