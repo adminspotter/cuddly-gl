@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 09:55:45 tquirk
+ *   last updated 18 Nov 2017, 10:49:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -162,11 +162,11 @@ std::string ui::font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
-void ui::font::load_glyph(FT_ULong code)
+void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
 {
-    FT_GlyphSlot slot = this->face->glyph;
+    FT_GlyphSlot slot = face->glyph;
 
-    FT_Load_Char(this->face, code, FT_LOAD_RENDER);
+    FT_Load_Char(face, code, FT_LOAD_RENDER);
     ui::glyph& g = this->glyphs[code];
     g.code_point = code;
     /* Advance is represented in 26.6 format, so throw away the
@@ -258,7 +258,7 @@ struct ui::glyph& ui::font::operator[](FT_ULong code)
     ui::glyph& g = this->glyphs[code];
 
     if (g.bitmap == NULL)
-        this->load_glyph(code);
+        this->load_glyph(this->face, code);
     return g;
 }
 
