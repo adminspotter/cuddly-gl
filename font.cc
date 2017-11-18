@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 10:49:55 tquirk
+ *   last updated 18 Nov 2017, 11:03:12 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -131,8 +131,8 @@ bool ui::glyph::is_l_to_r(void)
     return false;
 }
 
-std::string ui::font::search_path(std::string& font_name,
-                              std::vector<std::string>& paths)
+std::string ui::base_font::search_path(std::string& font_name,
+                                       std::vector<std::string>& paths)
 {
     std::vector<std::string>::iterator i;
     struct stat st;
