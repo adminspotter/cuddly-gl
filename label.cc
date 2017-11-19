@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:06:49 tquirk
+ *   last updated 18 Nov 2017, 18:12:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -51,7 +51,7 @@ void ui::label::set_font(GLuint t, void *v)
         this->shared_font = true;
     else
         this->shared_font = false;
-    this->font = (ui::font *)v;
+    this->font = (ui::base_font *)v;
     this->generate_string_image();
 }
 
