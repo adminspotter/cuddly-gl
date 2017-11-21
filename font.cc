@@ -298,10 +298,15 @@ void ui::base_font::cleanup_face(FT_Face face)
 
 void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
 {
+    if (!FT_Get_Char_Index(face, code))
+        return;
+
+    if (FT_Load_Char(face, code, FT_LOAD_RENDER))
+        return;
+
+    ui::glyph& g = this->glyphs[code];
     FT_GlyphSlot slot = face->glyph;
 
-    FT_Load_Char(face, code, FT_LOAD_RENDER);
-    ui::glyph& g = this->glyphs[code];
     g.face = face;
     g.code_point = code;
     /* Advance is represented in 26.6 format, so throw away the
