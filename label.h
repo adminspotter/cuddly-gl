@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 18:14:09 tquirk
+ *   last updated 21 Nov 2017, 08:57:12 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -58,9 +58,6 @@ namespace ui
         virtual void set_image(GLuint, void *);
         virtual void set_border(GLuint, void *) override;
         virtual void set_margin(GLuint, void *) override;
-
-        static std::u32string utf8tou32str(const std::string&);
-        static std::string u32strtoutf8(const std::u32string&);
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(void);

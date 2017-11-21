@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 17:25:24 tquirk
+ *   last updated 21 Nov 2017, 08:56:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -129,6 +129,120 @@ bool ui::glyph::is_l_to_r(void)
         == r_to_l_ranges.end())
         return true;
     return false;
+}
+
+/* We need to be able to convert from UTF-8 representation to
+ * actual Unicode code points and back.  All network traffic
+ * should be in UTF-8, and we'll of course need to display things
+ * in whatever native font the user needs.
+ *
+ * Ref: http://www.cprogramming.com/tutorial/unicode.html
+ * Ref: https://www.cl.cam.ac.uk/~mgk25/unicode.html
+ */
+std::u32string ui::utf8tou32str(const std::string& str)
+{
+    std::string::const_iterator i = str.begin();
+    std::u32string newstr;
+    uint32_t ch;
+
+    while (i != str.end())
+    {
+        if ((*i & 0xfe) == 0xfc)
+        {
+            ch = (*i & 0x01) << 30;
+            ch |= (*(++i) & 0x3f) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xfc) == 0xf8)
+        {
+            ch = (*i & 0x03) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xf8) == 0xf0)
+        {
+            ch = (*i & 0x07) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xf0) == 0xe0)
+        {
+            ch = (*i & 0x0f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xe0) == 0xc0)
+        {
+            ch = (*i & 0x1f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0x80) == 0x00)
+            ch = *i;
+        else
+            ch = '.';
+
+        newstr.push_back(ch);
+        ++i;
+    }
+    return newstr;
+}
+
+std::string ui::u32strtoutf8(const std::u32string& str)
+{
+    std::u32string::const_iterator i = str.begin();
+    std::string newstr;
+
+    while (i != str.end())
+    {
+        if (*i & 0x7c000000)
+        {
+            newstr.push_back(0xfc | ((*i & 0x40000000) >> 30));
+            newstr.push_back(0x80 | ((*i & 0x3f000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x3e00000)
+        {
+            newstr.push_back(0xf8 | ((*i & 0x3000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x1f0000)
+        {
+            newstr.push_back(0xf0 | ((*i & 0x1c0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0xf800)
+        {
+            newstr.push_back(0xe0 | ((*i & 0x1f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x780)
+        {
+            newstr.push_back(0xc0 | ((*i & 0x7c0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else
+        {
+            newstr.push_back(*i & 0x7f);
+        }
+        ++i;
+    }
+
+    return newstr;
 }
 
 std::string ui::base_font::search_path(std::string& font_name,

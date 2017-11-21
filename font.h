@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2017, 17:25:26 tquirk
+ *   last updated 21 Nov 2017, 08:57:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -71,6 +71,9 @@ namespace ui
 
         bool is_l_to_r(void);
     };
+
+    std::u32string utf8tou32str(const std::string&);
+    std::string u32strtoutf8(const std::u32string&);
 
     class base_font
     {
