@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 08:57:07 tquirk
+ *   last updated 21 Nov 2017, 09:13:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -87,6 +87,7 @@ namespace ui
                 }
         };
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
+        int bbox_w, bbox_a, bbox_d;
 
         std::string search_path(std::string&, std::vector<std::string>&);
 
@@ -103,7 +104,7 @@ namespace ui
         base_font(std::string&);
         virtual ~base_font();
 
-        virtual void max_cell_size(std::vector<int>&) = 0;
+        void max_cell_size(std::vector<int>&);
 
         virtual struct glyph& operator[](FT_ULong) = 0;
 
@@ -117,15 +118,12 @@ namespace ui
     {
       private:
         FT_Face face;
-        int bbox_w, bbox_a, bbox_d;
 
         virtual int line_height(void) override;
 
       public:
         font(std::string&, int, std::vector<std::string>&);
         virtual ~font();
-
-        virtual void max_cell_size(std::vector<int>&) override;
 
         virtual struct glyph& operator[](FT_ULong) override;
 

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 08:56:08 tquirk
+ *   last updated 21 Nov 2017, 09:14:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -368,6 +368,13 @@ ui::base_font::~base_font()
 {
 }
 
+void ui::base_font::max_cell_size(std::vector<int>& v)
+{
+    v[0] = this->bbox_w;
+    v[1] = this->bbox_a;
+    v[2] = this->bbox_d;
+}
+
 /* This gets a little complicated, because a glyph which has no
  * descender could have an overall height that is equal to a shorter
  * glyph that has a descender.  They would evaluate as equal, but the
@@ -570,13 +577,6 @@ ui::font::font(std::string& font_name,
 ui::font::~font()
 {
     this->cleanup_face(this->face);
-}
-
-void ui::font::max_cell_size(std::vector<int>& v)
-{
-    v[0] = this->bbox_w;
-    v[1] = this->bbox_a;
-    v[2] = this->bbox_d;
 }
 
 struct ui::glyph& ui::font::operator[](FT_ULong code)
