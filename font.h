@@ -54,6 +54,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "cache.h"
 #include "image.h"
@@ -128,7 +129,24 @@ namespace ui
         virtual ~font();
 
         virtual struct glyph& operator[](FT_ULong) override;
+    };
 
+    class font_set : public base_font
+    {
+      public:
+        typedef std::tuple<std::string&, int, search_paths&> font_spec;
+
+      private:
+        std::vector<FT_Face> faces;
+
+        virtual int line_height(void) override;
+
+      public:
+        font_set(std::string&);
+        virtual ~font_set();
+
+        font_set& operator<<(font_spec&);
+        virtual struct glyph& operator[](FT_ULong) override;
     };
 }
 

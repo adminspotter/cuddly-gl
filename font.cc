@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 09:27:09 tquirk
+ *   last updated 21 Nov 2017, 09:31:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -583,5 +583,45 @@ struct ui::glyph& ui::font::operator[](FT_ULong code)
 
     if (g.bitmap == NULL)
         this->load_glyph(this->face, code);
+    return g;
+}
+
+int ui::font_set::line_height(void)
+{
+    return this->faces[0]->size->metrics.height >> 6;
+}
+
+ui::font_set::font_set(std::string& set_name)
+    : ui::base_font(set_name), faces()
+{
+}
+
+ui::font_set::~font_set()
+{
+    for (auto i = this->faces.begin(); i != this->faces.end(); ++i)
+        this->cleanup_face(*i);
+}
+
+ui::font_set& ui::font_set::operator<<(ui::font_set::font_spec& fs)
+{
+    this->faces.push_back(this->init_face(std::get<0>(fs),
+                                          std::get<1>(fs),
+                                          std::get<2>(fs)));
+    if (this->faces.size() == 1)
+        this->get_max_glyph_box(this->faces[0],
+                                &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    return *this;
+}
+
+struct ui::glyph& ui::font_set::operator[](FT_ULong code)
+{
+    ui::glyph& g = this->glyphs[code];
+
+    auto i = this->faces.begin();
+    while (g.bitmap == NULL && i != this->faces.end())
+    {
+        this->load_glyph(*i, code);
+        ++i;
+    }
     return g;
 }
