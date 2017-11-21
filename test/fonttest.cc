@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     int i, j;
     ui::font f(font_name, 20, paths);
     std::string s("Howdy");
-    std::u32string str(s.begin(), s.end());
+    std::u32string str(ui::utf8tou32str(s));
     ui::image img;
 
     f.render_string(str, img);
