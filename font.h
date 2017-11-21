@@ -75,6 +75,8 @@ namespace ui
     std::u32string utf8tou32str(const std::string&);
     std::string u32strtoutf8(const std::u32string&);
 
+    typedef std::vector<std::string> search_paths;
+
     class base_font
     {
       protected:
@@ -89,9 +91,9 @@ namespace ui
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
         int bbox_w, bbox_a, bbox_d;
 
-        std::string search_path(std::string&, std::vector<std::string>&);
+        std::string search_path(std::string&, search_paths&);
 
-        FT_Face init_face(std::string&, int, std::vector<std::string>&);
+        FT_Face init_face(std::string&, int, search_paths&);
         void cleanup_face(FT_Face);
 
         void load_glyph(FT_Face, FT_ULong);

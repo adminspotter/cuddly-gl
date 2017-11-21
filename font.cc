@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 09:14:26 tquirk
+ *   last updated 21 Nov 2017, 09:27:09 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -246,7 +246,7 @@ std::string ui::u32strtoutf8(const std::u32string& str)
 }
 
 std::string ui::base_font::search_path(std::string& font_name,
-                                       std::vector<std::string>& paths)
+                                       ui::search_paths& paths)
 {
     std::vector<std::string>::iterator i;
     struct stat st;
@@ -278,7 +278,7 @@ std::string ui::base_font::search_path(std::string& font_name,
 
 FT_Face ui::base_font::init_face(std::string& fname,
                                  int pixel_size,
-                                 std::vector<std::string>& paths)
+                                 ui::search_paths& paths)
 {
     FT_Library *lib = init_freetype();
     FT_Face face;
@@ -564,9 +564,7 @@ int ui::font::line_height(void)
     return this->face->size->metrics.height >> 6;
 }
 
-ui::font::font(std::string& font_name,
-           int pixel_size,
-           std::vector<std::string>& paths)
+ui::font::font(std::string& font_name, int pixel_size, ui::search_paths& paths)
     : ui::base_font(font_name)
 {
     this->face = this->init_face(font_name, pixel_size, paths);
