@@ -6,7 +6,8 @@
 
 std::vector<std::string> font_names =
 {
-    "techover.ttf"
+    "techover.ttf",
+    "nehama.ttf"
 };
 std::vector<std::string> paths =
 {
@@ -18,7 +19,7 @@ int main(int argc, char **argv)
 {
     int i, j;
     ui::font_set f(font_names[0]);
-    std::string s("Howdy");
+    std::string s("Howdy שלום");
     std::u32string str(ui::utf8tou32str(s));
     ui::image img;
 
