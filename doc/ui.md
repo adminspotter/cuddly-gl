@@ -332,7 +332,7 @@ configured image.
 Input strings are `std::string`, and should be encoded UTF-8.  Output
 strings will always be UTF-8 `std::string`.  Internally, the string is
 converted into `std::u32string`.  Font handling is done via the
-[`ui::font`](#font) support type.
+[`ui::font`](#font) support family.
 
 Images use the [`ui::image`](#image) support type.
 
@@ -631,14 +631,69 @@ widget to include the spacing between its grid elements.
 #### Font ####
 
 The `ui::font` ([font.h](../client/ui/font.h) and
-[font.cc](../client/ui/font.cc)) is used by the `ui::label` and its
-descendents.  It is a wrapper around libfreetype2, which provides the
-specific functionality that we require:  sizing of glyphs and strings,
-and rendering of strings into bitmaps.
+[font.cc](../client/ui/font.cc)) is a family of objects which are used
+by the `ui::label` and its descendents.  They are a wrapper around
+libfreetype2, which provides the specific functionality that we
+require:  sizing of glyphs and strings, and rendering of strings into
+bitmaps.
 
-Its interface shares very little in common with the rest of our UI
+There are two objects in the family:  the `ui::font`, which manages a
+single font, and the `ui::font_set` which manages multiple fonts, and
+adds fallback logic when a given glyph is not found in any given font.
+Either may be supplied where a font resource is needed.
+
+The interface shares very little in common with the rest of our UI
 toolkit, but it is largely meant to be an internal interface, used
 only by the calling widgets.
+
+The only interesting interface of the `ui::font` is the constructor.
+It takes three arguments:  the font filename, the pixel size we'll use
+to render the font, and a vector of search paths where we might find
+the font on the filesystem.
+
+```cpp
+ui::search_paths paths =
+{
+    "/fonts",
+    "/other-fonts",
+    ...
+};
+
+ui::font f("a.ttf", 10, paths);
+```
+
+The `ui::font_set` has a somewhat different interface.  The
+constructor takes a string, which is the "name" of the font set.  The
+name is only used for error reporting and debugging information.
+Adding fonts to the font set uses the injection operator (`<<`), and
+expects `std::tuple` objects.
+
+```cpp
+std::vector<std::string> fonts =
+{
+    "a.ttf",
+    "b.ttf",
+    ...
+};
+ui::search_paths paths =
+{
+    "/fonts",
+    "/other-fonts",
+    ...
+};
+ui::font_set f("standard set");
+
+for (std::string i : fonts)
+{
+    ui::font_set::font_spec fs = std::make_tuple(std::ref(i),
+                                                 10,
+                                                 std::ref(paths));
+    f << fs;
+}
+```
+
+A `ui::font_set` can contain only a single font, where it will
+function otherwise like a `ui::font`.
 
 #### Image ####
 
