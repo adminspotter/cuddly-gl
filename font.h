@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 09:13:40 tquirk
+ *   last updated 24 Nov 2017, 09:21:32 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -125,7 +125,7 @@ namespace ui
         virtual int line_height(void) override;
 
       public:
-        font(std::string&, int, std::vector<std::string>&);
+        font(std::string&, int, search_paths&);
         virtual ~font();
 
         virtual struct glyph& operator[](FT_ULong) override;
