@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 17:58:03 tquirk
+ *   last updated 24 Nov 2017, 09:21:32 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -54,6 +54,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "cache.h"
 #include "image.h"
@@ -62,6 +63,7 @@ namespace ui
 {
     struct glyph
     {
+        FT_Face face;
         uint32_t code_point;
         int x_advance, y_advance, width, height;
         int top, left;
@@ -71,9 +73,14 @@ namespace ui
         bool is_l_to_r(void);
     };
 
-    class font
+    std::u32string utf8tou32str(const std::string&);
+    std::string u32strtoutf8(const std::u32string&);
+
+    typedef std::vector<std::string> search_paths;
+
+    class base_font
     {
-      private:
+      protected:
         struct glyph_cleanup
         {
             void operator()(struct glyph& g)
@@ -82,30 +89,64 @@ namespace ui
                         delete[] g.bitmap;
                 }
         };
-
-        FT_Face face;
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
         int bbox_w, bbox_a, bbox_d;
 
-        std::string search_path(std::string&, std::vector<std::string>&);
+        std::string search_path(std::string&, search_paths&);
 
-        void load_glyph(FT_ULong);
+        FT_Face init_face(std::string&, int, search_paths&);
+        void cleanup_face(FT_Face);
+
+        void load_glyph(FT_Face, FT_ULong);
         void kern(FT_ULong, FT_ULong, FT_Vector *);
+        virtual int line_height(void) = 0;
 
-        void get_max_glyph_box(void);
+        void get_max_glyph_box(FT_Face, int *, int *, int *);
 
       public:
-        font(std::string&, int, std::vector<std::string>&);
-        ~font();
+        base_font(std::string&);
+        virtual ~base_font();
 
         void max_cell_size(std::vector<int>&);
 
-        struct glyph& operator[](FT_ULong);
+        virtual struct glyph& operator[](FT_ULong) = 0;
 
         void get_string_size(const std::u32string&, std::vector<int>&);
         void render_string(const std::u32string&, image&);
         void render_multiline_string(const std::vector<std::u32string>&,
                                      image&);
+    };
+
+    class font : public base_font
+    {
+      private:
+        FT_Face face;
+
+        virtual int line_height(void) override;
+
+      public:
+        font(std::string&, int, search_paths&);
+        virtual ~font();
+
+        virtual struct glyph& operator[](FT_ULong) override;
+    };
+
+    class font_set : public base_font
+    {
+      public:
+        typedef std::tuple<std::string&, int, search_paths&> font_spec;
+
+      private:
+        std::vector<FT_Face> faces;
+
+        virtual int line_height(void) override;
+
+      public:
+        font_set(std::string&);
+        virtual ~font_set();
+
+        font_set& operator<<(font_spec&);
+        virtual struct glyph& operator[](FT_ULong) override;
     };
 }
 

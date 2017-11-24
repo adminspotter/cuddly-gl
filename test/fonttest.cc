@@ -1,8 +1,14 @@
 #include <iostream>
+#include <tuple>
+#include <functional>
 
 #include "../font.h"
 
-std::string font_name = "techover.ttf";
+std::vector<std::string> font_names =
+{
+    "techover.ttf",
+    "nehama.ttf"
+};
 std::vector<std::string> paths =
 {
     ".",
@@ -12,10 +18,16 @@ std::vector<std::string> paths =
 int main(int argc, char **argv)
 {
     int i, j;
-    ui::font f(font_name, 20, paths);
-    std::string s("Howdy");
-    std::u32string str(s.begin(), s.end());
+    ui::font_set f(font_names[0]);
+    std::string s("Howdy שלום");
+    std::u32string str(ui::utf8tou32str(s));
     ui::image img;
+
+    for (auto i : font_names)
+    {
+        auto f1 = std::make_tuple(std::ref(i), 20, std::ref(paths));
+        f << f1;
+    }
 
     f.render_string(str, img);
 

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:01:10 tquirk
+ *   last updated 24 Nov 2017, 09:22:09 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -131,10 +131,124 @@ bool ui::glyph::is_l_to_r(void)
     return false;
 }
 
-std::string ui::font::search_path(std::string& font_name,
-                              std::vector<std::string>& paths)
+/* We need to be able to convert from UTF-8 representation to
+ * actual Unicode code points and back.  All network traffic
+ * should be in UTF-8, and we'll of course need to display things
+ * in whatever native font the user needs.
+ *
+ * Ref: http://www.cprogramming.com/tutorial/unicode.html
+ * Ref: https://www.cl.cam.ac.uk/~mgk25/unicode.html
+ */
+std::u32string ui::utf8tou32str(const std::string& str)
 {
-    std::vector<std::string>::iterator i;
+    std::string::const_iterator i = str.begin();
+    std::u32string newstr;
+    uint32_t ch;
+
+    while (i != str.end())
+    {
+        if ((*i & 0xfe) == 0xfc)
+        {
+            ch = (*i & 0x01) << 30;
+            ch |= (*(++i) & 0x3f) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xfc) == 0xf8)
+        {
+            ch = (*i & 0x03) << 24;
+            ch |= (*(++i) & 0x3f) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xf8) == 0xf0)
+        {
+            ch = (*i & 0x07) << 18;
+            ch |= (*(++i) & 0x3f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xf0) == 0xe0)
+        {
+            ch = (*i & 0x0f) << 12;
+            ch |= (*(++i) & 0x3f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0xe0) == 0xc0)
+        {
+            ch = (*i & 0x1f) << 6;
+            ch |= (*(++i) & 0x3f);
+        }
+        else if ((*i & 0x80) == 0x00)
+            ch = *i;
+        else
+            ch = '.';
+
+        newstr.push_back(ch);
+        ++i;
+    }
+    return newstr;
+}
+
+std::string ui::u32strtoutf8(const std::u32string& str)
+{
+    std::u32string::const_iterator i = str.begin();
+    std::string newstr;
+
+    while (i != str.end())
+    {
+        if (*i & 0x7c000000)
+        {
+            newstr.push_back(0xfc | ((*i & 0x40000000) >> 30));
+            newstr.push_back(0x80 | ((*i & 0x3f000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x3e00000)
+        {
+            newstr.push_back(0xf8 | ((*i & 0x3000000) >> 24));
+            newstr.push_back(0x80 | ((*i & 0xfc0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x1f0000)
+        {
+            newstr.push_back(0xf0 | ((*i & 0x1c0000) >> 18));
+            newstr.push_back(0x80 | ((*i & 0x3f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0xf800)
+        {
+            newstr.push_back(0xe0 | ((*i & 0x1f000) >> 12));
+            newstr.push_back(0x80 | ((*i & 0xfc0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else if (*i & 0x780)
+        {
+            newstr.push_back(0xc0 | ((*i & 0x7c0) >> 6));
+            newstr.push_back(0x80 | (*i & 0x3f));
+        }
+        else
+        {
+            newstr.push_back(*i & 0x7f);
+        }
+        ++i;
+    }
+
+    return newstr;
+}
+
+std::string ui::base_font::search_path(std::string& font_name,
+                                       ui::search_paths& paths)
+{
+    ui::search_paths::iterator i;
     struct stat st;
 
     for (i = paths.begin(); i != paths.end(); ++i)
@@ -162,12 +276,38 @@ std::string ui::font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
-void ui::font::load_glyph(FT_ULong code)
+FT_Face ui::base_font::init_face(std::string& fname,
+                                 int pixel_size,
+                                 ui::search_paths& paths)
 {
-    FT_GlyphSlot slot = this->face->glyph;
+    FT_Library *lib = init_freetype();
+    FT_Face face;
+    std::string font_path = this->search_path(fname, paths);
 
-    FT_Load_Char(this->face, code, FT_LOAD_RENDER);
+    if (FT_New_Face(*lib, font_path.c_str(), 0, &face))
+        throw std::runtime_error("Could not load font " + fname);
+    FT_Set_Pixel_Sizes(face, 0, pixel_size);
+    return face;
+}
+
+void ui::base_font::cleanup_face(FT_Face face)
+{
+    FT_Done_Face(face);
+    cleanup_freetype();
+}
+
+void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
+{
+    if (!FT_Get_Char_Index(face, code))
+        return;
+
+    if (FT_Load_Char(face, code, FT_LOAD_RENDER))
+        return;
+
     ui::glyph& g = this->glyphs[code];
+    FT_GlyphSlot slot = face->glyph;
+
+    g.face = face;
     g.code_point = code;
     /* Advance is represented in 26.6 format, so throw away the
      * lowest-order 6 bits.
@@ -183,16 +323,18 @@ void ui::font::load_glyph(FT_ULong code)
     memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
 }
 
-void ui::font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
+void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 {
-    if (FT_Get_Kerning(this->face, a, b, FT_KERNING_DEFAULT, k))
+    if (this->glyphs[a].face != this->glyphs[b].face
+        || FT_Get_Kerning(this->glyphs[a].face, a, b, FT_KERNING_DEFAULT, k))
         k->x = k->y = 0;
     /* Kerning in default mode is 26.6 format */
     k->x >>= 6;
     k->y >>= 6;
 }
 
-void ui::font::get_max_glyph_box(void)
+void ui::base_font::get_max_glyph_box(FT_Face face,
+                                      int *box_w, int *box_a, int *box_d)
 {
     FT_ULong code;
     FT_UInt index;
@@ -200,57 +342,37 @@ void ui::font::get_max_glyph_box(void)
     FT_BBox bbox;
     FT_Pos w = 0, a = 0, d = 0;
 
-    code = FT_Get_First_Char(this->face, &index);
+    code = FT_Get_First_Char(face, &index);
     while (index != 0)
     {
-        FT_Load_Glyph(this->face, index, FT_LOAD_DEFAULT);
-        FT_Get_Glyph(this->face->glyph, &g);
+        FT_Load_Glyph(face, index, FT_LOAD_DEFAULT);
+        FT_Get_Glyph(face->glyph, &g);
         FT_Glyph_Get_CBox(g, FT_GLYPH_BBOX_TRUNCATE, &bbox);
         w = std::max(w, bbox.xMax - bbox.xMin);
         a = std::max(a, bbox.yMax);
         d = std::min(d, bbox.yMin);
         FT_Done_Glyph(g);
-        code = FT_Get_Next_Char(this->face, code, &index);
+        code = FT_Get_Next_Char(face, code, &index);
     }
-    this->bbox_w = (int)w;
-    this->bbox_a = (int)a;
-    this->bbox_d = -((int)d);
+    *box_w = (int)w;
+    *box_a = (int)a;
+    *box_d = -((int)d);
 }
 
-ui::font::font(std::string& font_name,
-           int pixel_size,
-           std::vector<std::string>& paths)
-    : glyphs(font_name + " glyphs")
+ui::base_font::base_font(std::string& name)
+    : glyphs(name + " glyphs")
 {
-    FT_Library *lib = init_freetype();
-    std::string font_path = this->search_path(font_name, paths);
-
-    if (FT_New_Face(*lib, font_path.c_str(), 0, &this->face))
-        throw std::runtime_error("Could not load font " + font_name);
-    FT_Set_Pixel_Sizes(this->face, 0, pixel_size);
-    this->get_max_glyph_box();
 }
 
-ui::font::~font()
+ui::base_font::~base_font()
 {
-    FT_Done_Face(this->face);
-    cleanup_freetype();
 }
 
-void ui::font::max_cell_size(std::vector<int>& v)
+void ui::base_font::max_cell_size(std::vector<int>& v)
 {
     v[0] = this->bbox_w;
     v[1] = this->bbox_a;
     v[2] = this->bbox_d;
-}
-
-struct ui::glyph& ui::font::operator[](FT_ULong code)
-{
-    ui::glyph& g = this->glyphs[code];
-
-    if (g.bitmap == NULL)
-        this->load_glyph(code);
-    return g;
 }
 
 /* This gets a little complicated, because a glyph which has no
@@ -268,8 +390,8 @@ struct ui::glyph& ui::font::operator[](FT_ULong code)
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
  */
-void ui::font::get_string_size(const std::u32string& str,
-                           std::vector<int>& req_size)
+void ui::base_font::get_string_size(const std::u32string& str,
+                                    std::vector<int>& req_size)
 {
     std::u32string::const_iterator i;
 
@@ -297,7 +419,7 @@ void ui::font::get_string_size(const std::u32string& str,
     }
 }
 
-void ui::font::render_string(const std::u32string& str, ui::image& img)
+void ui::base_font::render_string(const std::u32string& str, ui::image& img)
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
@@ -382,12 +504,12 @@ void ui::font::render_string(const std::u32string& str, ui::image& img)
     }
 }
 
-void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                       ui::image& img)
+void ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
+                                            ui::image& img)
 {
     std::vector<int> req_size = {0, 0, 0};
     ui::image *imgs = new ui::image[strs.size()];
-    int str_count = 0, line_height = this->face->size->metrics.height >> 6;
+    int str_count = 0, line_height = this->line_height();
 
     img.reset();
     img.width = 0;
@@ -435,4 +557,71 @@ void ui::font::render_multiline_string(const std::vector<std::u32string>& strs,
     }
 
     delete[] imgs;
+}
+
+int ui::font::line_height(void)
+{
+    return this->face->size->metrics.height >> 6;
+}
+
+ui::font::font(std::string& font_name, int pixel_size, ui::search_paths& paths)
+    : ui::base_font(font_name)
+{
+    this->face = this->init_face(font_name, pixel_size, paths);
+    this->get_max_glyph_box(this->face,
+                            &this->bbox_w, &this->bbox_a, &this->bbox_d);
+}
+
+ui::font::~font()
+{
+    this->cleanup_face(this->face);
+}
+
+struct ui::glyph& ui::font::operator[](FT_ULong code)
+{
+    ui::glyph& g = this->glyphs[code];
+
+    if (g.bitmap == NULL)
+        this->load_glyph(this->face, code);
+    return g;
+}
+
+int ui::font_set::line_height(void)
+{
+    return this->faces[0]->size->metrics.height >> 6;
+}
+
+ui::font_set::font_set(std::string& set_name)
+    : ui::base_font(set_name), faces()
+{
+}
+
+ui::font_set::~font_set()
+{
+    for (auto i = this->faces.begin(); i != this->faces.end(); ++i)
+        this->cleanup_face(*i);
+}
+
+ui::font_set& ui::font_set::operator<<(ui::font_set::font_spec& fs)
+{
+    this->faces.push_back(this->init_face(std::get<0>(fs),
+                                          std::get<1>(fs),
+                                          std::get<2>(fs)));
+    if (this->faces.size() == 1)
+        this->get_max_glyph_box(this->faces[0],
+                                &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    return *this;
+}
+
+struct ui::glyph& ui::font_set::operator[](FT_ULong code)
+{
+    ui::glyph& g = this->glyphs[code];
+
+    auto i = this->faces.begin();
+    while (g.bitmap == NULL && i != this->faces.end())
+    {
+        this->load_glyph(*i, code);
+        ++i;
+    }
+    return g;
 }
