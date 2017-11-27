@@ -10,7 +10,7 @@ TC += uitest
 TS += run-uitest
 endif
 
-SUBDIRS = tap++
+SUBDIRS = tap++ .
 
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 	$(top_srcdir)/build-aux/tap-driver.sh
