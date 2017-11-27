@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libtap++.la
+check_LTLIBRARIES = libtap++.la
 
 libtap___la_SOURCES = tap++.C tap++.h
 libtap___la_CXXFLAGS = -I..
