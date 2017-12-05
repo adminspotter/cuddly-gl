@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Nov 2017, 09:22:09 tquirk
+ *   last updated 05 Dec 2017, 10:27:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -60,6 +60,10 @@
 #include <algorithm>
 
 #include "font.h"
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#include FT_TRUETYPE_TABLES_H
+#include FT_TRUETYPE_TAGS_H
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 #include FT_GLYPH_H
 
 /* We'll keep a single library handle, and a refcount.  This will all
@@ -276,6 +280,12 @@ std::string ui::base_font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+void ui::base_font::setup_bitmap_face(FT_Face face, int pixel_size)
+{
+}
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
 FT_Face ui::base_font::init_face(std::string& fname,
                                  int pixel_size,
                                  ui::search_paths& paths)
@@ -286,7 +296,15 @@ FT_Face ui::base_font::init_face(std::string& fname,
 
     if (FT_New_Face(*lib, font_path.c_str(), 0, &face))
         throw std::runtime_error("Could not load font " + fname);
-    FT_Set_Pixel_Sizes(face, 0, pixel_size);
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    FT_ULong length = 0;
+
+    if (!FT_Load_Sfnt_Table(face, TTAG_CBDT, 0, NULL, &length) && length)
+        this->setup_bitmap_face(face, pixel_size);
+    else
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+        FT_Set_Pixel_Sizes(face, 0, pixel_size);
     return face;
 }
 

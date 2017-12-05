@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Nov 2017, 09:21:32 tquirk
+ *   last updated 05 Dec 2017, 09:25:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -49,6 +49,7 @@
 #define __INC_CUDDLY_FONT_H__
 
 #include <ft2build.h>
+#include FT_CONFIG_OPTIONS_H
 #include FT_FREETYPE_H
 #include FT_TYPES_H
 
@@ -93,6 +94,10 @@ namespace ui
         int bbox_w, bbox_a, bbox_d;
 
         std::string search_path(std::string&, search_paths&);
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+        void setup_bitmap_face(FT_Face, int);
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
         FT_Face init_face(std::string&, int, search_paths&);
         void cleanup_face(FT_Face);
