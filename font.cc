@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Dec 2017, 10:27:59 tquirk
+ *   last updated 08 Dec 2017, 08:28:04 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -283,6 +283,19 @@ std::string ui::base_font::search_path(std::string& font_name,
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 void ui::base_font::setup_bitmap_face(FT_Face face, int pixel_size)
 {
+    int best_match = 0;
+    int diff = abs(pixel_size - face->available_sizes[0].height);
+
+    for (int i = 1; i < face->num_fixed_sizes; ++i)
+    {
+        int ndiff = abs(pixel_size - face->available_sizes[i].height);
+        if (ndiff < diff)
+        {
+            best_match = i;
+            diff = ndiff;
+        }
+    }
+    FT_Select_Size(face, best_match);
 }
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
