@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Dec 2017, 08:28:04 tquirk
+ *   last updated 08 Dec 2017, 08:40:34 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -329,10 +329,12 @@ void ui::base_font::cleanup_face(FT_Face face)
 
 void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
 {
-    if (!FT_Get_Char_Index(face, code))
+    FT_UInt index = FT_Get_Char_Index(face, code);
+    if (index == 0)
         return;
 
-    if (FT_Load_Char(face, code, FT_LOAD_RENDER))
+    if (FT_Load_Char(face, code, FT_LOAD_RENDER)
+        && FT_Load_Glyph(face, index, FT_LOAD_COLOR))
         return;
 
     ui::glyph& g = this->glyphs[code];
