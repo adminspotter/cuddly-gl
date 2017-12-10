@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Dec 2017, 08:40:34 tquirk
+ *   last updated 10 Dec 2017, 09:17:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -369,27 +369,9 @@ void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 void ui::base_font::get_max_glyph_box(FT_Face face,
                                       int *box_w, int *box_a, int *box_d)
 {
-    FT_ULong code;
-    FT_UInt index;
-    FT_Glyph g;
-    FT_BBox bbox;
-    FT_Pos w = 0, a = 0, d = 0;
-
-    code = FT_Get_First_Char(face, &index);
-    while (index != 0)
-    {
-        FT_Load_Glyph(face, index, FT_LOAD_DEFAULT);
-        FT_Get_Glyph(face->glyph, &g);
-        FT_Glyph_Get_CBox(g, FT_GLYPH_BBOX_TRUNCATE, &bbox);
-        w = std::max(w, bbox.xMax - bbox.xMin);
-        a = std::max(a, bbox.yMax);
-        d = std::min(d, bbox.yMin);
-        FT_Done_Glyph(g);
-        code = FT_Get_Next_Char(face, code, &index);
-    }
-    *box_w = (int)w;
-    *box_a = (int)a;
-    *box_d = -((int)d);
+    *box_w = face->size->metrics.max_advance >> 6;
+    *box_a = face->size->metrics.ascender >> 6;
+    *box_d = -(face->size->metrics.descender >> 6);
 }
 
 ui::base_font::base_font(std::string& name)
