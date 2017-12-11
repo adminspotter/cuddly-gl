@@ -622,9 +622,14 @@ ui::font_set& ui::font_set::operator<<(ui::font_set::font_spec& fs)
     this->faces.push_back(this->init_face(std::get<0>(fs),
                                           std::get<1>(fs),
                                           std::get<2>(fs)));
-    if (this->faces.size() == 1)
-        this->get_max_glyph_box(this->faces[0],
-                                &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    int w, a, d;
+
+    this->get_max_glyph_box(this->faces[this->faces.size() - 1], &w, &a, &d);
+
+    this->bbox_w = std::max(this->bbox_w, w);
+    this->bbox_a = std::max(this->bbox_a, a);
+    this->bbox_d = std::max(this->bbox_d, d);
+
     return *this;
 }
 
