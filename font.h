@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Dec 2017, 09:25:02 tquirk
+ *   last updated 15 Dec 2017, 07:42:19 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -93,20 +93,20 @@ namespace ui
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
         int bbox_w, bbox_a, bbox_d;
 
-        std::string search_path(std::string&, search_paths&);
+        static std::string search_path(std::string&, search_paths&);
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-        void setup_bitmap_face(FT_Face, int);
+        static void setup_bitmap_face(FT_Face, int);
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-        FT_Face init_face(std::string&, int, search_paths&);
-        void cleanup_face(FT_Face);
+        static FT_Face init_face(std::string&, int, search_paths&);
+        static void cleanup_face(FT_Face);
 
         void load_glyph(FT_Face, FT_ULong);
         void kern(FT_ULong, FT_ULong, FT_Vector *);
         virtual int line_height(void) = 0;
 
-        void get_max_glyph_box(FT_Face, int *, int *, int *);
+        static void get_max_glyph_box(FT_Face, int *, int *, int *);
 
       public:
         base_font(std::string&);

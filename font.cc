@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Dec 2017, 09:17:48 tquirk
+ *   last updated 15 Dec 2017, 07:44:44 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -305,7 +305,7 @@ FT_Face ui::base_font::init_face(std::string& fname,
 {
     FT_Library *lib = init_freetype();
     FT_Face face;
-    std::string font_path = this->search_path(fname, paths);
+    std::string font_path = ui::base_font::search_path(fname, paths);
 
     if (FT_New_Face(*lib, font_path.c_str(), 0, &face))
         throw std::runtime_error("Could not load font " + fname);
@@ -314,7 +314,7 @@ FT_Face ui::base_font::init_face(std::string& fname,
     FT_ULong length = 0;
 
     if (!FT_Load_Sfnt_Table(face, TTAG_CBDT, 0, NULL, &length) && length)
-        this->setup_bitmap_face(face, pixel_size);
+        ui::base_font::setup_bitmap_face(face, pixel_size);
     else
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
         FT_Set_Pixel_Sizes(face, 0, pixel_size);
@@ -582,14 +582,16 @@ int ui::font::line_height(void)
 ui::font::font(std::string& font_name, int pixel_size, ui::search_paths& paths)
     : ui::base_font(font_name)
 {
-    this->face = this->init_face(font_name, pixel_size, paths);
-    this->get_max_glyph_box(this->face,
-                            &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    this->face = ui::base_font::init_face(font_name, pixel_size, paths);
+    ui::base_font::get_max_glyph_box(this->face,
+                                     &this->bbox_w,
+                                     &this->bbox_a,
+                                     &this->bbox_d);
 }
 
 ui::font::~font()
 {
-    this->cleanup_face(this->face);
+    ui::base_font::cleanup_face(this->face);
 }
 
 struct ui::glyph& ui::font::operator[](FT_ULong code)
@@ -614,17 +616,18 @@ ui::font_set::font_set(std::string& set_name)
 ui::font_set::~font_set()
 {
     for (auto i = this->faces.begin(); i != this->faces.end(); ++i)
-        this->cleanup_face(*i);
+        ui::base_font::cleanup_face(*i);
 }
 
 ui::font_set& ui::font_set::operator<<(ui::font_set::font_spec& fs)
 {
-    this->faces.push_back(this->init_face(std::get<0>(fs),
-                                          std::get<1>(fs),
-                                          std::get<2>(fs)));
+    this->faces.push_back(ui::base_font::init_face(std::get<0>(fs),
+                                                   std::get<1>(fs),
+                                                   std::get<2>(fs)));
     int w, a, d;
 
-    this->get_max_glyph_box(this->faces[this->faces.size() - 1], &w, &a, &d);
+    ui::base_font::get_max_glyph_box(this->faces[this->faces.size() - 1],
+                                     &w, &a, &d);
 
     this->bbox_w = std::max(this->bbox_w, w);
     this->bbox_a = std::max(this->bbox_a, a);
