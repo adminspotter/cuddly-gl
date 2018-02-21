@@ -1,9 +1,9 @@
 /* cache.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:39:38 tquirk
+ *   last updated 21 Feb 2018, 13:59:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@
 
 #include <config.h>
 
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <pthread.h>
@@ -134,8 +135,11 @@ class BasicCache
                                       (void *)this)) != 0)
             {
                 std::ostringstream s;
+                char err[128];
+
+                strerror_r(ret, err, sizeof(err));
                 s << "Couldn't start " << this->type
-                  << " reaper thread: " << strerror(ret) << " (" << ret << ")";
+                  << " reaper thread: " << err << " (" << ret << ")";
                 throw std::runtime_error(s.str());
             }
         };
@@ -145,14 +149,24 @@ class BasicCache
             typename _bct::_bcom_t::iterator i;
 
             if ((ret = pthread_cancel(this->prune_thread)) != 0)
+            {
+                char err[128];
+
+                strerror_r(ret, err, sizeof(err));
                 std::clog << "Couldn't cancel " << this->type
                           << " reaper thread: "
-                          << strerror(ret) << " (" << ret << ")" << std::endl;
+                          << err << " (" << ret << ")" << std::endl;
+            }
             sleep(0);
             if ((ret = pthread_join(this->prune_thread, NULL)) != 0)
+            {
+                char err[128];
+
+                strerror_r(ret, err, sizeof(err));
                 std::clog << "Couldn't reap " << this->type
                           << " reaper thread: "
-                          << strerror(ret) << " (" << ret << ")" << std::endl;
+                          << err << " (" << ret << ")" << std::endl;
+            }
 
             typename _bct::clean_func_type cleanup_func = bc_cleanup();
 

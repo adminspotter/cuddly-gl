@@ -202,7 +202,7 @@ AC_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_UINT32_T
 
-AC_CHECK_FUNCS([memcpy memmove memset])
+AC_CHECK_FUNCS([memcpy memmove memset strerror_r])
 
 AC_CONFIG_FILES([Makefile
                  test/Makefile
