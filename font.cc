@@ -1,9 +1,9 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2017, 07:44:44 tquirk
+ *   last updated 20 Apr 2018, 12:30:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -434,7 +434,10 @@ void ui::base_font::get_string_size(const std::u32string& str,
     }
 }
 
-void ui::base_font::render_string(const std::u32string& str, ui::image& img)
+void ui::base_font::render_string(const std::u32string& str,
+                                  ui::image& img,
+                                  const glm::vec4& foreground,
+                                  const glm::vec4& background)
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
@@ -520,7 +523,9 @@ void ui::base_font::render_string(const std::u32string& str, ui::image& img)
 }
 
 void ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                            ui::image& img)
+                                            ui::image& img,
+                                            const glm::vec4& foreground,
+                                            const glm::vec4& background)
 {
     std::vector<int> req_size = {0, 0, 0};
     ui::image *imgs = new ui::image[strs.size()];
@@ -530,7 +535,7 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
     img.width = 0;
     for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
     {
-        this->render_string(*i, imgs[str_count]);
+        this->render_string(*i, imgs[str_count], foreground, background);
         img.width = std::max(img.width, imgs[str_count].width);
     }
 

@@ -1,9 +1,9 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2017, 07:42:19 tquirk
+ *   last updated 20 Apr 2018, 12:33:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,6 +52,8 @@
 #include FT_CONFIG_OPTIONS_H
 #include FT_FREETYPE_H
 #include FT_TYPES_H
+
+#include <glm/vec4.hpp>
 
 #include <string>
 #include <vector>
@@ -117,9 +119,11 @@ namespace ui
         virtual struct glyph& operator[](FT_ULong) = 0;
 
         void get_string_size(const std::u32string&, std::vector<int>&);
-        void render_string(const std::u32string&, image&);
+        void render_string(const std::u32string&, image&,
+                           const glm::vec4&, const glm::vec4&);
         void render_multiline_string(const std::vector<std::u32string>&,
-                                     image&);
+                                     image&,
+                                     const glm::vec4&, const glm::vec4&);
     };
 
     class font : public base_font

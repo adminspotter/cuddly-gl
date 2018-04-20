@@ -1,9 +1,9 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 08:57:54 tquirk
+ *   last updated 20 Apr 2018, 12:36:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,7 +102,8 @@ void ui::label::generate_string_image(void)
 {
     if (this->use_text == true && this->font != NULL && this->str.size() > 0)
     {
-        this->font->render_string(this->str, this->img);
+        this->font->render_string(this->str, this->img,
+                                  this->foreground, this->background);
         this->calculate_widget_size();
     }
 }

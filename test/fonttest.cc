@@ -29,7 +29,9 @@ int main(int argc, char **argv)
         f << f1;
     }
 
-    f.render_string(str, img);
+    f.render_string(str, img,
+                    glm::vec4(1.0, 1.0, 1.0, 1.0),
+                    glm::vec4(0.0, 0.0, 0.0, 1.0));
 
     for (i = img.height - 1; i >= 0; --i)
     {

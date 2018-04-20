@@ -1,9 +1,9 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:09:44 tquirk
+ *   last updated 20 Apr 2018, 12:36:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -161,7 +161,8 @@ void ui::multi_label::generate_string_image(void)
 
         this->split_string_to_width(width, strs);
         str_vec.insert(str_vec.begin(), strs.begin(), strs.end());
-        this->font->render_multiline_string(str_vec, this->img);
+        this->font->render_multiline_string(str_vec, this->img,
+                                            this->foreground, this->background);
         this->calculate_widget_size();
     }
 }
