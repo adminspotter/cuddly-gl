@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Apr 2018, 12:36:28 tquirk
+ *   last updated 20 Apr 2018, 12:49:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -65,7 +65,6 @@ int ui::label::get_string(GLuint t, void *v)
 /* ARGSUSED */
 void ui::label::set_string(GLuint t, void *v)
 {
-    this->use_text = true;
     this->str = ui::utf8tou32str(*((std::string *)v));
     this->generate_string_image();
 }
@@ -80,7 +79,6 @@ int ui::label::get_image(GLuint t, void *v)
 /* ARGSUSED */
 void ui::label::set_image(GLuint t, void *v)
 {
-    this->use_text = false;
     this->str.clear();
     this->img = *(ui::image *)v;
     this->calculate_widget_size();
@@ -100,7 +98,7 @@ void ui::label::set_margin(GLuint t, void *v)
 
 void ui::label::generate_string_image(void)
 {
-    if (this->use_text == true && this->font != NULL && this->str.size() > 0)
+    if (this->font != NULL && this->str.size() > 0)
     {
         this->font->render_string(this->str, this->img,
                                   this->foreground, this->background);
@@ -180,8 +178,9 @@ void ui::label::populate_buffers(void)
     {
         glBindTexture(GL_TEXTURE_2D, this->tex);
 
-        if (this->use_text)
+        if (this->img.per_pixel == 1)
         {
+            this->use_text = true;
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                          this->img.width, this->img.height, 0, GL_RED,
@@ -189,6 +188,7 @@ void ui::label::populate_buffers(void)
         }
         else
         {
+            this->use_text = false;
             glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                          this->img.width, this->img.height, 0, GL_RGBA,
