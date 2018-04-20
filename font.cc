@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Apr 2018, 12:30:27 tquirk
+ *   last updated 20 Apr 2018, 16:38:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -449,8 +449,8 @@ void ui::base_font::render_string(const std::u32string& str,
     img.width = req_size[0];
     img.height = req_size[1] + req_size[2];
     img.per_pixel = 1;
-    img.data = new unsigned char[img.width * img.height];
-    memset(img.data, 0, img.width * img.height);
+    img.data = new unsigned char[img.width * img.height * img.per_pixel];
+    memset(img.data, 0, img.width * img.height * img.per_pixel);
     save_pos = pos = (l_to_r ? 0 : img.width - 1);
 
     /* GL does positive y as up, so it makes more sense to just draw
