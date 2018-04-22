@@ -1,9 +1,9 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Sep 2016, 09:25:09 tquirk
+ *   last updated 22 Apr 2018, 09:18:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,9 +33,19 @@
 
 namespace ui
 {
+    typedef struct cell_tag
+    {
+        unsigned char r, g, b, a;
+    } __attribute__ ((__packed__))
+    cell;
+
     struct image
     {
-        unsigned char *data;
+        union {
+            unsigned char *data;
+            cell *cells;
+        };
+
         GLuint width, height, per_pixel;
 
         image()
