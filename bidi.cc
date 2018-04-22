@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Apr 2018, 09:53:20 tquirk
+ *   last updated 22 Apr 2018, 12:16:38 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -28,10 +28,12 @@
 
 #include "bidi.h"
 
+std::u32string PARA_SEP = { 0x0a, 0x2029 };
 std::u32string CRLF = { 0x0d, 0x0a };
 
-/* Rule P1:  split text into paragraphs.  We will consider LF (0x0a)
- * and CRLF (0x0d 0x0a) to be the separators.
+/* Rule P1:  split text into paragraphs.  We will consider LF (0x0a),
+ * Paragraph Separator (0x2029), and CRLF (0x0d 0x0a) to be the
+ * separators.
  */
 std::vector<std::u32string> bidi_p1(const std::u32string& s)
 {
@@ -43,7 +45,7 @@ std::vector<std::u32string> bidi_p1(const std::u32string& s)
     while ((pos = tmp_str.find(CRLF)) != std::u32string::npos)
         tmp_str.replace(pos, 2, 1, 0x0a);
 
-    while ((pos = tmp_str.find_first_of(0x0a)) != std::u32string::npos)
+    while ((pos = tmp_str.find_first_of(PARA_SEP)) != std::u32string::npos)
     {
         ret.push_back(tmp_str.substr(0, pos));
         tmp_str.replace(0, pos + 1, empty);

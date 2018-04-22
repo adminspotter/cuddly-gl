@@ -58,11 +58,21 @@ void test_bidi_p1(void)
     is(res5.size(), 2, test + st + "expected vector size");
     is(ui::u32strtoutf8(res5[0]), "abc", test + st + "expected string 1");
     is(ui::u32strtoutf8(res5[1]), "123", test + st + "expected string 2");
+
+    st = "paragraph separator: ";
+
+    std::u32string para_sep = { 'a', 'b', 'c', 0x2029, '1', '2', '3' };
+
+    std::vector<std::u32string> res6 = bidi_p1(para_sep);
+
+    is(res6.size(), 2, test + st + "expected vector size");
+    is(ui::u32strtoutf8(res6[0]), "abc", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res6[1]), "123", test + st + "expected string 2");
 }
 
 int main(int argc, char **argv)
 {
-    plan(14);
+    plan(17);
 
     test_bidi_p1();
     return exit_status();
