@@ -19,11 +19,40 @@ void test_bidi_p1(void)
     is(ui::u32strtoutf8(res1[0]), "abcde12345",
        test + st + "expected string");
 
+    st = "newline at beginning: ";
+
+    std::u32string leading_lf = ui::utf8tou32str("\nabc123");
+
+    std::vector<std::u32string> res2 = bidi_p1(leading_lf);
+
+    is(res2.size(), 2, test + st + "expected vector size");
+    is(ui::u32strtoutf8(res2[0]), "", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res2[1]), "abc123", test + st + "expected string 2");
+
+    st = "newline at end: ";
+
+    std::u32string trailing_lf = ui::utf8tou32str("abc123\n");
+
+    std::vector<std::u32string> res3 = bidi_p1(trailing_lf);
+
+    is(res3.size(), 2, test + st + "expected vector size");
+    is(ui::u32strtoutf8(res3[0]), "abc123", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res3[1]), "", test + st + "expected string 2");
+
+    st = "newline in middle: ";
+
+    std::u32string middle_lf = ui::utf8tou32str("abc\n123");
+
+    std::vector<std::u32string> res4 = bidi_p1(middle_lf);
+
+    is(res4.size(), 2, test + st + "expected vector size");
+    is(ui::u32strtoutf8(res4[0]), "abc", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res4[1]), "123", test + st + "expected string 2");
 }
 
 int main(int argc, char **argv)
 {
-    plan(2);
+    plan(11);
 
     test_bidi_p1();
     return exit_status();

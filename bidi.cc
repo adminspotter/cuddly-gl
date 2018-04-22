@@ -34,8 +34,15 @@
 std::vector<std::u32string> bidi_p1(const std::u32string& s)
 {
     std::u32string tmp_str(s);
+    std::u32string::size_type pos;
+    std::u32string empty;
     std::vector<std::u32string> ret;
 
+    while ((pos = tmp_str.find_first_of(0x0a)) != std::u32string::npos)
+    {
+        ret.push_back(tmp_str.substr(0, pos));
+        tmp_str.replace(0, pos + 1, empty);
+    }
     ret.push_back(tmp_str);
     return ret;
 }
