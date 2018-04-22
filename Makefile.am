@@ -10,6 +10,7 @@ install-recursive: SUBDIRS = $(SD_INST)
 EXTRA_DIST = autogen.sh doc
 
 pkginclude_HEADERS = active.h \
+	bidi.h \
 	button.h \
 	composite.h \
 	font.h\
