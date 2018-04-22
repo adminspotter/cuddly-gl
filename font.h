@@ -71,6 +71,7 @@ namespace ui
         int x_advance, y_advance, width, height;
         int top, left;
         int pitch;
+        int per_pixel;
         union
         {
             unsigned char *bitmap;

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Apr 2018, 16:38:48 tquirk
+ *   last updated 21 Apr 2018, 07:59:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -352,8 +352,19 @@ void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
     g.left = slot->bitmap_left;
     g.top = slot->bitmap_top;
     g.pitch = slot->bitmap.pitch;
+    g.per_pixel = (slot->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? 4 : 1);
     g.bitmap = new unsigned char[abs(g.pitch) * g.height];
-    memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
+    if (g.per_pixel == 1)
+        memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
+    else
+        /* Freetype color glyphs are in BGRA format, and we use RGBA. */
+        for (int i = 0, j = 0; i < abs(g.pitch) * g.height; i += 4, ++j)
+        {
+            g.cells[j].b = slot->bitmap.buffer[i];
+            g.cells[j].g = slot->bitmap.buffer[i + 1];
+            g.cells[j].r = slot->bitmap.buffer[i + 2];
+            g.cells[j].a = slot->bitmap.buffer[i + 3];
+        }
 }
 
 void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
