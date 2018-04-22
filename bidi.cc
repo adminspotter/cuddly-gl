@@ -28,6 +28,8 @@
 
 #include "bidi.h"
 
+std::u32string CRLF = { 0x0d, 0x0a };
+
 /* Rule P1:  split text into paragraphs.  We will consider LF (0x0a)
  * and CRLF (0x0d 0x0a) to be the separators.
  */
@@ -37,6 +39,9 @@ std::vector<std::u32string> bidi_p1(const std::u32string& s)
     std::u32string::size_type pos;
     std::u32string empty;
     std::vector<std::u32string> ret;
+
+    while ((pos = tmp_str.find(CRLF)) != std::u32string::npos)
+        tmp_str.replace(pos, 2, 1, 0x0a);
 
     while ((pos = tmp_str.find_first_of(0x0a)) != std::u32string::npos)
     {

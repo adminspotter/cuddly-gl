@@ -48,11 +48,21 @@ void test_bidi_p1(void)
     is(res4.size(), 2, test + st + "expected vector size");
     is(ui::u32strtoutf8(res4[0]), "abc", test + st + "expected string 1");
     is(ui::u32strtoutf8(res4[1]), "123", test + st + "expected string 2");
+
+    st = "crlf: ";
+
+    std::u32string crlf = { 'a', 'b', 'c', 0x0d, 0x0a, '1', '2', '3' };
+
+    std::vector<std::u32string> res5 = bidi_p1(crlf);
+
+    is(res5.size(), 2, test + st + "expected vector size");
+    is(ui::u32strtoutf8(res5[0]), "abc", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res5[1]), "123", test + st + "expected string 2");
 }
 
 int main(int argc, char **argv)
 {
-    plan(11);
+    plan(14);
 
     test_bidi_p1();
     return exit_status();
