@@ -35,6 +35,7 @@ connectordir = @datadir@/$(PACKAGE)/connectors
 connector_DATA = connect_glfw.cc connect_glfw.h
 
 libcuddly_gl_la_SOURCES = active.cc \
+	bidi.cc \
 	button.cc \
 	composite.cc \
 	font.cc \

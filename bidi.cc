@@ -1,6 +1,6 @@
-/* bidi.h                                                  -*- C++ -*-
+/* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Apr 2018, 09:37:45 tquirk
+ *   last updated 22 Apr 2018, 09:53:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -20,19 +20,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * Prototypes, types, and defines for the Unicode BIDI algorithm.
- * See:  http://unicode.org/reports/tr9/
+ * Implementation of the Unicode BIDI algorithm.
  *
  * Things to do
  *
  */
 
-#ifndef __INC_CUDDLY_BIDI_H__
-#define __INC_CUDDLY_BIDI_H__
+#include "bidi.h"
 
-#include <string>
-#include <vector>
+/* Rule P1:  split text into paragraphs.  We will consider LF (0x0a)
+ * and CRLF (0x0d 0x0a) to be the separators.
+ */
+std::vector<std::u32string> bidi_p1(const std::u32string& s)
+{
+    std::vector<std::u32string> ret;
 
-std::vector<std::u32string> bidi_p1(const std::u32string&);
-
-#endif /* __INC_CUDDLY_BIDI_H__ */
+    return ret;
+}
