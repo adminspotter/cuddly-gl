@@ -33,7 +33,9 @@
  */
 std::vector<std::u32string> bidi_p1(const std::u32string& s)
 {
+    std::u32string tmp_str(s);
     std::vector<std::u32string> ret;
 
+    ret.push_back(tmp_str);
     return ret;
 }
