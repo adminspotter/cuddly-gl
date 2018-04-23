@@ -97,11 +97,32 @@ void test_bidi_p2_p3(void)
     std::u32string neutral_al = { '-', 0x627 };
     is(bidi_p2_p3(neutral_al), 1,
        test + "AL after neutral: expected embedding");
+
+    std::u32string all_isolate = { 0x2066, 0x5d0, 0x2069 };
+    is(bidi_p2_p3(all_isolate), 0,
+       test + "all isolate: expected embedding");
+
+    std::u32string isolate_l = { 0x2066, 0x5d0, 0x2069, 'a' };
+    is(bidi_p2_p3(isolate_l), 0,
+       test + "L after isolate: expected embedding");
+
+    std::u32string isolate_r = { 0x2066, 'a', 0x2069, 0x5d0 };
+    is(bidi_p2_p3(isolate_r), 1,
+       test + "R after isolate: expected embedding");
+
+    std::u32string isolate_al = { 0x2066, 'a', 0x2069, 0x627 };
+    is(bidi_p2_p3(isolate_al), 1,
+       test + "AL after isolate: expected embedding");
+
+    std::u32string nested =
+        { 0x2066, 'a', 0x2067, 'b', 0x2069, 0x2069, 0x627 };
+    is(bidi_p2_p3(nested), 1,
+       test + "nested isolates: expected embedding");
 }
 
 int main(int argc, char **argv)
 {
-    plan(24);
+    plan(29);
 
     test_bidi_p1();
     test_bidi_p2_p3();

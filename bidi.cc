@@ -61,14 +61,19 @@ std::vector<std::u32string> bidi_p1(const std::u32string& s)
  */
 int bidi_p2_p3(const std::u32string& s)
 {
-    int embedding = 0;
+    int embedding = 0, isolate_level = 0;
 
     for (auto c : s)
     {
-        if (c == RLM
-            || c == ALM
-            || R.find(c) != R.end()
-            || AL.find(c) != AL.end())
+        if (c >= LRI && c <= FSI)
+            ++isolate_level;
+        else if (c == PDI)
+            --isolate_level;
+        else if (isolate_level == 0
+                 && (c == RLM
+                     || c == ALM
+                     || R.find(c) != R.end()
+                     || AL.find(c) != AL.end()))
         {
             embedding = 1;
             break;
