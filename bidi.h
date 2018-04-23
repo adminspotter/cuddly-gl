@@ -37,5 +37,6 @@
 extern std::unordered_set<char32_t> AL, R;
 
 std::vector<std::u32string> bidi_p1(const std::u32string&);
+int bidi_p2_p3(const std::u32string&);
 
 #endif /* __INC_CUDDLY_BIDI_H__ */

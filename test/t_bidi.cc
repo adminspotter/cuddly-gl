@@ -70,10 +70,19 @@ void test_bidi_p1(void)
     is(ui::u32strtoutf8(res6[1]), "123", test + st + "expected string 2");
 }
 
+void test_bidi_p2_p3(void)
+{
+    std::string test = "bidi_p2_p3: ";
+
+    std::u32string empty;
+    is(bidi_p2_p3(empty), 0, test + "empty: expected embedding");
+}
+
 int main(int argc, char **argv)
 {
-    plan(17);
+    plan(18);
 
     test_bidi_p1();
+    test_bidi_p2_p3();
     return exit_status();
 }

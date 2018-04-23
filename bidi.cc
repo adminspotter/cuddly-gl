@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Apr 2018, 12:16:38 tquirk
+ *   last updated 23 Apr 2018, 16:50:01 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -52,4 +52,16 @@ std::vector<std::u32string> bidi_p1(const std::u32string& s)
     }
     ret.push_back(tmp_str);
     return ret;
+}
+
+/* Rule P2:  find the first L, AL, or R character that isn't part of
+ * an isolate block.
+ * Rule P3:  if the found character is AL or R, set paragraph
+ * embedding to 1, otherwise 0.
+ */
+int bidi_p2_p3(const std::u32string& s)
+{
+    int embedding = 0;
+
+    return embedding;
 }
