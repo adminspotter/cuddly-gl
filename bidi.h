@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Apr 2018, 09:37:45 tquirk
+ *   last updated 23 Apr 2018, 11:40:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -32,6 +32,9 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
+
+extern std::unordered_set<char32_t> AL, R;
 
 std::vector<std::u32string> bidi_p1(const std::u32string&);
 

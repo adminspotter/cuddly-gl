@@ -36,6 +36,7 @@ connector_DATA = connect_glfw.cc connect_glfw.h
 
 libcuddly_gl_la_SOURCES = active.cc \
 	bidi.cc \
+	bidi_classes.cc \
 	button.cc \
 	composite.cc \
 	font.cc \
