@@ -63,5 +63,17 @@ int bidi_p2_p3(const std::u32string& s)
 {
     int embedding = 0;
 
+    for (auto c : s)
+    {
+        if (c == RLM
+            || c == ALM
+            || R.find(c) != R.end()
+            || AL.find(c) != AL.end())
+        {
+            embedding = 1;
+            break;
+        }
+    }
+
     return embedding;
 }

@@ -36,6 +36,10 @@
 
 extern std::unordered_set<char32_t> AL, R;
 
+#define LRM 0x200e
+#define RLM 0x200f
+#define ALM 0x061c
+
 std::vector<std::u32string> bidi_p1(const std::u32string&);
 int bidi_p2_p3(const std::u32string&);
 
