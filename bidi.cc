@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Apr 2018, 16:50:01 tquirk
+ *   last updated 24 Apr 2018, 08:41:01 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -28,29 +28,37 @@
 
 #include "bidi.h"
 
-std::u32string PARA_SEP = { 0x0a, 0x2029 };
 std::u32string CRLF = { 0x0d, 0x0a };
 
-/* Rule P1:  split text into paragraphs.  We will consider LF (0x0a),
- * Paragraph Separator (0x2029), and CRLF (0x0d 0x0a) to be the
- * separators.
+/* Rule P1:  split text into paragraphs.  Along with the contents of
+ * character class B, we will also consider CRLF (0x0d 0x0a) to be a
+ * valid separator.
+ *
+ * NOTE:  in the description for rule P1, it is declared that
+ * paragraph separators be kept with the paragraphs which precede
+ * them.  We just drop them here.
  */
 std::vector<std::u32string> bidi_p1(const std::u32string& s)
 {
     std::u32string tmp_str(s);
-    std::u32string::size_type pos;
+    std::u32string::size_type pos, start;
     std::u32string empty;
     std::vector<std::u32string> ret;
 
     while ((pos = tmp_str.find(CRLF)) != std::u32string::npos)
-        tmp_str.replace(pos, 2, 1, 0x0a);
+        tmp_str.replace(pos, 2, 1, PARA_SEP);
 
-    while ((pos = tmp_str.find_first_of(PARA_SEP)) != std::u32string::npos)
+    start = pos = 0;
+    for (auto c : tmp_str)
     {
-        ret.push_back(tmp_str.substr(0, pos));
-        tmp_str.replace(0, pos + 1, empty);
+        if (B.find(c) != B.end())
+        {
+            ret.push_back(tmp_str.substr(start, pos - start));
+            start = pos + 1;
+        }
+        ++pos;
     }
-    ret.push_back(tmp_str);
+    ret.push_back(tmp_str.substr(start, pos - start));
     return ret;
 }
 

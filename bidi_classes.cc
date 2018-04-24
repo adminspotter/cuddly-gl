@@ -1,6 +1,6 @@
 /* bidi_classes.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Apr 2018, 12:07:07 tquirk
+ *   last updated 24 Apr 2018, 08:02:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -186,6 +186,12 @@ std::unordered_set<char32_t> AL
     0x1eea8, 0x1eea9, 0x1eeab, 0x1eeac, 0x1eead, 0x1eeae, 0x1eeaf,
     0x1eeb0, 0x1eeb1, 0x1eeb2, 0x1eeb3, 0x1eeb4, 0x1eeb5, 0x1eeb6,
     0x1eeb7, 0x1eeb8, 0x1eeb9, 0x1eeba, 0x1eebb
+};
+
+/* Class B:  Paragraph separators */
+std::unordered_set<char32_t> B
+{
+    0x0a, 0x0d, 0x1c, 0x1d, 0x1e, 0x85, 0x2029
 };
 
 /* Class R:  Right-to-left */

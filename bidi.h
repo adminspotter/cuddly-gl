@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 Apr 2018, 11:40:56 tquirk
+ *   last updated 24 Apr 2018, 08:39:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -34,7 +34,9 @@
 #include <vector>
 #include <unordered_set>
 
-extern std::unordered_set<char32_t> AL, R;
+extern std::unordered_set<char32_t> AL, B, R;
+
+#define PARA_SEP 0x2029
 
 #define LRM 0x200e
 #define RLM 0x200f
