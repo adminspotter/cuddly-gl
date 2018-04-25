@@ -11,40 +11,43 @@ class fake_bidi : public unicode_bidi
     fake_bidi() : unicode_bidi() {};
     ~fake_bidi() {};
 
+    using unicode_bidi::char_type;
     using unicode_bidi::rule_p1;
     using unicode_bidi::rule_p2_p3;
 };
 
-void test_bidi_char_type(void)
+void test_char_type(void)
 {
-    std::string test = "bidi_char_type: ";
+    std::string test = "char_type: ";
 
-    is(bidi_char_type(0x202a), class_LRE, test + "expected LRE");
-    is(bidi_char_type(0x202b), class_RLE, test + "expected RLE");
-    is(bidi_char_type(0x202c), class_PDF, test + "expected PDF");
-    is(bidi_char_type(0x202d), class_LRO, test + "expected LRO");
-    is(bidi_char_type(0x202e), class_RLO, test + "expected RLO");
-    is(bidi_char_type(0x2066), class_LRI, test + "expected LRI");
-    is(bidi_char_type(0x2067), class_RLI, test + "expected RLI");
-    is(bidi_char_type(0x2068), class_FSI, test + "expected FSI");
-    is(bidi_char_type(0x2069), class_PDI, test + "expected PDI");
-    is(bidi_char_type(0x061c), class_AL, test + "expected ALM AL");
-    is(bidi_char_type(0x0627), class_AL, test + "expected char AL");
-    is(bidi_char_type(0x200f), class_R, test + "expected RLM R");
-    is(bidi_char_type(0x05d0), class_R, test + "expected char R");
-    is(bidi_char_type(0x066b), class_AN, test + "expected AN");
-    is(bidi_char_type(0x0085), class_B, test + "expected B");
-    is(bidi_char_type(0x206a), class_BN, test + "expected BN");
-    is(bidi_char_type(0xff0c), class_CS, test + "expected CS");
-    is(bidi_char_type(0x0039), class_EN, test + "expected EN");
-    is(bidi_char_type(0x207a), class_ES, test + "expected ES");
-    is(bidi_char_type(0x20a9), class_ET, test + "expected ET");
-    is(bidi_char_type(0x065a), class_NSM, test + "expected NSM");
-    is(bidi_char_type(0x1809), class_ON, test + "expected ON");
-    is(bidi_char_type(0x000b), class_S, test + "expected S");
-    is(bidi_char_type(0x2005), class_WS, test + "expected WS");
-    is(bidi_char_type(0x200e), class_L, test + "expected LRM L");
-    is(bidi_char_type(0x0061), class_L, test + "expected char L");
+    fake_bidi b;
+
+    is(b.char_type(0x202a), class_LRE, test + "expected LRE");
+    is(b.char_type(0x202b), class_RLE, test + "expected RLE");
+    is(b.char_type(0x202c), class_PDF, test + "expected PDF");
+    is(b.char_type(0x202d), class_LRO, test + "expected LRO");
+    is(b.char_type(0x202e), class_RLO, test + "expected RLO");
+    is(b.char_type(0x2066), class_LRI, test + "expected LRI");
+    is(b.char_type(0x2067), class_RLI, test + "expected RLI");
+    is(b.char_type(0x2068), class_FSI, test + "expected FSI");
+    is(b.char_type(0x2069), class_PDI, test + "expected PDI");
+    is(b.char_type(0x061c), class_AL, test + "expected ALM AL");
+    is(b.char_type(0x0627), class_AL, test + "expected char AL");
+    is(b.char_type(0x200f), class_R, test + "expected RLM R");
+    is(b.char_type(0x05d0), class_R, test + "expected char R");
+    is(b.char_type(0x066b), class_AN, test + "expected AN");
+    is(b.char_type(0x0085), class_B, test + "expected B");
+    is(b.char_type(0x206a), class_BN, test + "expected BN");
+    is(b.char_type(0xff0c), class_CS, test + "expected CS");
+    is(b.char_type(0x0039), class_EN, test + "expected EN");
+    is(b.char_type(0x207a), class_ES, test + "expected ES");
+    is(b.char_type(0x20a9), class_ET, test + "expected ET");
+    is(b.char_type(0x065a), class_NSM, test + "expected NSM");
+    is(b.char_type(0x1809), class_ON, test + "expected ON");
+    is(b.char_type(0x000b), class_S, test + "expected S");
+    is(b.char_type(0x2005), class_WS, test + "expected WS");
+    is(b.char_type(0x200e), class_L, test + "expected LRM L");
+    is(b.char_type(0x0061), class_L, test + "expected char L");
 }
 
 void test_rule_p1(void)
@@ -176,7 +179,7 @@ int main(int argc, char **argv)
 {
     plan(57);
 
-    test_bidi_char_type();
+    test_char_type();
     test_rule_p1();
     test_rule_p2_p3();
     return exit_status();

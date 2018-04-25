@@ -32,7 +32,7 @@ const int PARA_SEP = 0x2029;
 
 std::u32string CRLF = { 0x0d, 0x0a };
 
-char_class_t bidi_char_type(char32_t c)
+char_class_t unicode_bidi::char_type(char32_t c)
 {
     if (c == LRE) return class_LRE;
     if (c == RLE) return class_RLE;
@@ -107,7 +107,7 @@ int unicode_bidi::rule_p2_p3(const std::u32string& s)
             --isolate_level;
         else if (isolate_level == 0)
         {
-            char_class_t type = bidi_char_type(c);
+            char_class_t type = unicode_bidi::char_type(c);
             if (type == class_R || type == class_AL)
             {
                 embedding = 1;
