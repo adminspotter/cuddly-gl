@@ -9,6 +9,11 @@ void test_bidi_char_type(void)
 {
     std::string test = "bidi_char_type: ";
 
+    is(bidi_char_type(0x202a), class_LRE, test + "expected LRE");
+    is(bidi_char_type(0x202b), class_RLE, test + "expected RLE");
+    is(bidi_char_type(0x202c), class_PDF, test + "expected PDF");
+    is(bidi_char_type(0x202d), class_LRO, test + "expected LRO");
+    is(bidi_char_type(0x202e), class_RLO, test + "expected RLO");
     is(bidi_char_type(0x2066), class_LRI, test + "expected LRI");
     is(bidi_char_type(0x2067), class_RLI, test + "expected RLI");
     is(bidi_char_type(0x2068), class_FSI, test + "expected FSI");
@@ -145,7 +150,7 @@ void test_bidi_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(42);
+    plan(47);
 
     test_bidi_char_type();
     test_bidi_p1();

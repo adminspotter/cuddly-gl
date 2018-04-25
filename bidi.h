@@ -44,7 +44,7 @@ char_class_t;
 
 extern std::unordered_set<char32_t> AL, B, R;
 
-extern const int LRM, RLM, ALM, LRI, RLI, FSI, PDI;
+extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 
 char_class_t bidi_char_type(char32_t);
 
