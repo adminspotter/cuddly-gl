@@ -50,6 +50,7 @@ char_class_t bidi_char_type(char32_t c)
     if (c == RLM || R.find(c) != R.end()) return class_R;
     if (AN.find(c) != AN.end()) return class_AN;
     if (B.find(c) != B.end()) return class_B;
+    if (BN.find(c) != BN.end()) return class_BN;
     return class_L;
 }
 
