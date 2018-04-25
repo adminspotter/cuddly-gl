@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 10:48:14 tquirk
+ *   last updated 25 Apr 2018, 16:52:51 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -42,8 +42,8 @@ typedef enum {
 }
 char_class_t;
 
-extern std::unordered_set<char32_t> AL, AN, B, BN, CS, EN, ES;
-extern std::unordered_set<char32_t> ET, NSM, ON, R, S, WS;
+extern const std::unordered_set<char32_t> AL, AN, B, BN, CS, EN, ES;
+extern const std::unordered_set<char32_t> ET, NSM, ON, R, S, WS;
 
 extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 

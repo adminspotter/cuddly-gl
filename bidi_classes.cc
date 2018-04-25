@@ -1,6 +1,6 @@
 /* bidi_classes.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 07:02:16 tquirk
+ *   last updated 25 Apr 2018, 16:54:30 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -29,7 +29,7 @@
 #include "bidi.h"
 
 /* Class AL:  Arabic Letters */
-std::unordered_set<char32_t> AL
+const std::unordered_set<char32_t> AL
 {
     0x0608, 0x060b, 0x060d, 0x061b, 0x061c, 0x061e, 0x061f, 0x0620,
     0x0621, 0x0622, 0x0623, 0x0624, 0x0625, 0x0626, 0x0627, 0x0628,
@@ -189,7 +189,7 @@ std::unordered_set<char32_t> AL
 };
 
 /* Class AN:  Arabic numbers */
-std::unordered_set<char32_t> AN
+const std::unordered_set<char32_t> AN
 {
     0x0600, 0x0601, 0x0602, 0x0603, 0x0604, 0x0605, 0x0660, 0x0661,
     0x0662, 0x0663, 0x0664, 0x0665, 0x0666, 0x0667, 0x0668, 0x0669,
@@ -201,13 +201,13 @@ std::unordered_set<char32_t> AN
 };
 
 /* Class B:  Paragraph separators */
-std::unordered_set<char32_t> B
+const std::unordered_set<char32_t> B
 {
     0x0a, 0x0d, 0x1c, 0x1d, 0x1e, 0x85, 0x2029
 };
 
 /* Class BN:  Boundary Neutrals */
-std::unordered_set<char32_t> BN
+const std::unordered_set<char32_t> BN
 {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
     0x0008, 0x000e, 0x000f, 0x0010, 0x0011, 0x0012, 0x0013, 0x0014,
@@ -237,14 +237,14 @@ std::unordered_set<char32_t> BN
 };
 
 /* Class CS:  Common separators */
-std::unordered_set<char32_t> CS
+const std::unordered_set<char32_t> CS
 {
     0x002c, 0x002e, 0x002f, 0x003a, 0x00a0, 0x060c, 0x202f, 0x2044,
     0xfe50, 0xfe52, 0xfe55, 0xff0c, 0xff0e, 0xff0f, 0xff1a
 };
 
 /* Class EN:  European numbers */
-std::unordered_set<char32_t> EN
+const std::unordered_set<char32_t> EN
 {
     0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
     0x0038, 0x0039, 0x00b2, 0x00b3, 0x00b9, 0x06f0, 0x06f1, 0x06f2,
@@ -271,14 +271,14 @@ std::unordered_set<char32_t> EN
 };
 
 /* Class ES:  European separators */
-std::unordered_set<char32_t> ES
+const std::unordered_set<char32_t> ES
 {
     0x002b, 0x002d, 0x207a, 0x207b, 0x208a, 0x208b, 0x2212, 0xfb29,
     0xfe62, 0xfe63, 0xff0b, 0xff0d
 };
 
 /* Class ET:  European terminators */
-std::unordered_set<char32_t> ET
+const std::unordered_set<char32_t> ET
 {
     0x0023, 0x0024, 0x0025, 0x00a2, 0x00a3, 0x00a4, 0x00a5, 0x00b0,
     0x00b1, 0x058f, 0x0609, 0x060a, 0x066a, 0x09f2, 0x09f3, 0x09fb,
@@ -292,7 +292,7 @@ std::unordered_set<char32_t> ET
 };
 
 /* Class NSM:  Nonspacing marks */
-std::unordered_set<char32_t> NSM
+const std::unordered_set<char32_t> NSM
 {
     0x0300, 0x0301, 0x0302, 0x0303, 0x0304, 0x0305, 0x0306, 0x0307,
     0x0308, 0x0309, 0x030a, 0x030b, 0x030c, 0x030d, 0x030e, 0x030f,
@@ -522,7 +522,7 @@ std::unordered_set<char32_t> NSM
 };
 
 /* Class ON:  Other neutrals */
-std::unordered_set<char32_t> ON
+const std::unordered_set<char32_t> ON
 {
     0x0021, 0x0022, 0x0026, 0x0027, 0x0028, 0x0029, 0x002a, 0x003b,
     0x003c, 0x003d, 0x003e, 0x003f, 0x0040, 0x005b, 0x005c, 0x005d,
@@ -1221,7 +1221,7 @@ std::unordered_set<char32_t> ON
 };
 
 /* Class R:  Right-to-left */
-std::unordered_set<char32_t> R
+const std::unordered_set<char32_t> R
 {
     0x05be, 0x05c0, 0x05c3, 0x05c6, 0x05d0, 0x05d1, 0x05d2, 0x05d3,
     0x05d4, 0x05d5, 0x05d6, 0x05d7, 0x05d8, 0x05d9, 0x05da, 0x05db,
@@ -1412,15 +1412,20 @@ std::unordered_set<char32_t> R
 };
 
 /* Class S:  Segment separators */
-std::unordered_set<char32_t> S
+const std::unordered_set<char32_t> S
 {
     0x0009, 0x000b, 0x001f
 };
 
 /* Class WS:  Whitespace */
-std::unordered_set<char32_t> WS
+const std::unordered_set<char32_t> WS
 {
     0x000c, 0x0020, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004,
     0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200a, 0x2028, 0x205f,
     0x3000
 };
+
+/* The single-character directional control classes */
+const int LRM = 0x200e, RLM = 0x200f, ALM = 0x061c;
+const int LRE = 0x202a, RLE = 0x202b, PDF = 0x202c, LRO = 0x202d, RLO = 0x202e;
+const int LRI = 0x2066, RLI = 0x2067, FSI = 0x2068, PDI = 0x2069;

@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 11:29:02 tquirk
+ *   last updated 25 Apr 2018, 16:51:18 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -29,9 +29,6 @@
 #include "bidi.h"
 
 const int PARA_SEP = 0x2029;
-const int LRM = 0x200e, RLM = 0x200f, ALM = 0x061c;
-const int LRE = 0x202a, RLE = 0x202b, PDF = 0x202c, LRO = 0x202d, RLO = 0x202e;
-const int LRI = 0x2066, RLI = 0x2067, FSI = 0x2068, PDI = 0x2069;
 
 std::u32string CRLF = { 0x0d, 0x0a };
 
