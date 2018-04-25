@@ -42,7 +42,7 @@ typedef enum {
 }
 char_class_t;
 
-extern std::unordered_set<char32_t> AL, AN, B, BN, CS, R;
+extern std::unordered_set<char32_t> AL, AN, B, BN, CS, EN, R;
 
 extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 
