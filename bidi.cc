@@ -96,7 +96,7 @@ std::vector<std::u32string> unicode_bidi::rule_p1(const std::u32string& s)
  * Rule P3:  if the found character is AL or R, set paragraph
  * embedding to 1, otherwise 0.
  */
-int bidi_p2_p3(const std::u32string& s)
+int unicode_bidi::rule_p2_p3(const std::u32string& s)
 {
     int embedding = 0, isolate_level = 0;
 

@@ -49,12 +49,11 @@ extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 
 char_class_t bidi_char_type(char32_t);
 
-int bidi_p2_p3(const std::u32string&);
-
 class unicode_bidi
 {
   protected:
     std::vector<std::u32string> rule_p1(const std::u32string&);
+    int rule_p2_p3(const std::u32string&);
 
   public:
     unicode_bidi();

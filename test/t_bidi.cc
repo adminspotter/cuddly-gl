@@ -12,6 +12,7 @@ class fake_bidi : public unicode_bidi
     ~fake_bidi() {};
 
     using unicode_bidi::rule_p1;
+    using unicode_bidi::rule_p2_p3;
 };
 
 void test_bidi_char_type(void)
@@ -113,59 +114,61 @@ void test_rule_p1(void)
     is(ui::u32strtoutf8(res6[1]), "123", test + st + "expected string 2");
 }
 
-void test_bidi_p2_p3(void)
+void test_rule_p2_p3(void)
 {
-    std::string test = "bidi_p2_p3: ";
+    std::string test = "rule_p2_p3: ";
+
+    fake_bidi b;
 
     std::u32string empty;
-    is(bidi_p2_p3(empty), 0, test + "empty: expected embedding");
+    is(b.rule_p2_p3(empty), 0, test + "empty: expected embedding");
 
     std::u32string l_first = { 'a' };
-    is(bidi_p2_p3(l_first), 0, test + "L first: expected embedding");
+    is(b.rule_p2_p3(l_first), 0, test + "L first: expected embedding");
 
     std::u32string r_first = { 0x5d0 };
-    is(bidi_p2_p3(r_first), 1, test + "R first: expected embedding");
+    is(b.rule_p2_p3(r_first), 1, test + "R first: expected embedding");
 
     std::u32string al_first = { 0x627 };
-    is(bidi_p2_p3(al_first), 1, test + "AL first: expected embedding");
+    is(b.rule_p2_p3(al_first), 1, test + "AL first: expected embedding");
 
     std::u32string l_before_r = { 'a', 0x5d0 };
-    is(bidi_p2_p3(l_before_r), 0, test + "L before R: expected embedding");
+    is(b.rule_p2_p3(l_before_r), 0, test + "L before R: expected embedding");
 
     std::u32string l_before_al = { 'a', 0x627 };
-    is(bidi_p2_p3(l_before_al), 0, test + "L before AL: expected embedding");
+    is(b.rule_p2_p3(l_before_al), 0, test + "L before AL: expected embedding");
 
     std::u32string neutral_l = { '-', 'a' };
-    is(bidi_p2_p3(neutral_l), 0,
+    is(b.rule_p2_p3(neutral_l), 0,
        test + "L after neutral: expected embedding");
 
     std::u32string neutral_r = { '-', 0x5d0 };
-    is(bidi_p2_p3(neutral_r), 1,
+    is(b.rule_p2_p3(neutral_r), 1,
        test + "R after neutral: expected embedding");
 
     std::u32string neutral_al = { '-', 0x627 };
-    is(bidi_p2_p3(neutral_al), 1,
+    is(b.rule_p2_p3(neutral_al), 1,
        test + "AL after neutral: expected embedding");
 
     std::u32string all_isolate = { 0x2066, 0x5d0, 0x2069 };
-    is(bidi_p2_p3(all_isolate), 0,
+    is(b.rule_p2_p3(all_isolate), 0,
        test + "all isolate: expected embedding");
 
     std::u32string isolate_l = { 0x2066, 0x5d0, 0x2069, 'a' };
-    is(bidi_p2_p3(isolate_l), 0,
+    is(b.rule_p2_p3(isolate_l), 0,
        test + "L after isolate: expected embedding");
 
     std::u32string isolate_r = { 0x2066, 'a', 0x2069, 0x5d0 };
-    is(bidi_p2_p3(isolate_r), 1,
+    is(b.rule_p2_p3(isolate_r), 1,
        test + "R after isolate: expected embedding");
 
     std::u32string isolate_al = { 0x2066, 'a', 0x2069, 0x627 };
-    is(bidi_p2_p3(isolate_al), 1,
+    is(b.rule_p2_p3(isolate_al), 1,
        test + "AL after isolate: expected embedding");
 
     std::u32string nested =
         { 0x2066, 'a', 0x2067, 'b', 0x2069, 0x2069, 0x627 };
-    is(bidi_p2_p3(nested), 1,
+    is(b.rule_p2_p3(nested), 1,
        test + "nested isolates: expected embedding");
 }
 
@@ -175,6 +178,6 @@ int main(int argc, char **argv)
 
     test_bidi_char_type();
     test_rule_p1();
-    test_bidi_p2_p3();
+    test_rule_p2_p3();
     return exit_status();
 }
