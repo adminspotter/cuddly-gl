@@ -67,7 +67,7 @@ char_class_t bidi_char_type(char32_t c)
  * paragraph separators be kept with the paragraphs which precede
  * them.  We just drop them here.
  */
-std::vector<std::u32string> bidi_p1(const std::u32string& s)
+std::vector<std::u32string> unicode_bidi::rule_p1(const std::u32string& s)
 {
     std::u32string tmp_str(s);
     std::u32string::size_type pos, start;
