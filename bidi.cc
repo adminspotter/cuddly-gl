@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 10:39:25 tquirk
+ *   last updated 25 Apr 2018, 10:48:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -33,6 +33,18 @@ const int LRM = 0x200e, RLM = 0x200f, ALM = 0x061c;
 const int LRI = 0x2066, RLI = 0x2067, FSI = 0x2068, PDI = 0x2069;
 
 std::u32string CRLF = { 0x0d, 0x0a };
+
+char_class_t bidi_char_type(char32_t c)
+{
+    if (c == LRI) return class_LRI;
+    if (c == RLI) return class_RLI;
+    if (c == FSI) return class_FSI;
+    if (c == PDI) return class_PDI;
+    if (c == ALM || AL.find(c) != AL.end()) return class_AL;
+    if (c == RLM || R.find(c) != R.end()) return class_R;
+    if (B.find(c) != B.end()) return class_B;
+    return class_L;
+}
 
 /* Rule P1:  split text into paragraphs.  Along with the contents of
  * character class B, we will also consider CRLF (0x0d 0x0a) to be a

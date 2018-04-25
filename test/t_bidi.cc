@@ -5,6 +5,23 @@ using namespace TAP;
 #include "../bidi.h"
 #include "../font.h"
 
+void test_bidi_char_type(void)
+{
+    std::string test = "bidi_char_type: ";
+
+    is(bidi_char_type(0x2066), class_LRI, test + "expected LRI");
+    is(bidi_char_type(0x2067), class_RLI, test + "expected RLI");
+    is(bidi_char_type(0x2068), class_FSI, test + "expected FSI");
+    is(bidi_char_type(0x2069), class_PDI, test + "expected PDI");
+    is(bidi_char_type(0x061c), class_AL, test + "expected ALM AL");
+    is(bidi_char_type(0x0627), class_AL, test + "expected char AL");
+    is(bidi_char_type(0x200f), class_R, test + "expected RLM R");
+    is(bidi_char_type(0x05d0), class_R, test + "expected char R");
+    is(bidi_char_type(0x0085), class_B, test + "expected B");
+    is(bidi_char_type(0x200e), class_L, test + "expected LRM L");
+    is(bidi_char_type(0x0061), class_L, test + "expected char L");
+}
+
 void test_bidi_p1(void)
 {
     std::string test = "bidi_p1: ", st;
@@ -122,8 +139,9 @@ void test_bidi_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(29);
+    plan(40);
 
+    test_bidi_char_type();
     test_bidi_p1();
     test_bidi_p2_p3();
     return exit_status();
