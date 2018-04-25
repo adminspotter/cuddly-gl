@@ -55,6 +55,7 @@ char_class_t bidi_char_type(char32_t c)
     if (EN.find(c) != EN.end()) return class_EN;
     if (ES.find(c) != ES.end()) return class_ES;
     if (ET.find(c) != ET.end()) return class_ET;
+    if (NSM.find(c) != NSM.end()) return class_NSM;
     return class_L;
 }
 
