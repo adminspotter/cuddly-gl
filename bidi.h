@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Apr 2018, 08:39:37 tquirk
+ *   last updated 25 Apr 2018, 10:38:43 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -34,18 +34,17 @@
 #include <vector>
 #include <unordered_set>
 
+typedef enum {
+    class_AL, class_AN, class_B, class_BN, class_CS, class_EN, class_ES,
+    class_ET, class_FSI, class_L, class_LRE, class_LRI, class_LRO, class_NSM,
+    class_ON, class_PDF, class_PDI, class_R, class_RLE, class_RLI, class_RLO,
+    class_S, class_WS
+}
+char_class_t;
+
 extern std::unordered_set<char32_t> AL, B, R;
 
-#define PARA_SEP 0x2029
-
-#define LRM 0x200e
-#define RLM 0x200f
-#define ALM 0x061c
-
-#define LRI 0x2066
-#define RLI 0x2067
-#define FSI 0x2068
-#define PDI 0x2069
+extern const int LRM, RLM, ALM, LRI, RLI, FSI, PDI;
 
 std::vector<std::u32string> bidi_p1(const std::u32string&);
 int bidi_p2_p3(const std::u32string&);
