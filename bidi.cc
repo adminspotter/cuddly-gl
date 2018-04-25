@@ -88,21 +88,21 @@ int bidi_p2_p3(const std::u32string& s)
     int embedding = 0, isolate_level = 0;
 
     for (auto c : s)
-    {
         if (c >= LRI && c <= FSI)
             ++isolate_level;
         else if (c == PDI)
             --isolate_level;
-        else if (isolate_level == 0
-                 && (c == RLM
-                     || c == ALM
-                     || R.find(c) != R.end()
-                     || AL.find(c) != AL.end()))
+        else if (isolate_level == 0)
         {
-            embedding = 1;
-            break;
+            char_class_t type = bidi_char_type(c);
+            if (type == class_R || type == class_AL)
+            {
+                embedding = 1;
+                break;
+            }
+            else if (type == class_L)
+                break;
         }
-    }
 
     return embedding;
 }

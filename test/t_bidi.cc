@@ -103,6 +103,12 @@ void test_bidi_p2_p3(void)
     std::u32string al_first = { 0x627 };
     is(bidi_p2_p3(al_first), 1, test + "AL first: expected embedding");
 
+    std::u32string l_before_r = { 'a', 0x5d0 };
+    is(bidi_p2_p3(l_before_r), 0, test + "L before R: expected embedding");
+
+    std::u32string l_before_al = { 'a', 0x627 };
+    is(bidi_p2_p3(l_before_al), 0, test + "L before AL: expected embedding");
+
     std::u32string neutral_l = { '-', 'a' };
     is(bidi_p2_p3(neutral_l), 0,
        test + "L after neutral: expected embedding");
@@ -139,7 +145,7 @@ void test_bidi_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(40);
+    plan(42);
 
     test_bidi_char_type();
     test_bidi_p1();
