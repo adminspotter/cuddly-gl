@@ -48,6 +48,7 @@ char_class_t bidi_char_type(char32_t c)
     if (c == PDI) return class_PDI;
     if (c == ALM || AL.find(c) != AL.end()) return class_AL;
     if (c == RLM || R.find(c) != R.end()) return class_R;
+    if (AN.find(c) != AN.end()) return class_AN;
     if (B.find(c) != B.end()) return class_B;
     return class_L;
 }
