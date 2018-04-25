@@ -270,6 +270,13 @@ std::unordered_set<char32_t> EN
     0x1f109, 0x1f10a
 };
 
+/* Class ES:  European separators */
+std::unordered_set<char32_t> ES
+{
+    0x002b, 0x002d, 0x207a, 0x207b, 0x208a, 0x208b, 0x2212, 0xfb29,
+    0xfe62, 0xfe63, 0xff0b, 0xff0d
+};
+
 /* Class R:  Right-to-left */
 std::unordered_set<char32_t> R
 {

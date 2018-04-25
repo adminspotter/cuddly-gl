@@ -53,6 +53,7 @@ char_class_t bidi_char_type(char32_t c)
     if (BN.find(c) != BN.end()) return class_BN;
     if (CS.find(c) != CS.end()) return class_CS;
     if (EN.find(c) != EN.end()) return class_EN;
+    if (ES.find(c) != ES.end()) return class_ES;
     return class_L;
 }
 
