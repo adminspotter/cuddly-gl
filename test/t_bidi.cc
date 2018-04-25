@@ -28,6 +28,7 @@ void test_bidi_char_type(void)
     is(bidi_char_type(0xff0c), class_CS, test + "expected CS");
     is(bidi_char_type(0x0039), class_EN, test + "expected EN");
     is(bidi_char_type(0x207a), class_ES, test + "expected ES");
+    is(bidi_char_type(0x20a9), class_ET, test + "expected ET");
     is(bidi_char_type(0x200e), class_L, test + "expected LRM L");
     is(bidi_char_type(0x0061), class_L, test + "expected char L");
 }
@@ -155,7 +156,7 @@ void test_bidi_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(52);
+    plan(53);
 
     test_bidi_char_type();
     test_bidi_p1();
