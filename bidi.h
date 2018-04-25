@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 16:52:51 tquirk
+ *   last updated 25 Apr 2018, 17:18:39 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -51,5 +51,13 @@ char_class_t bidi_char_type(char32_t);
 
 std::vector<std::u32string> bidi_p1(const std::u32string&);
 int bidi_p2_p3(const std::u32string&);
+
+class unicode_bidi
+{
+  public:
+    unicode_bidi();
+    ~unicode_bidi();
+
+};
 
 #endif /* __INC_CUDDLY_BIDI_H__ */
