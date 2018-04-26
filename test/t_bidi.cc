@@ -11,10 +11,37 @@ class fake_bidi : public unicode_bidi
     fake_bidi() : unicode_bidi() {};
     ~fake_bidi() {};
 
+    using unicode_bidi::direction_stack;
+    using unicode_bidi::overflow_isolate;
+    using unicode_bidi::overflow_embed;
+    using unicode_bidi::valid_isolate;
+
     using unicode_bidi::char_type;
     using unicode_bidi::rule_p1;
     using unicode_bidi::rule_p2_p3;
 };
+
+void test_create_delete(void)
+{
+    std::string test = "create/delete: ";
+    fake_bidi *b = NULL;
+
+    try
+    {
+        b = new fake_bidi();
+    }
+    catch (...)
+    {
+        fail(test + "constructor exception");
+    }
+
+    is(b->direction_stack.size(), 0, test + "expected stack size");
+    is(b->overflow_isolate, 0, test + "expected overflow isolate count");
+    is(b->overflow_embed, 0, test + "expected overflow embed count");
+    is(b->valid_isolate, 0, test + "expected valid isolate count");
+
+    delete b;
+}
 
 void test_char_type(void)
 {
@@ -177,8 +204,9 @@ void test_rule_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(57);
+    plan(61);
 
+    test_create_delete();
     test_char_type();
     test_rule_p1();
     test_rule_p2_p3();

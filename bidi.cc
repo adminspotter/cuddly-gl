@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 17:18:38 tquirk
+ *   last updated 25 Apr 2018, 18:29:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -121,7 +121,9 @@ int unicode_bidi::rule_p2_p3(const std::u32string& s)
 }
 
 unicode_bidi::unicode_bidi()
+    : direction_stack()
 {
+    this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
 }
 
 unicode_bidi::~unicode_bidi()

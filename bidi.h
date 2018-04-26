@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 17:18:39 tquirk
+ *   last updated 25 Apr 2018, 18:29:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -33,6 +33,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <stack>
 
 typedef enum {
     class_AL, class_AN, class_B, class_BN, class_CS, class_EN, class_ES,
@@ -50,6 +51,17 @@ extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 class unicode_bidi
 {
   protected:
+    typedef struct
+    {
+        int embed;
+        enum { LTR, RTL, NEUTRAL } override;
+        bool isolate;
+    }
+    direction_rec;
+
+    std::stack<direction_rec> direction_stack;
+    int overflow_isolate, overflow_embed, valid_isolate;
+
     static char_class_t char_type(char32_t);
 
     std::vector<std::u32string> rule_p1(const std::u32string&);
