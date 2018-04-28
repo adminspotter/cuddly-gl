@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 08:16:06 tquirk
+ *   last updated 28 Apr 2018, 11:20:32 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -63,6 +63,7 @@ class bidi
     int overflow_isolate, overflow_embed, valid_isolate;
 
     static char_class_t char_type(char32_t);
+    char_class_t reset_direction_class(char_class_t);
 
     std::vector<std::u32string> rule_p1(const std::u32string&);
     int rule_p2_p3(const std::u32string&);

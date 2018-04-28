@@ -11,12 +11,15 @@ class fake_bidi : public bidi
     fake_bidi() : bidi() {};
     ~fake_bidi() {};
 
+    using bidi::direction_rec;
+
     using bidi::direction_stack;
     using bidi::overflow_isolate;
     using bidi::overflow_embed;
     using bidi::valid_isolate;
 
     using bidi::char_type;
+    using bidi::reset_direction_class;
     using bidi::rule_p1;
     using bidi::rule_p2_p3;
 };
@@ -75,6 +78,25 @@ void test_char_type(void)
     is(b.char_type(0x2005), class_WS, test + "expected WS");
     is(b.char_type(0x200e), class_L, test + "expected LRM L");
     is(b.char_type(0x0061), class_L, test + "expected char L");
+}
+
+void test_reset_direction_class(void)
+{
+    std::string test = "reset_direction_class: ";
+
+    fake_bidi b;
+
+    b.direction_stack.push({0, fake_bidi::direction_rec::NEUTRAL, false});
+    is(b.reset_direction_class(class_EN), class_EN,
+       test + "neutral: expected class");
+
+    b.direction_stack.push({0, fake_bidi::direction_rec::LTR, false});
+    is(b.reset_direction_class(class_EN), class_L,
+       test + "LTR: expected class");
+
+    b.direction_stack.push({0, fake_bidi::direction_rec::RTL, false});
+    is(b.reset_direction_class(class_EN), class_R,
+       test + "RTL: expected class");
 }
 
 void test_rule_p1(void)
@@ -210,10 +232,11 @@ void test_rule_p2_p3(void)
 
 int main(int argc, char **argv)
 {
-    plan(62);
+    plan(65);
 
     test_create_delete();
     test_char_type();
+    test_reset_direction_class();
     test_rule_p1();
     test_rule_p2_p3();
     return exit_status();

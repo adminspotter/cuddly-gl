@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 11:15:21 tquirk
+ *   last updated 28 Apr 2018, 11:20:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -57,6 +57,15 @@ char_class_t bidi::char_type(char32_t c)
     if (S.find(c) != S.end()) return class_S;
     if (WS.find(c) != WS.end()) return class_WS;
     return class_L;
+}
+
+char_class_t bidi::reset_direction_class(char_class_t cc)
+{
+    if (this->direction_stack.top().override == direction_rec::LTR)
+        return class_L;
+    else if (this->direction_stack.top().override == direction_rec::RTL)
+        return class_R;
+    return cc;
 }
 
 /* Rule P1:  split text into paragraphs.  Along with the contents of
