@@ -100,7 +100,7 @@ void test_rule_p1(void)
     std::vector<std::u32string> res2 = b.rule_p1(leading_lf);
 
     is(res2.size(), 2, test + st + "expected vector size");
-    is(ui::u32strtoutf8(res2[0]), "", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res2[0]), "\n", test + st + "expected string 1");
     is(ui::u32strtoutf8(res2[1]), "abc123", test + st + "expected string 2");
 
     st = "newline at end: ";
@@ -110,7 +110,7 @@ void test_rule_p1(void)
     std::vector<std::u32string> res3 = b.rule_p1(trailing_lf);
 
     is(res3.size(), 2, test + st + "expected vector size");
-    is(ui::u32strtoutf8(res3[0]), "abc123", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res3[0]), "abc123\n", test + st + "expected string 1");
     is(ui::u32strtoutf8(res3[1]), "", test + st + "expected string 2");
 
     st = "newline in middle: ";
@@ -120,7 +120,7 @@ void test_rule_p1(void)
     std::vector<std::u32string> res4 = b.rule_p1(middle_lf);
 
     is(res4.size(), 2, test + st + "expected vector size");
-    is(ui::u32strtoutf8(res4[0]), "abc", test + st + "expected string 1");
+    is(ui::u32strtoutf8(res4[0]), "abc\n", test + st + "expected string 1");
     is(ui::u32strtoutf8(res4[1]), "123", test + st + "expected string 2");
 
     st = "crlf: ";
@@ -130,7 +130,8 @@ void test_rule_p1(void)
     std::vector<std::u32string> res5 = b.rule_p1(crlf);
 
     is(res5.size(), 2, test + st + "expected vector size");
-    is(ui::u32strtoutf8(res5[0]), "abc", test + st + "expected string 1");
+    is(res5[0] == std::u32string({ 'a', 'b', 'c', 0x2029 }), true,
+       test + st + "expected string 1");
     is(ui::u32strtoutf8(res5[1]), "123", test + st + "expected string 2");
 
     st = "paragraph separator: ";
@@ -140,7 +141,8 @@ void test_rule_p1(void)
     std::vector<std::u32string> res6 = b.rule_p1(para_sep);
 
     is(res6.size(), 2, test + st + "expected vector size");
-    is(ui::u32strtoutf8(res6[0]), "abc", test + st + "expected string 1");
+    is(res6[0] == std::u32string({ 'a', 'b', 'c', 0x2029 }), true,
+       test + st + "expected string 1");
     is(ui::u32strtoutf8(res6[1]), "123", test + st + "expected string 2");
 }
 

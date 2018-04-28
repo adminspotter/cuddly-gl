@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 08:22:20 tquirk
+ *   last updated 28 Apr 2018, 10:52:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -60,12 +60,8 @@ char_class_t bidi::char_type(char32_t c)
 }
 
 /* Rule P1:  split text into paragraphs.  Along with the contents of
- * character class B, we will also consider CRLF (0x0d 0x0a) to be a
+ * character class B, we will also transform CRLF (0x0d 0x0a) to be a
  * valid separator.
- *
- * NOTE:  in the description for rule P1, it is declared that
- * paragraph separators be kept with the paragraphs which precede
- * them.  We just drop them here.
  */
 std::vector<std::u32string> bidi::rule_p1(const std::u32string& s)
 {
@@ -82,12 +78,12 @@ std::vector<std::u32string> bidi::rule_p1(const std::u32string& s)
     {
         if (B.find(c) != B.end())
         {
-            ret.push_back(tmp_str.substr(start, pos - start));
+            ret.push_back(tmp_str.substr(start, pos - start + 1));
             start = pos + 1;
         }
         ++pos;
     }
-    ret.push_back(tmp_str.substr(start, pos - start));
+    ret.push_back(tmp_str.substr(start));
     return ret;
 }
 
