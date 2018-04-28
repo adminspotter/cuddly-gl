@@ -68,10 +68,13 @@ class bidi
     std::vector<std::u32string> rule_p1(const std::u32string&);
     int rule_p2_p3(const std::u32string&);
 
+    void rule_x1(int, const std::u32string&);
+
   public:
     bidi();
     ~bidi();
 
+    std::vector<std::u32string> reorder(const std::u32string&);
 };
 
 #endif /* __INC_CUDDLY_BIDI_H__ */

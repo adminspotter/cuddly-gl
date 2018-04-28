@@ -22,6 +22,7 @@ class fake_bidi : public bidi
     using bidi::reset_direction_class;
     using bidi::rule_p1;
     using bidi::rule_p2_p3;
+    using bidi::rule_x1;
 };
 
 void test_create_delete(void)
@@ -230,14 +231,35 @@ void test_rule_p2_p3(void)
        test + "extra isolate terminator: expected embedding");
 }
 
+void test_rule_x1(void)
+{
+    std::string test = "rule_x1: ";
+
+    fake_bidi b;
+
+    b.direction_stack.push({1, fake_bidi::direction_rec::RTL, false});
+
+    b.rule_x1(9, std::u32string());
+
+    is(b.direction_stack.size(), 1, test + "expected stack size");
+    is(b.direction_stack.top().embed, 9, test + "expected base embed");
+    is(b.direction_stack.top().override, fake_bidi::direction_rec::NEUTRAL,
+       test + "expected base direction");
+    is(b.direction_stack.top().isolate, false, test + "expected base isolate");
+    is(b.overflow_isolate, 0, test + "expected overflow isolate");
+    is(b.overflow_embed, 0, test + "expected overflow embed");
+    is(b.valid_isolate, 0, test + "expected valid isolate");
+}
+
 int main(int argc, char **argv)
 {
-    plan(65);
+    plan(72);
 
     test_create_delete();
     test_char_type();
     test_reset_direction_class();
     test_rule_p1();
     test_rule_p2_p3();
+    test_rule_x1();
     return exit_status();
 }

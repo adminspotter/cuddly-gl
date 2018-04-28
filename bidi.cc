@@ -128,6 +128,14 @@ int bidi::rule_p2_p3(const std::u32string& s)
     return embedding;
 }
 
+void bidi::rule_x1(int base, const std::u32string& str)
+{
+    while (this->direction_stack.size())
+        this->direction_stack.pop();
+    this->direction_stack.push({base, direction_rec::NEUTRAL, false});
+    this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
+}
+
 bidi::bidi()
     : direction_stack()
 {
