@@ -5,20 +5,20 @@ using namespace TAP;
 #include "../bidi.h"
 #include "../font.h"
 
-class fake_bidi : public unicode_bidi
+class fake_bidi : public bidi
 {
   public:
-    fake_bidi() : unicode_bidi() {};
+    fake_bidi() : bidi() {};
     ~fake_bidi() {};
 
-    using unicode_bidi::direction_stack;
-    using unicode_bidi::overflow_isolate;
-    using unicode_bidi::overflow_embed;
-    using unicode_bidi::valid_isolate;
+    using bidi::direction_stack;
+    using bidi::overflow_isolate;
+    using bidi::overflow_embed;
+    using bidi::valid_isolate;
 
-    using unicode_bidi::char_type;
-    using unicode_bidi::rule_p1;
-    using unicode_bidi::rule_p2_p3;
+    using bidi::char_type;
+    using bidi::rule_p1;
+    using bidi::rule_p2_p3;
 };
 
 void test_create_delete(void)

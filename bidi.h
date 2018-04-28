@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 18:29:59 tquirk
+ *   last updated 28 Apr 2018, 08:16:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -48,7 +48,7 @@ extern const std::unordered_set<char32_t> ET, NSM, ON, R, S, WS;
 
 extern const int LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI;
 
-class unicode_bidi
+class bidi
 {
   protected:
     typedef struct
@@ -68,8 +68,8 @@ class unicode_bidi
     int rule_p2_p3(const std::u32string&);
 
   public:
-    unicode_bidi();
-    ~unicode_bidi();
+    bidi();
+    ~bidi();
 
 };
 

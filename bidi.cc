@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 18:29:57 tquirk
+ *   last updated 28 Apr 2018, 08:22:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -32,7 +32,7 @@ const int PARA_SEP = 0x2029;
 
 std::u32string CRLF = { 0x0d, 0x0a };
 
-char_class_t unicode_bidi::char_type(char32_t c)
+char_class_t bidi::char_type(char32_t c)
 {
     if (c == LRE) return class_LRE;
     if (c == RLE) return class_RLE;
@@ -67,7 +67,7 @@ char_class_t unicode_bidi::char_type(char32_t c)
  * paragraph separators be kept with the paragraphs which precede
  * them.  We just drop them here.
  */
-std::vector<std::u32string> unicode_bidi::rule_p1(const std::u32string& s)
+std::vector<std::u32string> bidi::rule_p1(const std::u32string& s)
 {
     std::u32string tmp_str(s);
     std::u32string::size_type pos, start;
@@ -96,7 +96,7 @@ std::vector<std::u32string> unicode_bidi::rule_p1(const std::u32string& s)
  * Rule P3:  if the found character is AL or R, set paragraph
  * embedding to 1, otherwise 0.
  */
-int unicode_bidi::rule_p2_p3(const std::u32string& s)
+int bidi::rule_p2_p3(const std::u32string& s)
 {
     int embedding = 0, isolate_level = 0;
 
@@ -107,7 +107,7 @@ int unicode_bidi::rule_p2_p3(const std::u32string& s)
             --isolate_level;
         else if (isolate_level == 0)
         {
-            char_class_t type = unicode_bidi::char_type(c);
+            char_class_t type = bidi::char_type(c);
             if (type == class_R || type == class_AL)
             {
                 embedding = 1;
@@ -120,12 +120,12 @@ int unicode_bidi::rule_p2_p3(const std::u32string& s)
     return embedding;
 }
 
-unicode_bidi::unicode_bidi()
+bidi::bidi()
     : direction_stack()
 {
     this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
 }
 
-unicode_bidi::~unicode_bidi()
+bidi::~bidi()
 {
 }
