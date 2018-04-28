@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 10:52:48 tquirk
+ *   last updated 28 Apr 2018, 11:15:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -100,7 +100,10 @@ int bidi::rule_p2_p3(const std::u32string& s)
         if (c >= LRI && c <= FSI)
             ++isolate_level;
         else if (c == PDI)
-            --isolate_level;
+        {
+            if (--isolate_level < 0)
+                break;
+        }
         else if (isolate_level == 0)
         {
             char_class_t type = bidi::char_type(c);

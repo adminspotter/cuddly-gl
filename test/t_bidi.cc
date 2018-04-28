@@ -202,11 +202,15 @@ void test_rule_p2_p3(void)
         { 0x2066, 'a', 0x2067, 'b', 0x2069, 0x2069, 0x627 };
     is(b.rule_p2_p3(nested), 1,
        test + "nested isolates: expected embedding");
+
+    std::u32string extra = { 0x2069, 0x627 };
+    is(b.rule_p2_p3(extra), 0,
+       test + "extra isolate terminator: expected embedding");
 }
 
 int main(int argc, char **argv)
 {
-    plan(61);
+    plan(62);
 
     test_create_delete();
     test_char_type();
