@@ -136,6 +136,25 @@ void bidi::rule_x1(int base, const std::u32string& str)
     this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
 }
 
+bidi::character_rec& bidi::rule_x2(bidi::character_rec& cr)
+{
+    int embed = this->direction_stack.top().embed;
+
+    if (this->overflow_isolate == 0)
+    {
+        if (this->overflow_embed == 0)
+        {
+            if (++embed % 2 == 0)
+                ++embed;
+            this->direction_stack.push({embed, direction_rec::NEUTRAL, false});
+        }
+        else
+            ++this->overflow_embed;
+    }
+    cr.embed = embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {

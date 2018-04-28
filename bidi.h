@@ -59,6 +59,14 @@ class bidi
     }
     direction_rec;
 
+    typedef struct
+    {
+        char32_t c;
+        char_class_t c_class;
+        int embed;
+    }
+    character_rec;
+
     std::stack<direction_rec> direction_stack;
     int overflow_isolate, overflow_embed, valid_isolate;
 
@@ -69,6 +77,7 @@ class bidi
     int rule_p2_p3(const std::u32string&);
 
     void rule_x1(int, const std::u32string&);
+    character_rec& rule_x2(character_rec&);
 
   public:
     bidi();

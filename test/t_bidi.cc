@@ -12,6 +12,7 @@ class fake_bidi : public bidi
     ~fake_bidi() {};
 
     using bidi::direction_rec;
+    using bidi::character_rec;
 
     using bidi::direction_stack;
     using bidi::overflow_isolate;
@@ -23,6 +24,7 @@ class fake_bidi : public bidi
     using bidi::rule_p1;
     using bidi::rule_p2_p3;
     using bidi::rule_x1;
+    using bidi::rule_x2;
 };
 
 void test_create_delete(void)
@@ -251,9 +253,59 @@ void test_rule_x1(void)
     is(b.valid_isolate, 0, test + "expected valid isolate");
 }
 
+void test_rule_x2(void)
+{
+    std::string test = "rule_x2: ", st;
+
+    fake_bidi b;
+
+    b.direction_stack.push({14, fake_bidi::direction_rec::RTL, true});
+
+    st = "even stack embed: ";
+
+    fake_bidi::character_rec cr = {'a', class_L, 4};
+    fake_bidi::character_rec new_cr = b.rule_x2(cr);
+
+    is(new_cr.c, 'a', test + st + "expected character");
+    is(new_cr.c_class, class_L, test + st + "expected type");
+    is(new_cr.embed, 15, test + st + "expected embed");
+
+    is(b.direction_stack.size(), 2, test + st + "expected stack size");
+    is(b.direction_stack.top().embed, 15, test + st + "expected stack embed");
+    is(b.direction_stack.top().override, fake_bidi::direction_rec::NEUTRAL,
+       test + st + "expected stack override");
+    is(b.direction_stack.top().isolate, false,
+       test + st + "expected stack isolate");
+
+    st = "odd stack embed: ";
+
+    b.direction_stack.push({5, fake_bidi::direction_rec::RTL, true});
+    fake_bidi::character_rec new_cr2 = b.rule_x2(cr);
+
+    is(new_cr2.embed, 7, test + st + "expected embed");
+
+    st = "nonzero embed overflow: ";
+
+    b.overflow_embed = 1;
+
+    fake_bidi::character_rec new_cr3 = b.rule_x2(cr);
+
+    is(new_cr3.embed, 7, test + st + "expected embed");
+    is(b.overflow_embed, 2, test + st + "expected embed overflow");
+
+    st = "nonzero isolate overflow: ";
+
+    b.overflow_isolate = 1;
+
+    fake_bidi::character_rec new_cr4 = b.rule_x2(cr);
+
+    is(new_cr4.embed, 7, test + st + "exepected embed");
+    is(b.overflow_embed, 2, test + st + "expected embed overflow");
+}
+
 int main(int argc, char **argv)
 {
-    plan(72);
+    plan(84);
 
     test_create_delete();
     test_char_type();
@@ -261,5 +313,6 @@ int main(int argc, char **argv)
     test_rule_p1();
     test_rule_p2_p3();
     test_rule_x1();
+    test_rule_x2();
     return exit_status();
 }
