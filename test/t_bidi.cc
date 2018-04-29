@@ -30,6 +30,7 @@ class fake_bidi : public bidi
     using bidi::rule_x5;
     using bidi::rule_x5a;
     using bidi::rule_x5b;
+    using bidi::rule_x6a;
 };
 
 class mock_x5c_bidi : public bidi
@@ -645,9 +646,54 @@ void test_rule_x5c(void)
     is(new_cr2.embed, 58, test + st + "expected embed");
 }
 
+void test_rule_x6a(void)
+{
+    std::string test = "rule_x6a: ", st;
+
+    fake_bidi b;
+
+    st = "nonzero overflow isolate: ";
+
+    b.overflow_isolate = 1;
+
+    b.direction_stack.push({6, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec cr = {'a', class_L, 38};
+    fake_bidi::character_rec new_cr = b.rule_x6a(cr);
+
+    is(b.direction_stack.size(), 1, test + st + "no stack pops");
+    is(b.overflow_isolate, 0, test + st + "expected isolate overflow");
+    is(new_cr.c_class, class_R, test + st + "expected type");
+    is(new_cr.embed, 6, test + st + "expected embed");
+
+    st = "nonzero valid isolate: ";
+
+    b.valid_isolate = 1;
+    b.overflow_embed = 5;
+
+    b.direction_stack.push({7, fake_bidi::direction_rec::NEUTRAL, true});
+    b.direction_stack.push({8, fake_bidi::direction_rec::RTL, false});
+    b.direction_stack.push({9, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec new_cr2 = b.rule_x6a(cr);
+
+    is(b.direction_stack.size(), 1, test + st + "stack cleaned up");
+    is(b.valid_isolate, 0, test + st + "expected valid isolate");
+    is(new_cr2.c_class, class_R, test + st + "expected type");
+    is(new_cr2.embed, 6, test + st + "expected embed");
+
+    st = "no isolate: ";
+
+    fake_bidi::character_rec new_cr3 = b.rule_x6a(cr);
+
+    is(b.direction_stack.size(), 1, test + st + "no stack operations");
+    is(new_cr3.c_class, class_R, test + st + "expected type");
+    is(new_cr3.embed, 6, test + st + "expected embed");
+}
+
 int main(int argc, char **argv)
 {
-    plan(176);
+    plan(187);
 
     test_create_delete();
     test_char_type();
@@ -662,5 +708,6 @@ int main(int argc, char **argv)
     test_rule_x5a();
     test_rule_x5b();
     test_rule_x5c();
+    test_rule_x6a();
     return exit_status();
 }

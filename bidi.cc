@@ -259,6 +259,24 @@ bidi::character_rec& bidi::rule_x5c(bidi::character_rec& cr,
     return this->rule_x5b(cr);
 }
 
+bidi::character_rec& bidi::rule_x6a(bidi::character_rec& cr)
+{
+    if (this->overflow_isolate > 0)
+        --this->overflow_isolate;
+    else if (this->valid_isolate > 0)
+    {
+        this->overflow_embed = 0;
+        while (this->direction_stack.top().isolate == false)
+            this->direction_stack.pop();
+        this->direction_stack.pop();
+        --this->valid_isolate;
+    }
+
+    cr.c_class = this->reset_direction_class(cr.c_class);
+    cr.embed = this->direction_stack.top().embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {
