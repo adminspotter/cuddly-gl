@@ -285,6 +285,7 @@ void test_rule_x2(void)
     b.direction_stack.push({5, fake_bidi::direction_rec::RTL, true});
     fake_bidi::character_rec new_cr2 = b.rule_x2(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "expected stack size");
     is(new_cr2.embed, 7, test + st + "expected embed");
 
     st = "nonzero embed overflow: ";
@@ -293,6 +294,7 @@ void test_rule_x2(void)
 
     fake_bidi::character_rec new_cr3 = b.rule_x2(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr3.embed, 7, test + st + "expected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 
@@ -302,6 +304,7 @@ void test_rule_x2(void)
 
     fake_bidi::character_rec new_cr4 = b.rule_x2(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 7, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 }
@@ -335,6 +338,7 @@ void test_rule_x3(void)
     b.direction_stack.push({5, fake_bidi::direction_rec::RTL, true});
     fake_bidi::character_rec new_cr2 = b.rule_x3(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "expected stack size");
     is(new_cr2.embed, 6, test + st + "expected embed");
 
     st = "nonzero embed overflow: ";
@@ -343,6 +347,7 @@ void test_rule_x3(void)
 
     fake_bidi::character_rec new_cr3 = b.rule_x3(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr3.embed, 6, test + st + "expected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 
@@ -352,6 +357,7 @@ void test_rule_x3(void)
 
     fake_bidi::character_rec new_cr4 = b.rule_x3(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 6, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 }
@@ -385,6 +391,7 @@ void test_rule_x4(void)
     b.direction_stack.push({5, fake_bidi::direction_rec::NEUTRAL, true});
     fake_bidi::character_rec new_cr2 = b.rule_x4(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "expected stack size");
     is(new_cr2.embed, 7, test + st + "expected embed");
 
     st = "nonzero embed overflow: ";
@@ -393,6 +400,7 @@ void test_rule_x4(void)
 
     fake_bidi::character_rec new_cr3 = b.rule_x4(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr3.embed, 7, test + st + "expected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 
@@ -402,6 +410,7 @@ void test_rule_x4(void)
 
     fake_bidi::character_rec new_cr4 = b.rule_x4(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 7, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 }
@@ -435,6 +444,7 @@ void test_rule_x5(void)
     b.direction_stack.push({5, fake_bidi::direction_rec::NEUTRAL, true});
     fake_bidi::character_rec new_cr2 = b.rule_x5(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "expected stack size");
     is(new_cr2.embed, 6, test + st + "expected embed");
 
     st = "nonzero embed overflow: ";
@@ -443,6 +453,7 @@ void test_rule_x5(void)
 
     fake_bidi::character_rec new_cr3 = b.rule_x5(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr3.embed, 6, test + st + "expected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 
@@ -452,13 +463,14 @@ void test_rule_x5(void)
 
     fake_bidi::character_rec new_cr4 = b.rule_x5(cr);
 
+    is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 6, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 }
 
 int main(int argc, char **argv)
 {
-    plan(120);
+    plan(132);
 
     test_create_delete();
     test_char_type();
