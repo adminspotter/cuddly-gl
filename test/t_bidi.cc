@@ -31,6 +31,7 @@ class fake_bidi : public bidi
     using bidi::rule_x5a;
     using bidi::rule_x5b;
     using bidi::rule_x6a;
+    using bidi::rule_x7;
 };
 
 class mock_x5c_bidi : public bidi
@@ -691,9 +692,67 @@ void test_rule_x6a(void)
     is(new_cr3.embed, 6, test + st + "expected embed");
 }
 
+void test_rule_x7(void)
+{
+    std::string test = "rule_x7: ", st;
+
+    fake_bidi b;
+
+    st = "nonzero overflow isolate: ";
+
+    b.overflow_isolate = 1;
+
+    fake_bidi::character_rec cr = {'a', class_L, 38};
+    fake_bidi::character_rec new_cr = b.rule_x7(cr);
+
+    is(b.overflow_isolate, 1, test + st + "no overflow isolate change");
+    is(new_cr.c_class, class_L, test + st + "expected type");
+    is(new_cr.embed, 38, test + st + "expected embed");
+
+    st = "nonzero overflow embed: ";
+
+    b.overflow_isolate = 0;
+    b.overflow_embed = 1;
+
+    b.direction_stack.push({6, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec new_cr2 = b.rule_x7(cr);
+
+    is(b.overflow_embed, 0, test + st + "expected overflow embed");
+    is(new_cr2.embed, 6, test + st + "expected embed");
+
+    st = "direction stack too small: ";
+
+    b.direction_stack.pop();
+    b.direction_stack.push({48, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec new_cr3 = b.rule_x7(cr);
+
+    is(b.direction_stack.size(), 1, test + st + "expected stack size");
+    is(new_cr3.embed, 48, test + st + "expected embed");
+
+    st = "direction stack top wrong: ";
+
+    b.direction_stack.push({19, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr4 = b.rule_x7(cr);
+
+    is(b.direction_stack.size(), 2, test + st + "expected stack size");
+    is(new_cr4.embed, 19, test + st + "expected embed");
+
+    st = "good stack state: ";
+
+    b.direction_stack.push({66, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x7(cr);
+
+    is(b.direction_stack.size(), 2, test + st + "expected stack size");
+    is(new_cr5.embed, 19, test + st + "expected embed");
+}
+
 int main(int argc, char **argv)
 {
-    plan(187);
+    plan(198);
 
     test_create_delete();
     test_char_type();
@@ -709,5 +768,6 @@ int main(int argc, char **argv)
     test_rule_x5b();
     test_rule_x5c();
     test_rule_x6a();
+    test_rule_x7();
     return exit_status();
 }

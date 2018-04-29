@@ -277,6 +277,19 @@ bidi::character_rec& bidi::rule_x6a(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x7(bidi::character_rec& cr)
+{
+    if (this->overflow_isolate > 0)
+        return cr;
+    else if (this->overflow_embed > 0)
+        --this->overflow_embed;
+    else if (this->direction_stack.size() >= 2
+             && this->direction_stack.top().isolate == false)
+        this->direction_stack.pop();
+    cr.embed = this->direction_stack.top().embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {

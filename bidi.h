@@ -85,6 +85,7 @@ class bidi
     virtual character_rec& rule_x5b(character_rec&);
     character_rec& rule_x5c(character_rec&, const std::u32string&);
     character_rec& rule_x6a(character_rec&);
+    character_rec& rule_x7(character_rec&);
 
   public:
     bidi();
