@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 11:20:32 tquirk
+ *   last updated 29 Apr 2018, 07:51:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -74,15 +74,16 @@ class bidi
     char_class_t reset_direction_class(char_class_t);
 
     std::vector<std::u32string> rule_p1(const std::u32string&);
-    int rule_p2_p3(const std::u32string&);
+    virtual int rule_p2_p3(const std::u32string&);
 
     void rule_x1(int, const std::u32string&);
     character_rec& rule_x2(character_rec&);
     character_rec& rule_x3(character_rec&);
     character_rec& rule_x4(character_rec&);
     character_rec& rule_x5(character_rec&);
-    character_rec& rule_x5a(character_rec&);
-    character_rec& rule_x5b(character_rec&);
+    virtual character_rec& rule_x5a(character_rec&);
+    virtual character_rec& rule_x5b(character_rec&);
+    character_rec& rule_x5c(character_rec&, const std::u32string&);
 
   public:
     bidi();

@@ -249,6 +249,16 @@ bidi::character_rec& bidi::rule_x5b(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x5c(bidi::character_rec& cr,
+                                    const std::u32string& s)
+{
+    int embed = this->rule_p2_p3(s);
+
+    if (embed == 1)
+        return this->rule_x5a(cr);
+    return this->rule_x5b(cr);
+}
+
 bidi::bidi()
     : direction_stack()
 {

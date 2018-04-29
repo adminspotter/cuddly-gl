@@ -32,6 +32,34 @@ class fake_bidi : public bidi
     using bidi::rule_x5b;
 };
 
+class mock_x5c_bidi : public bidi
+{
+  public:
+    int fake_embed;
+
+    mock_x5c_bidi() : bidi() {};
+    ~mock_x5c_bidi() {};
+
+    using bidi::character_rec;
+
+    virtual int rule_p2_p3(const std::u32string& s)
+        {
+            return fake_embed;
+        };
+    virtual character_rec& rule_x5a(character_rec& cr)
+        {
+            cr = {'a', class_BN, 99};
+            return cr;
+        };
+    virtual character_rec& rule_x5b(character_rec& cr)
+        {
+            cr = {'b', class_ES, 58};
+            return cr;
+        };
+
+    using bidi::rule_x5c;
+};
+
 void test_create_delete(void)
 {
     std::string test = "create/delete: ";
@@ -586,9 +614,40 @@ void test_rule_x5b(void)
     is(b.overflow_isolate, 2, test + st + "expected isolate overflow");
 }
 
+void test_rule_x5c(void)
+{
+    std::string test = "rule_x5c: ", st;
+
+    mock_x5c_bidi b;
+
+    st = "RTL: ";
+
+    b.fake_embed = 1;
+
+    std::u32string str = {'a', 'b', 'c'};
+
+    mock_x5c_bidi::character_rec cr = {'q', class_L, 4};
+    mock_x5c_bidi::character_rec new_cr = b.rule_x5c(cr, str);
+
+    is(new_cr.c, 'a', test + st + "expected character");
+    is(new_cr.c_class, class_BN, test + st + "expected type");
+    is(new_cr.embed, 99, test + st + "expected embed");
+
+    st = "LTR: ";
+
+    b.fake_embed = 0;
+
+    cr = {'q', class_L, 4};
+    mock_x5c_bidi::character_rec new_cr2 = b.rule_x5c(cr, str);
+
+    is(new_cr2.c, 'b', test + st + "expected character");
+    is(new_cr2.c_class, class_ES, test + st + "expected type");
+    is(new_cr2.embed, 58, test + st + "expected embed");
+}
+
 int main(int argc, char **argv)
 {
-    plan(170);
+    plan(176);
 
     test_create_delete();
     test_char_type();
@@ -602,5 +661,6 @@ int main(int argc, char **argv)
     test_rule_x5();
     test_rule_x5a();
     test_rule_x5b();
+    test_rule_x5c();
     return exit_status();
 }
