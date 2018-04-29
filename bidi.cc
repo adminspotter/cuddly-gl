@@ -155,6 +155,25 @@ bidi::character_rec& bidi::rule_x2(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x3(bidi::character_rec& cr)
+{
+    int embed = this->direction_stack.top().embed;
+
+    if (this->overflow_isolate == 0)
+    {
+        if (this->overflow_embed == 0)
+        {
+            if (++embed % 2 == 1)
+                ++embed;
+            this->direction_stack.push({embed, direction_rec::NEUTRAL, false});
+        }
+        else
+            ++this->overflow_embed;
+    }
+    cr.embed = embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {
