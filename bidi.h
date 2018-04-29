@@ -79,6 +79,7 @@ class bidi
     void rule_x1(int, const std::u32string&);
     character_rec& rule_x2(character_rec&);
     character_rec& rule_x3(character_rec&);
+    character_rec& rule_x4(character_rec&);
 
   public:
     bidi();
