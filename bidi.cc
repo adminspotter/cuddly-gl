@@ -145,7 +145,8 @@ bidi::character_rec& bidi::rule_x2(bidi::character_rec& cr)
 
     if (this->overflow_isolate == 0)
     {
-        if (this->overflow_embed == 0)
+        if (this->overflow_embed == 0
+            && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
         {
             if (++embed % 2 == 0)
                 ++embed;
@@ -164,7 +165,8 @@ bidi::character_rec& bidi::rule_x3(bidi::character_rec& cr)
 
     if (this->overflow_isolate == 0)
     {
-        if (this->overflow_embed == 0)
+        if (this->overflow_embed == 0
+            && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
         {
             if (++embed % 2 == 1)
                 ++embed;
@@ -183,7 +185,8 @@ bidi::character_rec& bidi::rule_x4(bidi::character_rec& cr)
 
     if (this->overflow_isolate == 0)
     {
-        if (this->overflow_embed == 0)
+        if (this->overflow_embed == 0
+            && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
         {
             if (++embed % 2 == 0)
                 ++embed;
@@ -202,7 +205,8 @@ bidi::character_rec& bidi::rule_x5(bidi::character_rec& cr)
 
     if (this->overflow_isolate == 0)
     {
-        if (this->overflow_embed == 0)
+        if (this->overflow_embed == 0
+            && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
         {
             if (++embed % 2 == 1)
                 ++embed;
@@ -222,7 +226,9 @@ bidi::character_rec& bidi::rule_x5a(bidi::character_rec& cr)
 
     cr.c_class = this->reset_direction_class(cr.c_class);
     cr.embed = embed;
-    if (this->overflow_isolate == 0 && this->overflow_embed == 0)
+    if (this->overflow_isolate == 0
+        && this->overflow_embed == 0
+        && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
     {
         if (++embed % 2 == 0)
             ++embed;
@@ -240,7 +246,9 @@ bidi::character_rec& bidi::rule_x5b(bidi::character_rec& cr)
 
     cr.c_class = this->reset_direction_class(cr.c_class);
     cr.embed = embed;
-    if (this->overflow_isolate == 0 && this->overflow_embed == 0)
+    if (this->overflow_isolate == 0
+        && this->overflow_embed == 0
+        && this->direction_stack.size() < bidi::MAX_STACK_SIZE)
     {
         if (++embed % 2 == 1)
             ++embed;

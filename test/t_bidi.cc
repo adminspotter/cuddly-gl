@@ -11,6 +11,9 @@ class fake_bidi : public bidi
     fake_bidi() : bidi() {};
     ~fake_bidi() {};
 
+    using bidi::MAX_DEPTH;
+    using bidi::MAX_STACK_SIZE;
+
     using bidi::direction_rec;
     using bidi::character_rec;
 
@@ -340,6 +343,19 @@ void test_rule_x2(void)
     is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 7, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x2(cr);
+
+    is(b.overflow_embed, 1, test + st + "expected embed overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x3(void)
@@ -393,6 +409,19 @@ void test_rule_x3(void)
     is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 6, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x3(cr);
+
+    is(b.overflow_embed, 1, test + st + "expected embed overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x4(void)
@@ -446,6 +475,19 @@ void test_rule_x4(void)
     is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 7, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x4(cr);
+
+    is(b.overflow_embed, 1, test + st + "expected embed overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x5(void)
@@ -499,6 +541,19 @@ void test_rule_x5(void)
     is(b.direction_stack.size(), 4, test + st + "no new stack entries");
     is(new_cr4.embed, 6, test + st + "exepected embed");
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x5(cr);
+
+    is(b.overflow_embed, 1, test + st + "expected embed overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x5a(void)
@@ -557,6 +612,19 @@ void test_rule_x5a(void)
     is(b.direction_stack.size(), 5, test + st + "no new stack entries");
     is(new_cr4.embed, 5, test + st + "expected embed");
     is(b.overflow_isolate, 2, test + st + "expected isolate overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x5a(cr);
+
+    is(b.overflow_isolate, 1, test + st + "expected isolate overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x5b(void)
@@ -615,6 +683,19 @@ void test_rule_x5b(void)
     is(b.direction_stack.size(), 5, test + st + "no new stack entries");
     is(new_cr4.embed, 5, test + st + "expected embed");
     is(b.overflow_isolate, 2, test + st + "expected isolate overflow");
+
+    st = "too-deep stack: ";
+
+    b.overflow_isolate = b.overflow_embed = 0;
+    int i;
+    for (i = 0; i < fake_bidi::MAX_STACK_SIZE; ++i)
+        b.direction_stack.push({i, fake_bidi::direction_rec::RTL, true});
+
+    fake_bidi::character_rec new_cr5 = b.rule_x5b(cr);
+
+    is(b.overflow_isolate, 1, test + st + "expected isolate overflow");
+    is(new_cr5.embed, fake_bidi::MAX_STACK_SIZE - 1,
+       test + st + "exepected embed");
 }
 
 void test_rule_x5c(void)
@@ -777,7 +858,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(203);
+    plan(215);
 
     test_create_delete();
     test_char_type();
