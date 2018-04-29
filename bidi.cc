@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Apr 2018, 11:20:14 tquirk
+ *   last updated 29 Apr 2018, 11:30:43 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -31,6 +31,9 @@
 const int PARA_SEP = 0x2029;
 
 std::u32string CRLF = { 0x0d, 0x0a };
+
+const int bidi::MAX_DEPTH = 125;
+const int bidi::MAX_STACK_SIZE = bidi::MAX_DEPTH + 2;
 
 char_class_t bidi::char_type(char32_t c)
 {
