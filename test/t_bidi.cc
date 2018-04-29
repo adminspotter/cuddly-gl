@@ -28,6 +28,7 @@ class fake_bidi : public bidi
     using bidi::rule_x3;
     using bidi::rule_x4;
     using bidi::rule_x5;
+    using bidi::rule_x5a;
 };
 
 void test_create_delete(void)
@@ -468,9 +469,67 @@ void test_rule_x5(void)
     is(b.overflow_embed, 2, test + st + "expected embed overflow");
 }
 
+void test_rule_x5a(void)
+{
+    std::string test = "rule_x5a: ", st;
+
+    fake_bidi b;
+
+    b.direction_stack.push({14, fake_bidi::direction_rec::RTL, true});
+
+    st = "even stack embed: ";
+
+    fake_bidi::character_rec cr = {'a', class_L, 4};
+    fake_bidi::character_rec new_cr = b.rule_x5a(cr);
+
+    is(new_cr.c, 'a', test + st + "expected character");
+    is(new_cr.c_class, class_R, test + st + "expected type");
+    is(new_cr.embed, 14, test + st + "expected embed");
+
+    is(b.direction_stack.size(), 2, test + st + "expected stack size");
+    is(b.direction_stack.top().embed, 15, test + st + "expected stack embed");
+    is(b.direction_stack.top().override, fake_bidi::direction_rec::NEUTRAL,
+       test + st + "expected stack override");
+    is(b.direction_stack.top().isolate, true,
+       test + st + "expected stack isolate");
+    is(b.valid_isolate, 1, test + st + "expected valid isolate");
+
+    st = "odd stack embed: ";
+
+    b.direction_stack.push({5, fake_bidi::direction_rec::RTL, true});
+    fake_bidi::character_rec new_cr2 = b.rule_x5a(cr);
+
+    is(b.direction_stack.size(), 4, test + st + "expected stack size");
+    is(new_cr2.embed, 5, test + st + "expected embed");
+    is(new_cr2.c_class, class_R, test + st + "expected type");
+    is(b.direction_stack.top().embed, 7, test + st + "expected stack embed");
+    is(b.valid_isolate, 2, test + st + "expected valid isolate");
+
+    st = "nonzero embed overflow: ";
+
+    b.overflow_embed = 1;
+
+    b.direction_stack.push({5, fake_bidi::direction_rec::RTL, true});
+    fake_bidi::character_rec new_cr3 = b.rule_x5a(cr);
+
+    is(b.direction_stack.size(), 5, test + st + "no new stack entries");
+    is(new_cr3.embed, 5, test + st + "expected embed");
+    is(b.overflow_isolate, 1, test + st + "expected isolate overflow");
+
+    st = "nonzero isolate overflow: ";
+
+    b.overflow_embed = 0;
+
+    fake_bidi::character_rec new_cr4 = b.rule_x5a(cr);
+
+    is(b.direction_stack.size(), 5, test + st + "no new stack entries");
+    is(new_cr4.embed, 5, test + st + "expected embed");
+    is(b.overflow_isolate, 2, test + st + "expected isolate overflow");
+}
+
 int main(int argc, char **argv)
 {
-    plan(132);
+    plan(151);
 
     test_create_delete();
     test_char_type();
@@ -482,5 +541,6 @@ int main(int argc, char **argv)
     test_rule_x3();
     test_rule_x4();
     test_rule_x5();
+    test_rule_x5a();
     return exit_status();
 }

@@ -213,6 +213,24 @@ bidi::character_rec& bidi::rule_x5(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x5a(bidi::character_rec& cr)
+{
+    int embed = this->direction_stack.top().embed;
+
+    cr.c_class = this->reset_direction_class(cr.c_class);
+    cr.embed = embed;
+    if (this->overflow_isolate == 0 && this->overflow_embed == 0)
+    {
+        if (++embed % 2 == 0)
+            ++embed;
+        this->direction_stack.push({embed, direction_rec::NEUTRAL, true});
+        ++this->valid_isolate;
+    }
+    else
+        ++this->overflow_isolate;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {
