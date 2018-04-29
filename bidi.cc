@@ -290,6 +290,15 @@ bidi::character_rec& bidi::rule_x7(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x8(bidi::character_rec& cr)
+{
+    while (this->direction_stack.size() > 1)
+        this->direction_stack.pop();
+    this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
+    cr.embed = this->direction_stack.top().embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {

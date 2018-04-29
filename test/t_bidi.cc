@@ -32,6 +32,7 @@ class fake_bidi : public bidi
     using bidi::rule_x5b;
     using bidi::rule_x6a;
     using bidi::rule_x7;
+    using bidi::rule_x8;
 };
 
 class mock_x5c_bidi : public bidi
@@ -750,9 +751,33 @@ void test_rule_x7(void)
     is(new_cr5.embed, 19, test + st + "expected embed");
 }
 
+void test_rule_x8(void)
+{
+    std::string test = "rule_x8: ";
+
+    fake_bidi b;
+
+    b.overflow_isolate = 38;
+    b.overflow_embed = 16;
+    b.valid_isolate = 185;
+
+    b.direction_stack.push({7, fake_bidi::direction_rec::NEUTRAL, true});
+    b.direction_stack.push({8, fake_bidi::direction_rec::RTL, false});
+    b.direction_stack.push({9, fake_bidi::direction_rec::RTL, false});
+
+    fake_bidi::character_rec cr = {'a', class_L, 38};
+    fake_bidi::character_rec new_cr = b.rule_x8(cr);
+
+    is(b.direction_stack.size(), 1, test + "expected stack size");
+    is(b.overflow_isolate, 0, test + "expected overflow isolate");
+    is(b.overflow_embed, 0, test + "expected overflow embed");
+    is(b.valid_isolate, 0, test + "expected valid isolate");
+    is(new_cr.embed, 7, test + "expected embed");
+}
+
 int main(int argc, char **argv)
 {
-    plan(198);
+    plan(203);
 
     test_create_delete();
     test_char_type();
@@ -769,5 +794,6 @@ int main(int argc, char **argv)
     test_rule_x5c();
     test_rule_x6a();
     test_rule_x7();
+    test_rule_x8();
     return exit_status();
 }
