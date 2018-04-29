@@ -193,6 +193,26 @@ bidi::character_rec& bidi::rule_x4(bidi::character_rec& cr)
     return cr;
 }
 
+bidi::character_rec& bidi::rule_x5(bidi::character_rec& cr)
+{
+    int embed = this->direction_stack.top().embed;
+
+    if (this->overflow_isolate == 0)
+    {
+        if (this->overflow_embed == 0)
+        {
+            if (++embed % 2 == 1)
+                ++embed;
+            this->direction_stack.push({embed, direction_rec::LTR, false});
+        }
+        else
+            ++this->overflow_embed;
+    }
+    cr.c_class = this->reset_direction_class(cr.c_class);
+    cr.embed = embed;
+    return cr;
+}
+
 bidi::bidi()
     : direction_stack()
 {

@@ -80,6 +80,7 @@ class bidi
     character_rec& rule_x2(character_rec&);
     character_rec& rule_x3(character_rec&);
     character_rec& rule_x4(character_rec&);
+    character_rec& rule_x5(character_rec&);
 
   public:
     bidi();
