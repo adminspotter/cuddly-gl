@@ -274,22 +274,25 @@ void test_rule_p2_p3(void)
 
 void test_rule_x1(void)
 {
-    std::string test = "rule_x1: ";
+    std::string test = "rule_x1: ", st;
 
     fake_bidi b;
+
+    st = "base initialization: ";
 
     b.direction_stack.push({1, fake_bidi::direction_rec::RTL, false});
 
     b.rule_x1(9, std::u32string());
 
-    is(b.direction_stack.size(), 1, test + "expected stack size");
-    is(b.direction_stack.top().embed, 9, test + "expected base embed");
+    is(b.direction_stack.size(), 1, test + st + "expected stack size");
+    is(b.direction_stack.top().embed, 9, test + st + "expected base embed");
     is(b.direction_stack.top().override, fake_bidi::direction_rec::NEUTRAL,
-       test + "expected base direction");
-    is(b.direction_stack.top().isolate, false, test + "expected base isolate");
-    is(b.overflow_isolate, 0, test + "expected overflow isolate");
-    is(b.overflow_embed, 0, test + "expected overflow embed");
-    is(b.valid_isolate, 0, test + "expected valid isolate");
+       test + st + "expected base direction");
+    is(b.direction_stack.top().isolate, false,
+       test + st + "expected base isolate");
+    is(b.overflow_isolate, 0, test + st + "expected overflow isolate");
+    is(b.overflow_embed, 0, test + st + "expected overflow embed");
+    is(b.valid_isolate, 0, test + st + "expected valid isolate");
 }
 
 void test_rule_x2(void)
