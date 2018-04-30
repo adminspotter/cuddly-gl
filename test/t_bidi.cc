@@ -293,6 +293,28 @@ void test_rule_x1(void)
     is(b.overflow_isolate, 0, test + st + "expected overflow isolate");
     is(b.overflow_embed, 0, test + st + "expected overflow embed");
     is(b.valid_isolate, 0, test + st + "expected valid isolate");
+
+    st = "simple LTR: ";
+
+    std::u32string simple_ltr = {'a'};
+
+    auto result = b.rule_x1(0, simple_ltr);
+
+    is(result.size(), 1, test + st + "expected result size");
+    is(result.front().c, 'a', test + st + "expected character");
+    is(result.front().c_class, class_L, test + st + "expected type");
+    is(result.front().embed, 0, test + st + "expected embed");
+
+    st = "simple RTL: ";
+
+    std::u32string simple_rtl = {0x05d0};
+
+    result = b.rule_x1(1, simple_rtl);
+
+    is(result.size(), 1, test + st + "expected result size");
+    is(result.front().c, 0x05d0, test + st + "expected character");
+    is(result.front().c_class, class_R, test + st + "expected type");
+    is(result.front().embed, 1, test + st + "expected embed");
 }
 
 void test_rule_x2(void)
@@ -861,7 +883,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(215);
+    plan(223);
 
     test_create_delete();
     test_char_type();

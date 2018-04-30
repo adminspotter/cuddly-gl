@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Apr 2018, 11:33:32 tquirk
+ *   last updated 30 Apr 2018, 08:25:43 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -33,6 +33,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <deque>
 #include <stack>
 
 typedef enum {
@@ -79,7 +80,7 @@ class bidi
     std::vector<std::u32string> rule_p1(const std::u32string&);
     virtual int rule_p2_p3(const std::u32string&);
 
-    void rule_x1(int, const std::u32string&);
+    std::deque<character_rec> rule_x1(int, const std::u32string&);
     character_rec& rule_x2(character_rec&);
     character_rec& rule_x3(character_rec&);
     character_rec& rule_x4(character_rec&);
