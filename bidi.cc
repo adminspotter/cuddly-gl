@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Apr 2018, 08:25:25 tquirk
+ *   last updated 30 Apr 2018, 09:04:12 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -149,6 +149,8 @@ std::deque<bidi::character_rec> bidi::rule_x1(int base,
 
         switch (cr.c_class)
         {
+          case class_RLO:  s.push_back(this->rule_x4(cr));   break;
+          case class_LRO:  s.push_back(this->rule_x5(cr));   break;
           default:
             /* Rule 6 */
             s.push_back(cr);
