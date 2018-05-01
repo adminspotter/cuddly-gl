@@ -370,6 +370,17 @@ void test_rule_x1(void)
     is(result.back().c, PDF, test + st + "expected character");
     is(result.back().c_class, class_PDF, test + st + "expected type");
     is(result.back().embed, 0, test + st + "expected embed");
+
+    st = "class B: ";
+
+    std::u32string with_b = {'a', RLE, 'b', 0x000d};
+
+    result = b.rule_x1(0, with_b);
+
+    is(result.size(), 4, test + st + "expected result size");
+    is(result.back().c, 0x000d, test + st + "expected character");
+    is(result.back().c_class, class_B, test + st + "expected type");
+    is(result.back().embed, 0, test + st + "expected embed");
 }
 
 void test_rule_x2(void)
@@ -938,7 +949,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(243);
+    plan(247);
 
     test_create_delete();
     test_char_type();
