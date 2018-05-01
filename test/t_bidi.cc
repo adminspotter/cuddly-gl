@@ -381,6 +381,17 @@ void test_rule_x1(void)
     is(result.back().c, 0x000d, test + st + "expected character");
     is(result.back().c_class, class_B, test + st + "expected type");
     is(result.back().embed, 0, test + st + "expected embed");
+
+    st = "class BN: ";
+
+    std::u32string with_bn = {'a', RLO, 0x206e};
+
+    result = b.rule_x1(0, with_bn);
+
+    is(result.size(), 3, test + st + "expected result size");
+    is(result.back().c, 0x206e, test + st + "expected character");
+    is(result.back().c_class, class_BN, test + st + "expected type");
+    is(result.back().embed, 1, test + st + "expected embed");
 }
 
 void test_rule_x2(void)
@@ -949,7 +960,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(247);
+    plan(251);
 
     test_create_delete();
     test_char_type();

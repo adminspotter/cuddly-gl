@@ -156,7 +156,9 @@ std::deque<bidi::character_rec> bidi::rule_x1(int base,
           case class_PDF:  s.push_back(this->rule_x7(cr));   break;
           case class_B:    s.push_back(this->rule_x8(cr));   break;
           default:
-            /* Rule 6 */
+            /* Rule X6 */
+            if (cr.c_class != class_BN)
+                cr.c_class = this->reset_direction_class(cr.c_class);
             s.push_back(cr);
             break;
         }
