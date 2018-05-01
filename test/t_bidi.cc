@@ -382,6 +382,28 @@ void test_rule_x1(void)
     is(result.back().c_class, class_R, test + st + "expected type");
     is(result.back().embed, 4, test + st + "expected embed");
 
+    st = "class FSI: ";
+
+    std::u32string with_fsi = {'a', FSI, 0x05d0};
+
+    result = b.rule_x1(0, with_fsi);
+
+    is(result.size(), 3, test + st + "expected result size");
+    is(result.back().c, 0x05d0, test + st + "expected character");
+    is(result.back().c_class, class_R, test + st + "expected type");
+    is(result.back().embed, 1, test + st + "expected embed");
+
+    st = "class FSI last: ";
+
+    std::u32string with_fsi_last = {'a', FSI};
+
+    result = b.rule_x1(0, with_fsi_last);
+
+    is(result.size(), 1, test + st + "expected result size");
+    is(result.back().c, 'a', test + st + "expected character");
+    is(result.back().c_class, class_L, test + st + "expected type");
+    is(result.back().embed, 0, test + st + "expected embed");
+
     st = "class PDI: ";
 
     std::u32string with_pdi = {'a', RLO, 'b', LRI, PDI, 'c'};
@@ -993,7 +1015,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(263);
+    plan(271);
 
     test_create_delete();
     test_char_type();

@@ -155,6 +155,13 @@ std::deque<bidi::character_rec> bidi::rule_x1(int base,
           case class_LRO:  s.push_back(this->rule_x5(cr));   break;
           case class_RLI:  s.push_back(this->rule_x5a(cr));  break;
           case class_LRI:  s.push_back(this->rule_x5b(cr));  break;
+          case class_FSI:
+            /* If FSI is *the* last character, we have a degenerate
+             * string, and should be able to ignore the FSI.
+             */
+            if (pos < str.size() - 1)
+                s.push_back(this->rule_x5c(cr, str.substr(pos + 1)));
+            break;
           case class_PDI:  s.push_back(this->rule_x6a(cr));  break;
           case class_PDF:  s.push_back(this->rule_x7(cr));   break;
           case class_B:    s.push_back(this->rule_x8(cr));   break;
