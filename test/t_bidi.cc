@@ -360,6 +360,28 @@ void test_rule_x1(void)
     is(result.back().c_class, class_L, test + st + "expected type");
     is(result.back().embed, 2, test + st + "expected embed");
 
+    st = "class RLI: ";
+
+    std::u32string with_rli = {'a', RLO, 'b', RLI, 'c'};
+
+    result = b.rule_x1(0, with_rli);
+
+    is(result.size(), 5, test + st + "expected result size");
+    is(result.back().c, 'c', test + st + "expected character");
+    is(result.back().c_class, class_L, test + st + "expected type");
+    is(result.back().embed, 3, test + st + "expected embed");
+
+    st = "class LRI: ";
+
+    std::u32string with_lri = {0x05d0, LRO, 0x05d1, LRI, 0x05d2};
+
+    result = b.rule_x1(1, with_lri);
+
+    is(result.size(), 5, test + st + "expected result size");
+    is(result.back().c, 0x05d2, test + st + "expected character");
+    is(result.back().c_class, class_R, test + st + "expected type");
+    is(result.back().embed, 4, test + st + "expected embed");
+
     st = "class PDF: ";
 
     std::u32string with_pdf = {'a', RLE, 'b', PDF};
@@ -960,7 +982,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(251);
+    plan(259);
 
     test_create_delete();
     test_char_type();

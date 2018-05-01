@@ -153,6 +153,8 @@ std::deque<bidi::character_rec> bidi::rule_x1(int base,
           case class_LRE:  s.push_back(this->rule_x3(cr));   break;
           case class_RLO:  s.push_back(this->rule_x4(cr));   break;
           case class_LRO:  s.push_back(this->rule_x5(cr));   break;
+          case class_RLI:  s.push_back(this->rule_x5a(cr));  break;
+          case class_LRI:  s.push_back(this->rule_x5b(cr));  break;
           case class_PDF:  s.push_back(this->rule_x7(cr));   break;
           case class_B:    s.push_back(this->rule_x8(cr));   break;
           default:
