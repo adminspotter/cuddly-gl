@@ -1,6 +1,6 @@
 /* bidi_classes.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 25 Apr 2018, 16:54:30 tquirk
+ *   last updated 01 May 2018, 08:38:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -1426,6 +1426,7 @@ const std::unordered_set<char32_t> WS
 };
 
 /* The single-character directional control classes */
-const int LRM = 0x200e, RLM = 0x200f, ALM = 0x061c;
-const int LRE = 0x202a, RLE = 0x202b, PDF = 0x202c, LRO = 0x202d, RLO = 0x202e;
-const int LRI = 0x2066, RLI = 0x2067, FSI = 0x2068, PDI = 0x2069;
+const char32_t LRM = 0x200e, RLM = 0x200f, ALM = 0x061c;
+const char32_t LRE = 0x202a, RLE = 0x202b, PDF = 0x202c;
+const char32_t LRO = 0x202d, RLO = 0x202e;
+const char32_t LRI = 0x2066, RLI = 0x2067, FSI = 0x2068, PDI = 0x2069;
