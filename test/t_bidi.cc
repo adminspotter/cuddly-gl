@@ -382,6 +382,17 @@ void test_rule_x1(void)
     is(result.back().c_class, class_R, test + st + "expected type");
     is(result.back().embed, 4, test + st + "expected embed");
 
+    st = "class PDI: ";
+
+    std::u32string with_pdi = {'a', RLO, 'b', LRI, PDI, 'c'};
+
+    result = b.rule_x1(0, with_pdi);
+
+    is(result.size(), 6, test + st + "expected result size");
+    is(result.back().c, 'c', test + st + "expected character");
+    is(result.back().c_class, class_R, test + st + "expected type");
+    is(result.back().embed, 1, test + st + "expected embed");
+
     st = "class PDF: ";
 
     std::u32string with_pdf = {'a', RLE, 'b', PDF};
@@ -982,7 +993,7 @@ void test_rule_x8(void)
 
 int main(int argc, char **argv)
 {
-    plan(259);
+    plan(263);
 
     test_create_delete();
     test_char_type();
