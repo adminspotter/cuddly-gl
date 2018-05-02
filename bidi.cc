@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 May 2018, 09:18:20 tquirk
+ *   last updated 01 May 2018, 23:21:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -131,15 +131,14 @@ int bidi::rule_p2_p3(const std::u32string& s)
     return embedding;
 }
 
-std::deque<bidi::character_rec> bidi::rule_x1(int base,
-                                              const std::u32string& str)
+bidi::char_container bidi::rule_x1(int base, const std::u32string& str)
 {
     while (this->direction_stack.size())
         this->direction_stack.pop();
     this->direction_stack.push({base, direction_rec::NEUTRAL, false});
     this->overflow_isolate = this->overflow_embed = this->valid_isolate = 0;
 
-    std::deque<bidi::character_rec> s;
+    bidi::char_container s;
     std::u32string::size_type pos = 0;
 
     for (auto c : str)
