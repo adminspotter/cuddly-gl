@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 May 2018, 23:21:33 tquirk
+ *   last updated 02 May 2018, 07:54:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -20,7 +20,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * Implementation of the Unicode BIDI algorithm.
+ * Implementation of the Unicode BIDI algorithm, revision 37.
+ *
+ * http://www.unicode.org/reports/tr9/tr9-37.html
  *
  * Things to do
  *
