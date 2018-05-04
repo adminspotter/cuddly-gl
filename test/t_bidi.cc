@@ -16,6 +16,7 @@ class fake_bidi : public bidi
 
     using bidi::direction_rec;
     using bidi::character_rec;
+    using bidi::char_container;
 
     using bidi::direction_stack;
     using bidi::overflow_isolate;
@@ -36,6 +37,7 @@ class fake_bidi : public bidi
     using bidi::rule_x6a;
     using bidi::rule_x7;
     using bidi::rule_x8;
+    using bidi::rule_x9;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1013,9 +1015,30 @@ void test_rule_x8(void)
     is(new_cr.embed, 7, test + "expected embed");
 }
 
+void test_rule_x9(void)
+{
+    std::string test = "rule_x9: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc = {
+        {'a', class_L, 0},
+        {RLE, class_RLE, 1},
+        {0x206c, class_BN, 1},
+        {PDF, class_PDF, 0},
+        {'b', class_L, 0}
+    };
+
+    b.rule_x9(cc);
+
+    is(cc.size(), 2, test + "expected string size");
+    is(cc.front().c, 'a', test + "expected front character");
+    is(cc.back().c, 'b', test + "expected back character");
+}
+
 int main(int argc, char **argv)
 {
-    plan(271);
+    plan(274);
 
     test_create_delete();
     test_char_type();
@@ -1033,5 +1056,6 @@ int main(int argc, char **argv)
     test_rule_x6a();
     test_rule_x7();
     test_rule_x8();
+    test_rule_x9();
     return exit_status();
 }
