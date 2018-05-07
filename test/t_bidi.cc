@@ -1060,11 +1060,27 @@ void test_rule_w1(void)
 
     is(at_start.back().c_class, class_AL,
        test + st + "expected character type");
+
+    st = "NSM after WS: ";
+
+    fake_bidi::char_container after_ws =
+    {
+        {' ', class_WS, 0}, {0x0304, class_NSM, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        after_ws.begin(), after_ws.end() - 1, class_AL, class_NSM
+    };
+
+    b.rule_w1(seq2);
+
+    is(after_ws.back().c_class, class_WS,
+       test + st + "expected character type");
 }
 
 int main(int argc, char **argv)
 {
-    plan(275);
+    plan(276);
 
     test_create_delete();
     test_char_type();

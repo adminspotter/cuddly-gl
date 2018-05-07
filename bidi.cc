@@ -369,8 +369,12 @@ void bidi::rule_w1(bidi::run_sequence& seq)
 
     do
         if (i->c_class == class_NSM)
+        {
             if (i == seq.start)
                 (*i).c_class = seq.sos;
+            else
+                (*i).c_class = prev;
+        }
     while (i++ != seq.end);
 }
 
