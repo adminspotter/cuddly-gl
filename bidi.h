@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 May 2018, 22:08:29 tquirk
+ *   last updated 06 May 2018, 17:27:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -70,6 +70,13 @@ class bidi
     character_rec;
     typedef std::deque<character_rec> char_container;
 
+    typedef struct
+    {
+        char_container::iterator start, end;
+        char_class_t sos, eos;
+    }
+    run_sequence;
+
     static const int MAX_DEPTH, MAX_STACK_SIZE;
 
     static char_class_t char_type(char32_t);
@@ -95,6 +102,8 @@ class bidi
     character_rec& rule_x8(character_rec&);
 
     void rule_x9(char_container&);
+
+    void rule_w1(run_sequence&);
 
   public:
     bidi();

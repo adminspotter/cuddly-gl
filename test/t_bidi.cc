@@ -17,6 +17,7 @@ class fake_bidi : public bidi
     using bidi::direction_rec;
     using bidi::character_rec;
     using bidi::char_container;
+    using bidi::run_sequence;
 
     using bidi::direction_stack;
     using bidi::overflow_isolate;
@@ -38,6 +39,8 @@ class fake_bidi : public bidi
     using bidi::rule_x7;
     using bidi::rule_x8;
     using bidi::rule_x9;
+
+    using bidi::rule_w1;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1036,9 +1039,32 @@ void test_rule_x9(void)
     is(cc.back().c, 'b', test + "expected back character");
 }
 
+void test_rule_w1(void)
+{
+    std::string test = "rule_w1: ", st;
+
+    fake_bidi b;
+
+    st = "NSM at start: ";
+
+    fake_bidi::char_container at_start =
+    {
+        {0x0304, class_NSM, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        at_start.begin(), at_start.end() - 1, class_AL, class_NSM
+    };
+
+    b.rule_w1(seq);
+
+    is(at_start.back().c_class, class_AL,
+       test + st + "expected character type");
+}
+
 int main(int argc, char **argv)
 {
-    plan(274);
+    plan(275);
 
     test_create_delete();
     test_char_type();
@@ -1057,5 +1083,6 @@ int main(int argc, char **argv)
     test_rule_x7();
     test_rule_x8();
     test_rule_x9();
+    test_rule_w1();
     return exit_status();
 }
