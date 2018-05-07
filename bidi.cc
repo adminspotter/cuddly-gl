@@ -373,7 +373,13 @@ void bidi::rule_w1(bidi::run_sequence& seq)
             if (i == seq.start)
                 (*i).c_class = seq.sos;
             else
-                (*i).c_class = prev;
+            {
+                auto prev = (*(i - 1)).c_class;
+                if (prev == class_LRI || prev == class_RLI || prev == class_PDI)
+                    (*i).c_class = class_ON;
+                else
+                    (*i).c_class = prev;
+            }
         }
     while (i++ != seq.end);
 }

@@ -1076,11 +1076,27 @@ void test_rule_w1(void)
 
     is(after_ws.back().c_class, class_WS,
        test + st + "expected character type");
+
+    st = "NSM after LRI: ";
+
+    fake_bidi::char_container after_lri =
+    {
+        {LRI, class_LRI, 0}, {0x0304, class_NSM, 0}
+    };
+    fake_bidi::run_sequence seq3 =
+    {
+        after_lri.begin(), after_lri.end() - 1, class_AL, class_NSM
+    };
+
+    b.rule_w1(seq3);
+
+    is(after_lri.back().c_class, class_ON,
+       test + st + "expected character type");
 }
 
 int main(int argc, char **argv)
 {
-    plan(276);
+    plan(277);
 
     test_create_delete();
     test_char_type();
