@@ -1098,9 +1098,11 @@ void test_rule_w1(void)
 
 void test_rule_w2(void)
 {
-    std::string test = "rule_w2: ";
+    std::string test = "rule_w2: ", st;
 
     fake_bidi b;
+
+    st = "strong AL: ";
 
     fake_bidi::char_container cc =
     {
@@ -1113,7 +1115,22 @@ void test_rule_w2(void)
 
     b.rule_w2(seq);
 
-    is(cc.back().c_class, class_AN, test + "expected type");
+    is(cc.back().c_class, class_AN, test + st + "expected type");
+
+    st = "sos AL: ";
+
+    fake_bidi::char_container cc2 =
+    {
+        {'!', class_ON, 1}, {'5', class_EN, 1}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        cc2.begin(), cc2.end() - 1, class_AL, class_EN
+    };
+
+    b.rule_w2(seq2);
+
+    is(cc2.back().c_class, class_AN, test + st + "expected type");
 }
 
 void test_rule_w3(void)
@@ -1139,7 +1156,7 @@ void test_rule_w3(void)
 
 int main(int argc, char **argv)
 {
-    plan(280);
+    plan(281);
 
     test_create_delete();
     test_char_type();
