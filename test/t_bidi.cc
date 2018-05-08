@@ -41,6 +41,7 @@ class fake_bidi : public bidi
     using bidi::rule_x9;
 
     using bidi::rule_w1;
+    using bidi::rule_w2;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1094,9 +1095,29 @@ void test_rule_w1(void)
        test + st + "expected character type");
 }
 
+void test_rule_w2(void)
+{
+    std::string test = "rule_w2: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc =
+    {
+        {0x0608, class_AL, 1}, {'!', class_ON, 1}, {'5', class_EN, 1}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        cc.begin(), cc.end() - 1, class_AL, class_EN
+    };
+
+    b.rule_w2(seq);
+
+    is(cc.back().c_class, class_AN, test + "expected type");
+}
+
 int main(int argc, char **argv)
 {
-    plan(277);
+    plan(278);
 
     test_create_delete();
     test_char_type();
@@ -1116,5 +1137,6 @@ int main(int argc, char **argv)
     test_rule_x8();
     test_rule_x9();
     test_rule_w1();
+    test_rule_w2();
     return exit_status();
 }
