@@ -500,6 +500,8 @@ void bidi::rule_w7(bidi::run_sequence& seq)
                         (*i).c_class = class_L;
                     break;
                 }
+                if (j == seq.start && seq.sos == class_L)
+                    (*i).c_class = class_L;
             }
             while (j-- != seq.start);
         }

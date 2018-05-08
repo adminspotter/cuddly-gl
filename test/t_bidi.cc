@@ -1296,11 +1296,26 @@ void test_rule_w7(void)
     b.rule_w7(seq);
 
     is(cc.back().c_class, class_L, test + st + "expected type");
+
+    st = "sos L: ";
+
+    fake_bidi::char_container cc2 =
+    {
+        {'!', class_ON, 1}, {'5', class_EN, 1}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        cc2.begin(), cc2.end() - 1, class_L, class_EN
+    };
+
+    b.rule_w7(seq2);
+
+    is(cc2.back().c_class, class_L, test + st + "expected type");
 }
 
 int main(int argc, char **argv)
 {
-    plan(290);
+    plan(291);
 
     test_create_delete();
     test_char_type();
