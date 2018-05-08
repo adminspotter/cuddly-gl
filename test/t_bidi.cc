@@ -1231,11 +1231,26 @@ void test_rule_w5(void)
     b.rule_w5(seq);
 
     is(pre_en.back().c_class, class_EN, test + st + "expected type");
+
+    st = "following EN: ";
+
+    fake_bidi::char_container post_en =
+    {
+        {'#', class_ET, 0}, {'#', class_ET, 0}, {'5', class_EN, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        post_en.begin(), post_en.end() - 1, class_ET, class_EN
+    };
+
+    b.rule_w5(seq2);
+
+    is(pre_en.front().c_class, class_EN, test + st + "expected type");
 }
 
 int main(int argc, char **argv)
 {
-    plan(285);
+    plan(286);
 
     test_create_delete();
     test_char_type();

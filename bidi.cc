@@ -450,6 +450,20 @@ void bidi::rule_w5(bidi::run_sequence& seq)
         {
             if (i != seq.start && (*(i - 1)).c_class == class_EN)
                 (*i).c_class = class_EN;
+            else
+            {
+                auto j = i + 1;
+                while (j != seq.end && (*j).c_class == class_ET)
+                    ++j;
+                if ((*j).c_class == class_EN)
+                {
+                    while (i != j)
+                    {
+                        (*i).c_class = class_EN;
+                        ++i;
+                    }
+                }
+            }
         }
     while (i++ != seq.end);
 }
