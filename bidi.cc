@@ -410,6 +410,16 @@ void bidi::rule_w2(bidi::run_sequence& seq)
     while (i-- != seq.start);
 }
 
+void bidi::rule_w3(bidi::run_sequence& seq)
+{
+    auto i = seq.start;
+
+    do
+        if ((*i).c_class == class_AL)
+            (*i).c_class = class_R;
+    while (i++ != seq.end);
+}
+
 bidi::bidi()
     : direction_stack()
 {
