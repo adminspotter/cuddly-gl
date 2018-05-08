@@ -107,6 +107,7 @@ class bidi
     void rule_w2(run_sequence&);
     void rule_w3(run_sequence&);
     void rule_w4(run_sequence&);
+    void rule_w5(run_sequence&);
 
   public:
     bidi();
