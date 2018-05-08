@@ -420,6 +420,20 @@ void bidi::rule_w3(bidi::run_sequence& seq)
     while (i++ != seq.end);
 }
 
+void bidi::rule_w4(bidi::run_sequence& seq)
+{
+    auto i = seq.start + 1;
+
+    do
+        if ((*i).c_class == class_ES
+            && (*(i - 1)).c_class == class_EN
+            && (*(i + 1)).c_class == class_EN)
+        {
+            (*i).c_class = class_EN;
+        }
+    while (++i != seq.end);
+}
+
 bidi::bidi()
     : direction_stack()
 {

@@ -43,6 +43,7 @@ class fake_bidi : public bidi
     using bidi::rule_w1;
     using bidi::rule_w2;
     using bidi::rule_w3;
+    using bidi::rule_w4;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1154,9 +1155,32 @@ void test_rule_w3(void)
     is(cc.back().c_class, class_EN, test + "expected EN type");
 }
 
+void test_rule_w4(void)
+{
+    std::string test = "rule_w4: ", st;
+
+    fake_bidi b;
+
+    st = "ES between ENs: ";
+
+    fake_bidi::char_container es_in_ens =
+    {
+        {'5', class_EN, 0}, {'+', class_ES, 0}, {'5', class_EN, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        es_in_ens.begin(), es_in_ens.end() - 1, class_EN, class_EN
+    };
+
+    b.rule_w4(seq);
+
+    is((*(es_in_ens.begin() + 1)).c_class, class_EN,
+       test + st + "expected type");
+}
+
 int main(int argc, char **argv)
 {
-    plan(281);
+    plan(282);
 
     test_create_delete();
     test_char_type();
@@ -1178,5 +1202,6 @@ int main(int argc, char **argv)
     test_rule_w1();
     test_rule_w2();
     test_rule_w3();
+    test_rule_w4();
     return exit_status();
 }
