@@ -1176,11 +1176,43 @@ void test_rule_w4(void)
 
     is((*(es_in_ens.begin() + 1)).c_class, class_EN,
        test + st + "expected type");
+
+    st = "CS between ENs: ";
+
+    fake_bidi::char_container cs_in_ens =
+    {
+        {'5', class_EN, 0}, {'/', class_CS, 0}, {'5', class_EN, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        cs_in_ens.begin(), cs_in_ens.end() - 1, class_EN, class_EN
+    };
+
+    b.rule_w4(seq2);
+
+    is((*(cs_in_ens.begin() + 1)).c_class, class_EN,
+       test + st + "expected type");
+
+    st = "CS between ANs: ";
+
+    fake_bidi::char_container cs_in_ans =
+    {
+        {0x0661, class_AN, 0}, {'/', class_CS, 0}, {0x0662, class_AN, 0}
+    };
+    fake_bidi::run_sequence seq3 =
+    {
+        cs_in_ans.begin(), cs_in_ans.end() - 1, class_EN, class_EN
+    };
+
+    b.rule_w4(seq3);
+
+    is((*(cs_in_ans.begin() + 1)).c_class, class_AN,
+       test + st + "expected type");
 }
 
 int main(int argc, char **argv)
 {
-    plan(282);
+    plan(284);
 
     test_create_delete();
     test_char_type();

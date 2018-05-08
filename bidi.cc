@@ -431,6 +431,13 @@ void bidi::rule_w4(bidi::run_sequence& seq)
         {
             (*i).c_class = class_EN;
         }
+        else if ((*i).c_class == class_CS
+                 && ((*(i - 1)).c_class == class_EN
+                     || (*(i - 1)).c_class == class_AN)
+                 && (*(i - 1)).c_class == (*(i + 1)).c_class)
+        {
+            (*i).c_class = (*(i - 1)).c_class;
+        }
     while (++i != seq.end);
 }
 
