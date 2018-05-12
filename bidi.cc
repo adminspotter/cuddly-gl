@@ -371,14 +371,14 @@ void bidi::rule_w1(bidi::run_sequence& seq)
         if (i->c_class == class_NSM)
         {
             if (i == seq.start)
-                (*i).c_class = seq.sos;
+                i->c_class = seq.sos;
             else
             {
                 auto prev = (*(i - 1)).c_class;
                 if (prev == class_LRI || prev == class_RLI || prev == class_PDI)
-                    (*i).c_class = class_ON;
+                    i->c_class = class_ON;
                 else
-                    (*i).c_class = prev;
+                    i->c_class = prev;
             }
         }
     while (i++ != seq.end);
@@ -389,21 +389,21 @@ void bidi::rule_w2(bidi::run_sequence& seq)
     auto i = seq.end;
 
     do
-        if ((*i).c_class == class_EN)
+        if (i->c_class == class_EN)
         {
             auto j = i - 1;
             do
             {
-                if ((*j).c_class == class_R
-                    || (*j).c_class == class_L
-                    || (*j).c_class == class_AL)
+                if (j->c_class == class_R
+                    || j->c_class == class_L
+                    || j->c_class == class_AL)
                 {
-                    if ((*j).c_class == class_AL)
-                        (*i).c_class = class_AN;
+                    if (j->c_class == class_AL)
+                        i->c_class = class_AN;
                     break;
                 }
                 if (j == seq.start && seq.sos == class_AL)
-                    (*i).c_class = class_AN;
+                    i->c_class = class_AN;
             }
             while (j-- != seq.start);
         }
@@ -415,8 +415,8 @@ void bidi::rule_w3(bidi::run_sequence& seq)
     auto i = seq.start;
 
     do
-        if ((*i).c_class == class_AL)
-            (*i).c_class = class_R;
+        if (i->c_class == class_AL)
+            i->c_class = class_R;
     while (i++ != seq.end);
 }
 
@@ -425,18 +425,18 @@ void bidi::rule_w4(bidi::run_sequence& seq)
     auto i = seq.start + 1;
 
     do
-        if ((*i).c_class == class_ES
+        if (i->c_class == class_ES
             && (*(i - 1)).c_class == class_EN
             && (*(i + 1)).c_class == class_EN)
         {
-            (*i).c_class = class_EN;
+            i->c_class = class_EN;
         }
-        else if ((*i).c_class == class_CS
+        else if (i->c_class == class_CS
                  && ((*(i - 1)).c_class == class_EN
                      || (*(i - 1)).c_class == class_AN)
                  && (*(i - 1)).c_class == (*(i + 1)).c_class)
         {
-            (*i).c_class = (*(i - 1)).c_class;
+            i->c_class = (*(i - 1)).c_class;
         }
     while (++i != seq.end);
 }
@@ -446,20 +446,20 @@ void bidi::rule_w5(bidi::run_sequence& seq)
     auto i = seq.start;
 
     do
-        if ((*i).c_class == class_ET)
+        if (i->c_class == class_ET)
         {
             if (i != seq.start && (*(i - 1)).c_class == class_EN)
-                (*i).c_class = class_EN;
+                i->c_class = class_EN;
             else
             {
                 auto j = i + 1;
-                while (j != seq.end && (*j).c_class == class_ET)
+                while (j != seq.end && j->c_class == class_ET)
                     ++j;
-                if ((*j).c_class == class_EN)
+                if (j->c_class == class_EN)
                 {
                     while (i != j)
                     {
-                        (*i).c_class = class_EN;
+                        i->c_class = class_EN;
                         ++i;
                     }
                 }
@@ -473,11 +473,11 @@ void bidi::rule_w6(bidi::run_sequence& seq)
     auto i = seq.start;
 
     do
-        if ((*i).c_class == class_ET
-            || (*i).c_class == class_ES
-            || (*i).c_class == class_CS)
+        if (i->c_class == class_ET
+            || i->c_class == class_ES
+            || i->c_class == class_CS)
         {
-            (*i).c_class = class_ON;
+            i->c_class = class_ON;
         }
     while (i++ != seq.end);
 }
@@ -487,21 +487,21 @@ void bidi::rule_w7(bidi::run_sequence& seq)
     auto i = seq.end;
 
     do
-        if ((*i).c_class == class_EN)
+        if (i->c_class == class_EN)
         {
             auto j = i - 1;
             do
             {
-                if ((*j).c_class == class_R
-                    || (*j).c_class == class_L
-                    || (*j).c_class == class_AL)
+                if (j->c_class == class_R
+                    || j->c_class == class_L
+                    || j->c_class == class_AL)
                 {
-                    if ((*j).c_class == class_L)
-                        (*i).c_class = class_L;
+                    if (j->c_class == class_L)
+                        i->c_class = class_L;
                     break;
                 }
                 if (j == seq.start && seq.sos == class_L)
-                    (*i).c_class = class_L;
+                    i->c_class = class_L;
             }
             while (j-- != seq.start);
         }
