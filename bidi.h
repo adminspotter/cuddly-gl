@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 May 2018, 17:27:03 tquirk
+ *   last updated 12 May 2018, 10:15:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -33,6 +33,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <deque>
 #include <stack>
 
@@ -49,6 +50,15 @@ extern const std::unordered_set<char32_t> ET, NSM, ON, R, S, WS;
 
 extern const char32_t LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO;
 extern const char32_t LRI, RLI, FSI, PDI;
+
+typedef struct
+{
+    enum {o, c} which;
+    char32_t mate;
+}
+bracket_t;
+
+extern const std::unordered_map<char32_t, bracket_t> bracket_chars;
 
 class bidi
 {
