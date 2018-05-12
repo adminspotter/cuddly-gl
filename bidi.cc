@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 May 2018, 08:14:23 tquirk
+ *   last updated 12 May 2018, 13:15:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,6 +36,7 @@ std::u32string CRLF = { 0x0d, 0x0a };
 
 const int bidi::MAX_DEPTH = 125;
 const int bidi::MAX_STACK_SIZE = bidi::MAX_DEPTH + 2;
+const int bidi::MAX_PAIR_STACK_SIZE = 63;
 
 char_class_t bidi::char_type(char32_t c)
 {
@@ -506,6 +507,42 @@ void bidi::rule_w7(bidi::run_sequence& seq)
             while (j-- != seq.start);
         }
     while (i-- != seq.start);
+}
+
+void bidi::bd16(bidi::run_sequence& seq)
+{
+    std::deque<bidi::stack_entry_t> bracket_stack;
+    auto i = seq.start;
+
+    do
+    {
+        auto j = bracket_chars.find(i->c);
+        if (j != bracket_chars.end())
+        {
+            if (j->second.which == bracket_t::o)
+            {
+                if (bracket_stack.size() < bidi::MAX_PAIR_STACK_SIZE)
+                    bracket_stack.push_back({i, i->c, j->second});
+                else
+                    i = seq.end;
+            }
+            else
+            {
+                auto k = bracket_stack.end() - 1;
+                while (k >= bracket_stack.begin())
+                {
+                    if (k->b.mate == i->c)
+                    {
+                        seq.bracket_pairs.push_back({k->start, i});
+                        bracket_stack.erase(k, bracket_stack.end());
+                        break;
+                    }
+                    --k;
+                }
+            }
+        }
+    }
+    while (i++ != seq.end);
 }
 
 bidi::bidi()

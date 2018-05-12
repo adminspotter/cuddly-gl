@@ -47,6 +47,8 @@ class fake_bidi : public bidi
     using bidi::rule_w5;
     using bidi::rule_w6;
     using bidi::rule_w7;
+
+    using bidi::bd16;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1313,9 +1315,46 @@ void test_rule_w7(void)
     is(cc2.back().c_class, class_L, test + st + "expected type");
 }
 
+void test_bd16(void)
+{
+    std::string test = "bd16: ", st;
+
+    fake_bidi b;
+
+    st = "no pair: ";
+
+    fake_bidi::char_container no_pair =
+    {
+        {'(', class_ON, 0}, {'[', class_ON, 0}, {'}', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        no_pair.begin(), no_pair.end() - 1, class_L, class_L
+    };
+
+    b.bd16(seq);
+
+    is(seq.bracket_pairs.size(), 0, test + st + "expected pair list size");
+
+    st = "valid pair: ";
+
+    fake_bidi::char_container one_pair =
+    {
+        {'(', class_ON, 0}, {'[', class_L, 0}, {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        one_pair.begin(), one_pair.end() - 1, class_L, class_L
+    };
+
+    b.bd16(seq2);
+
+    is(seq2.bracket_pairs.size(), 1, test + st + "expected pair list size");
+}
+
 int main(int argc, char **argv)
 {
-    plan(291);
+    plan(293);
 
     test_create_delete();
     test_char_type();
@@ -1341,5 +1380,6 @@ int main(int argc, char **argv)
     test_rule_w5();
     test_rule_w6();
     test_rule_w7();
+    test_bd16();
     return exit_status();
 }

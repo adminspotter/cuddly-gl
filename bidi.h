@@ -36,6 +36,7 @@
 #include <unordered_map>
 #include <deque>
 #include <stack>
+#include <utility>
 
 typedef enum {
     class_AL, class_AN, class_B, class_BN, class_CS, class_EN, class_ES,
@@ -79,15 +80,27 @@ class bidi
     }
     character_rec;
     typedef std::deque<character_rec> char_container;
+    typedef char_container::iterator char_cont_it_t;
+    typedef std::pair<char_cont_it_t, char_cont_it_t> char_pair_t;
 
     typedef struct
     {
-        char_container::iterator start, end;
+        char_cont_it_t start, end;
         char_class_t sos, eos;
+        std::deque<char_pair_t> bracket_pairs;
     }
     run_sequence;
+    typedef std::deque<run_sequence> sequences;
 
-    static const int MAX_DEPTH, MAX_STACK_SIZE;
+    typedef struct
+    {
+        char_cont_it_t start;
+        char32_t c;
+        bracket_t b;
+    }
+    stack_entry_t;
+
+    static const int MAX_DEPTH, MAX_STACK_SIZE, MAX_PAIR_STACK_SIZE;
 
     static char_class_t char_type(char32_t);
 
@@ -120,6 +133,8 @@ class bidi
     void rule_w5(run_sequence&);
     void rule_w6(run_sequence&);
     void rule_w7(run_sequence&);
+
+    void bd16(run_sequence&);
 
   public:
     bidi();
