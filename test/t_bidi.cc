@@ -17,6 +17,8 @@ class fake_bidi : public bidi
     using bidi::direction_rec;
     using bidi::character_rec;
     using bidi::char_container;
+    using bidi::char_cont_it_t;
+    using bidi::char_pair_t;
     using bidi::run_sequence;
 
     using bidi::direction_stack;
@@ -49,6 +51,7 @@ class fake_bidi : public bidi
     using bidi::rule_w7;
 
     using bidi::bd16;
+    using bidi::set_paired_brackets;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1352,9 +1355,34 @@ void test_bd16(void)
     is(seq2.bracket_pairs.size(), 1, test + st + "expected pair list size");
 }
 
+void test_set_paired_brackets(void)
+{
+    std::string test = "set_paired_brackets: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container no_nsm =
+    {
+        {'(', class_ON, 0}, {'a', class_L, 0}, {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        no_nsm.begin(), no_nsm.end() - 1, class_L, class_L
+    };
+    fake_bidi::char_pair_t no_nsm_pr =
+    {
+        no_nsm.begin(), no_nsm.end() - 1
+    };
+
+    b.set_paired_brackets(no_nsm_pr, class_L, seq);
+
+    is(no_nsm.front().c_class, class_L, test + "expected open bracket class");
+    is(no_nsm.back().c_class, class_L, test + "expected close bracket class");
+}
+
 int main(int argc, char **argv)
 {
-    plan(293);
+    plan(295);
 
     test_create_delete();
     test_char_type();
@@ -1381,5 +1409,6 @@ int main(int argc, char **argv)
     test_rule_w6();
     test_rule_w7();
     test_bd16();
+    test_set_paired_brackets();
     return exit_status();
 }

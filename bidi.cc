@@ -545,6 +545,13 @@ void bidi::bd16(bidi::run_sequence& seq)
     while (i++ != seq.end);
 }
 
+void bidi::set_paired_brackets(char_pair_t& brackets,
+                               char_class_t type,
+                               bidi::run_sequence& seq)
+{
+    brackets.first->c_class = brackets.second->c_class = type;
+}
+
 bidi::bidi()
     : direction_stack()
 {
