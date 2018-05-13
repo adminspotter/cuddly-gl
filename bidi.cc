@@ -557,7 +557,20 @@ void bidi::rule_n0(bidi::run_sequence& seq)
             {
                 if ((j->c_class == class_R && j->embed % 2 == 1)
                     || (j->c_class == class_L && j->embed % 2 == 0))
+                {
                     this->set_paired_brackets(i, j->c_class, seq);
+                }
+                else if (i.first != seq.start)
+                {
+                    auto k = i.first;
+                    do
+                        if (k->c_class == j->c_class)
+                        {
+                            this->set_paired_brackets(i, j->c_class, seq);
+                            break;
+                        }
+                    while (k-- != seq.start);
+                }
                 break;
             }
         while (j++ != i.second);

@@ -1358,9 +1358,11 @@ void test_bd16(void)
 
 void test_rule_n0(void)
 {
-    std::string test = "rule_n0: ";
+    std::string test = "rule_n0: ", st;
 
     fake_bidi b;
+
+    st = "matching strong: ";
 
     fake_bidi::char_container l_pair =
     {
@@ -1373,8 +1375,31 @@ void test_rule_n0(void)
 
     b.rule_n0(seq);
 
-    is(l_pair.begin()->c_class, class_L, test + "expected open type");
-    is((l_pair.begin() + 2)->c_class, class_L, test + "expected close type");
+    is(l_pair.begin()->c_class, class_L,
+       test + st + "expected open type");
+    is((l_pair.begin() + 2)->c_class, class_L,
+       test + st + "expected close type");
+
+    st = "backward strong search: ";
+
+    fake_bidi::char_container back_search =
+    {
+        {0x05d1, class_R, 0},
+        {'(', class_ON, 0},
+        {0x05d0, class_R, 0},
+        {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        back_search.begin(), back_search.end() - 1, class_L, class_L
+    };
+
+    b.rule_n0(seq2);
+
+    is((back_search.begin() + 1)->c_class, class_R,
+       test + st + "expected open type");
+    is((back_search.begin() + 3)->c_class, class_R,
+       test + st + "expected close type");
 }
 
 void test_set_paired_brackets(void)
@@ -1441,7 +1466,7 @@ void test_set_paired_brackets(void)
 
 int main(int argc, char **argv)
 {
-    plan(302);
+    plan(304);
 
     test_create_delete();
     test_char_type();
