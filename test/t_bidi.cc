@@ -51,6 +51,7 @@ class fake_bidi : public bidi
     using bidi::rule_w7;
 
     using bidi::bd16;
+    using bidi::rule_n0;
     using bidi::set_paired_brackets;
 };
 
@@ -1355,6 +1356,27 @@ void test_bd16(void)
     is(seq2.bracket_pairs.size(), 1, test + st + "expected pair list size");
 }
 
+void test_rule_n0(void)
+{
+    std::string test = "rule_n0: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container l_pair =
+    {
+        {'(', class_ON, 0}, {'a', class_L, 0}, {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        l_pair.begin(), l_pair.end() - 1, class_L, class_L
+    };
+
+    b.rule_n0(seq);
+
+    is(l_pair.begin()->c_class, class_L, test + "expected open type");
+    is((l_pair.begin() + 2)->c_class, class_L, test + "expected close type");
+}
+
 void test_set_paired_brackets(void)
 {
     std::string test = "set_paired_brackets: ", st;
@@ -1419,7 +1441,7 @@ void test_set_paired_brackets(void)
 
 int main(int argc, char **argv)
 {
-    plan(300);
+    plan(302);
 
     test_create_delete();
     test_char_type();
@@ -1446,6 +1468,7 @@ int main(int argc, char **argv)
     test_rule_w6();
     test_rule_w7();
     test_bd16();
+    test_rule_n0();
     test_set_paired_brackets();
     return exit_status();
 }

@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 May 2018, 19:38:48 tquirk
+ *   last updated 12 May 2018, 19:53:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -543,6 +543,25 @@ void bidi::bd16(bidi::run_sequence& seq)
         }
     }
     while (i++ != seq.end);
+}
+
+void bidi::rule_n0(bidi::run_sequence& seq)
+{
+    this->bd16(seq);
+
+    for (auto& i : seq.bracket_pairs)
+    {
+        auto j = i.first;
+        do
+            if (j->c_class == class_R || j->c_class == class_L)
+            {
+                if ((j->c_class == class_R && j->embed % 2 == 1)
+                    || (j->c_class == class_L && j->embed % 2 == 0))
+                    this->set_paired_brackets(i, j->c_class, seq);
+                break;
+            }
+        while (j++ != i.second);
+    }
 }
 
 void bidi::set_paired_brackets(char_pair_t& brackets,
