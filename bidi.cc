@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 May 2018, 19:53:05 tquirk
+ *   last updated 13 May 2018, 09:33:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -601,6 +601,41 @@ void bidi::set_paired_brackets(char_pair_t& brackets,
     i = brackets.second;
     while (++i != seq.end + 1 && bidi::char_type(i->c) == class_NSM)
         i->c_class = type;
+}
+
+#define is_NI(x) ((x)->c_class == class_B || (x)->c_class == class_S \
+                  || (x)->c_class == class_WS || (x)->c_class == class_ON \
+                  || (x)->c == FSI || (x)->c == LRI || (x)->c == RLI \
+                  || (x)->c == PDI)
+#define N1_class(x) ((x)->c_class == class_AN || (x)->c_class == class_EN \
+                     ? class_R : (x)->c_class)
+
+void bidi::rule_n1(bidi::run_sequence& seq)
+{
+    auto i = seq.start + 1;
+
+    do
+        if (is_NI(i)
+            && ((i - 1)->c_class == class_L
+                || (i - 1)->c_class == class_R
+                || (i - 1)->c_class == class_AN
+                || (i - 1)->c_class == class_EN))
+        {
+            char_class_t prev = N1_class(i - 1);
+            auto j = i + 1;
+
+            while (j != seq.end && is_NI(j))
+                ++j;
+
+            if (N1_class(j) == prev)
+                do
+                    i->c_class = prev;
+                while (++i != j);
+
+            if (i == seq.end)
+                break;
+        }
+    while (++i != seq.end);
 }
 
 bidi::bidi()

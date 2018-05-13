@@ -53,6 +53,7 @@ class fake_bidi : public bidi
     using bidi::bd16;
     using bidi::rule_n0;
     using bidi::set_paired_brackets;
+    using bidi::rule_n1;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1527,9 +1528,40 @@ void test_set_paired_brackets(void)
        test + st + "expected third NSM class");
 }
 
+void test_rule_n1(void)
+{
+    std::string test = "rule_n1: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container en_chars =
+    {
+        {'1', class_EN, 0},
+        {' ', class_WS, 0},
+        {' ', class_WS, 0},
+        {'2', class_EN, 0},
+        {' ', class_WS, 0},
+        {'a', class_L, 0},
+        {'b', class_L, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        en_chars.begin(), en_chars.end() - 1, class_L, class_L
+    };
+
+    b.rule_n1(seq);
+
+    is((en_chars.begin() + 1)->c_class, class_R,
+       test + "expected pair list size");
+    is((en_chars.begin() + 2)->c_class, class_R,
+       test + "expected pair list size");
+    is((en_chars.begin() + 4)->c_class, class_WS,
+       test + "expected pair list size");
+}
+
 int main(int argc, char **argv)
 {
-    plan(310);
+    plan(313);
 
     test_create_delete();
     test_char_type();
@@ -1558,5 +1590,6 @@ int main(int argc, char **argv)
     test_bd16();
     test_rule_n0();
     test_set_paired_brackets();
+    test_rule_n1();
     return exit_status();
 }

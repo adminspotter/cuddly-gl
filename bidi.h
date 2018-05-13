@@ -137,6 +137,7 @@ class bidi
     void bd16(run_sequence&);
     void rule_n0(run_sequence&);
     void set_paired_brackets(char_pair_t&, char_class_t, run_sequence&);
+    void rule_n1(run_sequence&);
 
   public:
     bidi();
