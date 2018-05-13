@@ -1357,9 +1357,11 @@ void test_bd16(void)
 
 void test_set_paired_brackets(void)
 {
-    std::string test = "set_paired_brackets: ";
+    std::string test = "set_paired_brackets: ", st;
 
     fake_bidi b;
+
+    st = "no NSM: ";
 
     fake_bidi::char_container no_nsm =
     {
@@ -1376,13 +1378,48 @@ void test_set_paired_brackets(void)
 
     b.set_paired_brackets(no_nsm_pr, class_L, seq);
 
-    is(no_nsm.front().c_class, class_L, test + "expected open bracket class");
-    is(no_nsm.back().c_class, class_L, test + "expected close bracket class");
+    is(no_nsm.front().c_class, class_L,
+       test + st + "expected open bracket class");
+    is(no_nsm.back().c_class, class_L,
+       test + st + "expected close bracket class");
+
+    st = "with NSM: ";
+
+    fake_bidi::char_container with_nsm =
+    {
+        {'(', class_ON, 0},
+        {0x0308, class_NSM, 0},
+        {'a', class_L, 0},
+        {')', class_ON, 0},
+        {0x0309, class_NSM, 0},
+        {0x0308, class_NSM, 0}
+    };
+    fake_bidi::run_sequence seq2 =
+    {
+        with_nsm.begin(), with_nsm.end() - 1, class_L, class_L
+    };
+    fake_bidi::char_pair_t with_nsm_pr =
+    {
+        with_nsm.begin(), with_nsm.begin() + 3
+    };
+
+    b.set_paired_brackets(with_nsm_pr, class_L, seq);
+
+    is(with_nsm.begin()->c_class, class_L,
+       test + st + "expected open bracket class");
+    is((with_nsm.begin() + 1)->c_class, class_L,
+       test + st + "expected first NSM class");
+    is((with_nsm.begin() + 3)->c_class, class_L,
+       test + st + "expected close bracket class");
+    is((with_nsm.begin() + 4)->c_class, class_L,
+       test + st + "expected second NSM class");
+    is((with_nsm.begin() + 5)->c_class, class_L,
+       test + st + "expected third NSM class");
 }
 
 int main(int argc, char **argv)
 {
-    plan(295);
+    plan(300);
 
     test_create_delete();
     test_char_type();
