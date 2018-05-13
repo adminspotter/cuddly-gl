@@ -570,6 +570,8 @@ void bidi::rule_n0(bidi::run_sequence& seq)
                             break;
                         }
                     while (k-- != seq.start);
+                    if (k == seq.start - 1 && seq.sos == j->c_class)
+                        this->set_paired_brackets(i, seq.sos, seq);
                 }
                 break;
             }

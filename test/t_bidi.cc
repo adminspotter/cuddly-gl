@@ -1400,6 +1400,27 @@ void test_rule_n0(void)
        test + st + "expected open type");
     is((back_search.begin() + 3)->c_class, class_R,
        test + st + "expected close type");
+
+    st = "sos search: ";
+
+    fake_bidi::char_container sos_search =
+    {
+        {' ', class_WS, 0},
+        {'(', class_ON, 0},
+        {0x05d0, class_R, 0},
+        {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq3 =
+    {
+        sos_search.begin(), sos_search.end() - 1, class_R, class_L
+    };
+
+    b.rule_n0(seq3);
+
+    is((sos_search.begin() + 1)->c_class, class_R,
+       test + st + "expected open type");
+    is((sos_search.begin() + 3)->c_class, class_R,
+       test + st + "expected close type");
 }
 
 void test_set_paired_brackets(void)
@@ -1466,7 +1487,7 @@ void test_set_paired_brackets(void)
 
 int main(int argc, char **argv)
 {
-    plan(304);
+    plan(306);
 
     test_create_delete();
     test_char_type();
