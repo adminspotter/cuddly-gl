@@ -1442,6 +1442,27 @@ void test_rule_n0(void)
        test + st + "expected open type");
     is((embed_dir.begin() + 3)->c_class, class_L,
        test + st + "expected close type");
+
+    st = "no strong: ";
+
+    fake_bidi::char_container no_strong =
+    {
+        {' ', class_WS, 0},
+        {'(', class_ON, 0},
+        {' ', class_WS, 0},
+        {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq5 =
+    {
+        no_strong.begin(), no_strong.end() - 1, class_L, class_L
+    };
+
+    b.rule_n0(seq5);
+
+    is((no_strong.begin() + 1)->c_class, class_ON,
+       test + st + "expected open type");
+    is((no_strong.begin() + 3)->c_class, class_ON,
+       test + st + "expected close type");
 }
 
 void test_set_paired_brackets(void)
@@ -1508,7 +1529,7 @@ void test_set_paired_brackets(void)
 
 int main(int argc, char **argv)
 {
-    plan(308);
+    plan(310);
 
     test_create_delete();
     test_char_type();
