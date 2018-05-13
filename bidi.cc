@@ -570,8 +570,16 @@ void bidi::rule_n0(bidi::run_sequence& seq)
                             break;
                         }
                     while (k-- != seq.start);
-                    if (k == seq.start - 1 && seq.sos == j->c_class)
-                        this->set_paired_brackets(i, seq.sos, seq);
+                    if (k == seq.start - 1)
+                    {
+                        if (seq.sos == j->c_class)
+                            this->set_paired_brackets(i, seq.sos, seq);
+                        else
+                        {
+                            auto dir = i.first->embed % 2 ? class_R : class_L;
+                            this->set_paired_brackets(i, dir, seq);
+                        }
+                    }
                 }
                 break;
             }

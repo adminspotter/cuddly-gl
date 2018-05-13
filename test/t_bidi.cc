@@ -1421,6 +1421,27 @@ void test_rule_n0(void)
        test + st + "expected open type");
     is((sos_search.begin() + 3)->c_class, class_R,
        test + st + "expected close type");
+
+    st = "embed direction: ";
+
+    fake_bidi::char_container embed_dir =
+    {
+        {' ', class_WS, 0},
+        {'(', class_ON, 0},
+        {0x05d0, class_R, 0},
+        {')', class_ON, 0}
+    };
+    fake_bidi::run_sequence seq4 =
+    {
+        embed_dir.begin(), embed_dir.end() - 1, class_L, class_L
+    };
+
+    b.rule_n0(seq4);
+
+    is((embed_dir.begin() + 1)->c_class, class_L,
+       test + st + "expected open type");
+    is((embed_dir.begin() + 3)->c_class, class_L,
+       test + st + "expected close type");
 }
 
 void test_set_paired_brackets(void)
@@ -1487,7 +1508,7 @@ void test_set_paired_brackets(void)
 
 int main(int argc, char **argv)
 {
-    plan(306);
+    plan(308);
 
     test_create_delete();
     test_char_type();
