@@ -1640,7 +1640,6 @@ void test_rule_l1(void)
 
     fake_bidi::char_container cc =
     {
-        {'a', class_L, 0},
         {' ', class_WS, 4},
         {0x0009, class_S, 4},
         {'a', class_L, 0},
@@ -1651,17 +1650,16 @@ void test_rule_l1(void)
 
     b.rule_l1(0, cc);
 
-    is((cc.begin() + 1)->embed, 0, test + st + "expected WS embed");
-    is((cc.begin() + 2)->embed, 0, test + st + "expected S embed");
-    is((cc.begin() + 4)->embed, 0, test + st + "expected RLI embed");
-    is((cc.begin() + 5)->embed, 0, test + st + "expected PDI embed");
-    is((cc.begin() + 6)->embed, 0, test + st + "expected B embed");
+    is(cc.begin()->embed, 0, test + st + "expected WS embed");
+    is((cc.begin() + 1)->embed, 0, test + st + "expected S embed");
+    is((cc.begin() + 3)->embed, 0, test + st + "expected RLI embed");
+    is((cc.begin() + 4)->embed, 0, test + st + "expected PDI embed");
+    is((cc.begin() + 5)->embed, 0, test + st + "expected B embed");
 
     st = "trailing: ";
 
     fake_bidi::char_container cc2 =
     {
-        {'a', class_L, 0},
         {' ', class_WS, 4},
         {RLI, class_RLI, 6},
         {PDI, class_PDI, 6},
@@ -1669,9 +1667,9 @@ void test_rule_l1(void)
 
     b.rule_l1(0, cc2);
 
-    is((cc.begin() + 1)->embed, 0, test + st + "expected WS embed");
-    is((cc.begin() + 2)->embed, 0, test + st + "expected RLI embed");
-    is((cc.begin() + 3)->embed, 0, test + st + "expected PDI embed");
+    is(cc.begin()->embed, 0, test + st + "expected WS embed");
+    is((cc.begin() + 1)->embed, 0, test + st + "expected RLI embed");
+    is((cc.begin() + 2)->embed, 0, test + st + "expected PDI embed");
 }
 
 int main(int argc, char **argv)

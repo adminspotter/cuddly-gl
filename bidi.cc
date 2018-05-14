@@ -697,27 +697,31 @@ void bidi::rule_l1(int base, bidi::char_container& str)
             if (i != str.begin())
             {
                 auto j = i;
-                while (--j != str.begin())
+                do
                 {
+                    --j;
                     if (j->c == FSI || j->c == LRI || j->c == RLI || j->c == PDI
                         || bidi::char_type(j->c) == class_WS)
                         j->embed = base;
                     else
                         break;
                 }
+                while (j != str.begin());
             }
         }
     }
     while (++i != str.end());
 
-    while (--i != str.begin())
+    do
     {
+        --i;
         if (i->c == FSI || i->c == LRI || i->c == RLI || i->c == PDI
             || bidi::char_type(i->c) == class_WS)
             i->embed = base;
         else
             break;
     }
+    while (i != str.begin());
 }
 
 bidi::bidi()
