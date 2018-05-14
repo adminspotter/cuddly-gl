@@ -143,6 +143,8 @@ class bidi
     void rule_i1(run_sequence&);
     void rule_i2(run_sequence&);
 
+    void rule_l1(int, char_container&);
+
   public:
     bidi();
     ~bidi();
