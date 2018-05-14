@@ -653,6 +653,21 @@ void bidi::rule_n2(bidi::run_sequence& seq)
     while (i++ != seq.end);
 }
 
+void bidi::rule_i1(bidi::run_sequence& seq)
+{
+    auto i = seq.start;
+
+    do
+        if (i->embed % 2 == 0)
+        {
+            if (i->c_class == class_R)
+                i->embed += 1;
+            else if (i->c_class == class_AN || i->c_class == class_EN)
+                i->embed += 2;
+        }
+    while (i++ != seq.end);
+}
+
 bidi::bidi()
     : direction_stack()
 {

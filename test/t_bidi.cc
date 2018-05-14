@@ -55,6 +55,8 @@ class fake_bidi : public bidi
     using bidi::set_paired_brackets;
     using bidi::rule_n1;
     using bidi::rule_n2;
+
+    using bidi::rule_i1;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1581,9 +1583,31 @@ void test_rule_n2(void)
     is((cc.begin() + 1)->c_class, class_R, test + "expected odd embed class");
 }
 
+void test_rule_i1(void)
+{
+    std::string test = "rule_i1: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc =
+    {
+        {0x0627, class_R, 0}, {0x0600, class_AN, 0}, {'3', class_EN, 0}
+    };
+    fake_bidi::run_sequence seq =
+    {
+        cc.begin(), cc.end() - 1, class_L, class_L
+    };
+
+    b.rule_i1(seq);
+
+    is(cc.begin()->embed, 1, test + "expected R embed");
+    is((cc.begin() + 1)->embed, 2, test + "expected AN embed");
+    is((cc.begin() + 2)->embed, 2, test + "expected EN embed");
+}
+
 int main(int argc, char **argv)
 {
-    plan(315);
+    plan(318);
 
     test_create_delete();
     test_char_type();
@@ -1614,5 +1638,6 @@ int main(int argc, char **argv)
     test_set_paired_brackets();
     test_rule_n1();
     test_rule_n2();
+    test_rule_i1();
     return exit_status();
 }
