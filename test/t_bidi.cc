@@ -65,6 +65,7 @@ class fake_bidi : public bidi
     using bidi::rule_l1;
     using bidi::rule_l2;
     using bidi::rule_l3;
+    using bidi::rule_l4;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1840,9 +1841,38 @@ void test_rule_l3(void)
     b.rule_l3(cc);
 }
 
+void test_rule_l4(void)
+{
+    std::string test = "rule_l4: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc =
+    {
+        {'a', class_L, 0},
+        {')', class_R, 1},
+        {FSI, class_L, 1},
+        {'c', class_R, 3},
+        {PDI, class_L, 1},
+        {'(', class_R, 1},
+        {LRI, class_L, 0},
+        {RLI, class_L, 0},
+        {'d', class_L, 0},
+        {'e', class_L, 0},
+        {0x000d, class_B, 0}
+    };
+
+    auto result = b.rule_l4(cc);
+
+    is(result.size(), 6, test + "expected result length");
+    is((result.begin() + 1)->mirror, true, test + "close paren mirrored");
+    is((result.begin() + 3)->mirror, true, test + "open paren mirrored");
+    is((result.begin() + 5)->c, 'e', test + "expected last character");
+}
+
 int main(int argc, char **argv)
 {
-    plan(342);
+    plan(346);
 
     test_create_delete();
     test_char_type();
@@ -1881,5 +1911,6 @@ int main(int argc, char **argv)
     test_rule_l1();
     test_rule_l2();
     test_rule_l3();
+    test_rule_l4();
     return exit_status();
 }

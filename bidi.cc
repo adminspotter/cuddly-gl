@@ -826,6 +826,22 @@ void bidi::rule_l3(bidi::char_container& str)
      */
 }
 
+std::vector<bidi::mirror_t> bidi::rule_l4(bidi::char_container& str)
+{
+    std::vector<mirror_t> result;
+
+    for (auto& i : str)
+    {
+        if (i.c == FSI || i.c == LRI || i.c == RLI || i.c == PDI
+            || bidi::char_type(i.c) == class_B)
+            continue;
+        result.push_back({i.c, (mirror_chars.find(i.c) != mirror_chars.end()
+                                && i.c_class == class_R)});
+    }
+
+    return result;
+}
+
 bidi::bidi()
     : direction_stack()
 {

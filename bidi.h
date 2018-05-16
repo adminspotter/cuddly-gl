@@ -86,6 +86,13 @@ class bidi
 
     typedef struct
     {
+        char32_t c;
+        bool mirror;
+    }
+    mirror_t;
+
+    typedef struct
+    {
         char_cont_it_t start, end;
         char_class_t sos, eos;
         std::deque<char_pair_t> bracket_pairs;
@@ -151,6 +158,7 @@ class bidi
     void rule_l1(int, char_container&);
     void rule_l2(int, char_container&);
     virtual void rule_l3(char_container&);
+    std::vector<mirror_t> rule_l4(char_container&);
 
   public:
     bidi();
