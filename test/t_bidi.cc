@@ -93,6 +93,61 @@ class mock_x5c_bidi : public bidi
     using bidi::rule_x5c;
 };
 
+class mock_x10_bidi : public bidi
+{
+  public:
+    using bidi::char_container;
+    using bidi::run_sequence;
+    using bidi::sequences;
+
+    int call_count;
+    char_container cc;
+
+    mock_x10_bidi()
+        : bidi(), cc()
+        {
+            this->call_count = 0;
+            this->cc.push_back({'a', class_L, 0});
+            this->cc.push_back({'b', class_L, 0});
+            this->cc.push_back({0x05d0, class_R, 1});
+            this->cc.push_back({0x05d1, class_R, 1});
+            this->cc.push_back({'a', class_L, 2});
+        };
+    virtual ~mock_x10_bidi() {};
+
+    using bidi::rule_x10;
+
+    sequences bd13(int a, char_container& b)
+        {
+            sequences seq =
+            {
+                {this->cc.begin(), this->cc.begin() + 1, class_L, class_R},
+                {this->cc.begin() + 2, this->cc.begin() + 3, class_R, class_L},
+                {this->cc.begin() + 4, this->cc.begin() + 4, class_L, class_L}
+            };
+            return seq;
+        };
+
+    void compute_sos_eos(char_container& a,
+                                        int b,
+                                        run_sequence& c)
+        {
+            ++this->call_count;
+        };
+    void rule_w1(run_sequence& a) { ++this->call_count; };
+    void rule_w2(run_sequence& a) { ++this->call_count; };
+    void rule_w3(run_sequence& a) { ++this->call_count; };
+    void rule_w4(run_sequence& a) { ++this->call_count; };
+    void rule_w5(run_sequence& a) { ++this->call_count; };
+    void rule_w6(run_sequence& a) { ++this->call_count; };
+    void rule_w7(run_sequence& a) { ++this->call_count; };
+    void rule_n0(run_sequence& a) { ++this->call_count; };
+    void rule_n1(run_sequence& a) { ++this->call_count; };
+    void rule_n2(run_sequence& a) { ++this->call_count; };
+    void rule_i1(run_sequence& a) { ++this->call_count; };
+    void rule_i2(run_sequence& a) { ++this->call_count; };
+};
+
 void test_create_delete(void)
 {
     std::string test = "create/delete: ";
