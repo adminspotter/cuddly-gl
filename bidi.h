@@ -48,6 +48,7 @@ char_class_t;
 
 extern const std::unordered_set<char32_t> AL, AN, B, BN, CS, EN, ES;
 extern const std::unordered_set<char32_t> ET, NSM, ON, R, S, WS;
+extern const std::unordered_set<char32_t> mirror_chars;
 
 extern const char32_t LRM, RLM, ALM, LRE, RLE, PDF, LRO, RLO;
 extern const char32_t LRI, RLI, FSI, PDI;
