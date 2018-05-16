@@ -389,6 +389,28 @@ bidi::sequences bidi::bd13(int base, bidi::char_container& str)
     return seq;
 }
 
+void bidi::rule_x10(int base, bidi::char_container& str)
+{
+    bidi::sequences seq = this->bd13(base, str);
+
+    for (auto& s : seq)
+    {
+        this->compute_sos_eos(str, base, s);
+        this->rule_w1(s);
+        this->rule_w2(s);
+        this->rule_w3(s);
+        this->rule_w4(s);
+        this->rule_w5(s);
+        this->rule_w6(s);
+        this->rule_w7(s);
+        this->rule_n0(s);
+        this->rule_n1(s);
+        this->rule_n2(s);
+        this->rule_i1(s);
+        this->rule_i2(s);
+    }
+}
+
 void bidi::compute_sos_eos(bidi::char_container& str,
                            int base,
                            bidi::run_sequence& seq)

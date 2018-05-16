@@ -1135,6 +1135,19 @@ void test_bd13(void)
     is(seq.size(), 3, test + "expected sequence size");
 }
 
+void test_rule_x10(void)
+{
+    std::string test = "rule_x10: ";
+
+    mock_x10_bidi b;
+
+    mock_x10_bidi::char_container cc;
+
+    b.rule_x10(1, cc);
+
+    is(b.call_count, 39, test + "expected rule callouts");
+}
+
 void test_compute_sos_eos(void)
 {
     std::string test = "compute_sos_eos: ", st;
@@ -1787,7 +1800,7 @@ void test_rule_l1(void)
 
 int main(int argc, char **argv)
 {
-    plan(334);
+    plan(335);
 
     test_create_delete();
     test_char_type();
@@ -1807,6 +1820,7 @@ int main(int argc, char **argv)
     test_rule_x8();
     test_rule_x9();
     test_bd13();
+    test_rule_x10();
     test_compute_sos_eos();
     test_rule_w1();
     test_rule_w2();

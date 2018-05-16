@@ -127,6 +127,7 @@ class bidi
     void rule_x9(char_container&);
 
     virtual bidi::sequences bd13(int, char_container&);
+    void rule_x10(int, char_container&);
     virtual void compute_sos_eos(char_container&, int, run_sequence&);
 
     virtual void rule_w1(run_sequence&);
