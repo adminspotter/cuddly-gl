@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 May 2018, 22:16:27 tquirk
+ *   last updated 16 May 2018, 08:22:25 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -126,31 +126,31 @@ class bidi
 
     void rule_x9(char_container&);
 
-    bidi::sequences bd13(int, char_container&);
-    void compute_sos_eos(char_container&, int, run_sequence&);
+    virtual bidi::sequences bd13(int, char_container&);
+    virtual void compute_sos_eos(char_container&, int, run_sequence&);
 
-    void rule_w1(run_sequence&);
-    void rule_w2(run_sequence&);
-    void rule_w3(run_sequence&);
-    void rule_w4(run_sequence&);
-    void rule_w5(run_sequence&);
-    void rule_w6(run_sequence&);
-    void rule_w7(run_sequence&);
+    virtual void rule_w1(run_sequence&);
+    virtual void rule_w2(run_sequence&);
+    virtual void rule_w3(run_sequence&);
+    virtual void rule_w4(run_sequence&);
+    virtual void rule_w5(run_sequence&);
+    virtual void rule_w6(run_sequence&);
+    virtual void rule_w7(run_sequence&);
 
     void bd16(run_sequence&);
-    void rule_n0(run_sequence&);
+    virtual void rule_n0(run_sequence&);
     void set_paired_brackets(char_pair_t&, char_class_t, run_sequence&);
-    void rule_n1(run_sequence&);
-    void rule_n2(run_sequence&);
+    virtual void rule_n1(run_sequence&);
+    virtual void rule_n2(run_sequence&);
 
-    void rule_i1(run_sequence&);
-    void rule_i2(run_sequence&);
+    virtual void rule_i1(run_sequence&);
+    virtual void rule_i2(run_sequence&);
 
     void rule_l1(int, char_container&);
 
   public:
     bidi();
-    ~bidi();
+    virtual ~bidi();
 
     std::vector<std::u32string> reorder(const std::u32string&);
 };

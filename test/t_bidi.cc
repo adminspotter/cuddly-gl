@@ -9,7 +9,7 @@ class fake_bidi : public bidi
 {
   public:
     fake_bidi() : bidi() {};
-    ~fake_bidi() {};
+    virtual ~fake_bidi() {};
 
     using bidi::MAX_DEPTH;
     using bidi::MAX_STACK_SIZE;
@@ -71,7 +71,7 @@ class mock_x5c_bidi : public bidi
     int fake_embed;
 
     mock_x5c_bidi() : bidi() {};
-    ~mock_x5c_bidi() {};
+    virtual ~mock_x5c_bidi() {};
 
     using bidi::character_rec;
 
