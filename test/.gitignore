@@ -2,4 +2,5 @@
 *.trs
 
 t_active
+t_bidi
 t_rect
