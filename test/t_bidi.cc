@@ -20,6 +20,7 @@ class fake_bidi : public bidi
     using bidi::char_cont_it_t;
     using bidi::char_pair_t;
     using bidi::run_sequence;
+    using bidi::sequences;
 
     using bidi::direction_stack;
     using bidi::overflow_isolate;
@@ -42,6 +43,7 @@ class fake_bidi : public bidi
     using bidi::rule_x8;
     using bidi::rule_x9;
 
+    using bidi::bd13;
     using bidi::rule_w1;
     using bidi::rule_w2;
     using bidi::rule_w3;
@@ -1058,6 +1060,25 @@ void test_rule_x9(void)
     is(cc.back().c, 'b', test + "expected back character");
 }
 
+void test_bd13(void)
+{
+    std::string test = "bd13: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc = {
+        {'a', class_L, 0},
+        {0x05d0, class_R, 1},
+        {0x05d1, class_R, 1},
+        {'b', class_L, 0},
+        {'c', class_L, 0}
+    };
+
+    auto seq = b.bd13(0, cc);
+
+    is(seq.size(), 3, test + "expected sequence size");
+}
+
 void test_rule_w1(void)
 {
     std::string test = "rule_w1: ", st;
@@ -1674,7 +1695,7 @@ void test_rule_l1(void)
 
 int main(int argc, char **argv)
 {
-    plan(329);
+    plan(330);
 
     test_create_delete();
     test_char_type();
@@ -1693,6 +1714,7 @@ int main(int argc, char **argv)
     test_rule_x7();
     test_rule_x8();
     test_rule_x9();
+    test_bd13();
     test_rule_w1();
     test_rule_w2();
     test_rule_w3();

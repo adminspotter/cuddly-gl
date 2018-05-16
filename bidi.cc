@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 May 2018, 07:10:57 tquirk
+ *   last updated 16 May 2018, 07:42:51 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -362,6 +362,29 @@ void bidi::rule_x9(bidi::char_container& str)
             str.erase(--pos + 1);
         ++pos;
     }
+}
+
+/* This currently does not handle appending matched directional
+ * isolate prefixes and suffixes to the same level run.
+ *
+ * Rules W2, W7, and N0 may be affected.
+ */
+bidi::sequences bidi::bd13(int base, bidi::char_container& str)
+{
+    bidi::sequences seq;
+    auto i = str.begin(), start = i;
+
+    do
+        if (i->embed != start->embed)
+        {
+            seq.push_back({start, i - 1, class_L, class_L});
+            start = i;
+        }
+    while (++i != str.end());
+
+    seq.push_back({start, str.end() - 1, class_L, class_L});
+
+    return seq;
 }
 
 void bidi::rule_w1(bidi::run_sequence& seq)

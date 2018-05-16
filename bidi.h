@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 May 2018, 10:15:37 tquirk
+ *   last updated 15 May 2018, 22:16:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -125,6 +125,8 @@ class bidi
     character_rec& rule_x8(character_rec&);
 
     void rule_x9(char_container&);
+
+    bidi::sequences bd13(int, char_container&);
 
     void rule_w1(run_sequence&);
     void rule_w2(run_sequence&);
