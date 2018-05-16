@@ -1870,9 +1870,33 @@ void test_rule_l4(void)
     is((result.begin() + 5)->c, 'e', test + "expected last character");
 }
 
+void test_reorder(void)
+{
+    std::string test = "reorder: ";
+
+    bidi b;
+
+    std::u32string str
+    {
+        'a', 'b', '\n', 0x05d0, 0x5d1, '\n', 0x0627, 0x0628
+    };
+
+    auto result = b.reorder(str);
+
+    is(result.size(), 3, test + "expected substring count");
+
+    is(result[0].size(), 2, test + "expected first substring size");
+    is(result[1].size(), 2, test + "expected second substring size");
+    is(result[1][0].c, 0x05d1, test + "expected first char");
+    is(result[1][1].c, 0x05d0, test + "expected second char");
+    is(result[2].size(), 2, test + "expected third substring size");
+    is(result[2][0].c, 0x0628, test + "expected first char");
+    is(result[2][1].c, 0x0627, test + "expected first char");
+}
+
 int main(int argc, char **argv)
 {
-    plan(346);
+    plan(354);
 
     test_create_delete();
     test_char_type();
@@ -1912,5 +1936,6 @@ int main(int argc, char **argv)
     test_rule_l2();
     test_rule_l3();
     test_rule_l4();
+    test_reorder();
     return exit_status();
 }

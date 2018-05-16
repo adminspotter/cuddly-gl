@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2018, 09:59:00 tquirk
+ *   last updated 16 May 2018, 10:03:19 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -851,4 +851,24 @@ bidi::bidi()
 
 bidi::~bidi()
 {
+}
+
+std::vector<std::vector<bidi::mirror_t> > bidi::reorder(const std::u32string& s)
+{
+    std::vector<std::vector<bidi::mirror_t> > result;
+    std::vector<std::u32string> strs = this->rule_p1(s);
+
+    for (auto& str : strs)
+    {
+        int base = this->rule_p2_p3(str);
+
+        auto chars = this->rule_x1(base, str);
+        this->rule_x9(chars);
+        this->rule_x10(base, chars);
+        this->rule_l1(base, chars);
+        this->rule_l2(base, chars);
+        this->rule_l3(chars);
+        result.push_back(this->rule_l4(chars));
+    }
+    return result;
 }

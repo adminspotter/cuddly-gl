@@ -164,7 +164,7 @@ class bidi
     bidi();
     virtual ~bidi();
 
-    std::vector<std::u32string> reorder(const std::u32string&);
+    std::vector<std::vector<mirror_t> > reorder(const std::u32string&);
 };
 
 #endif /* __INC_CUDDLY_BIDI_H__ */
