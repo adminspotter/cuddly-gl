@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2018, 07:42:51 tquirk
+ *   last updated 16 May 2018, 09:14:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -789,6 +789,33 @@ void bidi::rule_l1(int base, bidi::char_container& str)
             break;
     }
     while (i != str.begin());
+}
+
+void bidi::rule_l2(int base, bidi::char_container& str)
+{
+    int max_embed = base;
+
+    for (auto& i : str)
+        max_embed = std::max(max_embed, i.embed);
+
+    while (max_embed > 0)
+    {
+        char_cont_it_t start = str.begin(), end;
+
+        while (start != str.end())
+        {
+            while (start != str.end() && start->embed < max_embed)
+                ++start;
+            end = start;
+            while (end != str.end() && end->embed >= max_embed)
+                ++end;
+
+            std::reverse(start, end);
+            start = end;
+        }
+
+        --max_embed;
+    }
 }
 
 bidi::bidi()

@@ -63,6 +63,7 @@ class fake_bidi : public bidi
     using bidi::rule_i2;
 
     using bidi::rule_l1;
+    using bidi::rule_l2;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1798,9 +1799,37 @@ void test_rule_l1(void)
     is((cc.begin() + 2)->embed, 0, test + st + "expected PDI embed");
 }
 
+void test_rule_l2(void)
+{
+    std::string test = "rule_l2: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc =
+    {
+        {'a', class_L, 0},
+        {'b', class_L, 0},
+        {'f', class_R, 1},
+        {'e', class_R, 1},
+        {'c', class_L, 2},
+        {'d', class_L, 2},
+        {'g', class_L, 0}
+    };
+
+    b.rule_l2(0, cc);
+
+    is(cc.begin()->c, 'a', test + "expected first char");
+    is((cc.begin() + 1)->c, 'b', test + "expected second char");
+    is((cc.begin() + 2)->c, 'c', test + "expected third char");
+    is((cc.begin() + 3)->c, 'd', test + "expected fourth char");
+    is((cc.begin() + 4)->c, 'e', test + "expected fifth char");
+    is((cc.begin() + 5)->c, 'f', test + "expected sixth char");
+    is((cc.begin() + 6)->c, 'g', test + "expected seventh char");
+}
+
 int main(int argc, char **argv)
 {
-    plan(335);
+    plan(342);
 
     test_create_delete();
     test_char_type();
@@ -1837,5 +1866,6 @@ int main(int argc, char **argv)
     test_rule_i1();
     test_rule_i2();
     test_rule_l1();
+    test_rule_l2();
     return exit_status();
 }
