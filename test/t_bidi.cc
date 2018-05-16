@@ -64,6 +64,7 @@ class fake_bidi : public bidi
 
     using bidi::rule_l1;
     using bidi::rule_l2;
+    using bidi::rule_l3;
 };
 
 class mock_x5c_bidi : public bidi
@@ -1827,6 +1828,18 @@ void test_rule_l2(void)
     is((cc.begin() + 6)->c, 'g', test + "expected seventh char");
 }
 
+void test_rule_l3(void)
+{
+    std::string test = "rule_l3: ";
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc;
+
+    /* In our current implementation, rule L3 does nothing. */
+    b.rule_l3(cc);
+}
+
 int main(int argc, char **argv)
 {
     plan(342);
@@ -1867,5 +1880,6 @@ int main(int argc, char **argv)
     test_rule_i2();
     test_rule_l1();
     test_rule_l2();
+    test_rule_l3();
     return exit_status();
 }

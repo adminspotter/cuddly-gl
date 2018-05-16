@@ -149,6 +149,7 @@ class bidi
 
     void rule_l1(int, char_container&);
     void rule_l2(int, char_container&);
+    virtual void rule_l3(char_container&);
 
   public:
     bidi();

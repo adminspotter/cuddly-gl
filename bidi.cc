@@ -818,6 +818,14 @@ void bidi::rule_l2(int base, bidi::char_container& str)
     }
 }
 
+void bidi::rule_l3(bidi::char_container& str)
+{
+    /* We explicitly do not handle any glyph combining at this time.
+     * We will support it in the future, but for now this function
+     * exists only as a placeholder.
+     */
+}
+
 bidi::bidi()
     : direction_stack()
 {
