@@ -44,6 +44,7 @@ class fake_bidi : public bidi
     using bidi::rule_x9;
 
     using bidi::bd13;
+    using bidi::compute_sos_eos;
     using bidi::rule_w1;
     using bidi::rule_w2;
     using bidi::rule_w3;
@@ -1079,6 +1080,42 @@ void test_bd13(void)
     is(seq.size(), 3, test + "expected sequence size");
 }
 
+void test_compute_sos_eos(void)
+{
+    std::string test = "compute_sos_eos: ", st;
+
+    fake_bidi b;
+
+    fake_bidi::char_container cc = {
+        {'a', class_L, 0},
+        {'b', class_L, 0}
+    };
+
+    st = "at start: ";
+
+    fake_bidi::run_sequence at_start =
+    {
+        cc.begin(), cc.begin(), class_L, class_L
+    };
+
+    b.compute_sos_eos(cc, 4, at_start);
+
+    is(at_start.sos, class_L, test + st + "expected sos class");
+    is(at_start.eos, class_L, test + st + "expected eos class");
+
+    st = "at end: ";
+
+    fake_bidi::run_sequence at_end =
+    {
+        cc.begin() + 1, cc.begin() + 1, class_L, class_L
+    };
+
+    b.compute_sos_eos(cc, 3, at_end);
+
+    is(at_end.sos, class_L, test + st + "expected sos class");
+    is(at_end.eos, class_R, test + st + "expected eos class");
+}
+
 void test_rule_w1(void)
 {
     std::string test = "rule_w1: ", st;
@@ -1695,7 +1732,7 @@ void test_rule_l1(void)
 
 int main(int argc, char **argv)
 {
-    plan(330);
+    plan(334);
 
     test_create_delete();
     test_char_type();
@@ -1715,6 +1752,7 @@ int main(int argc, char **argv)
     test_rule_x8();
     test_rule_x9();
     test_bd13();
+    test_compute_sos_eos();
     test_rule_w1();
     test_rule_w2();
     test_rule_w3();

@@ -30,6 +30,8 @@
 
 #include "bidi.h"
 
+#include <algorithm>
+
 const int PARA_SEP = 0x2029;
 
 std::u32string CRLF = { 0x0d, 0x0a };
@@ -385,6 +387,26 @@ bidi::sequences bidi::bd13(int base, bidi::char_container& str)
     seq.push_back({start, str.end() - 1, class_L, class_L});
 
     return seq;
+}
+
+void bidi::compute_sos_eos(bidi::char_container& str,
+                           int base,
+                           bidi::run_sequence& seq)
+{
+    int sos_embed = seq.start->embed;
+    int eos_embed = seq.end->embed;
+
+    if (seq.start == str.begin())
+        sos_embed = std::max(sos_embed, base);
+    else
+        sos_embed = std::max(sos_embed, (seq.start - 1)->embed);
+    seq.sos = (sos_embed % 2 == 0 ? class_L : class_R);
+
+    if (seq.end == str.end() - 1)
+        eos_embed = std::max(eos_embed, base);
+    else
+        eos_embed = std::max(eos_embed, (seq.end + 1)->embed);
+    seq.eos = (eos_embed % 2 == 0 ? class_L : class_R);
 }
 
 void bidi::rule_w1(bidi::run_sequence& seq)
