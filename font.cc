@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Apr 2018, 07:59:58 tquirk
+ *   last updated 18 May 2018, 17:42:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -133,6 +133,30 @@ bool ui::glyph::is_l_to_r(void)
         == r_to_l_ranges.end())
         return true;
     return false;
+}
+
+void ui::glyph::copy_to_image(ui::image& img,
+                              const glm::ivec2& pos,
+                              const glm::vec4& foreground,
+                              bool mirror)
+{
+    int row_offset, i, j;
+
+    for (i = 0; i < this->height; ++i)
+    {
+        row_offset = img.width * (pos.y + i) + pos.x;
+
+        for (j = 0; j < this->width; ++j)
+        {
+            int off = (mirror == true ? this->width - j - 1 : j);
+
+            if (this->per_pixel == 1)
+                img.cells[row_offset + j]
+                    |= foreground * (this->bitmap[this->width * (this->height - i) + off] / 255.0f);
+            else
+                img.cells[row_offset + j] |= this->cells[this->width * (this->height - i) + off];
+        }
+    }
 }
 
 /* We need to be able to convert from UTF-8 representation to

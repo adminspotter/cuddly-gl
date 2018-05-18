@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Apr 2018, 07:57:44 tquirk
+ *   last updated 18 May 2018, 17:41:38 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -53,6 +53,7 @@
 #include FT_FREETYPE_H
 #include FT_TYPES_H
 
+#include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
 #include <string>
@@ -79,6 +80,7 @@ namespace ui
         };
 
         bool is_l_to_r(void);
+        void copy_to_image(image&, const glm::ivec2&, const glm::vec4&, bool);
     };
 
     std::u32string utf8tou32str(const std::string&);
