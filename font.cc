@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 May 2018, 17:42:22 tquirk
+ *   last updated 18 May 2018, 17:58:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -476,8 +476,7 @@ void ui::base_font::render_string(const std::u32string& str,
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
-    bool l_to_r = (*this)[*i].is_l_to_r();
-    int pos, save_pos;
+    int pos;
 
     this->get_string_size(str, req_size);
     img.reset();
@@ -486,7 +485,6 @@ void ui::base_font::render_string(const std::u32string& str,
     img.per_pixel = 1;
     img.data = new unsigned char[img.width * img.height * img.per_pixel];
     memset(img.data, 0, img.width * img.height * img.per_pixel);
-    save_pos = pos = (l_to_r ? 0 : img.width - 1);
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -498,60 +496,24 @@ void ui::base_font::render_string(const std::u32string& str,
         int j, k, bottom_row = req_size[2] + g.top - g.height;
         int row_offset, glyph_offset;
         FT_Vector kerning = {0, 0};
-        bool same_dir = (l_to_r == g.is_l_to_r());
 
         /* Kerning, if available */
         if (i != str.begin())
             this->kern(*(i - 1), *i, &kerning);
 
-        /* If we're dealing with wrong-direction text, scoot things over */
-        if (!same_dir && pos != save_pos)
-        {
-            int x_move = abs(pos - save_pos);
-            int x_distance = g.x_advance + kerning.x;
-            int start = std::min(pos, save_pos);
-            for (j = 0; j < img.height; ++j)
-            {
-                row_offset = (img.width * j) + start;
-                memmove(&img.data[row_offset
-                                  + (!l_to_r ? -x_distance : x_distance)],
-                        &img.data[row_offset],
-                        x_move);
-                memset(&img.data[row_offset - start + save_pos
-                                 - (!l_to_r ? x_distance : 0)],
-                       0,
-                       x_distance);
-            }
-        }
-        else
-            save_pos = pos;
-        if (!l_to_r)
-        {
-            pos -= g.x_advance + kerning.x;
-            if (i != str.begin())
-                pos -= g.left;
-            if (same_dir)
-                save_pos = pos;
-        }
         for (j = 0; j < g.height; ++j)
         {
             row_offset = (bottom_row + j + kerning.y) * img.width
-                + save_pos + kerning.x
-                - (!l_to_r && !same_dir ? g.x_advance : 0);
+                + pos + kerning.x;
             if (i != str.begin())
                 row_offset += g.left;
             glyph_offset = (g.height - 1 - j) * g.width;
             for (k = 0; k < g.width; ++k)
                 img.data[row_offset + k] |= g.bitmap[glyph_offset + k];
         }
-        if (l_to_r)
-        {
-            pos += g.x_advance + kerning.x;
-            if (i != str.begin())
-                pos += g.left;
-            if (same_dir)
-                save_pos = pos;
-        }
+        pos += g.x_advance + kerning.x;
+        if (i != str.begin())
+            pos += g.left;
 
         ++i;
     }
