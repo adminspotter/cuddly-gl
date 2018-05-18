@@ -1,6 +1,6 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Apr 2018, 09:18:02 tquirk
+ *   last updated 18 May 2018, 09:33:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -27,15 +27,34 @@
 #ifndef __INC_CUDDLY_IMAGE_H__
 #define __INC_CUDDLY_IMAGE_H__
 
+#include <math.h>
 #include <string.h>
 
 #include <GL/gl.h>
+
+#include <algorithm>
+
+#include <glm/vec4.hpp>
 
 namespace ui
 {
     typedef struct cell_tag
     {
         unsigned char r, g, b, a;
+
+        static float clamp(float n)
+            {
+                return std::min(std::max(n, 0.0f), 1.0f);
+            }
+
+        struct cell_tag& operator=(const glm::vec4& v)
+            {
+                this->r = truncf(clamp(v.r) * 255);
+                this->g = truncf(clamp(v.g) * 255);
+                this->b = truncf(clamp(v.b) * 255);
+                this->a = truncf(clamp(v.a) * 255);
+                return *this;
+            }
     } __attribute__ ((__packed__))
     cell;
 
