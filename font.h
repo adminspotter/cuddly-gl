@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 May 2018, 17:41:38 tquirk
+ *   last updated 18 May 2018, 18:11:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -79,7 +79,6 @@ namespace ui
             cell *cells;
         };
 
-        bool is_l_to_r(void);
         void copy_to_image(image&, const glm::ivec2&, const glm::vec4&, bool);
     };
 

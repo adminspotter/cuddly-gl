@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 May 2018, 17:58:50 tquirk
+ *   last updated 18 May 2018, 18:09:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -73,40 +73,6 @@
 static FT_Library ft_lib;
 static int ft_lib_count = 0;
 
-/* Instead of having a giant if-condition, we'll do some sensible
- * searching with a set.  There are a handful of single code points
- * which are r-to-l, and a number of ranges.  We'll make ranges out of
- * the single points, with the same beginning and end, and our
- * comparisons should still hold.
- */
-struct range
-{
-    uint32_t start, end;
-
-    range(uint32_t a, uint32_t b) { this->start = a; this->end = b; };
-};
-
-static bool operator<(const range& a, const range& b)
-{
-    if (a.end < b.start)
-        return true;
-    return false;
-}
-
-static std::set<range> r_to_l_ranges =
-{
-    {0x05be, 0x05be}, {0x05c0, 0x05c0}, {0x05c3, 0x05c3}, {0x05c6, 0x05c6},
-    {0x05d0, 0x05f4}, {0x0608, 0x0608}, {0x060b, 0x060b}, {0x060d, 0x060d},
-    {0x061b, 0x064a}, {0x066d, 0x066f}, {0x0671, 0x06d5}, {0x06e5, 0x06e6},
-    {0x06ee, 0x06ef}, {0x06fa, 0x0710}, {0x0712, 0x072f}, {0x074d, 0x07a5},
-    {0x07b1, 0x07ea}, {0x07f4, 0x07f5}, {0x07fa, 0x0815}, {0x081a, 0x081a},
-    {0x0824, 0x0824}, {0x0828, 0x0828}, {0x0830, 0x0858}, {0x085e, 0x08ac},
-    {0x200f, 0x200f}, {0xfb1d, 0xfb1d}, {0xfb1f, 0xfb28}, {0xfb2a, 0xfd3d},
-    {0xfd50, 0xfdfc}, {0xfe70, 0xfefc}, {0x10800, 0x1091b}, {0x10920, 0x10a00},
-    {0x10a10, 0x10a33}, {0x10a40, 0x10b35}, {0x10b40, 0x10c48},
-    {0x1ee00, 0x1eebb}
-};
-
 static FT_Library *init_freetype(void)
 {
     if (ft_lib_count++ == 0)
@@ -119,20 +85,6 @@ static void cleanup_freetype(void)
 {
     if (--ft_lib_count == 0)
         FT_Done_FreeType(ft_lib);
-}
-
-/* The TTF format, or at least Freetype, doesn't distinguish between
- * L-to-R and R-to-L characters.  Seems that they could provide a
- * negative advance value for R-to-L, but whatever.  Our R-to-L set
- * should provide the ranges which are R-to-L based on Unicode code
- * point.
- */
-bool ui::glyph::is_l_to_r(void)
-{
-    if (r_to_l_ranges.find(range(this->code_point, this->code_point))
-        == r_to_l_ranges.end())
-        return true;
-    return false;
 }
 
 void ui::glyph::copy_to_image(ui::image& img,
