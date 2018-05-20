@@ -45,8 +45,6 @@ AC_ARG_ENABLE([profile],
               AS_HELP_STRING([--enable-profile], [Build binaries with profiling support]),
               [],
               [enable_profile="no"])
-AC_ARG_ENABLE([gui-tests],
-              AS_HELP_STRING([--disable-gui-tests], [Don't perform tests with X11 driver]))
 
 AC_ARG_WITH([freetype],
             AS_HELP_STRING([--with-freetype=<path>], [Freetype2 install root]),
@@ -173,7 +171,7 @@ AS_IF([test "x$with_glfw" != "xno"],
         CPPFLAGS="$CXXFLAGS"
         AC_CHECK_HEADERS([GLFW/glfw3.h],
                          [can_do_tests="yes"],
-                         [AC_MSG_NOTICE([no GLFW headers found, not building GUI test suite])])
+                         [AC_MSG_NOTICE([no GLFW headers found, not building test suite])])
 
         AS_IF([test "x$can_do_tests" == "xyes"],
               [
@@ -185,24 +183,18 @@ AS_IF([test "x$with_glfw" != "xno"],
                 AC_SEARCH_LIBS([glfwInit], [glfw],
                                [GLFW_LDLIBS="$ac_cv_search_glfwInit"],
                                [
-                                 AC_MSG_NOTICE([no GLFW libraries found, not building GUI test suite])
+                                 AC_MSG_NOTICE([no GLFW libraries found, not building test suite])
                                  can_do_tests="no"
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
                                      [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
-        AS_IF([test "x$enable_gui_tests" != "xno"],
-              [AX_PROG_PERL_MODULES([Test::More X11::GUITest],
-                                    [],
-                                    [AC_MSG_NOTICE([X11::GUITest is installed enough for our purposes])],
-                                    [
-                                      AC_MSG_NOTICE([missing perl modules, not building GUI test suite])
-                                      can_do_tests="no"
-                                    ])
-              ],
-              [
-                AC_MSG_NOTICE([not building GUI test suite due to option])
-                can_do_tests="no"
-              ])
+        AX_PROG_PERL_MODULES([Test::More X11::GUITest],
+                             [],
+                             [AC_MSG_NOTICE([X11::GUITest is installed enough for our purposes])],
+                             [
+                               AC_MSG_NOTICE([missing perl modules, not building test suite])
+                               can_do_tests="no"
+                             ])
       ])
 AM_CONDITIONAL([HAVE_TEST_PREREQS], [test "x$can_do_tests" == "xyes"])
 AS_IF([test "x$can_do_tests" == "xyes"],
