@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 08:09:15 tquirk
+ *   last updated 20 May 2018, 08:38:11 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -361,6 +361,42 @@ void ui::base_font::get_max_glyph_box(FT_Face face,
     *box_d = -(face->size->metrics.descender >> 6);
 }
 
+ui::image ui::base_font::render(const std::u32string& str,
+                                const glm::vec4& foreground,
+                                const glm::vec4& background)
+{
+    std::vector<int> req_size = {0, 0, 0};
+    std::u32string::const_iterator i = str.begin();
+    glm::ivec2 pos = {0, 0};
+
+    this->get_string_size(str, req_size);
+    ui::image img(req_size[0], req_size[1] + req_size[2], 4);
+
+    /* GL does positive y as up, so it makes more sense to just draw
+     * the buffer upside-down.  All the glyphs are already
+     * upside-down.
+     */
+    while (i != str.end())
+    {
+        ui::glyph& g = (*this)[*i];
+        FT_Vector kerning = {0, 0};
+
+        if (i != str.begin())
+        {
+            pos.x += g.left;
+            this->kern(*(i - 1), *i, &kerning);
+        }
+        pos.x += kerning.x;
+        pos.y = req_size[2] + g.top - g.height + kerning.y;
+
+        g.copy_to_image(img, pos, foreground, false);
+
+        pos.x += g.x_advance;
+        ++i;
+    }
+    return img;
+}
+
 ui::base_font::base_font(std::string& name)
     : glyphs(name + " glyphs")
 {
@@ -425,36 +461,7 @@ ui::image ui::base_font::render_string(const std::u32string& str,
                                        const glm::vec4& foreground,
                                        const glm::vec4& background)
 {
-    std::vector<int> req_size = {0, 0, 0};
-    std::u32string::const_iterator i = str.begin();
-    glm::ivec2 pos = {0, 0};
-
-    this->get_string_size(str, req_size);
-    ui::image img(req_size[0], req_size[1] + req_size[2], 4);
-
-    /* GL does positive y as up, so it makes more sense to just draw
-     * the buffer upside-down.  All the glyphs are already
-     * upside-down.
-     */
-    while (i != str.end())
-    {
-        ui::glyph& g = (*this)[*i];
-        FT_Vector kerning = {0, 0};
-
-        if (i != str.begin())
-        {
-            pos.x += g.left;
-            this->kern(*(i - 1), *i, &kerning);
-        }
-        pos.x += kerning.x;
-        pos.y = req_size[2] + g.top - g.height + kerning.y;
-
-        g.copy_to_image(img, pos, foreground, false);
-
-        pos.x += g.x_advance;
-        ++i;
-    }
-    return img;
+    return this->render(str, foreground, background);
 }
 
 ui::image ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
@@ -469,7 +476,7 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
     img.width = 0;
     for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
     {
-        imgs[str_count] = this->render_string(*i, foreground, background);
+        imgs[str_count] = this->render(*i, foreground, background);
         img.width = std::max(img.width, imgs[str_count].width);
     }
 
