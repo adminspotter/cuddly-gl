@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 May 2018, 21:19:48 tquirk
+ *   last updated 20 May 2018, 08:09:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -421,22 +421,16 @@ void ui::base_font::get_string_size(const std::u32string& str,
     }
 }
 
-void ui::base_font::render_string(const std::u32string& str,
-                                  ui::image& img,
-                                  const glm::vec4& foreground,
-                                  const glm::vec4& background)
+ui::image ui::base_font::render_string(const std::u32string& str,
+                                       const glm::vec4& foreground,
+                                       const glm::vec4& background)
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
     glm::ivec2 pos = {0, 0};
 
     this->get_string_size(str, req_size);
-    img.reset();
-    img.width = req_size[0];
-    img.height = req_size[1] + req_size[2];
-    img.per_pixel = 4;
-    img.data = new unsigned char[img.width * img.height * img.per_pixel];
-    memset(img.data, 0, img.width * img.height * img.per_pixel);
+    ui::image img(req_size[0], req_size[1] + req_size[2], 4);
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -460,22 +454,22 @@ void ui::base_font::render_string(const std::u32string& str,
         pos.x += g.x_advance;
         ++i;
     }
+    return img;
 }
 
-void ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                            ui::image& img,
-                                            const glm::vec4& foreground,
-                                            const glm::vec4& background)
+ui::image ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
+                                                 const glm::vec4& foreground,
+                                                 const glm::vec4& background)
 {
     std::vector<int> req_size = {0, 0, 0};
-    ui::image *imgs = new ui::image[strs.size()];
+    ui::image *imgs = new ui::image[strs.size()], img;
     int str_count = 0, line_height = this->line_height();
 
     img.reset();
     img.width = 0;
     for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
     {
-        this->render_string(*i, imgs[str_count], foreground, background);
+        imgs[str_count] = this->render_string(*i, foreground, background);
         img.width = std::max(img.width, imgs[str_count].width);
     }
 
@@ -517,6 +511,7 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
     }
 
     delete[] imgs;
+    return img;
 }
 
 int ui::font::line_height(void)

@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Apr 2018, 12:49:33 tquirk
+ *   last updated 20 May 2018, 07:59:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -100,8 +100,9 @@ void ui::label::generate_string_image(void)
 {
     if (this->font != NULL && this->str.size() > 0)
     {
-        this->font->render_string(this->str, this->img,
-                                  this->foreground, this->background);
+        this->img = this->font->render_string(this->str,
+                                              this->foreground,
+                                              this->background);
         this->calculate_widget_size();
     }
 }

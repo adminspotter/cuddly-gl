@@ -1,6 +1,6 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 19 May 2018, 23:13:15 tquirk
+ *   last updated 20 May 2018, 08:06:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -81,6 +81,14 @@ namespace ui
             {
                 this->data = NULL;
                 this->reset();
+            };
+        image(GLuint w, GLuint h, GLuint pp)
+            {
+                this->width = w;
+                this->height = h;
+                this->per_pixel = pp;
+                this->data = new unsigned char[w * h * pp];
+                memset(this->data, 0, w * h * pp);
             };
         image(const image& i)
             {
