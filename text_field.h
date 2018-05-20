@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Nov 2016, 07:21:25 tquirk
+ *   last updated 20 May 2018, 15:00:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -73,7 +73,8 @@ namespace ui
         void remove_previous_char(void);
         void remove_next_char(void);
 
-        virtual void get_string_size(const std::u32string&, std::vector<int>&);
+        virtual void get_string_size(const std::u32string&,
+                                     GLuint&, GLuint&, GLuint&);
         virtual int get_raw_cursor_pos(void);
         void set_cursor_transform(int);
         int calculate_field_length(void);

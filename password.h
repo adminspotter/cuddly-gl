@@ -1,6 +1,6 @@
 /* password.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2016, 15:54:00 tquirk
+ *   last updated 20 May 2018, 15:01:17 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,7 +42,7 @@ namespace ui
         virtual void generate_string_image(void) override;
 
         virtual void get_string_size(const std::u32string&,
-                                     std::vector<int>&) override;
+                                     GLuint&, GLuint&, GLuint&) override;
         virtual int get_raw_cursor_pos(void) override;
 
       public:

@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 14:40:36 tquirk
+ *   last updated 20 May 2018, 14:50:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -365,12 +365,12 @@ ui::image ui::base_font::render(const std::u32string& str,
                                 const glm::vec4& foreground,
                                 const glm::vec4& background)
 {
-    std::vector<int> req_size = {0, 0, 0};
+    GLuint w, asc, desc;
     std::u32string::const_iterator i = str.begin();
     glm::ivec2 pos = {0, 0};
 
-    this->get_string_size(str, req_size);
-    ui::image img(req_size[0], req_size[1] + req_size[2], 4);
+    this->get_string_size(str, w, asc, desc);
+    ui::image img(w, asc + desc, 4);
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -387,7 +387,7 @@ ui::image ui::base_font::render(const std::u32string& str,
             this->kern(*(i - 1), *i, &kerning);
         }
         pos.x += kerning.x;
-        pos.y = req_size[2] + g.top - g.height + kerning.y;
+        pos.y = desc + g.top - g.height + kerning.y;
 
         g.copy_to_image(img, pos, foreground, false);
 
@@ -475,7 +475,7 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
                                                  const glm::vec4& foreground,
                                                  const glm::vec4& background)
 {
-    std::vector<int> req_size = {0, 0, 0};
+    GLuint width, asc, desc;
     ui::image *imgs = new ui::image[strs.size()], img;
     int str_count = 0, line_height = this->line_height();
 
@@ -493,11 +493,11 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
      * string.
      */
     img.height = (str_count - 1) * line_height;
-    this->get_string_size(strs.back(), req_size);
-    img.height += req_size[2];
+    this->get_string_size(strs.back(), width, asc, desc);
+    img.height += desc;
     if (str_count > 1)
-        this->get_string_size(strs.front(), req_size);
-    img.height += req_size[1];
+        this->get_string_size(strs.front(), width, asc, desc);
+    img.height += asc;
 
     img.per_pixel = 4;
     img.data = new unsigned char[img.width * img.height * img.per_pixel];
@@ -511,9 +511,9 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
 
     for (int i = 0; i < str_count; ++i)
     {
-        this->get_string_size(strs[i], req_size);
+        this->get_string_size(strs[i], width, asc, desc);
         if (i != 0)
-            row_num -= line_height - prev_descender - req_size[1];
+            row_num -= line_height - prev_descender - asc;
         row_offset = row_num * img.width * img.per_pixel;
         for (int j = imgs[i].height - 1;
              j >= 0;
@@ -521,7 +521,7 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
             memcpy(&(img.data[row_offset]),
                    &(imgs[i].data[j * imgs[i].width * imgs[i].per_pixel]),
                    imgs[i].width * imgs[i].per_pixel);
-        prev_descender = req_size[2];
+        prev_descender = desc;
     }
 
     delete[] imgs;

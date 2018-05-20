@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:08:34 tquirk
+ *   last updated 20 May 2018, 15:06:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -255,10 +255,10 @@ void ui::text_field::remove_next_char(void)
 }
 
 void ui::text_field::get_string_size(const std::u32string& str,
-                                     std::vector<int>& sz)
+                                     GLuint& w, GLuint& a, GLuint& d)
 {
     if (this->font != NULL)
-        this->font->get_string_size(str, sz);
+        this->font->get_string_size(str, w, a, d);
 }
 
 int ui::text_field::get_raw_cursor_pos(void)
@@ -267,10 +267,10 @@ int ui::text_field::get_raw_cursor_pos(void)
 
     if (this->font != NULL)
     {
-        std::vector<int> req_size = {0, 0, 0};
+        GLuint w, a, d;
 
-        this->get_string_size(this->str.substr(0, this->cursor_pos), req_size);
-        ret = req_size[0];
+        this->get_string_size(this->str.substr(0, this->cursor_pos), w, a, d);
+        ret = w;
     }
     return ret;
 }
@@ -299,12 +299,12 @@ void ui::text_field::generate_string_image(void)
 {
     this->label::generate_string_image();
 
-    std::vector<int> string_max = {0, 0, 0};
+    GLuint w, a, d;
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
 
-    this->get_string_size(this->str, string_max);
-    if (string_max[0] > field_len)
+    this->get_string_size(this->str, w, a, d);
+    if (w > field_len)
     {
         /* The full string is too big to be displayed in its entirety.
          * We'll chunk the image into half-widget-size pieces, and try
@@ -317,7 +317,7 @@ void ui::text_field::generate_string_image(void)
         int start = chunk * which;
 
         /* Take the appropriate portion of the string image */
-        tmp_img.width = std::min(field_len, string_max[0] - start);
+        tmp_img.width = std::min(field_len, (int)w - start);
         tmp_img.height = this->img.height;
         tmp_img.per_pixel = this->img.per_pixel;
         tmp_img.data = new unsigned char[tmp_img.width
@@ -396,22 +396,23 @@ void ui::text_field::generate_cursor(void)
 ui::vertex_buffer *ui::text_field::generate_points(void)
 {
     ui::vertex_buffer *vb = this->label::generate_points();
-    std::vector<int> font_max = {0, 0, 0}, string_max = {0, 0, 0};
+    std::vector<int> font_max = {0, 0, 0};
+    GLuint w, a, d;
     float ph;
 
     if (this->img.data == NULL)
         return vb;
 
     this->font->max_cell_size(font_max);
-    this->get_string_size(this->str, string_max);
+    this->get_string_size(this->str, w, a, d);
 
     ph = 1.0f / (float)this->img.height;
 
     vb->vertex[7] = 1.0f + ((this->margin[0] + this->border[0] + 1
-                             + font_max[1] - string_max[1]) * ph);
+                             + font_max[1] - a) * ph);
     vb->vertex[15] = vb->vertex[7];
     vb->vertex[23] = 0.0f - ((this->margin[3] + this->border[3] + 1
-                              + font_max[2] - string_max[2]) * ph);
+                              + font_max[2] - d) * ph);
     vb->vertex[31] = vb->vertex[23];
 
     return vb;

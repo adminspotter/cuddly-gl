@@ -1,6 +1,6 @@
 /* password.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:29:58 tquirk
+ *   last updated 20 May 2018, 15:01:38 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -44,14 +44,14 @@ void ui::password::generate_string_image(void)
 }
 
 void ui::password::get_string_size(const std::u32string& s,
-                                   std::vector<int>& sz)
+                                   GLuint& w, GLuint& a, GLuint& d)
 {
     if (this->font != NULL)
     {
         std::u32string visible;
 
         visible.insert(0, s.size(), '*');
-        this->font->get_string_size(visible, sz);
+        this->font->get_string_size(visible, w, a, d);
     }
 }
 
@@ -62,11 +62,11 @@ int ui::password::get_raw_cursor_pos(void)
     if (this->font != NULL)
     {
         std::u32string visible;
-        std::vector<int> req_size = {0, 0, 0};
+        GLuint w, a, d;
 
         visible.insert(0, this->cursor_pos, '*');
-        this->font->get_string_size(visible, req_size);
-        ret = req_size[0];
+        this->font->get_string_size(visible, w, a, d);
+        ret = w;
     }
     return ret;
 }
