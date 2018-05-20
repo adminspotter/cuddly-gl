@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 15:35:31 tquirk
+ *   last updated 20 May 2018, 17:29:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -459,6 +459,33 @@ void ui::base_font::get_string_size(const std::u32string& str,
             throw std::runtime_error("This font is not supported.");
         if (i != str.begin())
             this->kern(*(i - 1), *i, &kerning);
+
+        /* We're only going to do horizontal text */
+        width += kerning.x;
+        if (i != str.begin())
+            width += g.left;
+        if (i + 1 == str.end() && g.width != 0)
+            width += g.width;
+        else
+            width += g.x_advance;
+        asc = std::max(asc, (GLuint)g.top);
+        desc = std::max(desc, (GLuint)(g.height - g.top));
+    }
+}
+
+void ui::base_font::get_string_size(const std::vector<bidi::mirror_t>& str,
+                                    GLuint& width, GLuint& asc, GLuint& desc)
+{
+    width = asc = desc = 0;
+    for (auto i = str.begin(); i != str.end(); ++i)
+    {
+        FT_Vector kerning = {0, 0};
+        ui::glyph& g = (*this)[i->c];
+
+        if (g.x_advance == 0 && g.y_advance != 0)
+            throw std::runtime_error("This font is not supported.");
+        if (i != str.begin())
+            this->kern((i - 1)->c, i->c, &kerning);
 
         /* We're only going to do horizontal text */
         width += kerning.x;
