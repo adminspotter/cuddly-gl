@@ -1,6 +1,6 @@
 /* bidi.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 May 2018, 08:22:25 tquirk
+ *   last updated 20 May 2018, 16:23:44 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -64,6 +64,14 @@ extern const std::unordered_map<char32_t, bracket_t> bracket_chars;
 
 class bidi
 {
+  public:
+    typedef struct
+    {
+        char32_t c;
+        bool mirror;
+    }
+    mirror_t;
+
   protected:
     typedef struct
     {
@@ -83,13 +91,6 @@ class bidi
     typedef std::deque<character_rec> char_container;
     typedef char_container::iterator char_cont_it_t;
     typedef std::pair<char_cont_it_t, char_cont_it_t> char_pair_t;
-
-    typedef struct
-    {
-        char32_t c;
-        bool mirror;
-    }
-    mirror_t;
 
     typedef struct
     {
