@@ -436,6 +436,14 @@ void ui::base_font::get_string_size(const std::u32string& str,
 }
 
 void ui::base_font::get_string_size(const std::u32string& str,
+                                    GLuint& width, GLuint& height)
+{
+    GLuint asc, desc;
+    this->get_string_size(str, width, asc, desc);
+    height = asc + desc;
+}
+
+void ui::base_font::get_string_size(const std::u32string& str,
                                     GLuint& width, GLuint& asc, GLuint& desc)
 {
     std::u32string::const_iterator i;

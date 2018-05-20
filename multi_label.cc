@@ -1,6 +1,6 @@
 /* multi_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 08:06:01 tquirk
+ *   last updated 20 May 2018, 15:02:30 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -88,13 +88,13 @@ void ui::multi_label::split_by_newlines(std::u32string s,
 std::u32string::size_type ui::multi_label::hard_split_string(GLuint width,
                                                              std::u32string& s)
 {
-    std::vector<int> sz = {0, 0, 0};
+    GLuint w, h;
     std::u32string::size_type first = 0, last = s.size() - 1, pos = last / 2;
 
     while (last - first > 1)
     {
-        this->font->get_string_size(s.substr(0, pos), sz);
-        if (sz[0] <= width)
+        this->font->get_string_size(s.substr(0, pos), w, h);
+        if (w <= width)
             first = pos;
         else
             last = pos;
@@ -106,7 +106,7 @@ std::u32string::size_type ui::multi_label::hard_split_string(GLuint width,
 void ui::multi_label::split_string_to_width(GLuint width,
                                             std::list<std::u32string>& strs)
 {
-    std::vector<int> sz = {0, 0, 0};
+    GLuint w, h;
     std::u32string::size_type pos;
 
     /* Split on newlines, push everything into the list */
@@ -124,10 +124,10 @@ void ui::multi_label::split_string_to_width(GLuint width,
         auto next = i;
         ++next;
 
-        this->font->get_string_size(tmp_str, sz);
-        if (sz[0] <= width)
+        this->font->get_string_size(tmp_str, w, h);
+        if (w <= width)
             continue;
-        while (sz[0] > width)
+        while (w > width)
         {
             pos = tmp_str.find_last_of(ui::multi_label::whitespace);
             if (pos == std::u32string::npos)
@@ -138,7 +138,7 @@ void ui::multi_label::split_string_to_width(GLuint width,
                 pos = this->hard_split_string(width, tmp_str);
 
             tmp_str = tmp_str.substr(0, pos);
-            this->font->get_string_size(tmp_str, sz);
+            this->font->get_string_size(tmp_str, w, h);
         }
 
         /* Skip past any whitespace in the second half of our string */
