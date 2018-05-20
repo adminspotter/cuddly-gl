@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 08:38:11 tquirk
+ *   last updated 20 May 2018, 14:40:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -421,9 +421,6 @@ void ui::base_font::max_cell_size(std::vector<int>& v)
  * the vertical axis; the values for vertical size are the ascender
  * and descender respectively.
  *
- * Return values come back in the req_size argument.  First element is
- * width, second is ascender, third is descender.
- *
  * It would be nice if we could support vertical lines, but it's going
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
@@ -431,9 +428,19 @@ void ui::base_font::max_cell_size(std::vector<int>& v)
 void ui::base_font::get_string_size(const std::u32string& str,
                                     std::vector<int>& req_size)
 {
+    GLuint w, a, d;
+    this->get_string_size(str, w, a, d);
+    req_size[0] = (int)w;
+    req_size[1] = (int)a;
+    req_size[2] = (int)d;
+}
+
+void ui::base_font::get_string_size(const std::u32string& str,
+                                    GLuint& width, GLuint& asc, GLuint& desc)
+{
     std::u32string::const_iterator i;
 
-    req_size[0] = req_size[1] = req_size[2] = 0;
+    width = asc = desc = 0;
     for (i = str.begin(); i != str.end(); ++i)
     {
         FT_Vector kerning = {0, 0};
@@ -445,15 +452,15 @@ void ui::base_font::get_string_size(const std::u32string& str,
             this->kern(*(i - 1), *i, &kerning);
 
         /* We're only going to do horizontal text */
-        req_size[0] += kerning.x;
+        width += kerning.x;
         if (i != str.begin())
-            req_size[0] += g.left;
+            width += g.left;
         if (i + 1 == str.end() && g.width != 0)
-            req_size[0] += g.width;
+            width += g.width;
         else
-            req_size[0] += g.x_advance;
-        req_size[1] = std::max(req_size[1], g.top);
-        req_size[2] = std::max(req_size[2], g.height - g.top);
+            width += g.x_advance;
+        asc = std::max(asc, (GLuint)g.top);
+        desc = std::max(desc, (GLuint)(g.height - g.top));
     }
 }
 

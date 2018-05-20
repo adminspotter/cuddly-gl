@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 08:35:55 tquirk
+ *   last updated 20 May 2018, 14:12:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -127,6 +127,7 @@ namespace ui
         virtual struct glyph& operator[](FT_ULong) = 0;
 
         void get_string_size(const std::u32string&, std::vector<int>&);
+        void get_string_size(const std::u32string&, GLuint&, GLuint&, GLuint&);
         image render_string(const std::u32string&,
                             const glm::vec4&,
                             const glm::vec4&);
