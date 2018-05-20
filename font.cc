@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 May 2018, 18:09:02 tquirk
+ *   last updated 19 May 2018, 21:19:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -428,13 +428,13 @@ void ui::base_font::render_string(const std::u32string& str,
 {
     std::vector<int> req_size = {0, 0, 0};
     std::u32string::const_iterator i = str.begin();
-    int pos;
+    glm::ivec2 pos = {0, 0};
 
     this->get_string_size(str, req_size);
     img.reset();
     img.width = req_size[0];
     img.height = req_size[1] + req_size[2];
-    img.per_pixel = 1;
+    img.per_pixel = 4;
     img.data = new unsigned char[img.width * img.height * img.per_pixel];
     memset(img.data, 0, img.width * img.height * img.per_pixel);
 
@@ -445,28 +445,19 @@ void ui::base_font::render_string(const std::u32string& str,
     while (i != str.end())
     {
         ui::glyph& g = (*this)[*i];
-        int j, k, bottom_row = req_size[2] + g.top - g.height;
-        int row_offset, glyph_offset;
         FT_Vector kerning = {0, 0};
 
-        /* Kerning, if available */
         if (i != str.begin())
-            this->kern(*(i - 1), *i, &kerning);
-
-        for (j = 0; j < g.height; ++j)
         {
-            row_offset = (bottom_row + j + kerning.y) * img.width
-                + pos + kerning.x;
-            if (i != str.begin())
-                row_offset += g.left;
-            glyph_offset = (g.height - 1 - j) * g.width;
-            for (k = 0; k < g.width; ++k)
-                img.data[row_offset + k] |= g.bitmap[glyph_offset + k];
+            pos.x += g.left;
+            this->kern(*(i - 1), *i, &kerning);
         }
-        pos += g.x_advance + kerning.x;
-        if (i != str.begin())
-            pos += g.left;
+        pos.x += kerning.x;
+        pos.y = req_size[2] + g.top - g.height + kerning.y;
 
+        g.copy_to_image(img, pos, foreground, false);
+
+        pos.x += g.x_advance;
         ++i;
     }
 }
@@ -500,9 +491,9 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
         this->get_string_size(strs.front(), req_size);
     img.height += req_size[1];
 
-    img.per_pixel = 1;
-    img.data = new unsigned char[img.width * img.height];
-    memset(img.data, 0, sizeof(unsigned char) * img.width * img.height);
+    img.per_pixel = 4;
+    img.data = new unsigned char[img.width * img.height * img.per_pixel];
+    memset(img.data, 0, sizeof(unsigned char) * img.width * img.height * img.per_pixel);
 
     /* Now copy everything into place in the main image.  We're still
      * producing upside-down images, so we'll copy bottom-to-top.
@@ -515,13 +506,13 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
         this->get_string_size(strs[i], req_size);
         if (i != 0)
             row_num -= line_height - prev_descender - req_size[1];
-        row_offset = row_num * img.width;
+        row_offset = row_num * img.width * img.per_pixel;
         for (int j = imgs[i].height - 1;
              j >= 0;
-             --j, --row_num, row_offset -= img.width)
+             --j, --row_num, row_offset -= img.width * img.per_pixel)
             memcpy(&(img.data[row_offset]),
-                   &(imgs[i].data[j * imgs[i].width]),
-                   imgs[i].width);
+                   &(imgs[i].data[j * imgs[i].width * imgs[i].per_pixel]),
+                   imgs[i].width * imgs[i].per_pixel);
         prev_descender = req_size[2];
     }
 
