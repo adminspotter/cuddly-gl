@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 14:50:35 tquirk
+ *   last updated 20 May 2018, 15:24:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -483,16 +483,14 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
                                                  const glm::vec4& foreground,
                                                  const glm::vec4& background)
 {
-    GLuint width, asc, desc;
-    ui::image *imgs = new ui::image[strs.size()], img;
-    int str_count = 0, line_height = this->line_height();
+    GLuint width, asc, desc, img_w = 0, img_h = 0;
+    std::vector<ui::image> imgs;
+    int line_height = this->line_height();
 
-    img.reset();
-    img.width = 0;
-    for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
+    for (auto& i : strs)
     {
-        imgs[str_count] = this->render(*i, foreground, background);
-        img.width = std::max(img.width, imgs[str_count].width);
+        imgs.push_back(this->render(i, foreground, background));
+        img_w = std::max(img_w, imgs.back().width);
     }
 
     /* We'll keep our line spacing consistent to what is contained in
@@ -500,16 +498,14 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
      * ascender of the top string, and the descender of the bottom
      * string.
      */
-    img.height = (str_count - 1) * line_height;
+    img_h = (strs.size() - 1) * line_height;
     this->get_string_size(strs.back(), width, asc, desc);
-    img.height += desc;
-    if (str_count > 1)
+    img_h += desc;
+    if (strs.size() > 1)
         this->get_string_size(strs.front(), width, asc, desc);
-    img.height += asc;
+    img_h += asc;
 
-    img.per_pixel = 4;
-    img.data = new unsigned char[img.width * img.height * img.per_pixel];
-    memset(img.data, 0, sizeof(unsigned char) * img.width * img.height * img.per_pixel);
+    ui::image img(img_w, img_h, 4);
 
     /* Now copy everything into place in the main image.  We're still
      * producing upside-down images, so we'll copy bottom-to-top.
@@ -517,7 +513,7 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
     GLuint row_num = img.height - 1;
     GLuint row_offset, prev_descender;
 
-    for (int i = 0; i < str_count; ++i)
+    for (int i = 0; i < strs.size(); ++i)
     {
         this->get_string_size(strs[i], width, asc, desc);
         if (i != 0)
@@ -532,7 +528,6 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
         prev_descender = desc;
     }
 
-    delete[] imgs;
     return img;
 }
 
