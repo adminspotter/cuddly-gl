@@ -178,10 +178,10 @@ int main(int argc, char **argv)
     ypos = 10;
     border = 5;
     b2->set_va(ui::element::font, ui::ownership::shared, std_font,
+               ui::element::color, ui::color::foreground, &fg2,
                ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating text field 1" << std::endl;
