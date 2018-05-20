@@ -1353,6 +1353,23 @@ void test_rule_w4(void)
 
     is((*(cs_in_ans.begin() + 1)).c_class, class_AN,
        test + st + "expected type");
+
+    st = "single-character run: ";
+
+    fake_bidi::char_container one_char =
+    {
+        {'a', class_L, 0}
+    };
+    fake_bidi::run_sequence seq4 =
+    {
+        one_char.begin(), one_char.end() - 1, class_L, class_L
+    };
+
+    b.rule_w4(seq4);
+
+    /* We're really just making sure it doesn't segfault.  No
+     * assertions, because it shouldn't have done anything.
+     */
 }
 
 void test_rule_w5(void)
@@ -1665,9 +1682,11 @@ void test_set_paired_brackets(void)
 
 void test_rule_n1(void)
 {
-    std::string test = "rule_n1: ";
+    std::string test = "rule_n1: ", st;
 
     fake_bidi b;
+
+    st = "reasonable run: ";
 
     fake_bidi::char_container en_chars =
     {
@@ -1687,11 +1706,28 @@ void test_rule_n1(void)
     b.rule_n1(seq);
 
     is((en_chars.begin() + 1)->c_class, class_R,
-       test + "expected pair list size");
+       test + st + "expected pair list size");
     is((en_chars.begin() + 2)->c_class, class_R,
-       test + "expected pair list size");
+       test + st + "expected pair list size");
     is((en_chars.begin() + 4)->c_class, class_WS,
-       test + "expected pair list size");
+       test + st + "expected pair list size");
+
+    st = "single-character run: ";
+
+    fake_bidi::char_container one_char =
+    {
+        {'a', class_L, 0}
+    };
+    fake_bidi::run_sequence seq4 =
+    {
+        one_char.begin(), one_char.end() - 1, class_L, class_L
+    };
+
+    b.rule_n1(seq4);
+
+    /* We're really just making sure it doesn't segfault.  No
+     * assertions, because it shouldn't have done anything.
+     */
 }
 
 void test_rule_n2(void)
