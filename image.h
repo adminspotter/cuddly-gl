@@ -1,6 +1,6 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 May 2018, 17:12:02 tquirk
+ *   last updated 19 May 2018, 23:13:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -34,6 +34,7 @@
 
 #include <algorithm>
 
+#include <glm/detail/func_common.hpp>
 #include <glm/vec4.hpp>
 
 namespace ui
@@ -42,17 +43,12 @@ namespace ui
     {
         unsigned char r, g, b, a;
 
-        static float clamp(float n)
-            {
-                return std::min(std::max(n, 0.0f), 1.0f);
-            }
-
         cell_tag(const glm::vec4& v)
             {
-                this->r = truncf(clamp(v.r) * 255);
-                this->g = truncf(clamp(v.g) * 255);
-                this->b = truncf(clamp(v.b) * 255);
-                this->a = truncf(clamp(v.a) * 255);
+                this->r = truncf(glm::clamp(v.r, 0.0f, 1.0f) * 255);
+                this->g = truncf(glm::clamp(v.g, 0.0f, 1.0f) * 255);
+                this->b = truncf(glm::clamp(v.b, 0.0f, 1.0f) * 255);
+                this->a = truncf(glm::clamp(v.a, 0.0f, 1.0f) * 255);
             }
 
         struct cell_tag& operator|=(const struct cell_tag& c)
