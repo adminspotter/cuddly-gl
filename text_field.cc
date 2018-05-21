@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 15:06:08 tquirk
+ *   last updated 21 May 2018, 09:10:34 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -324,9 +324,10 @@ void ui::text_field::generate_string_image(void)
                                          * tmp_img.height
                                          * tmp_img.per_pixel];
         for (int r = 0; r < tmp_img.height; ++r)
-            memcpy(&tmp_img.data[r * tmp_img.width],
-                   &this->img.data[r * this->img.width + start],
-                   tmp_img.width);
+            memcpy(&tmp_img.data[r * tmp_img.width * tmp_img.per_pixel],
+                   &this->img.data[r * this->img.width * tmp_img.per_pixel
+                                   + start],
+                   tmp_img.width * tmp_img.per_pixel);
         this->img = tmp_img;
 
         /* Fix the cursor's position */
