@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 08:32:19 tquirk
+ *   last updated 21 May 2018, 08:48:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -100,7 +100,7 @@ void ui::glyph::copy_to_image(ui::image& img,
 
         for (j = 0; j < this->width; ++j)
         {
-            int glyph_off = this->width * (this->height - i)
+            int glyph_off = this->width * (this->height - i - 1)
                 + (mirror == true ? this->width - j - 1 : j);
 
             if (this->per_pixel == 1)
