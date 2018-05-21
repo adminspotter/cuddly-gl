@@ -362,12 +362,12 @@ void ui::base_font::get_max_glyph_box(FT_Face face,
     *box_d = -(face->size->metrics.descender >> 6);
 }
 
-ui::image ui::base_font::render(const std::u32string& str,
+ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
                                 const glm::vec4& foreground,
                                 const glm::vec4& background)
 {
     GLuint w, asc, desc;
-    std::u32string::const_iterator i = str.begin();
+    auto i = str.begin();
     glm::ivec2 pos = {0, 0};
 
     this->get_string_size(str, w, asc, desc);
@@ -379,18 +379,18 @@ ui::image ui::base_font::render(const std::u32string& str,
      */
     while (i != str.end())
     {
-        ui::glyph& g = (*this)[*i];
+        ui::glyph& g = (*this)[i->c];
         FT_Vector kerning = {0, 0};
 
         if (i != str.begin())
         {
             pos.x += g.left;
-            this->kern(*(i - 1), *i, &kerning);
+            this->kern((i - 1)->c, i->c, &kerning);
         }
         pos.x += kerning.x;
         pos.y = desc + g.top - g.height + kerning.y;
 
-        g.copy_to_image(img, pos, foreground, false);
+        g.copy_to_image(img, pos, foreground, i->mirror);
 
         pos.x += g.x_advance;
         ++i;
@@ -504,7 +504,10 @@ ui::image ui::base_font::render_string(const std::u32string& str,
                                        const glm::vec4& foreground,
                                        const glm::vec4& background)
 {
-    return this->render(str, foreground, background);
+    bidi b;
+
+    auto strs = b.reorder(str);
+    return this->render(strs.front(), foreground, background);
 }
 
 ui::image ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
@@ -514,11 +517,16 @@ ui::image ui::base_font::render_multiline_string(const std::vector<std::u32strin
     GLuint width, asc, desc, img_w = 0, img_h = 0;
     std::vector<ui::image> imgs;
     int line_height = this->line_height();
+    bidi b;
 
-    for (auto& i : strs)
+    for (auto& str : strs)
     {
-        imgs.push_back(this->render(i, foreground, background));
-        img_w = std::max(img_w, imgs.back().width);
+        auto s = b.reorder(str);
+        for (auto& i : s)
+        {
+            imgs.push_back(this->render(i, foreground, background));
+            img_w = std::max(img_w, imgs.back().width);
+        }
     }
 
     /* We'll keep our line spacing consistent to what is contained in

@@ -117,7 +117,8 @@ namespace ui
 
         static void get_max_glyph_box(FT_Face, int *, int *, int *);
 
-        image render(const std::u32string&, const glm::vec4&, const glm::vec4&);
+        image render(const std::vector<bidi::mirror_t>&,
+                     const glm::vec4&, const glm::vec4&);
 
       public:
         base_font(std::string&);
