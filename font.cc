@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 17:29:28 tquirk
+ *   last updated 20 May 2018, 23:16:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -426,16 +426,6 @@ void ui::base_font::max_cell_size(std::vector<int>& v)
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
  */
-void ui::base_font::get_string_size(const std::u32string& str,
-                                    std::vector<int>& req_size)
-{
-    GLuint w, a, d;
-    this->get_string_size(str, w, a, d);
-    req_size[0] = (int)w;
-    req_size[1] = (int)a;
-    req_size[2] = (int)d;
-}
-
 void ui::base_font::get_string_size(const std::u32string& str,
                                     GLuint& width, GLuint& height)
 {
