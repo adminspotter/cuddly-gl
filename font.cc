@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 23:16:57 tquirk
+ *   last updated 21 May 2018, 08:32:19 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -497,26 +497,15 @@ ui::image ui::base_font::render_string(const std::u32string& str,
     bidi b;
 
     auto strs = b.reorder(str);
-    return this->render(strs.front(), foreground, background);
-}
 
-ui::image ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                                 const glm::vec4& foreground,
-                                                 const glm::vec4& background)
-{
-    GLuint width, asc, desc, img_w = 0, img_h = 0;
     std::vector<ui::image> imgs;
+    GLuint width, asc, desc, img_w = 0, img_h = 0;
     int line_height = this->line_height();
-    bidi b;
 
     for (auto& str : strs)
     {
-        auto s = b.reorder(str);
-        for (auto& i : s)
-        {
-            imgs.push_back(this->render(i, foreground, background));
-            img_w = std::max(img_w, imgs.back().width);
-        }
+        imgs.push_back(this->render(str, foreground, background));
+        img_w = std::max(img_w, imgs.back().width);
     }
 
     /* We'll keep our line spacing consistent to what is contained in

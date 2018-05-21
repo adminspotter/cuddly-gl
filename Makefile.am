@@ -17,7 +17,6 @@ pkginclude_HEADERS = active.h \
 	image.h \
 	label.h \
 	manager.h \
-	multi_label.h \
 	password.h \
 	pie_menu.h \
 	quadtree.h \
@@ -42,7 +41,6 @@ libcuddly_gl_la_SOURCES = active.cc \
 	font.cc \
 	label.cc \
 	manager.cc \
-	multi_label.cc \
 	password.cc \
 	pie_menu.cc \
 	quadtree.cc \

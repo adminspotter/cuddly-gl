@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 23:16:40 tquirk
+ *   last updated 21 May 2018, 08:39:18 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -135,8 +135,6 @@ namespace ui
         image render_string(const std::u32string&,
                             const glm::vec4&,
                             const glm::vec4&);
-        image render_multiline_string(const std::vector<std::u32string>&,
-                                      const glm::vec4&, const glm::vec4&);
     };
 
     class font : public base_font
