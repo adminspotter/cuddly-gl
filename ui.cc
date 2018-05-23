@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Nov 2017, 06:47:03 tquirk
+ *   last updated 23 May 2018, 08:33:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -50,9 +50,6 @@ int ui::context::get_attribute(GLuint t, void *v)
       case ui::attribute::texture:
         *((GLuint *)v) = this->texture_attr;
         break;
-      case ui::attribute::use_text:
-        *((GLuint *)v) = this->use_text_uniform;
-        break;
       case ui::attribute::text_bgnd:
         *((GLuint *)v) = this->text_bgnd_uniform;
         break;
@@ -72,7 +69,6 @@ ui::context::context(GLuint w, GLuint h)
     this->pos_attr = glGetAttribLocation(shader_pgm, "position");
     this->color_attr = glGetAttribLocation(shader_pgm, "color");
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
-    this->use_text_uniform = glGetUniformLocation(shader_pgm, "use_text");
     this->text_bgnd_uniform = glGetUniformLocation(shader_pgm, "text_bgnd");
     this->translate_uniform = glGetUniformLocation(shader_pgm, "translate");
 }

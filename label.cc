@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 07:59:42 tquirk
+ *   last updated 23 May 2018, 08:30:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -179,22 +179,10 @@ void ui::label::populate_buffers(void)
     {
         glBindTexture(GL_TEXTURE_2D, this->tex);
 
-        if (this->img.per_pixel == 1)
-        {
-            this->use_text = true;
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
-                         this->img.width, this->img.height, 0, GL_RED,
-                         GL_UNSIGNED_BYTE, this->img.data);
-        }
-        else
-        {
-            this->use_text = false;
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                         this->img.width, this->img.height, 0, GL_RGBA,
-                         GL_UNSIGNED_BYTE, this->img.data);
-        }
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                     this->img.width, this->img.height, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, this->img.data);
     }
 }
 
@@ -204,7 +192,6 @@ ui::label::label(ui::composite *c, GLuint w, GLuint h)
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
-    this->use_text = true;
     this->shared_font = false;
     this->font = NULL;
     glGenTextures(1, &this->tex);
@@ -247,13 +234,10 @@ void ui::label::set(GLuint e, GLuint t, void *v)
 
 void ui::label::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
-    GLuint text, bgnd, val = (this->use_text ? 1 : 0);
+    GLuint bgnd;
 
-    this->parent->get_va(ui::element::attribute,
-                         ui::attribute::use_text, &text,
-                         ui::element::attribute,
-                         ui::attribute::text_bgnd, &bgnd, 0);
-    glUniform1ui(text, val);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::text_bgnd, &bgnd);
     glUniform4f(bgnd,
                 this->background.x, this->background.y,
                 this->background.z, this->background.a);
@@ -261,5 +245,4 @@ void ui::label::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
     glBindTexture(GL_TEXTURE_2D, this->tex);
     ui::widget::draw(trans_uniform, parent_trans);
     glDisable(GL_TEXTURE_2D);
-    glUniform1ui(text, 0);
 }

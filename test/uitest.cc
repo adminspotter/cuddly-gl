@@ -74,6 +74,7 @@ int main(int argc, char **argv)
     GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
+    glm::vec4 bg3 = {0.0, 0.0, 0.0, 1.0};
     ui::font *std_font = new ui::font(font_name, 30, paths);
     ui::font *tiny_font = new ui::font(font_name, 15, paths);
     int button;
@@ -141,6 +142,7 @@ int main(int argc, char **argv)
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg3,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating password 1" << std::endl;

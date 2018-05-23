@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 06:52:06 tquirk
+ *   last updated 23 May 2018, 08:34:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -95,7 +95,7 @@ namespace ui
     namespace attribute
     {
         const GLuint position = 1, color = 2, texture = 3;
-        const GLuint use_text = 4, text_bgnd = 5;
+        const GLuint text_bgnd = 4;
     }
 
     namespace side
