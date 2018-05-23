@@ -1,9 +1,9 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Nov 2017, 09:22:09 tquirk
+ *   last updated 21 May 2018, 08:48:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -60,6 +60,10 @@
 #include <algorithm>
 
 #include "font.h"
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#include FT_TRUETYPE_TABLES_H
+#include FT_TRUETYPE_TAGS_H
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 #include FT_GLYPH_H
 
 /* We'll keep a single library handle, and a refcount.  This will all
@@ -68,40 +72,6 @@
  */
 static FT_Library ft_lib;
 static int ft_lib_count = 0;
-
-/* Instead of having a giant if-condition, we'll do some sensible
- * searching with a set.  There are a handful of single code points
- * which are r-to-l, and a number of ranges.  We'll make ranges out of
- * the single points, with the same beginning and end, and our
- * comparisons should still hold.
- */
-struct range
-{
-    uint32_t start, end;
-
-    range(uint32_t a, uint32_t b) { this->start = a; this->end = b; };
-};
-
-static bool operator<(const range& a, const range& b)
-{
-    if (a.end < b.start)
-        return true;
-    return false;
-}
-
-static std::set<range> r_to_l_ranges =
-{
-    {0x05be, 0x05be}, {0x05c0, 0x05c0}, {0x05c3, 0x05c3}, {0x05c6, 0x05c6},
-    {0x05d0, 0x05f4}, {0x0608, 0x0608}, {0x060b, 0x060b}, {0x060d, 0x060d},
-    {0x061b, 0x064a}, {0x066d, 0x066f}, {0x0671, 0x06d5}, {0x06e5, 0x06e6},
-    {0x06ee, 0x06ef}, {0x06fa, 0x0710}, {0x0712, 0x072f}, {0x074d, 0x07a5},
-    {0x07b1, 0x07ea}, {0x07f4, 0x07f5}, {0x07fa, 0x0815}, {0x081a, 0x081a},
-    {0x0824, 0x0824}, {0x0828, 0x0828}, {0x0830, 0x0858}, {0x085e, 0x08ac},
-    {0x200f, 0x200f}, {0xfb1d, 0xfb1d}, {0xfb1f, 0xfb28}, {0xfb2a, 0xfd3d},
-    {0xfd50, 0xfdfc}, {0xfe70, 0xfefc}, {0x10800, 0x1091b}, {0x10920, 0x10a00},
-    {0x10a10, 0x10a33}, {0x10a40, 0x10b35}, {0x10b40, 0x10c48},
-    {0x1ee00, 0x1eebb}
-};
 
 static FT_Library *init_freetype(void)
 {
@@ -117,18 +87,29 @@ static void cleanup_freetype(void)
         FT_Done_FreeType(ft_lib);
 }
 
-/* The TTF format, or at least Freetype, doesn't distinguish between
- * L-to-R and R-to-L characters.  Seems that they could provide a
- * negative advance value for R-to-L, but whatever.  Our R-to-L set
- * should provide the ranges which are R-to-L based on Unicode code
- * point.
- */
-bool ui::glyph::is_l_to_r(void)
+void ui::glyph::copy_to_image(ui::image& img,
+                              const glm::ivec2& pos,
+                              const glm::vec4& foreground,
+                              bool mirror)
 {
-    if (r_to_l_ranges.find(range(this->code_point, this->code_point))
-        == r_to_l_ranges.end())
-        return true;
-    return false;
+    int row_offset, i, j;
+
+    for (i = 0; i < this->height; ++i)
+    {
+        row_offset = img.width * (pos.y + i) + pos.x;
+
+        for (j = 0; j < this->width; ++j)
+        {
+            int glyph_off = this->width * (this->height - i - 1)
+                + (mirror == true ? this->width - j - 1 : j);
+
+            if (this->per_pixel == 1)
+                img.cells[row_offset + j]
+                    |= foreground * (this->bitmap[glyph_off] / 255.0f);
+            else
+                img.cells[row_offset + j] |= this->cells[glyph_off];
+        }
+    }
 }
 
 /* We need to be able to convert from UTF-8 representation to
@@ -276,17 +257,44 @@ std::string ui::base_font::search_path(std::string& font_name,
     throw std::runtime_error("Could not find font " + font_name);
 }
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+void ui::base_font::setup_bitmap_face(FT_Face face, int pixel_size)
+{
+    int best_match = 0;
+    int diff = abs(pixel_size - face->available_sizes[0].height);
+
+    for (int i = 1; i < face->num_fixed_sizes; ++i)
+    {
+        int ndiff = abs(pixel_size - face->available_sizes[i].height);
+        if (ndiff < diff)
+        {
+            best_match = i;
+            diff = ndiff;
+        }
+    }
+    FT_Select_Size(face, best_match);
+}
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
 FT_Face ui::base_font::init_face(std::string& fname,
                                  int pixel_size,
                                  ui::search_paths& paths)
 {
     FT_Library *lib = init_freetype();
     FT_Face face;
-    std::string font_path = this->search_path(fname, paths);
+    std::string font_path = ui::base_font::search_path(fname, paths);
 
     if (FT_New_Face(*lib, font_path.c_str(), 0, &face))
         throw std::runtime_error("Could not load font " + fname);
-    FT_Set_Pixel_Sizes(face, 0, pixel_size);
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    FT_ULong length = 0;
+
+    if (!FT_Load_Sfnt_Table(face, TTAG_CBDT, 0, NULL, &length) && length)
+        ui::base_font::setup_bitmap_face(face, pixel_size);
+    else
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+        FT_Set_Pixel_Sizes(face, 0, pixel_size);
     return face;
 }
 
@@ -298,10 +306,12 @@ void ui::base_font::cleanup_face(FT_Face face)
 
 void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
 {
-    if (!FT_Get_Char_Index(face, code))
+    FT_UInt index = FT_Get_Char_Index(face, code);
+    if (index == 0)
         return;
 
-    if (FT_Load_Char(face, code, FT_LOAD_RENDER))
+    if (FT_Load_Char(face, code, FT_LOAD_RENDER)
+        && FT_Load_Glyph(face, index, FT_LOAD_COLOR))
         return;
 
     ui::glyph& g = this->glyphs[code];
@@ -319,8 +329,19 @@ void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
     g.left = slot->bitmap_left;
     g.top = slot->bitmap_top;
     g.pitch = slot->bitmap.pitch;
+    g.per_pixel = (slot->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? 4 : 1);
     g.bitmap = new unsigned char[abs(g.pitch) * g.height];
-    memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
+    if (g.per_pixel == 1)
+        memcpy(g.bitmap, slot->bitmap.buffer, abs(g.pitch) * g.height);
+    else
+        /* Freetype color glyphs are in BGRA format, and we use RGBA. */
+        for (int i = 0, j = 0; i < abs(g.pitch) * g.height; i += 4, ++j)
+        {
+            g.cells[j].b = slot->bitmap.buffer[i];
+            g.cells[j].g = slot->bitmap.buffer[i + 1];
+            g.cells[j].r = slot->bitmap.buffer[i + 2];
+            g.cells[j].a = slot->bitmap.buffer[i + 3];
+        }
 }
 
 void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
@@ -336,27 +357,45 @@ void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
 void ui::base_font::get_max_glyph_box(FT_Face face,
                                       int *box_w, int *box_a, int *box_d)
 {
-    FT_ULong code;
-    FT_UInt index;
-    FT_Glyph g;
-    FT_BBox bbox;
-    FT_Pos w = 0, a = 0, d = 0;
+    *box_w = face->size->metrics.max_advance >> 6;
+    *box_a = face->size->metrics.ascender >> 6;
+    *box_d = -(face->size->metrics.descender >> 6);
+}
 
-    code = FT_Get_First_Char(face, &index);
-    while (index != 0)
+ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
+                                const glm::vec4& foreground,
+                                const glm::vec4& background)
+{
+    GLuint w, asc, desc;
+    auto i = str.begin();
+    glm::ivec2 pos = {0, 0};
+
+    this->get_string_size(str, w, asc, desc);
+    ui::image img(w, asc + desc, 4);
+
+    /* GL does positive y as up, so it makes more sense to just draw
+     * the buffer upside-down.  All the glyphs are already
+     * upside-down.
+     */
+    while (i != str.end())
     {
-        FT_Load_Glyph(face, index, FT_LOAD_DEFAULT);
-        FT_Get_Glyph(face->glyph, &g);
-        FT_Glyph_Get_CBox(g, FT_GLYPH_BBOX_TRUNCATE, &bbox);
-        w = std::max(w, bbox.xMax - bbox.xMin);
-        a = std::max(a, bbox.yMax);
-        d = std::min(d, bbox.yMin);
-        FT_Done_Glyph(g);
-        code = FT_Get_Next_Char(face, code, &index);
+        ui::glyph& g = (*this)[i->c];
+        FT_Vector kerning = {0, 0};
+
+        if (i != str.begin())
+        {
+            pos.x += g.left;
+            this->kern((i - 1)->c, i->c, &kerning);
+        }
+        pos.x += kerning.x;
+        pos.y = desc + g.top - g.height + kerning.y;
+
+        g.copy_to_image(img, pos, foreground, i->mirror);
+
+        pos.x += g.x_advance;
+        ++i;
     }
-    *box_w = (int)w;
-    *box_a = (int)a;
-    *box_d = -((int)d);
+    return img;
 }
 
 ui::base_font::base_font(std::string& name)
@@ -383,19 +422,24 @@ void ui::base_font::max_cell_size(std::vector<int>& v)
  * the vertical axis; the values for vertical size are the ascender
  * and descender respectively.
  *
- * Return values come back in the req_size argument.  First element is
- * width, second is ascender, third is descender.
- *
  * It would be nice if we could support vertical lines, but it's going
  * to be way too difficult, and most of the currently-used vertical
  * languages have horizontal usage nowadays.
  */
 void ui::base_font::get_string_size(const std::u32string& str,
-                                    std::vector<int>& req_size)
+                                    GLuint& width, GLuint& height)
+{
+    GLuint asc, desc;
+    this->get_string_size(str, width, asc, desc);
+    height = asc + desc;
+}
+
+void ui::base_font::get_string_size(const std::u32string& str,
+                                    GLuint& width, GLuint& asc, GLuint& desc)
 {
     std::u32string::const_iterator i;
 
-    req_size[0] = req_size[1] = req_size[2] = 0;
+    width = asc = desc = 0;
     for (i = str.begin(); i != str.end(); ++i)
     {
         FT_Vector kerning = {0, 0};
@@ -407,116 +451,61 @@ void ui::base_font::get_string_size(const std::u32string& str,
             this->kern(*(i - 1), *i, &kerning);
 
         /* We're only going to do horizontal text */
-        req_size[0] += kerning.x;
+        width += kerning.x;
         if (i != str.begin())
-            req_size[0] += g.left;
+            width += g.left;
         if (i + 1 == str.end() && g.width != 0)
-            req_size[0] += g.width;
+            width += g.width;
         else
-            req_size[0] += g.x_advance;
-        req_size[1] = std::max(req_size[1], g.top);
-        req_size[2] = std::max(req_size[2], g.height - g.top);
+            width += g.x_advance;
+        asc = std::max(asc, (GLuint)g.top);
+        desc = std::max(desc, (GLuint)(g.height - g.top));
     }
 }
 
-void ui::base_font::render_string(const std::u32string& str, ui::image& img)
+void ui::base_font::get_string_size(const std::vector<bidi::mirror_t>& str,
+                                    GLuint& width, GLuint& asc, GLuint& desc)
 {
-    std::vector<int> req_size = {0, 0, 0};
-    std::u32string::const_iterator i = str.begin();
-    bool l_to_r = (*this)[*i].is_l_to_r();
-    int pos, save_pos;
-
-    this->get_string_size(str, req_size);
-    img.reset();
-    img.width = req_size[0];
-    img.height = req_size[1] + req_size[2];
-    img.per_pixel = 1;
-    img.data = new unsigned char[img.width * img.height];
-    memset(img.data, 0, img.width * img.height);
-    save_pos = pos = (l_to_r ? 0 : img.width - 1);
-
-    /* GL does positive y as up, so it makes more sense to just draw
-     * the buffer upside-down.  All the glyphs are already
-     * upside-down.
-     */
-    while (i != str.end())
+    width = asc = desc = 0;
+    for (auto i = str.begin(); i != str.end(); ++i)
     {
-        ui::glyph& g = (*this)[*i];
-        int j, k, bottom_row = req_size[2] + g.top - g.height;
-        int row_offset, glyph_offset;
         FT_Vector kerning = {0, 0};
-        bool same_dir = (l_to_r == g.is_l_to_r());
+        ui::glyph& g = (*this)[i->c];
 
-        /* Kerning, if available */
+        if (g.x_advance == 0 && g.y_advance != 0)
+            throw std::runtime_error("This font is not supported.");
         if (i != str.begin())
-            this->kern(*(i - 1), *i, &kerning);
+            this->kern((i - 1)->c, i->c, &kerning);
 
-        /* If we're dealing with wrong-direction text, scoot things over */
-        if (!same_dir && pos != save_pos)
-        {
-            int x_move = abs(pos - save_pos);
-            int x_distance = g.x_advance + kerning.x;
-            int start = std::min(pos, save_pos);
-            for (j = 0; j < img.height; ++j)
-            {
-                row_offset = (img.width * j) + start;
-                memmove(&img.data[row_offset
-                                  + (!l_to_r ? -x_distance : x_distance)],
-                        &img.data[row_offset],
-                        x_move);
-                memset(&img.data[row_offset - start + save_pos
-                                 - (!l_to_r ? x_distance : 0)],
-                       0,
-                       x_distance);
-            }
-        }
+        /* We're only going to do horizontal text */
+        width += kerning.x;
+        if (i != str.begin())
+            width += g.left;
+        if (i + 1 == str.end() && g.width != 0)
+            width += g.width;
         else
-            save_pos = pos;
-        if (!l_to_r)
-        {
-            pos -= g.x_advance + kerning.x;
-            if (i != str.begin())
-                pos -= g.left;
-            if (same_dir)
-                save_pos = pos;
-        }
-        for (j = 0; j < g.height; ++j)
-        {
-            row_offset = (bottom_row + j + kerning.y) * img.width
-                + save_pos + kerning.x
-                - (!l_to_r && !same_dir ? g.x_advance : 0);
-            if (i != str.begin())
-                row_offset += g.left;
-            glyph_offset = (g.height - 1 - j) * g.width;
-            for (k = 0; k < g.width; ++k)
-                img.data[row_offset + k] |= g.bitmap[glyph_offset + k];
-        }
-        if (l_to_r)
-        {
-            pos += g.x_advance + kerning.x;
-            if (i != str.begin())
-                pos += g.left;
-            if (same_dir)
-                save_pos = pos;
-        }
-
-        ++i;
+            width += g.x_advance;
+        asc = std::max(asc, (GLuint)g.top);
+        desc = std::max(desc, (GLuint)(g.height - g.top));
     }
 }
 
-void ui::base_font::render_multiline_string(const std::vector<std::u32string>& strs,
-                                            ui::image& img)
+ui::image ui::base_font::render_string(const std::u32string& str,
+                                       const glm::vec4& foreground,
+                                       const glm::vec4& background)
 {
-    std::vector<int> req_size = {0, 0, 0};
-    ui::image *imgs = new ui::image[strs.size()];
-    int str_count = 0, line_height = this->line_height();
+    bidi b;
 
-    img.reset();
-    img.width = 0;
-    for (auto i = strs.begin(); i != strs.end(); ++i, ++str_count)
+    auto strs = b.reorder(str);
+
+    std::vector<ui::image> imgs;
+    GLuint width, asc, desc, img_w = 0, img_h = 0;
+    int line_height = this->line_height();
+
+    for (auto& str : strs)
     {
-        this->render_string(*i, imgs[str_count]);
-        img.width = std::max(img.width, imgs[str_count].width);
+        imgs.push_back(this->render(str, foreground, background));
+        img_w = std::max(img_w, imgs.back().width);
     }
 
     /* We'll keep our line spacing consistent to what is contained in
@@ -524,16 +513,14 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
      * ascender of the top string, and the descender of the bottom
      * string.
      */
-    img.height = (str_count - 1) * line_height;
-    this->get_string_size(strs.back(), req_size);
-    img.height += req_size[2];
-    if (str_count > 1)
-        this->get_string_size(strs.front(), req_size);
-    img.height += req_size[1];
+    img_h = (strs.size() - 1) * line_height;
+    this->get_string_size(strs.back(), width, asc, desc);
+    img_h += desc;
+    if (strs.size() > 1)
+        this->get_string_size(strs.front(), width, asc, desc);
+    img_h += asc;
 
-    img.per_pixel = 1;
-    img.data = new unsigned char[img.width * img.height];
-    memset(img.data, 0, sizeof(unsigned char) * img.width * img.height);
+    ui::image img(img_w, img_h, 4);
 
     /* Now copy everything into place in the main image.  We're still
      * producing upside-down images, so we'll copy bottom-to-top.
@@ -541,22 +528,22 @@ void ui::base_font::render_multiline_string(const std::vector<std::u32string>& s
     GLuint row_num = img.height - 1;
     GLuint row_offset, prev_descender;
 
-    for (int i = 0; i < str_count; ++i)
+    for (int i = 0; i < strs.size(); ++i)
     {
-        this->get_string_size(strs[i], req_size);
+        this->get_string_size(strs[i], width, asc, desc);
         if (i != 0)
-            row_num -= line_height - prev_descender - req_size[1];
-        row_offset = row_num * img.width;
+            row_num -= line_height - prev_descender - asc;
+        row_offset = row_num * img.width * img.per_pixel;
         for (int j = imgs[i].height - 1;
              j >= 0;
-             --j, --row_num, row_offset -= img.width)
+             --j, --row_num, row_offset -= img.width * img.per_pixel)
             memcpy(&(img.data[row_offset]),
-                   &(imgs[i].data[j * imgs[i].width]),
-                   imgs[i].width);
-        prev_descender = req_size[2];
+                   &(imgs[i].data[j * imgs[i].width * imgs[i].per_pixel]),
+                   imgs[i].width * imgs[i].per_pixel);
+        prev_descender = desc;
     }
 
-    delete[] imgs;
+    return img;
 }
 
 int ui::font::line_height(void)
@@ -567,14 +554,16 @@ int ui::font::line_height(void)
 ui::font::font(std::string& font_name, int pixel_size, ui::search_paths& paths)
     : ui::base_font(font_name)
 {
-    this->face = this->init_face(font_name, pixel_size, paths);
-    this->get_max_glyph_box(this->face,
-                            &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    this->face = ui::base_font::init_face(font_name, pixel_size, paths);
+    ui::base_font::get_max_glyph_box(this->face,
+                                     &this->bbox_w,
+                                     &this->bbox_a,
+                                     &this->bbox_d);
 }
 
 ui::font::~font()
 {
-    this->cleanup_face(this->face);
+    ui::base_font::cleanup_face(this->face);
 }
 
 struct ui::glyph& ui::font::operator[](FT_ULong code)
@@ -599,17 +588,23 @@ ui::font_set::font_set(std::string& set_name)
 ui::font_set::~font_set()
 {
     for (auto i = this->faces.begin(); i != this->faces.end(); ++i)
-        this->cleanup_face(*i);
+        ui::base_font::cleanup_face(*i);
 }
 
 ui::font_set& ui::font_set::operator<<(ui::font_set::font_spec& fs)
 {
-    this->faces.push_back(this->init_face(std::get<0>(fs),
-                                          std::get<1>(fs),
-                                          std::get<2>(fs)));
-    if (this->faces.size() == 1)
-        this->get_max_glyph_box(this->faces[0],
-                                &this->bbox_w, &this->bbox_a, &this->bbox_d);
+    this->faces.push_back(ui::base_font::init_face(std::get<0>(fs),
+                                                   std::get<1>(fs),
+                                                   std::get<2>(fs)));
+    int w, a, d;
+
+    ui::base_font::get_max_glyph_box(this->faces[this->faces.size() - 1],
+                                     &w, &a, &d);
+
+    this->bbox_w = std::max(this->bbox_w, w);
+    this->bbox_a = std::max(this->bbox_a, a);
+    this->bbox_d = std::max(this->bbox_d, d);
+
     return *this;
 }
 

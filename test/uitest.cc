@@ -21,7 +21,6 @@
 #include "../manager.h"
 #include "../row_column.h"
 #include "../pie_menu.h"
-#include "../multi_label.h"
 
 #include "../connect_glfw.h"
 
@@ -44,10 +43,8 @@ ui::password *pw1;
 ui::manager *m1;
 ui::row_column *r1;
 ui::pie_menu *pu1;
-ui::multi_label *ml1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
-std::string multiline("Hi this is     adm1nspotter, and I like    cheese!\nHowdy!\nabcdefghijklmnopqrstuvwxyz");
 std::vector<std::string> paths =
 {
     ".",
@@ -77,6 +74,7 @@ int main(int argc, char **argv)
     GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
+    glm::vec4 bg3 = {0.0, 0.0, 0.0, 1.0};
     ui::font *std_font = new ui::font(font_name, 30, paths);
     ui::font *tiny_font = new ui::font(font_name, 15, paths);
     int button;
@@ -144,6 +142,7 @@ int main(int argc, char **argv)
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
                ui::element::color, ui::color::foreground, &fg1,
+               ui::element::color, ui::color::background, &bg3,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating password 1" << std::endl;
@@ -178,10 +177,10 @@ int main(int argc, char **argv)
     ypos = 10;
     border = 5;
     b2->set_va(ui::element::font, ui::ownership::shared, std_font,
+               ui::element::color, ui::color::foreground, &fg2,
                ui::element::string, 0, &greeting,
                ui::element::margin, ui::side::all, &border,
                ui::element::border, ui::side::all, &border,
-               ui::element::color, ui::color::foreground, &fg2,
                ui::element::position, ui::position::x, &xpos,
                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "creating text field 1" << std::endl;
@@ -220,7 +219,7 @@ int main(int argc, char **argv)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::multi_label *l = new ui::multi_label(r1, 0, 0);
+        ui::label *l = new ui::label(r1, 0, 0);
 
         s << "Label " << q << "\n" << greeting;
         std::string str = s.str();
@@ -254,18 +253,6 @@ int main(int argc, char **argv)
         pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
         pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
     }
-    std::cout << "creating multi_label" << std::endl;
-    ml1 = new ui::multi_label(ctx, 200, 10);
-    xpos = 50;
-    ypos = 300;
-    border = 1;
-    ml1->set_va(ui::element::font, ui::ownership::shared, std_font,
-                ui::element::string, 0, &multiline,
-                ui::element::color, ui::color::foreground, &fg1,
-                ui::element::border, ui::side::all, &border,
-                ui::element::margin, ui::side::all, &border,
-                ui::element::position, ui::position::x, &xpos,
-                ui::element::position, ui::position::y, &ypos, 0);
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))

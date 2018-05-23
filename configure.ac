@@ -118,6 +118,22 @@ AS_IF([test "x$with_freetype_includes" != "xno"],
 CXXFLAGS="$CXXFLAGS $FREETYPE_INCLUDES"
 CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([ft2build.h], [], [AC_MSG_ERROR([no valid Freetype2 headers found, can not continue])])
+# We will only report the results for the following, because there is
+# already a header file which has an appropriate define in it.
+AC_MSG_CHECKING([if Freetype2 is built with bitmap support])
+AC_PREPROC_IFELSE(
+    [AC_LANG_PROGRAM(
+        [
+#include <ft2build.h>
+#include FT_CONFIG_OPTIONS_H
+#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#error "no bitmap support"
+#endif
+        ],
+        [])
+    ],
+    [AC_MSG_RESULT([yes])],
+    [AC_MSG_RESULT([no])])
 AS_IF([test "x$with_freetype_libraries" != "xno"],
       [FREETYPE_LDFLAGS="-L$with_freetype_libraries"],
       [test "x$with_freetype" != "xno"],

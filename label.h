@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Nov 2017, 08:57:12 tquirk
+ *   last updated 21 May 2018, 09:17:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -44,7 +44,7 @@ namespace ui
     class label : public widget
     {
       protected:
-        bool use_text, shared_font;
+        bool shared_font;
         std::u32string str;
         image img;
         ui::base_font *font;

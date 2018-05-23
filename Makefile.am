@@ -10,13 +10,13 @@ install-recursive: SUBDIRS = $(SD_INST)
 EXTRA_DIST = autogen.sh doc
 
 pkginclude_HEADERS = active.h \
+	bidi.h \
 	button.h \
 	composite.h \
 	font.h\
 	image.h \
 	label.h \
 	manager.h \
-	multi_label.h \
 	password.h \
 	pie_menu.h \
 	quadtree.h \
@@ -34,12 +34,13 @@ connectordir = @datadir@/$(PACKAGE)/connectors
 connector_DATA = connect_glfw.cc connect_glfw.h
 
 libcuddly_gl_la_SOURCES = active.cc \
+	bidi.cc \
+	bidi_classes.cc \
 	button.cc \
 	composite.cc \
 	font.cc \
 	label.cc \
 	manager.cc \
-	multi_label.cc \
 	password.cc \
 	pie_menu.cc \
 	quadtree.cc \

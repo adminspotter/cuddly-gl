@@ -1,9 +1,9 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Nov 2017, 09:21:32 tquirk
+ *   last updated 21 May 2018, 08:39:18 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,8 +49,12 @@
 #define __INC_CUDDLY_FONT_H__
 
 #include <ft2build.h>
+#include FT_CONFIG_OPTIONS_H
 #include FT_FREETYPE_H
 #include FT_TYPES_H
+
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 #include <string>
 #include <vector>
@@ -58,6 +62,7 @@
 
 #include "cache.h"
 #include "image.h"
+#include "bidi.h"
 
 namespace ui
 {
@@ -68,9 +73,14 @@ namespace ui
         int x_advance, y_advance, width, height;
         int top, left;
         int pitch;
-        unsigned char *bitmap;
+        int per_pixel;
+        union
+        {
+            unsigned char *bitmap;
+            cell *cells;
+        };
 
-        bool is_l_to_r(void);
+        void copy_to_image(image&, const glm::ivec2&, const glm::vec4&, bool);
     };
 
     std::u32string utf8tou32str(const std::string&);
@@ -92,16 +102,23 @@ namespace ui
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
         int bbox_w, bbox_a, bbox_d;
 
-        std::string search_path(std::string&, search_paths&);
+        static std::string search_path(std::string&, search_paths&);
 
-        FT_Face init_face(std::string&, int, search_paths&);
-        void cleanup_face(FT_Face);
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+        static void setup_bitmap_face(FT_Face, int);
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+        static FT_Face init_face(std::string&, int, search_paths&);
+        static void cleanup_face(FT_Face);
 
         void load_glyph(FT_Face, FT_ULong);
         void kern(FT_ULong, FT_ULong, FT_Vector *);
         virtual int line_height(void) = 0;
 
-        void get_max_glyph_box(FT_Face, int *, int *, int *);
+        static void get_max_glyph_box(FT_Face, int *, int *, int *);
+
+        image render(const std::vector<bidi::mirror_t>&,
+                     const glm::vec4&, const glm::vec4&);
 
       public:
         base_font(std::string&);
@@ -111,10 +128,13 @@ namespace ui
 
         virtual struct glyph& operator[](FT_ULong) = 0;
 
-        void get_string_size(const std::u32string&, std::vector<int>&);
-        void render_string(const std::u32string&, image&);
-        void render_multiline_string(const std::vector<std::u32string>&,
-                                     image&);
+        void get_string_size(const std::u32string&, GLuint&, GLuint&);
+        void get_string_size(const std::u32string&, GLuint&, GLuint&, GLuint&);
+        void get_string_size(const std::vector<bidi::mirror_t>&,
+                             GLuint&, GLuint&, GLuint&);
+        image render_string(const std::u32string&,
+                            const glm::vec4&,
+                            const glm::vec4&);
     };
 
     class font : public base_font

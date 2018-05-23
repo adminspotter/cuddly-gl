@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Jan 2017, 21:24:15 tquirk
+ *   last updated 23 May 2018, 08:34:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,7 +42,7 @@ namespace ui
       private:
         GLuint vert_shader, frag_shader, shader_pgm;
         GLuint pos_attr, norm_attr, color_attr, texture_attr;
-        GLuint use_text_uniform, text_bgnd_uniform;
+        GLuint text_bgnd_uniform;
         GLuint translate_uniform;
 
       protected:

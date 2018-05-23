@@ -1,9 +1,9 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Sep 2016, 09:25:09 tquirk
+ *   last updated 20 May 2018, 08:06:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,21 +27,68 @@
 #ifndef __INC_CUDDLY_IMAGE_H__
 #define __INC_CUDDLY_IMAGE_H__
 
+#include <math.h>
 #include <string.h>
 
 #include <GL/gl.h>
 
+#include <algorithm>
+
+#include <glm/detail/func_common.hpp>
+#include <glm/vec4.hpp>
+
 namespace ui
 {
+    typedef struct cell_tag
+    {
+        unsigned char r, g, b, a;
+
+        cell_tag(const glm::vec4& v)
+            {
+                this->r = truncf(glm::clamp(v.r, 0.0f, 1.0f) * 255);
+                this->g = truncf(glm::clamp(v.g, 0.0f, 1.0f) * 255);
+                this->b = truncf(glm::clamp(v.b, 0.0f, 1.0f) * 255);
+                this->a = truncf(glm::clamp(v.a, 0.0f, 1.0f) * 255);
+            }
+
+        struct cell_tag& operator|=(const struct cell_tag& c)
+            {
+                this->r |= c.r;
+                this->g |= c.g;
+                this->b |= c.b;
+                this->a |= c.a;
+                return *this;
+            }
+
+        struct cell_tag& operator|=(const glm::vec4& v)
+            {
+                struct cell_tag t = v;
+                return *this |= t;
+            }
+    } __attribute__ ((__packed__))
+    cell;
+
     struct image
     {
-        unsigned char *data;
+        union {
+            unsigned char *data;
+            cell *cells;
+        };
+
         GLuint width, height, per_pixel;
 
         image()
             {
                 this->data = NULL;
                 this->reset();
+            };
+        image(GLuint w, GLuint h, GLuint pp)
+            {
+                this->width = w;
+                this->height = h;
+                this->per_pixel = pp;
+                this->data = new unsigned char[w * h * pp];
+                memset(this->data, 0, w * h * pp);
             };
         image(const image& i)
             {
