@@ -1485,6 +1485,21 @@ void test_rule_w7(void)
     b.rule_w7(seq2);
 
     is(cc2.back().c_class, class_L, test + st + "expected type");
+
+    st = "all EN: ";
+
+    fake_bidi::char_container cc3 =
+    {
+        {'4', class_EN, 1}, {'5', class_EN, 1}
+    };
+    fake_bidi::run_sequence seq3 =
+    {
+        cc3.begin(), cc3.end() - 1, class_R, class_R
+    };
+
+    b.rule_w7(seq3);
+
+    is(cc3.back().c_class, class_EN, test + st + "expected type");
 }
 
 void test_bd16(void)
@@ -1947,7 +1962,7 @@ void test_reorder(void)
 
 int main(int argc, char **argv)
 {
-    plan(355);
+    plan(356);
 
     test_create_delete();
     test_char_type();
