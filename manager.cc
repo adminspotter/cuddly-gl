@@ -1,9 +1,9 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Oct 2017, 08:20:48 tquirk
+ *   last updated 24 May 2018, 22:09:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -110,6 +110,7 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 
 void ui::manager::set_desired_size(void)
 {
+    glm::ivec2 old_sz(this->dim);
     glm::ivec2 max_pt(0, 0);
 
     this->composite::set_desired_size();
@@ -141,6 +142,11 @@ void ui::manager::set_desired_size(void)
             this->dim.x = max_pt.x;
         if (max_pt.y > this->dim.y)
             this->dim.y = max_pt.y;
+    }
+    if (this->dim != old_sz)
+    {
+        ui::resize_call_data call_data = { this->dim };
+        this->call_callbacks(ui::callback::resize, &call_data);
     }
     this->dirty = false;
     this->regenerate_search_tree();
