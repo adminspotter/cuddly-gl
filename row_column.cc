@@ -1,9 +1,9 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 Oct 2017, 07:20:26 tquirk
+ *   last updated 24 May 2018, 22:09:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,6 +123,7 @@ glm::ivec2 ui::row_column::calculate_grid_size(void)
 
 void ui::row_column::set_desired_size(void)
 {
+    glm::ivec2 old_sz(this->dim);
     glm::ivec2 cell_size(0, 0), grid_size(0, 0);
 
     this->composite::set_desired_size();
@@ -137,6 +138,11 @@ void ui::row_column::set_desired_size(void)
         + this->child_spacing.y
         + this->margin[0] + this->margin[3]
         + this->border[0] + this->border[3];
+    if (this->dim != old_sz)
+    {
+        ui::resize_call_data call_data = { this->dim };
+        this->call_callbacks(ui::callback::resize, &call_data);
+    }
     this->composite::parent->move_child(this);
     this->populate_buffers();
 
