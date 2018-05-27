@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 08:30:41 tquirk
+ *   last updated 27 May 2018, 08:07:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -105,6 +105,8 @@ void ui::label::generate_string_image(void)
                                               this->background);
         this->calculate_widget_size();
     }
+    else
+        this->img.reset();
 }
 
 void ui::label::calculate_widget_size(void)
