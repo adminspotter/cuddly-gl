@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:09:22 tquirk
+ *   last updated 29 Jul 2018, 07:46:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -235,13 +235,17 @@ int ui::widget::get_position(GLuint t, void *v) const
 
 void ui::widget::set_position(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
-
     switch (t)
     {
-      case ui::position::all:  this->pos = *(glm::ivec2 *)v;  break;
-      case ui::position::x:    this->pos.x = *(int *)v;       break;
-      case ui::position::y:    this->pos.y = *(int *)v;       break;
+      case ui::position::all:
+        this->pos = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::position::x:
+        this->pos.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::position::y:
+        this->pos.y = *reinterpret_cast<const int *>(v);
+        break;
     }
 
     this->parent->move_child(this);
@@ -262,7 +266,7 @@ void ui::widget::set_state(GLuint t, const void *v)
 {
     if (t == ui::state::visible)
     {
-        this->visible = *(bool *)v;
+        this->visible = *reinterpret_cast<const bool *>(v);
         this->parent->move_child(this);
     }
 }
@@ -284,7 +288,7 @@ int ui::widget::get_border(GLuint t, void *v) const
 
 void ui::widget::set_border(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (t & ui::side::top)     this->border[0] = new_v;
     if (t & ui::side::left)    this->border[1] = new_v;
@@ -311,7 +315,7 @@ int ui::widget::get_margin(GLuint t, void *v) const
 
 void ui::widget::set_margin(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (t & ui::side::top)     this->margin[0] = new_v;
     if (t & ui::side::left)    this->margin[1] = new_v;
