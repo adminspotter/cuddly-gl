@@ -1,9 +1,9 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:07:38 tquirk
+ *   last updated 28 Jul 2018, 07:53:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@
 #include "ui_defs.h"
 #include "button.h"
 
-int ui::button::get_state(GLuint t, void *v)
+int ui::button::get_state(GLuint t, void *v) const
 {
     bool *val = (bool *)v;
 
@@ -88,7 +88,7 @@ void ui::button::set_margin(GLuint s, void *v)
     this->populate_buffers();
 }
 
-int ui::button::get_active_state(bool *v)
+int ui::button::get_active_state(bool *v) const
 {
     *v = this->activated;
     return 0;
@@ -104,7 +104,7 @@ void ui::button::set_active_state(bool v)
         this->shrink_border();
 }
 
-int ui::button::get_arm_state(bool *v)
+int ui::button::get_arm_state(bool *v) const
 {
     *v = this->armed;
     return 0;

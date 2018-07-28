@@ -1,9 +1,9 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Oct 2016, 14:23:06 tquirk
+ *   last updated 28 Jul 2018, 08:04:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@
 #include "ui_defs.h"
 #include "rect.h"
 
-int ui::rect::get_size(GLuint t, void *v)
+int ui::rect::get_size(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -63,7 +63,7 @@ ui::rect::~rect()
 {
 }
 
-int ui::rect::get(GLuint e, GLuint t, void *v)
+int ui::rect::get(GLuint e, GLuint t, void *v) const
 {
     int ret = 1;
 
@@ -78,7 +78,7 @@ void ui::rect::set(GLuint e, GLuint t, void *v)
         this->set_size(t, v);
 }
 
-void ui::rect::get_va(GLuint e, GLuint t, void *v, ...)
+void ui::rect::get_va(GLuint e, GLuint t, void *v, ...) const
 {
     va_list args;
     GLuint item[2];

@@ -34,7 +34,7 @@ a base class with a size.
 
 ## METHODS ##
 
-* **get(type, subtype, obj_ptr)**
+* **get(type, subtype, obj_ptr) const**
 
   Retrieve resources from the object.  The `type` argument will be
   from the `ui::element` namespace, and the `subtype` argument will be
@@ -48,7 +48,7 @@ a base class with a size.
   `subtype` is from the corresponding sub-namespace.  The `obj_ptr` is
   also a `void *`.
 
-* **get_va(type, subtype, obj_ptr, ...)**
+* **get_va(type, subtype, obj_ptr, ...) const**
 
   A variable-argument version of the `get()` method.  Argument list is
   sets of the three regular `get()` arguments, terminated with an

@@ -1,9 +1,9 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Nov 2017, 19:12:31 tquirk
+ *   last updated 28 Jul 2018, 08:02:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,7 @@
 
 #define INNER_PCT  0.1f
 
-int ui::pie_menu::get_popup(GLuint t, void *v)
+int ui::pie_menu::get_popup(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -267,7 +267,7 @@ ui::pie_menu::~pie_menu()
     }
 }
 
-int ui::pie_menu::get(GLuint e, GLuint t, void *v)
+int ui::pie_menu::get(GLuint e, GLuint t, void *v) const
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);

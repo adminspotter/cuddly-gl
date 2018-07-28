@@ -1,9 +1,9 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 06:59:58 tquirk
+ *   last updated 28 Jul 2018, 07:54:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,7 +48,7 @@ void ui::composite::set_size(GLuint d, void *v)
         (*i)->call_callbacks(ui::callback::resize, &call_data);
 }
 
-int ui::composite::get_resize(GLuint t, void *v)
+int ui::composite::get_resize(GLuint t, void *v) const
 {
     *(GLuint *)v = this->resize;
     return 0;
@@ -62,7 +62,7 @@ void ui::composite::set_resize(GLuint t, void *v)
         this->resize = new_v;
 }
 
-int ui::composite::get_pixel_size(GLuint t, void *v)
+int ui::composite::get_pixel_size(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -169,7 +169,7 @@ ui::composite::~composite()
     this->children.clear();
 }
 
-int ui::composite::get(GLuint e, GLuint t, void *v)
+int ui::composite::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {

@@ -1,9 +1,9 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 08:33:46 tquirk
+ *   last updated 28 Jul 2018, 08:08:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@
 #include "ui.h"
 #include "shader.h"
 
-int ui::context::get_attribute(GLuint t, void *v)
+int ui::context::get_attribute(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -81,7 +81,7 @@ ui::context::~context()
     glDeleteProgram(this->shader_pgm);
 }
 
-int ui::context::get(GLuint e, GLuint t, void *v)
+int ui::context::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {

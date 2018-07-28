@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 May 2018, 22:09:07 tquirk
+ *   last updated 28 Jul 2018, 07:58:52 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,7 +36,7 @@
 #include "ui_defs.h"
 #include "manager.h"
 
-int ui::manager::get_child_spacing(GLuint t, void *v)
+int ui::manager::get_child_spacing(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -73,18 +73,18 @@ void ui::manager::set_resize(GLuint t, void *v)
     this->set_desired_size();
 }
 
-int ui::manager::get_size(GLuint t, void *v)
+int ui::manager::get_size(GLuint t, void *v) const
 {
     return this->composite::get_size(t, v);
 }
 
-void ui::manager::set_size(GLuint t, void *v)
+void ui::manager::set_size(GLuint t, const void *v)
 {
     this->composite::set_size(t, v);
     this->widget::set_size(t, v);
 }
 
-int ui::manager::get_pixel_size(GLuint t, void *v)
+int ui::manager::get_pixel_size(GLuint t, void *v) const
 {
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
@@ -175,7 +175,7 @@ ui::manager::~manager()
 {
 }
 
-int ui::manager::get(GLuint e, GLuint t, void *v)
+int ui::manager::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {

@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 May 2018, 22:09:15 tquirk
+ *   last updated 28 Jul 2018, 08:05:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -32,7 +32,7 @@
 #include "ui_defs.h"
 #include "row_column.h"
 
-int ui::row_column::get_size(GLuint t, void *v)
+int ui::row_column::get_size(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -64,7 +64,7 @@ void ui::row_column::set_size(GLuint t, void *v)
     }
 }
 
-int ui::row_column::get_order(GLuint t, void *v)
+int ui::row_column::get_order(GLuint t, void *v) const
 {
     *(GLuint *)v = this->pack_order;
     return 0;
@@ -206,7 +206,7 @@ ui::row_column::~row_column()
 {
 }
 
-int ui::row_column::get(GLuint e, GLuint t, void *v)
+int ui::row_column::get(GLuint e, GLuint t, void *v) const
 {
     if (e == ui::element::order)
         return this->get_order(t, v);

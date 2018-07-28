@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 09:10:34 tquirk
+ *   last updated 28 Jul 2018, 08:07:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@
 #include "ui_defs.h"
 #include "text_field.h"
 
-int ui::text_field::get_size(GLuint t, void *v)
+int ui::text_field::get_size(GLuint t, void *v) const
 {
     switch (t)
     {
@@ -57,7 +57,7 @@ void ui::text_field::set_size(GLuint t, void *v)
     }
 }
 
-int ui::text_field::get_cursor(GLuint t, void *v)
+int ui::text_field::get_cursor(GLuint t, void *v) const
 {
     GLuint *val = (GLuint *)v;
 
@@ -149,7 +149,7 @@ void ui::text_field::key_callback(ui::active *a,
     }
 }
 
-int ui::text_field::get_cursor_pos(GLuint *v)
+int ui::text_field::get_cursor_pos(GLuint *v) const
 {
     *v = this->cursor_pos;
     return 0;
@@ -164,7 +164,7 @@ void ui::text_field::set_cursor_pos(GLuint v)
 }
 
 /* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
-int ui::text_field::get_cursor_blink(GLuint *v)
+int ui::text_field::get_cursor_blink(GLuint *v) const
 {
     *v = this->blink;
     return 0;
@@ -479,7 +479,7 @@ ui::text_field::~text_field()
     glDeleteVertexArrays(1, &this->cursor_vao);
 }
 
-int ui::text_field::get(GLuint e, GLuint t, void *v)
+int ui::text_field::get(GLuint e, GLuint t, void *v) const
 {
     int ret = 0;
 

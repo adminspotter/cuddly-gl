@@ -1,9 +1,9 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:04:00 tquirk
+ *   last updated 28 Jul 2018, 08:09:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -219,7 +219,7 @@ size_t ui::vertex_buffer::element_size(void)
     return sizeof(GLuint) * this->element_index;
 }
 
-int ui::widget::get_position(GLuint t, void *v)
+int ui::widget::get_position(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -248,7 +248,7 @@ void ui::widget::set_position(GLuint t, void *v)
     this->recalculate_transformation_matrix();
 }
 
-int ui::widget::get_state(GLuint t, void *v)
+int ui::widget::get_state(GLuint t, void *v) const
 {
     if (t == ui::state::visible)
     {
@@ -267,7 +267,7 @@ void ui::widget::set_state(GLuint t, void *v)
     }
 }
 
-int ui::widget::get_border(GLuint t, void *v)
+int ui::widget::get_border(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -294,7 +294,7 @@ void ui::widget::set_border(GLuint t, void *v)
     this->populate_buffers();
 }
 
-int ui::widget::get_margin(GLuint t, void *v)
+int ui::widget::get_margin(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -321,7 +321,7 @@ void ui::widget::set_margin(GLuint t, void *v)
     this->populate_buffers();
 }
 
-int ui::widget::get_color(GLuint t, void *v)
+int ui::widget::get_color(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -493,7 +493,7 @@ ui::widget::~widget()
     glDeleteVertexArrays(1, &this->vao);
 }
 
-int ui::widget::get(GLuint e, GLuint t, void *v)
+int ui::widget::get(GLuint e, GLuint t, void *v) const
 {
     int ret;
 
