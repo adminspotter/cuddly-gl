@@ -45,7 +45,7 @@ int ui::text_field::get_size(GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set_size(GLuint t, void *v)
+void ui::text_field::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
@@ -69,7 +69,7 @@ int ui::text_field::get_cursor(GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set_cursor(GLuint t, void *v)
+void ui::text_field::set_cursor(GLuint t, const void *v)
 {
     GLuint val = *(GLuint *)v;
 
@@ -82,7 +82,7 @@ void ui::text_field::set_cursor(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_font(GLuint t, void *v)
+void ui::text_field::set_font(GLuint t, const void *v)
 {
     this->label::set_font(t, v);
 
@@ -92,7 +92,7 @@ void ui::text_field::set_font(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_string(GLuint t, void *v)
+void ui::text_field::set_string(GLuint t, const void *v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
@@ -100,7 +100,7 @@ void ui::text_field::set_string(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_image(GLuint t, void *v)
+void ui::text_field::set_image(GLuint t, const void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
 }
@@ -490,7 +490,7 @@ int ui::text_field::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set(GLuint e, GLuint t, void *v)
+void ui::text_field::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

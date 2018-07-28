@@ -44,16 +44,16 @@ namespace ui
         glm::ivec2 dim;
 
         virtual int get_size(GLuint, void *) const;
-        virtual void set_size(GLuint, void *);
+        virtual void set_size(GLuint, const void *);
 
       public:
         rect(GLuint, GLuint);
         virtual ~rect();
 
         virtual int get(GLuint, GLuint, void *) const;
-        virtual void set(GLuint, GLuint, void *);
+        virtual void set(GLuint, GLuint, const void *);
         void get_va(GLuint, GLuint, void *, ...) const;
-        void set_va(GLuint, GLuint, void *, ...);
+        void set_va(GLuint, GLuint, const void *, ...);
     };
 }
 

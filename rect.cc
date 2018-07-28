@@ -44,7 +44,7 @@ int ui::rect::get_size(GLuint t, void *v) const
     return ret;
 }
 
-void ui::rect::set_size(GLuint t, void *v)
+void ui::rect::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
@@ -72,7 +72,7 @@ int ui::rect::get(GLuint e, GLuint t, void *v) const
     return ret;
 }
 
-void ui::rect::set(GLuint e, GLuint t, void *v)
+void ui::rect::set(GLuint e, GLuint t, const void *v)
 {
     if (e == ui::element::size)
         this->set_size(t, v);
@@ -95,7 +95,7 @@ void ui::rect::get_va(GLuint e, GLuint t, void *v, ...) const
     va_end(args);
 }
 
-void ui::rect::set_va(GLuint e, GLuint t, void *v, ...)
+void ui::rect::set_va(GLuint e, GLuint t, const void *v, ...)
 {
     va_list args;
     GLuint item[2];

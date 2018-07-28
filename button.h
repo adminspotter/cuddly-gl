@@ -43,8 +43,8 @@ namespace ui
         bool activated, armed;
 
         virtual int get_state(GLuint, void *) const override;
-        virtual void set_state(GLuint, void *) override;
-        virtual void set_margin(GLuint, void *) override;
+        virtual void set_state(GLuint, const void *) override;
+        virtual void set_margin(GLuint, const void *) override;
 
         int get_active_state(bool *) const;
         void set_active_state(bool);

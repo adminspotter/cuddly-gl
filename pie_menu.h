@@ -41,8 +41,8 @@ namespace ui
         int popup_button;
 
         int get_popup(GLuint, void *) const;
-        void set_popup(GLuint, void *);
-        virtual void set_resize(GLuint, void *) override;
+        void set_popup(GLuint, const void *);
+        virtual void set_resize(GLuint, const void *) override;
 
         static void show(active *, void *, void *);
         static void hide(active *, void *, void *);
@@ -59,7 +59,7 @@ namespace ui
         virtual ~pie_menu();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void mouse_pos_callback(glm::ivec2&) override;
         virtual void mouse_btn_callback(ui::btn_call_data&) override;

@@ -47,12 +47,12 @@ namespace ui
         bool cursor_visible, cursor_active;
 
         virtual int get_size(GLuint, void *) const override;
-        virtual void set_size(GLuint, void *) override;
+        virtual void set_size(GLuint, const void *) override;
         virtual int get_cursor(GLuint, void *) const;
-        virtual void set_cursor(GLuint, void *);
-        virtual void set_font(GLuint, void *) override;
-        virtual void set_string(GLuint, void *) override;
-        virtual void set_image(GLuint, void *) final;
+        virtual void set_cursor(GLuint, const void *);
+        virtual void set_font(GLuint, const void *) override;
+        virtual void set_string(GLuint, const void *) override;
+        virtual void set_image(GLuint, const void *) final;
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
@@ -89,7 +89,7 @@ namespace ui
         virtual ~text_field();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

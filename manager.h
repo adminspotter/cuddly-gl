@@ -42,10 +42,10 @@ namespace ui
         glm::ivec2 child_spacing;
 
         int get_child_spacing(GLuint, void *) const;
-        void set_child_spacing(GLuint, void *);
-        virtual void set_resize(GLuint, void *) override;
+        void set_child_spacing(GLuint, const void *);
+        virtual void set_resize(GLuint, const void *) override;
         virtual int get_size(GLuint, void *) const override;
-        virtual void set_size(GLuint, void *) override;
+        virtual void set_size(GLuint, const void *) override;
         virtual int get_pixel_size(GLuint, void *) const override;
 
         glm::ivec2 calculate_max_point(void);
@@ -58,7 +58,7 @@ namespace ui
         virtual ~manager();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

@@ -233,7 +233,7 @@ int ui::widget::get_position(GLuint t, void *v) const
     return ret;
 }
 
-void ui::widget::set_position(GLuint t, void *v)
+void ui::widget::set_position(GLuint t, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
@@ -258,7 +258,7 @@ int ui::widget::get_state(GLuint t, void *v) const
     return 1;
 }
 
-void ui::widget::set_state(GLuint t, void *v)
+void ui::widget::set_state(GLuint t, const void *v)
 {
     if (t == ui::state::visible)
     {
@@ -282,7 +282,7 @@ int ui::widget::get_border(GLuint t, void *v) const
     return ret;
 }
 
-void ui::widget::set_border(GLuint t, void *v)
+void ui::widget::set_border(GLuint t, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
@@ -309,7 +309,7 @@ int ui::widget::get_margin(GLuint t, void *v) const
     return ret;
 }
 
-void ui::widget::set_margin(GLuint t, void *v)
+void ui::widget::set_margin(GLuint t, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
@@ -342,7 +342,7 @@ int ui::widget::get_color(GLuint t, void *v) const
     return ret;
 }
 
-void ui::widget::set_color(GLuint t, void *v)
+void ui::widget::set_color(GLuint t, const void *v)
 {
     if (t & ui::color::foreground)
         memcpy(glm::value_ptr(this->foreground), v, sizeof(float) * 4);
@@ -353,7 +353,7 @@ void ui::widget::set_color(GLuint t, void *v)
     this->populate_buffers();
 }
 
-void ui::widget::set_size(GLuint t, void *v)
+void ui::widget::set_size(GLuint t, const void *v)
 {
     this->rect::set_size(t, v);
     this->populate_buffers();
@@ -509,7 +509,7 @@ int ui::widget::get(GLuint e, GLuint t, void *v) const
     return ret;
 }
 
-void ui::widget::set(GLuint e, GLuint t, void *v)
+void ui::widget::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

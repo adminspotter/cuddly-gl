@@ -50,7 +50,7 @@ int ui::manager::get_child_spacing(GLuint t, void *v) const
     return ret;
 }
 
-void ui::manager::set_child_spacing(GLuint t, void *v)
+void ui::manager::set_child_spacing(GLuint t, const void *v)
 {
     switch (t)
     {
@@ -63,7 +63,7 @@ void ui::manager::set_child_spacing(GLuint t, void *v)
     this->populate_buffers();
 }
 
-void ui::manager::set_resize(GLuint t, void *v)
+void ui::manager::set_resize(GLuint t, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
@@ -191,7 +191,7 @@ int ui::manager::get(GLuint e, GLuint t, void *v) const
     return 1;
 }
 
-void ui::manager::set(GLuint e, GLuint t, void *v)
+void ui::manager::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

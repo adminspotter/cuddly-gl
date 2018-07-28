@@ -46,7 +46,7 @@ a base class with a size.
   Set resources within the object.  As with the `get()` method, the
   `type` argument is an item from the `ui::element` namespace, and the
   `subtype` is from the corresponding sub-namespace.  The `obj_ptr` is
-  also a `void *`.
+  a `const void *`.
 
 * **get_va(type, subtype, obj_ptr, ...) const**
 

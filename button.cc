@@ -47,7 +47,7 @@ int ui::button::get_state(GLuint t, void *v) const
     }
 }
 
-void ui::button::set_state(GLuint t, void *v)
+void ui::button::set_state(GLuint t, const void *v)
 {
     bool val = *(bool *)v;
 
@@ -59,7 +59,7 @@ void ui::button::set_state(GLuint t, void *v)
     }
 }
 
-void ui::button::set_margin(GLuint s, void *v)
+void ui::button::set_margin(GLuint s, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);

@@ -45,7 +45,7 @@ int ui::label::get_font(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_font(GLuint t, void *v)
+void ui::label::set_font(GLuint t, const void *v)
 {
     if (t == ui::ownership::shared)
         this->shared_font = true;
@@ -63,7 +63,7 @@ int ui::label::get_string(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_string(GLuint t, void *v)
+void ui::label::set_string(GLuint t, const void *v)
 {
     this->str = ui::utf8tou32str(*((std::string *)v));
     this->generate_string_image();
@@ -77,20 +77,20 @@ int ui::label::get_image(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_image(GLuint t, void *v)
+void ui::label::set_image(GLuint t, const void *v)
 {
     this->str.clear();
     this->img = *(ui::image *)v;
     this->calculate_widget_size();
 }
 
-void ui::label::set_border(GLuint t, void *v)
+void ui::label::set_border(GLuint t, const void *v)
 {
     this->widget::set_border(t, v);
     this->calculate_widget_size();
 }
 
-void ui::label::set_margin(GLuint t, void *v)
+void ui::label::set_margin(GLuint t, const void *v)
 {
     this->widget::set_margin(t, v);
     this->calculate_widget_size();
@@ -223,7 +223,7 @@ int ui::label::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::label::set(GLuint e, GLuint t, void *v)
+void ui::label::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

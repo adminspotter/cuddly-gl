@@ -41,9 +41,9 @@ namespace ui
         GLuint pack_order;
 
         virtual int get_size(GLuint, void *) const override;
-        virtual void set_size(GLuint, void *) override;
+        virtual void set_size(GLuint, const void *) override;
         virtual int get_order(GLuint, void *) const;
-        virtual void set_order(GLuint, void *);
+        virtual void set_order(GLuint, const void *);
 
         glm::ivec2 calculate_cell_size(void);
         glm::ivec2 calculate_grid_size(void);
@@ -56,7 +56,7 @@ namespace ui
         virtual ~row_column();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
     };
 }
 

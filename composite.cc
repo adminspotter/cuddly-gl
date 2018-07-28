@@ -36,7 +36,7 @@
 
 const int ui::composite::tree_max_depth = 4;
 
-void ui::composite::set_size(GLuint d, void *v)
+void ui::composite::set_size(GLuint d, const void *v)
 {
     ui::resize_call_data call_data;
 
@@ -54,7 +54,7 @@ int ui::composite::get_resize(GLuint t, void *v) const
     return 0;
 }
 
-void ui::composite::set_resize(GLuint t, void *v)
+void ui::composite::set_resize(GLuint t, const void *v)
 {
     GLuint new_v = *((GLuint *)v);
 
@@ -180,7 +180,7 @@ int ui::composite::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::composite::set(GLuint e, GLuint t, void *v)
+void ui::composite::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

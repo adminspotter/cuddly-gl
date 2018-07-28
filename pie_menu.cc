@@ -54,7 +54,7 @@ int ui::pie_menu::get_popup(GLuint t, void *v) const
     return ret;
 }
 
-void ui::pie_menu::set_popup(GLuint t, void *v)
+void ui::pie_menu::set_popup(GLuint t, const void *v)
 {
     switch (t)
     {
@@ -62,7 +62,7 @@ void ui::pie_menu::set_popup(GLuint t, void *v)
     }
 }
 
-void ui::pie_menu::set_resize(GLuint t, void *v)
+void ui::pie_menu::set_resize(GLuint t, const void *v)
 {
     /* No-op, since we don't want this to change */
 }
@@ -274,7 +274,7 @@ int ui::pie_menu::get(GLuint e, GLuint t, void *v) const
     return this->manager::get(e, t, v);
 }
 
-void ui::pie_menu::set(GLuint e, GLuint t, void *v)
+void ui::pie_menu::set(GLuint e, GLuint t, const void *v)
 {
     if (e == ui::element::popup)
         this->set_popup(t, v);

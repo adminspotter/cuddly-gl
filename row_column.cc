@@ -50,7 +50,7 @@ int ui::row_column::get_size(GLuint t, void *v) const
     return ret;
 }
 
-void ui::row_column::set_size(GLuint t, void *v)
+void ui::row_column::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
@@ -70,7 +70,7 @@ int ui::row_column::get_order(GLuint t, void *v) const
     return 0;
 }
 
-void ui::row_column::set_order(GLuint t, void *v)
+void ui::row_column::set_order(GLuint t, const void *v)
 {
     GLuint new_v = *(GLuint *)v;
 
@@ -213,7 +213,7 @@ int ui::row_column::get(GLuint e, GLuint t, void *v) const
     return this->manager::get(e, t, v);
 }
 
-void ui::row_column::set(GLuint e, GLuint t, void *v)
+void ui::row_column::set(GLuint e, GLuint t, const void *v)
 {
     if (e == ui::element::order)
         this->set_order(t, v);

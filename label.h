@@ -51,13 +51,13 @@ namespace ui
         GLuint tex;
 
         int get_font(GLuint, void *) const;
-        virtual void set_font(GLuint, void *);
+        virtual void set_font(GLuint, const void *);
         int get_string(GLuint, void *) const;
-        virtual void set_string(GLuint, void *);
+        virtual void set_string(GLuint, const void *);
         int get_image(GLuint, void *) const;
-        virtual void set_image(GLuint, void *);
-        virtual void set_border(GLuint, void *) override;
-        virtual void set_margin(GLuint, void *) override;
+        virtual void set_image(GLuint, const void *);
+        virtual void set_border(GLuint, const void *) override;
+        virtual void set_margin(GLuint, const void *) override;
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(void);
@@ -69,7 +69,7 @@ namespace ui
         virtual ~label();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

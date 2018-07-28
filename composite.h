@@ -56,9 +56,9 @@ namespace ui
 
         const static int tree_max_depth;
 
-        virtual void set_size(GLuint, void *) override;
+        virtual void set_size(GLuint, const void *) override;
         virtual int get_resize(GLuint, void *) const;
-        virtual void set_resize(GLuint, void *);
+        virtual void set_resize(GLuint, const void *);
         virtual int get_pixel_size(GLuint, void *) const;
 
         virtual void set_desired_size(void);
@@ -76,7 +76,7 @@ namespace ui
         virtual ~composite();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void add_child(widget *);
         virtual void remove_child(widget *);
