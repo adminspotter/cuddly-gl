@@ -1,6 +1,6 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:04:14 tquirk
+ *   last updated 29 Jul 2018, 07:38:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -48,9 +48,15 @@ void ui::rect::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
-      case ui::size::width:   this->dim.x = *(int *)v;       break;
-      case ui::size::height:  this->dim.y = *(int *)v;       break;
+      case ui::size::all:
+        this->dim = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::size::width:
+        this->dim.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::size::height:
+        this->dim.y = *reinterpret_cast<const int *>(v);
+        break;
     }
 }
 
