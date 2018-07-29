@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:54:48 tquirk
+ *   last updated 29 Jul 2018, 07:51:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -56,7 +56,7 @@ int ui::composite::get_resize(GLuint t, void *v) const
 
 void ui::composite::set_resize(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (new_v <= ui::resize::all)
         this->resize = new_v;

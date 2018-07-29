@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:58:52 tquirk
+ *   last updated 29 Jul 2018, 07:57:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -54,9 +54,15 @@ void ui::manager::set_child_spacing(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::all:     this->child_spacing = *(glm::ivec2 *)v;  break;
-      case ui::size::width:   this->child_spacing.x = *(int *)v;       break;
-      case ui::size::height:  this->child_spacing.y = *(int *)v;       break;
+      case ui::size::all:
+        this->child_spacing = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::size::width:
+        this->child_spacing.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::size::height:
+        this->child_spacing.y = *reinterpret_cast<const int *>(v);
+        break;
     }
     this->reposition_children();
     this->regenerate_search_tree();
@@ -65,7 +71,7 @@ void ui::manager::set_child_spacing(GLuint t, const void *v)
 
 void ui::manager::set_resize(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (new_v <= ui::resize::all)
         this->resize = new_v;

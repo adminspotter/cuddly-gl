@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:02:37 tquirk
+ *   last updated 29 Jul 2018, 07:59:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -56,10 +56,8 @@ int ui::pie_menu::get_popup(GLuint t, void *v) const
 
 void ui::pie_menu::set_popup(GLuint t, const void *v)
 {
-    switch (t)
-    {
-      case ui::popup::button:   this->popup_button = *(int *)v;  break;
-    }
+    if (t == ui::popup::button)
+        this->popup_button = *reinterpret_cast<const int *>(v);
 }
 
 void ui::pie_menu::set_resize(GLuint t, const void *v)

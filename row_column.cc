@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:05:27 tquirk
+ *   last updated 29 Jul 2018, 08:01:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -56,11 +56,19 @@ void ui::row_column::set_size(GLuint t, const void *v)
     {
       case ui::size::all:
       case ui::size::width:
-      case ui::size::height:   this->manager::set_size(t, v);     break;
+      case ui::size::height:
+        this->manager::set_size(t, v);
+        break;
 
-      case ui::size::grid:     this->grid_sz = *(glm::ivec2 *)v;  break;
-      case ui::size::rows:     this->grid_sz.y = *(int *)v;       break;
-      case ui::size::columns:  this->grid_sz.x = *(int *)v;       break;
+      case ui::size::grid:
+        this->grid_sz = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::size::rows:
+        this->grid_sz.y = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::size::columns:
+        this->grid_sz.x = *reinterpret_cast<const int *>(v);
+        break;
     }
 }
 
@@ -72,7 +80,7 @@ int ui::row_column::get_order(GLuint t, void *v) const
 
 void ui::row_column::set_order(GLuint t, const void *v)
 {
-    GLuint new_v = *(GLuint *)v;
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (new_v == ui::order::row || new_v == ui::order::column)
         this->pack_order = new_v;
