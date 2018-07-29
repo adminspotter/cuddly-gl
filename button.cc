@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:53:08 tquirk
+ *   last updated 29 Jul 2018, 07:49:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -49,7 +49,7 @@ int ui::button::get_state(GLuint t, void *v) const
 
 void ui::button::set_state(GLuint t, const void *v)
 {
-    bool val = *(bool *)v;
+    bool val = *reinterpret_cast<const bool *>(v);
 
     switch (t)
     {
@@ -61,7 +61,7 @@ void ui::button::set_state(GLuint t, const void *v)
 
 void ui::button::set_margin(GLuint s, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);
 
     if (s & ui::side::top || s & ui::side::bottom)

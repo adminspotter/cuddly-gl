@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:07:15 tquirk
+ *   last updated 29 Jul 2018, 08:03:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -49,11 +49,15 @@ void ui::text_field::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::max_width:  this->max_length = *(int *)v;
-                                 this->calculate_widget_size();
-                                 this->populate_buffers();
-                                 this->reset_cursor();  break;
-      default:                   this->label::set_size(t, v);   break;
+      case ui::size::max_width:
+        this->max_length = *reinterpret_cast<const int *>(v);
+        this->calculate_widget_size();
+        this->populate_buffers();
+        this->reset_cursor();
+        break;
+      default:
+        this->label::set_size(t, v);
+        break;
     }
 }
 
@@ -71,7 +75,7 @@ int ui::text_field::get_cursor(GLuint t, void *v) const
 
 void ui::text_field::set_cursor(GLuint t, const void *v)
 {
-    GLuint val = *(GLuint *)v;
+    GLuint val = *reinterpret_cast<const GLuint *>(v);
 
     switch (t)
     {
