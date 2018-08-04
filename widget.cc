@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 07:46:05 tquirk
+ *   last updated 29 Jul 2018, 10:52:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -225,10 +225,18 @@ int ui::widget::get_position(GLuint t, void *v) const
 
     switch (t)
     {
-      case ui::position::all: *((glm::ivec2 *)v) = this->pos;  break;
-      case ui::position::x:   *(int *)v = this->pos.x;         break;
-      case ui::position::y:   *(int *)v = this->pos.y;         break;
-      default:                ret = 1;                         break;
+      case ui::position::all:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->pos;
+        break;
+      case ui::position::x:
+        *reinterpret_cast<int *>(v) = this->pos.x;
+        break;
+      case ui::position::y:
+        *reinterpret_cast<int *>(v) = this->pos.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
@@ -256,7 +264,7 @@ int ui::widget::get_state(GLuint t, void *v) const
 {
     if (t == ui::state::visible)
     {
-        *(bool *)v = this->visible;
+        *reinterpret_cast<bool *>(v) = this->visible;
         return 0;
     }
     return 1;
@@ -277,11 +285,21 @@ int ui::widget::get_border(GLuint t, void *v) const
 
     switch (t)
     {
-      case ui::side::top:    *((GLuint *)v) = this->border[0]; break;
-      case ui::side::left:   *((GLuint *)v) = this->border[1]; break;
-      case ui::side::right:  *((GLuint *)v) = this->border[2]; break;
-      case ui::side::bottom: *((GLuint *)v) = this->border[3]; break;
-      default:               ret = 1;                          break;
+      case ui::side::top:
+        *reinterpret_cast<GLuint *>(v) = this->border[0];
+        break;
+      case ui::side::left:
+        *reinterpret_cast<GLuint *>(v) = this->border[1];
+        break;
+      case ui::side::right:
+        *reinterpret_cast<GLuint *>(v) = this->border[2];
+        break;
+      case ui::side::bottom:
+        *reinterpret_cast<GLuint *>(v) = this->border[3];
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
@@ -304,11 +322,21 @@ int ui::widget::get_margin(GLuint t, void *v) const
 
     switch (t)
     {
-      case ui::side::top:    *((GLuint *)v) = this->margin[0]; break;
-      case ui::side::left:   *((GLuint *)v) = this->margin[1]; break;
-      case ui::side::right:  *((GLuint *)v) = this->margin[2]; break;
-      case ui::side::bottom: *((GLuint *)v) = this->margin[3]; break;
-      default:               ret = 1;                          break;
+      case ui::side::top:
+        *reinterpret_cast<GLuint *>(v) = this->margin[0];
+        break;
+      case ui::side::left:
+        *reinterpret_cast<GLuint *>(v) = this->margin[1];
+        break;
+      case ui::side::right:
+        *reinterpret_cast<GLuint *>(v) = this->margin[2];
+        break;
+      case ui::side::bottom:
+        *reinterpret_cast<GLuint *>(v) = this->margin[3];
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
