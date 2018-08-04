@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 07:49:08 tquirk
+ *   last updated 29 Jul 2018, 09:20:23 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -37,7 +37,7 @@
 
 int ui::button::get_state(GLuint t, void *v) const
 {
-    bool *val = (bool *)v;
+    bool *val = reinterpret_cast<bool *>(v);
 
     switch (t)
     {

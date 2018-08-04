@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 07:54:57 tquirk
+ *   last updated 29 Jul 2018, 09:23:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -40,7 +40,7 @@
 /* ARGSUSED */
 int ui::label::get_font(GLuint t, void *v) const
 {
-    v = (void *)this->font;
+    v = this->font;
     return 0;
 }
 
@@ -58,7 +58,7 @@ void ui::label::set_font(GLuint t, const void *v)
 /* ARGSUSED */
 int ui::label::get_string(GLuint t, void *v) const
 {
-    *((std::string *)v) = ui::u32strtoutf8(this->str);
+    *reinterpret_cast<std::string *>(v) = ui::u32strtoutf8(this->str);
     return 0;
 }
 
@@ -72,7 +72,7 @@ void ui::label::set_string(GLuint t, const void *v)
 /* ARGSUSED */
 int ui::label::get_image(GLuint t, void *v) const
 {
-    *(ui::image *)v = this->img;
+    *reinterpret_cast<ui::image *>(v) = this->img;
     return 0;
 }
 
