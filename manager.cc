@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 07:57:36 tquirk
+ *   last updated 29 Jul 2018, 09:25:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -42,10 +42,18 @@ int ui::manager::get_child_spacing(GLuint t, void *v) const
 
     switch (t)
     {
-      case ui::size::all:    *(glm::ivec2 *)v = this->child_spacing;  break;
-      case ui::size::width:  *(int *)v = this->child_spacing.x;       break;
-      case ui::size::height: *(int *)v = this->child_spacing.y;       break;
-      default:               ret = 1;                                 break;
+      case ui::size::all:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->child_spacing;
+        break;
+      case ui::size::width:
+        *reinterpret_cast<int *>(v) = this->child_spacing.x;
+        break;
+      case ui::size::height:
+        *reinterpret_cast<int *>(v) = this->child_spacing.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }

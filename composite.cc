@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 07:51:33 tquirk
+ *   last updated 29 Jul 2018, 09:22:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -50,7 +50,7 @@ void ui::composite::set_size(GLuint d, const void *v)
 
 int ui::composite::get_resize(GLuint t, void *v) const
 {
-    *(GLuint *)v = this->resize;
+    *reinterpret_cast<GLuint *>(v) = this->resize;
     return 0;
 }
 
@@ -73,13 +73,19 @@ int ui::composite::get_pixel_size(GLuint t, void *v) const
             glm::vec3 sz(2.0f / (float)this->dim.x,
                          2.0f / (float)this->dim.y,
                          0.0f);
-            *(glm::vec3 *)v = sz;
+            *reinterpret_cast<glm::vec3 *>(v) = sz;
             break;
         }
 
-      case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;  break;
-      case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;  break;
-      default:                ret = 1;
+      case ui::size::width:
+        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.x;
+        break;
+      case ui::size::height:
+        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }

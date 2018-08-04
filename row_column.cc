@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 08:01:42 tquirk
+ *   last updated 29 Jul 2018, 09:57:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -40,12 +40,21 @@ int ui::row_column::get_size(GLuint t, void *v) const
     {
       case ui::size::all:
       case ui::size::width:
-      case ui::size::height:   return this->manager::get_size(t, v);
+      case ui::size::height:
+        return this->manager::get_size(t, v);
 
-      case ui::size::grid:     *(glm::ivec2 *)v = this->grid_sz;  break;
-      case ui::size::rows:     *(int *)v = this->grid_sz.x;       break;
-      case ui::size::columns:  *(int *)v = this->grid_sz.y;       break;
-      default:                 ret = 1;                           break;
+      case ui::size::grid:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->grid_sz;
+        break;
+      case ui::size::rows:
+        *reinterpret_cast<int *>(v) = this->grid_sz.x;
+        break;
+      case ui::size::columns:
+        *reinterpret_cast<int *>(v) = this->grid_sz.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
@@ -74,7 +83,7 @@ void ui::row_column::set_size(GLuint t, const void *v)
 
 int ui::row_column::get_order(GLuint t, void *v) const
 {
-    *(GLuint *)v = this->pack_order;
+    *reinterpret_cast<GLuint *>(v) = this->pack_order;
     return 0;
 }
 
