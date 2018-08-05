@@ -1,6 +1,6 @@
 /* shader.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 16 Oct 2017, 08:19:41 tquirk
+ *   last updated 05 Aug 2018, 08:08:11 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -243,7 +243,6 @@ std::string shader_string(GLenum e)
 std::string shader_version(void)
 {
     GLint major = 0, minor = 0;
-    std::ostringstream version;
 
     opengl_version(&major, &minor);
     if (major < 3)

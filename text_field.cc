@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:59:16 tquirk
+ *   last updated 05 Aug 2018, 08:09:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -488,8 +488,6 @@ ui::text_field::~text_field()
 
 int ui::text_field::get(GLuint e, GLuint t, void *v) const
 {
-    int ret = 0;
-
     switch (e)
     {
       case ui::element::cursor:  return this->get_cursor(t, v);
