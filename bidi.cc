@@ -653,7 +653,7 @@ void bidi::rule_n0(bidi::run_sequence& seq)
                             this->set_paired_brackets(i, seq.sos, seq);
                         else
                         {
-                            auto dir = i.first->embed % 2 ? class_R : class_L;
+                            auto dir = (i.first->embed % 2) ? class_R : class_L;
                             this->set_paired_brackets(i, dir, seq);
                         }
                     }
