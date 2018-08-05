@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 08:48:15 tquirk
+ *   last updated 05 Aug 2018, 08:12:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -401,6 +401,7 @@ ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
 ui::base_font::base_font(std::string& name)
     : glyphs(name + " glyphs")
 {
+    this->bbox_w = this->bbox_a = this->bbox_d = 0;
 }
 
 ui::base_font::~base_font()
