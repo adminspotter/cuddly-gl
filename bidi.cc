@@ -1,6 +1,6 @@
 /* bidi.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 23:30:14 tquirk
+ *   last updated 05 Aug 2018, 08:07:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -84,7 +84,6 @@ std::vector<std::u32string> bidi::rule_p1(const std::u32string& s)
 {
     std::u32string tmp_str(s);
     std::u32string::size_type pos, start;
-    std::u32string empty;
     std::vector<std::u32string> ret;
 
     while ((pos = tmp_str.find(CRLF)) != std::u32string::npos)
@@ -654,7 +653,7 @@ void bidi::rule_n0(bidi::run_sequence& seq)
                             this->set_paired_brackets(i, seq.sos, seq);
                         else
                         {
-                            auto dir = i.first->embed % 2 ? class_R : class_L;
+                            auto dir = (i.first->embed % 2) ? class_R : class_L;
                             this->set_paired_brackets(i, dir, seq);
                         }
                     }

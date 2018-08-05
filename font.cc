@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 08:48:15 tquirk
+ *   last updated 05 Aug 2018, 08:12:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -92,11 +92,11 @@ void ui::glyph::copy_to_image(ui::image& img,
                               const glm::vec4& foreground,
                               bool mirror)
 {
-    int row_offset, i, j;
+    int i, j;
 
     for (i = 0; i < this->height; ++i)
     {
-        row_offset = img.width * (pos.y + i) + pos.x;
+        int row_offset = img.width * (pos.y + i) + pos.x;
 
         for (j = 0; j < this->width; ++j)
         {
@@ -342,6 +342,7 @@ void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
             g.cells[j].r = slot->bitmap.buffer[i + 2];
             g.cells[j].a = slot->bitmap.buffer[i + 3];
         }
+    // cppcheck-suppress memleak symbolName=g.bitmap
 }
 
 void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
@@ -401,6 +402,7 @@ ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
 ui::base_font::base_font(std::string& name)
     : glyphs(name + " glyphs")
 {
+    this->bbox_w = this->bbox_a = this->bbox_d = 0;
 }
 
 ui::base_font::~base_font()

@@ -1,6 +1,6 @@
 /* cache.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Aug 2018, 08:46:14 tquirk
+ *   last updated 05 Aug 2018, 08:04:52 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -124,7 +124,7 @@ class BasicCache
         };
 
   public:
-    BasicCache(const std::string type_name)
+    explicit BasicCache(const std::string& type_name)
         : _bc_map(), type(type_name)
         {
             int ret;

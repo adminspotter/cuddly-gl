@@ -1,6 +1,6 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 08:06:45 tquirk
+ *   last updated 05 Aug 2018, 07:45:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -43,7 +43,7 @@ namespace ui
     {
         unsigned char r, g, b, a;
 
-        cell_tag(const glm::vec4& v)
+        explicit cell_tag(const glm::vec4& v)
             {
                 this->r = truncf(glm::clamp(v.r, 0.0f, 1.0f) * 255);
                 this->g = truncf(glm::clamp(v.g, 0.0f, 1.0f) * 255);
@@ -62,7 +62,7 @@ namespace ui
 
         struct cell_tag& operator|=(const glm::vec4& v)
             {
-                struct cell_tag t = v;
+                struct cell_tag t(v);
                 return *this |= t;
             }
     } __attribute__ ((__packed__))
@@ -102,6 +102,9 @@ namespace ui
             };
         image& operator=(const image& i)
             {
+                if (&i == this)
+                    return *this;
+
                 GLuint new_size = i.width * i.height * i.per_pixel;
 
                 if (this->data != NULL)
