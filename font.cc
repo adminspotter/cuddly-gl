@@ -92,11 +92,11 @@ void ui::glyph::copy_to_image(ui::image& img,
                               const glm::vec4& foreground,
                               bool mirror)
 {
-    int row_offset, i, j;
+    int i, j;
 
     for (i = 0; i < this->height; ++i)
     {
-        row_offset = img.width * (pos.y + i) + pos.x;
+        int row_offset = img.width * (pos.y + i) + pos.x;
 
         for (j = 0; j < this->width; ++j)
         {

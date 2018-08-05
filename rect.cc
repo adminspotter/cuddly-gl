@@ -1,6 +1,6 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:18:49 tquirk
+ *   last updated 05 Aug 2018, 08:11:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -96,14 +96,13 @@ void ui::rect::get_va(GLuint e, GLuint t, void *v, ...) const
 {
     va_list args;
     GLuint item[2];
-    void *ptr;
 
     this->get(e, t, v);
     va_start(args, v);
     while ((item[0] = va_arg(args, GLuint)) != 0)
     {
         item[1] = va_arg(args, GLuint);
-        ptr = va_arg(args, void *);
+        void *ptr = va_arg(args, void *);
         this->get(item[0], item[1], ptr);
     }
     va_end(args);
@@ -113,14 +112,13 @@ void ui::rect::set_va(GLuint e, GLuint t, const void *v, ...)
 {
     va_list args;
     GLuint item[2];
-    void *ptr;
 
     this->set(e, t, v);
     va_start(args, v);
     while ((item[0] = va_arg(args, GLuint)) != 0)
     {
         item[1] = va_arg(args, GLuint);
-        ptr = va_arg(args, void *);
+        void *ptr = va_arg(args, void *);
         this->set(item[0], item[1], ptr);
     }
     va_end(args);
