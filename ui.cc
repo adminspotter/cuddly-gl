@@ -1,9 +1,9 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 08:33:46 tquirk
+ *   last updated 29 Jul 2018, 10:00:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,23 +35,23 @@
 #include "ui.h"
 #include "shader.h"
 
-int ui::context::get_attribute(GLuint t, void *v)
+int ui::context::get_attribute(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
       case ui::attribute::position:
-        *((GLuint *)v) = this->pos_attr;
+        *reinterpret_cast<GLuint *>(v) = this->pos_attr;
         break;
       case ui::attribute::color:
-        *((GLuint *)v) = this->color_attr;
+        *reinterpret_cast<GLuint *>(v) = this->color_attr;
         break;
       case ui::attribute::texture:
-        *((GLuint *)v) = this->texture_attr;
+        *reinterpret_cast<GLuint *>(v) = this->texture_attr;
         break;
       case ui::attribute::text_bgnd:
-        *((GLuint *)v) = this->text_bgnd_uniform;
+        *reinterpret_cast<GLuint *>(v) = this->text_bgnd_uniform;
         break;
       default: ret = 1; break;
     }
@@ -81,7 +81,7 @@ ui::context::~context()
     glDeleteProgram(this->shader_pgm);
 }
 
-int ui::context::get(GLuint e, GLuint t, void *v)
+int ui::context::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {

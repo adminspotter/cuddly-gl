@@ -1,9 +1,9 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 08:34:06 tquirk
+ *   last updated 28 Jul 2018, 08:07:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,13 +46,13 @@ namespace ui
         GLuint translate_uniform;
 
       protected:
-        int get_attribute(GLuint, void *);
+        int get_attribute(GLuint, void *) const;
 
       public:
         context(GLuint, GLuint);
         ~context();
 
-        virtual int get(GLuint, GLuint, void *) override;
+        virtual int get(GLuint, GLuint, void *) const override;
 
         void draw(void);
     };

@@ -1,9 +1,9 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 15:00:05 tquirk
+ *   last updated 28 Jul 2018, 08:06:33 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,21 +46,21 @@ namespace ui
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
-        virtual int get_size(GLuint, void *) override;
-        virtual void set_size(GLuint, void *) override;
-        virtual int get_cursor(GLuint, void *);
-        virtual void set_cursor(GLuint, void *);
-        virtual void set_font(GLuint, void *) override;
-        virtual void set_string(GLuint, void *) override;
-        virtual void set_image(GLuint, void *) final;
+        virtual int get_size(GLuint, void *) const override;
+        virtual void set_size(GLuint, const void *) override;
+        virtual int get_cursor(GLuint, void *) const;
+        virtual void set_cursor(GLuint, const void *);
+        virtual void set_font(GLuint, const void *) override;
+        virtual void set_string(GLuint, const void *) override;
+        virtual void set_image(GLuint, const void *) final;
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
         static void key_callback(active *, void *, void *);
 
-        int get_cursor_pos(GLuint *);
+        int get_cursor_pos(GLuint *) const;
         void set_cursor_pos(GLuint);
-        int get_cursor_blink(GLuint *);
+        int get_cursor_blink(GLuint *) const;
         void set_cursor_blink(GLuint);
         void reset_cursor(void);
         void activate_cursor(void);
@@ -88,8 +88,8 @@ namespace ui
         text_field(composite *, GLuint = 0, GLuint = 0);
         virtual ~text_field();
 
-        virtual int get(GLuint, GLuint, void *) override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual int get(GLuint, GLuint, void *) const override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 09:10:34 tquirk
+ *   last updated 29 Jul 2018, 09:59:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,30 +36,37 @@
 #include "ui_defs.h"
 #include "text_field.h"
 
-int ui::text_field::get_size(GLuint t, void *v)
+int ui::text_field::get_size(GLuint t, void *v) const
 {
     switch (t)
     {
-      case ui::size::max_width:  *((GLuint *)v) = this->max_length;  return 0;
-      default:                   return this->label::get_size(t, v);
+      case ui::size::max_width:
+        *reinterpret_cast<GLuint *>(v) = this->max_length;
+        return 0;
+      default:
+        return this->label::get_size(t, v);
     }
 }
 
-void ui::text_field::set_size(GLuint t, void *v)
+void ui::text_field::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::max_width:  this->max_length = *(int *)v;
-                                 this->calculate_widget_size();
-                                 this->populate_buffers();
-                                 this->reset_cursor();  break;
-      default:                   this->label::set_size(t, v);   break;
+      case ui::size::max_width:
+        this->max_length = *reinterpret_cast<const int *>(v);
+        this->calculate_widget_size();
+        this->populate_buffers();
+        this->reset_cursor();
+        break;
+      default:
+        this->label::set_size(t, v);
+        break;
     }
 }
 
-int ui::text_field::get_cursor(GLuint t, void *v)
+int ui::text_field::get_cursor(GLuint t, void *v) const
 {
-    GLuint *val = (GLuint *)v;
+    GLuint *val = reinterpret_cast<GLuint *>(v);
 
     switch (t)
     {
@@ -69,9 +76,9 @@ int ui::text_field::get_cursor(GLuint t, void *v)
     }
 }
 
-void ui::text_field::set_cursor(GLuint t, void *v)
+void ui::text_field::set_cursor(GLuint t, const void *v)
 {
-    GLuint val = *(GLuint *)v;
+    GLuint val = *reinterpret_cast<const GLuint *>(v);
 
     switch (t)
     {
@@ -82,7 +89,7 @@ void ui::text_field::set_cursor(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_font(GLuint t, void *v)
+void ui::text_field::set_font(GLuint t, const void *v)
 {
     this->label::set_font(t, v);
 
@@ -92,7 +99,7 @@ void ui::text_field::set_font(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_string(GLuint t, void *v)
+void ui::text_field::set_string(GLuint t, const void *v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
@@ -100,7 +107,7 @@ void ui::text_field::set_string(GLuint t, void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_image(GLuint t, void *v)
+void ui::text_field::set_image(GLuint t, const void *v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
 }
@@ -149,7 +156,7 @@ void ui::text_field::key_callback(ui::active *a,
     }
 }
 
-int ui::text_field::get_cursor_pos(GLuint *v)
+int ui::text_field::get_cursor_pos(GLuint *v) const
 {
     *v = this->cursor_pos;
     return 0;
@@ -164,7 +171,7 @@ void ui::text_field::set_cursor_pos(GLuint v)
 }
 
 /* The cursor blink rate is in milliseconds.  Zero will turn blinking off. */
-int ui::text_field::get_cursor_blink(GLuint *v)
+int ui::text_field::get_cursor_blink(GLuint *v) const
 {
     *v = this->blink;
     return 0;
@@ -479,7 +486,7 @@ ui::text_field::~text_field()
     glDeleteVertexArrays(1, &this->cursor_vao);
 }
 
-int ui::text_field::get(GLuint e, GLuint t, void *v)
+int ui::text_field::get(GLuint e, GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -490,7 +497,7 @@ int ui::text_field::get(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::text_field::set(GLuint e, GLuint t, void *v)
+void ui::text_field::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

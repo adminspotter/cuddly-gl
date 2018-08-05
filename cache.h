@@ -1,6 +1,6 @@
 /* cache.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 Feb 2018, 13:59:22 tquirk
+ *   last updated 04 Aug 2018, 08:46:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -92,7 +92,7 @@ class BasicCache
 
     static void *prune_worker(void *arg)
         {
-            _bct *bc = (_bct *)arg;
+            _bct *bc = reinterpret_cast<_bct *>(arg);
             _bc_tpoint limit;
             std::chrono::seconds obj_lifetime(_bct::PRUNE_LIFETIME);
             typename _bct::_bcom_t::iterator i;

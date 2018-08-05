@@ -1,9 +1,9 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:07:38 tquirk
+ *   last updated 29 Jul 2018, 09:20:23 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,9 +35,9 @@
 #include "ui_defs.h"
 #include "button.h"
 
-int ui::button::get_state(GLuint t, void *v)
+int ui::button::get_state(GLuint t, void *v) const
 {
-    bool *val = (bool *)v;
+    bool *val = reinterpret_cast<bool *>(v);
 
     switch (t)
     {
@@ -47,9 +47,9 @@ int ui::button::get_state(GLuint t, void *v)
     }
 }
 
-void ui::button::set_state(GLuint t, void *v)
+void ui::button::set_state(GLuint t, const void *v)
 {
-    bool val = *(bool *)v;
+    bool val = *reinterpret_cast<const bool *>(v);
 
     switch (t)
     {
@@ -59,9 +59,9 @@ void ui::button::set_state(GLuint t, void *v)
     }
 }
 
-void ui::button::set_margin(GLuint s, void *v)
+void ui::button::set_margin(GLuint s, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);
 
     if (s & ui::side::top || s & ui::side::bottom)
@@ -88,7 +88,7 @@ void ui::button::set_margin(GLuint s, void *v)
     this->populate_buffers();
 }
 
-int ui::button::get_active_state(bool *v)
+int ui::button::get_active_state(bool *v) const
 {
     *v = this->activated;
     return 0;
@@ -104,7 +104,7 @@ void ui::button::set_active_state(bool v)
         this->shrink_border();
 }
 
-int ui::button::get_arm_state(bool *v)
+int ui::button::get_arm_state(bool *v) const
 {
     *v = this->armed;
     return 0;

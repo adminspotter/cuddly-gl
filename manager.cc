@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 24 May 2018, 22:09:07 tquirk
+ *   last updated 29 Jul 2018, 09:25:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,36 +36,50 @@
 #include "ui_defs.h"
 #include "manager.h"
 
-int ui::manager::get_child_spacing(GLuint t, void *v)
+int ui::manager::get_child_spacing(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::size::all:    *(glm::ivec2 *)v = this->child_spacing;  break;
-      case ui::size::width:  *(int *)v = this->child_spacing.x;       break;
-      case ui::size::height: *(int *)v = this->child_spacing.y;       break;
-      default:               ret = 1;                                 break;
+      case ui::size::all:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->child_spacing;
+        break;
+      case ui::size::width:
+        *reinterpret_cast<int *>(v) = this->child_spacing.x;
+        break;
+      case ui::size::height:
+        *reinterpret_cast<int *>(v) = this->child_spacing.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::manager::set_child_spacing(GLuint t, void *v)
+void ui::manager::set_child_spacing(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::all:     this->child_spacing = *(glm::ivec2 *)v;  break;
-      case ui::size::width:   this->child_spacing.x = *(int *)v;       break;
-      case ui::size::height:  this->child_spacing.y = *(int *)v;       break;
+      case ui::size::all:
+        this->child_spacing = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::size::width:
+        this->child_spacing.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::size::height:
+        this->child_spacing.y = *reinterpret_cast<const int *>(v);
+        break;
     }
     this->reposition_children();
     this->regenerate_search_tree();
     this->populate_buffers();
 }
 
-void ui::manager::set_resize(GLuint t, void *v)
+void ui::manager::set_resize(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (new_v <= ui::resize::all)
         this->resize = new_v;
@@ -73,18 +87,18 @@ void ui::manager::set_resize(GLuint t, void *v)
     this->set_desired_size();
 }
 
-int ui::manager::get_size(GLuint t, void *v)
+int ui::manager::get_size(GLuint t, void *v) const
 {
     return this->composite::get_size(t, v);
 }
 
-void ui::manager::set_size(GLuint t, void *v)
+void ui::manager::set_size(GLuint t, const void *v)
 {
     this->composite::set_size(t, v);
     this->widget::set_size(t, v);
 }
 
-int ui::manager::get_pixel_size(GLuint t, void *v)
+int ui::manager::get_pixel_size(GLuint t, void *v) const
 {
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
@@ -175,7 +189,7 @@ ui::manager::~manager()
 {
 }
 
-int ui::manager::get(GLuint e, GLuint t, void *v)
+int ui::manager::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {
@@ -191,7 +205,7 @@ int ui::manager::get(GLuint e, GLuint t, void *v)
     return 1;
 }
 
-void ui::manager::set(GLuint e, GLuint t, void *v)
+void ui::manager::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

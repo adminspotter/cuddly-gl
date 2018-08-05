@@ -1,9 +1,9 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Nov 2017, 19:12:31 tquirk
+ *   last updated 29 Jul 2018, 09:26:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,27 +42,29 @@
 
 #define INNER_PCT  0.1f
 
-int ui::pie_menu::get_popup(GLuint t, void *v)
+int ui::pie_menu::get_popup(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::popup::button:   *(int *)v = this->popup_button;  break;
-      default:                  ret = 1;                         break;
+      case ui::popup::button:
+        *reinterpret_cast<int *>(v) = this->popup_button;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::pie_menu::set_popup(GLuint t, void *v)
+void ui::pie_menu::set_popup(GLuint t, const void *v)
 {
-    switch (t)
-    {
-      case ui::popup::button:   this->popup_button = *(int *)v;  break;
-    }
+    if (t == ui::popup::button)
+        this->popup_button = *reinterpret_cast<const int *>(v);
 }
 
-void ui::pie_menu::set_resize(GLuint t, void *v)
+void ui::pie_menu::set_resize(GLuint t, const void *v)
 {
     /* No-op, since we don't want this to change */
 }
@@ -267,14 +269,14 @@ ui::pie_menu::~pie_menu()
     }
 }
 
-int ui::pie_menu::get(GLuint e, GLuint t, void *v)
+int ui::pie_menu::get(GLuint e, GLuint t, void *v) const
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);
     return this->manager::get(e, t, v);
 }
 
-void ui::pie_menu::set(GLuint e, GLuint t, void *v)
+void ui::pie_menu::set(GLuint e, GLuint t, const void *v)
 {
     if (e == ui::element::popup)
         this->set_popup(t, v);

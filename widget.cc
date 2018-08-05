@@ -1,9 +1,9 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Sep 2017, 18:04:00 tquirk
+ *   last updated 29 Jul 2018, 10:52:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -219,72 +219,94 @@ size_t ui::vertex_buffer::element_size(void)
     return sizeof(GLuint) * this->element_index;
 }
 
-int ui::widget::get_position(GLuint t, void *v)
+int ui::widget::get_position(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::position::all: *((glm::ivec2 *)v) = this->pos;  break;
-      case ui::position::x:   *(int *)v = this->pos.x;         break;
-      case ui::position::y:   *(int *)v = this->pos.y;         break;
-      default:                ret = 1;                         break;
+      case ui::position::all:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->pos;
+        break;
+      case ui::position::x:
+        *reinterpret_cast<int *>(v) = this->pos.x;
+        break;
+      case ui::position::y:
+        *reinterpret_cast<int *>(v) = this->pos.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::widget::set_position(GLuint t, void *v)
+void ui::widget::set_position(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
-
     switch (t)
     {
-      case ui::position::all:  this->pos = *(glm::ivec2 *)v;  break;
-      case ui::position::x:    this->pos.x = *(int *)v;       break;
-      case ui::position::y:    this->pos.y = *(int *)v;       break;
+      case ui::position::all:
+        this->pos = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::position::x:
+        this->pos.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::position::y:
+        this->pos.y = *reinterpret_cast<const int *>(v);
+        break;
     }
 
     this->parent->move_child(this);
     this->recalculate_transformation_matrix();
 }
 
-int ui::widget::get_state(GLuint t, void *v)
+int ui::widget::get_state(GLuint t, void *v) const
 {
     if (t == ui::state::visible)
     {
-        *(bool *)v = this->visible;
+        *reinterpret_cast<bool *>(v) = this->visible;
         return 0;
     }
     return 1;
 }
 
-void ui::widget::set_state(GLuint t, void *v)
+void ui::widget::set_state(GLuint t, const void *v)
 {
     if (t == ui::state::visible)
     {
-        this->visible = *(bool *)v;
+        this->visible = *reinterpret_cast<const bool *>(v);
         this->parent->move_child(this);
     }
 }
 
-int ui::widget::get_border(GLuint t, void *v)
+int ui::widget::get_border(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::side::top:    *((GLuint *)v) = this->border[0]; break;
-      case ui::side::left:   *((GLuint *)v) = this->border[1]; break;
-      case ui::side::right:  *((GLuint *)v) = this->border[2]; break;
-      case ui::side::bottom: *((GLuint *)v) = this->border[3]; break;
-      default:               ret = 1;                          break;
+      case ui::side::top:
+        *reinterpret_cast<GLuint *>(v) = this->border[0];
+        break;
+      case ui::side::left:
+        *reinterpret_cast<GLuint *>(v) = this->border[1];
+        break;
+      case ui::side::right:
+        *reinterpret_cast<GLuint *>(v) = this->border[2];
+        break;
+      case ui::side::bottom:
+        *reinterpret_cast<GLuint *>(v) = this->border[3];
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::widget::set_border(GLuint t, void *v)
+void ui::widget::set_border(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (t & ui::side::top)     this->border[0] = new_v;
     if (t & ui::side::left)    this->border[1] = new_v;
@@ -294,24 +316,34 @@ void ui::widget::set_border(GLuint t, void *v)
     this->populate_buffers();
 }
 
-int ui::widget::get_margin(GLuint t, void *v)
+int ui::widget::get_margin(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::side::top:    *((GLuint *)v) = this->margin[0]; break;
-      case ui::side::left:   *((GLuint *)v) = this->margin[1]; break;
-      case ui::side::right:  *((GLuint *)v) = this->margin[2]; break;
-      case ui::side::bottom: *((GLuint *)v) = this->margin[3]; break;
-      default:               ret = 1;                          break;
+      case ui::side::top:
+        *reinterpret_cast<GLuint *>(v) = this->margin[0];
+        break;
+      case ui::side::left:
+        *reinterpret_cast<GLuint *>(v) = this->margin[1];
+        break;
+      case ui::side::right:
+        *reinterpret_cast<GLuint *>(v) = this->margin[2];
+        break;
+      case ui::side::bottom:
+        *reinterpret_cast<GLuint *>(v) = this->margin[3];
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::widget::set_margin(GLuint t, void *v)
+void ui::widget::set_margin(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (t & ui::side::top)     this->margin[0] = new_v;
     if (t & ui::side::left)    this->margin[1] = new_v;
@@ -321,7 +353,7 @@ void ui::widget::set_margin(GLuint t, void *v)
     this->populate_buffers();
 }
 
-int ui::widget::get_color(GLuint t, void *v)
+int ui::widget::get_color(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -342,7 +374,7 @@ int ui::widget::get_color(GLuint t, void *v)
     return ret;
 }
 
-void ui::widget::set_color(GLuint t, void *v)
+void ui::widget::set_color(GLuint t, const void *v)
 {
     if (t & ui::color::foreground)
         memcpy(glm::value_ptr(this->foreground), v, sizeof(float) * 4);
@@ -353,7 +385,7 @@ void ui::widget::set_color(GLuint t, void *v)
     this->populate_buffers();
 }
 
-void ui::widget::set_size(GLuint t, void *v)
+void ui::widget::set_size(GLuint t, const void *v)
 {
     this->rect::set_size(t, v);
     this->populate_buffers();
@@ -493,7 +525,7 @@ ui::widget::~widget()
     glDeleteVertexArrays(1, &this->vao);
 }
 
-int ui::widget::get(GLuint e, GLuint t, void *v)
+int ui::widget::get(GLuint e, GLuint t, void *v) const
 {
     int ret;
 
@@ -509,7 +541,7 @@ int ui::widget::get(GLuint e, GLuint t, void *v)
     return ret;
 }
 
-void ui::widget::set(GLuint e, GLuint t, void *v)
+void ui::widget::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

@@ -1,9 +1,9 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 09:17:58 tquirk
+ *   last updated 28 Jul 2018, 07:48:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,14 +50,14 @@ namespace ui
         ui::base_font *font;
         GLuint tex;
 
-        int get_font(GLuint, void *);
-        virtual void set_font(GLuint, void *);
-        int get_string(GLuint, void *);
-        virtual void set_string(GLuint, void *);
-        int get_image(GLuint, void *);
-        virtual void set_image(GLuint, void *);
-        virtual void set_border(GLuint, void *) override;
-        virtual void set_margin(GLuint, void *) override;
+        int get_font(GLuint, void *) const;
+        virtual void set_font(GLuint, const void *);
+        int get_string(GLuint, void *) const;
+        virtual void set_string(GLuint, const void *);
+        int get_image(GLuint, void *) const;
+        virtual void set_image(GLuint, const void *);
+        virtual void set_border(GLuint, const void *) override;
+        virtual void set_margin(GLuint, const void *) override;
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(void);
@@ -68,8 +68,8 @@ namespace ui
         label(composite *, GLuint = 0, GLuint = 0);
         virtual ~label();
 
-        virtual int get(GLuint, GLuint, void *) override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual int get(GLuint, GLuint, void *) const override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

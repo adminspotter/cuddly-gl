@@ -1,9 +1,9 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Oct 2016, 14:23:06 tquirk
+ *   last updated 29 Jul 2018, 09:18:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,27 +30,41 @@
 #include "ui_defs.h"
 #include "rect.h"
 
-int ui::rect::get_size(GLuint t, void *v)
+int ui::rect::get_size(GLuint t, void *v) const
 {
     int ret = 0;
 
     switch (t)
     {
-      case ui::size::all:    *(glm::ivec2 *)v = this->dim;  break;
-      case ui::size::width:  *(int *)v = this->dim.x;       break;
-      case ui::size::height: *(int *)v = this->dim.y;       break;
-      default:               ret = 1;                       break;
+      case ui::size::all:
+        *reinterpret_cast<glm::ivec2 *>(v) = this->dim;
+        break;
+      case ui::size::width:
+        *reinterpret_cast<int *>(v) = this->dim.x;
+        break;
+      case ui::size::height:
+        *reinterpret_cast<int *>(v) = this->dim.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
 
-void ui::rect::set_size(GLuint t, void *v)
+void ui::rect::set_size(GLuint t, const void *v)
 {
     switch (t)
     {
-      case ui::size::all:     this->dim = *(glm::ivec2 *)v;  break;
-      case ui::size::width:   this->dim.x = *(int *)v;       break;
-      case ui::size::height:  this->dim.y = *(int *)v;       break;
+      case ui::size::all:
+        this->dim = *reinterpret_cast<const glm::ivec2 *>(v);
+        break;
+      case ui::size::width:
+        this->dim.x = *reinterpret_cast<const int *>(v);
+        break;
+      case ui::size::height:
+        this->dim.y = *reinterpret_cast<const int *>(v);
+        break;
     }
 }
 
@@ -63,7 +77,7 @@ ui::rect::~rect()
 {
 }
 
-int ui::rect::get(GLuint e, GLuint t, void *v)
+int ui::rect::get(GLuint e, GLuint t, void *v) const
 {
     int ret = 1;
 
@@ -72,13 +86,13 @@ int ui::rect::get(GLuint e, GLuint t, void *v)
     return ret;
 }
 
-void ui::rect::set(GLuint e, GLuint t, void *v)
+void ui::rect::set(GLuint e, GLuint t, const void *v)
 {
     if (e == ui::element::size)
         this->set_size(t, v);
 }
 
-void ui::rect::get_va(GLuint e, GLuint t, void *v, ...)
+void ui::rect::get_va(GLuint e, GLuint t, void *v, ...) const
 {
     va_list args;
     GLuint item[2];
@@ -95,7 +109,7 @@ void ui::rect::get_va(GLuint e, GLuint t, void *v, ...)
     va_end(args);
 }
 
-void ui::rect::set_va(GLuint e, GLuint t, void *v, ...)
+void ui::rect::set_va(GLuint e, GLuint t, const void *v, ...)
 {
     va_list args;
     GLuint item[2];

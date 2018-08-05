@@ -1,9 +1,9 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2017, 22:07:02 tquirk
+ *   last updated 28 Jul 2018, 07:39:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,17 +74,17 @@ namespace ui
         glm::vec4 foreground, background;
         bool visible;
 
-        int get_position(GLuint, void *);
-        void set_position(GLuint, void *);
-        virtual int get_state(GLuint, void *);
-        virtual void set_state(GLuint, void *);
-        virtual int get_border(GLuint, void *);
-        virtual void set_border(GLuint, void *);
-        virtual int get_margin(GLuint, void *);
-        virtual void set_margin(GLuint, void *);
-        int get_color(GLuint, void *);
-        void set_color(GLuint, void *);
-        virtual void set_size(GLuint, void *) override;
+        int get_position(GLuint, void *) const;
+        void set_position(GLuint, const void *);
+        virtual int get_state(GLuint, void *) const;
+        virtual void set_state(GLuint, const void *);
+        virtual int get_border(GLuint, void *) const;
+        virtual void set_border(GLuint, const void *);
+        virtual int get_margin(GLuint, void *) const;
+        virtual void set_margin(GLuint, const void *);
+        int get_color(GLuint, void *) const;
+        void set_color(GLuint, const void *);
+        virtual void set_size(GLuint, const void *) override;
 
         virtual void recalculate_transformation_matrix(void);
         virtual vertex_buffer *generate_points(void);
@@ -94,8 +94,8 @@ namespace ui
         widget(composite *, GLuint, GLuint);
         virtual ~widget();
 
-        virtual int get(GLuint, GLuint, void *) override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual int get(GLuint, GLuint, void *) const override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void draw(GLuint, const glm::mat4&);
 

@@ -1,9 +1,9 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 06:59:58 tquirk
+ *   last updated 29 Jul 2018, 09:22:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@
 
 const int ui::composite::tree_max_depth = 4;
 
-void ui::composite::set_size(GLuint d, void *v)
+void ui::composite::set_size(GLuint d, const void *v)
 {
     ui::resize_call_data call_data;
 
@@ -48,21 +48,21 @@ void ui::composite::set_size(GLuint d, void *v)
         (*i)->call_callbacks(ui::callback::resize, &call_data);
 }
 
-int ui::composite::get_resize(GLuint t, void *v)
+int ui::composite::get_resize(GLuint t, void *v) const
 {
-    *(GLuint *)v = this->resize;
+    *reinterpret_cast<GLuint *>(v) = this->resize;
     return 0;
 }
 
-void ui::composite::set_resize(GLuint t, void *v)
+void ui::composite::set_resize(GLuint t, const void *v)
 {
-    GLuint new_v = *((GLuint *)v);
+    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
 
     if (new_v <= ui::resize::all)
         this->resize = new_v;
 }
 
-int ui::composite::get_pixel_size(GLuint t, void *v)
+int ui::composite::get_pixel_size(GLuint t, void *v) const
 {
     int ret = 0;
 
@@ -73,13 +73,19 @@ int ui::composite::get_pixel_size(GLuint t, void *v)
             glm::vec3 sz(2.0f / (float)this->dim.x,
                          2.0f / (float)this->dim.y,
                          0.0f);
-            *(glm::vec3 *)v = sz;
+            *reinterpret_cast<glm::vec3 *>(v) = sz;
             break;
         }
 
-      case ui::size::width:   *(float *)v = 2.0f / (float)this->dim.x;  break;
-      case ui::size::height:  *(float *)v = 2.0f / (float)this->dim.y;  break;
-      default:                ret = 1;
+      case ui::size::width:
+        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.x;
+        break;
+      case ui::size::height:
+        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.y;
+        break;
+      default:
+        ret = 1;
+        break;
     }
     return ret;
 }
@@ -169,7 +175,7 @@ ui::composite::~composite()
     this->children.clear();
 }
 
-int ui::composite::get(GLuint e, GLuint t, void *v)
+int ui::composite::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {
@@ -180,7 +186,7 @@ int ui::composite::get(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::composite::set(GLuint e, GLuint t, void *v)
+void ui::composite::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

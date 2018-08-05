@@ -1,9 +1,9 @@
 /* rect.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Oct 2016, 14:24:09 tquirk
+ *   last updated 28 Jul 2018, 07:53:52 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,17 +43,17 @@ namespace ui
       protected:
         glm::ivec2 dim;
 
-        virtual int get_size(GLuint, void *);
-        virtual void set_size(GLuint, void *);
+        virtual int get_size(GLuint, void *) const;
+        virtual void set_size(GLuint, const void *);
 
       public:
         rect(GLuint, GLuint);
         virtual ~rect();
 
-        virtual int get(GLuint, GLuint, void *);
-        virtual void set(GLuint, GLuint, void *);
-        void get_va(GLuint, GLuint, void *, ...);
-        void set_va(GLuint, GLuint, void *, ...);
+        virtual int get(GLuint, GLuint, void *) const;
+        virtual void set(GLuint, GLuint, const void *);
+        void get_va(GLuint, GLuint, void *, ...) const;
+        void set_va(GLuint, GLuint, const void *, ...);
     };
 }
 

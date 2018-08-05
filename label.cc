@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 May 2018, 08:07:10 tquirk
+ *   last updated 04 Aug 2018, 15:35:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -38,14 +38,15 @@
 #include "label.h"
 
 /* ARGSUSED */
-int ui::label::get_font(GLuint t, void *v)
+int ui::label::get_font(GLuint t, void *v) const
 {
-    v = (void *)this->font;
+    *reinterpret_cast<ui::base_font **>(v)
+        = const_cast<ui::base_font *>(this->font);
     return 0;
 }
 
 /* ARGSUSED */
-void ui::label::set_font(GLuint t, void *v)
+void ui::label::set_font(GLuint t, const void *v)
 {
     if (t == ui::ownership::shared)
         this->shared_font = true;
@@ -56,41 +57,41 @@ void ui::label::set_font(GLuint t, void *v)
 }
 
 /* ARGSUSED */
-int ui::label::get_string(GLuint t, void *v)
+int ui::label::get_string(GLuint t, void *v) const
 {
-    *((std::string *)v) = ui::u32strtoutf8(this->str);
+    *reinterpret_cast<std::string *>(v) = ui::u32strtoutf8(this->str);
     return 0;
 }
 
 /* ARGSUSED */
-void ui::label::set_string(GLuint t, void *v)
+void ui::label::set_string(GLuint t, const void *v)
 {
-    this->str = ui::utf8tou32str(*((std::string *)v));
+    this->str = ui::utf8tou32str(*reinterpret_cast<const std::string *>(v));
     this->generate_string_image();
 }
 
 /* ARGSUSED */
-int ui::label::get_image(GLuint t, void *v)
+int ui::label::get_image(GLuint t, void *v) const
 {
-    *(ui::image *)v = this->img;
+    *reinterpret_cast<ui::image *>(v) = this->img;
     return 0;
 }
 
 /* ARGSUSED */
-void ui::label::set_image(GLuint t, void *v)
+void ui::label::set_image(GLuint t, const void *v)
 {
     this->str.clear();
-    this->img = *(ui::image *)v;
+    this->img = *reinterpret_cast<const ui::image *>(v);
     this->calculate_widget_size();
 }
 
-void ui::label::set_border(GLuint t, void *v)
+void ui::label::set_border(GLuint t, const void *v)
 {
     this->widget::set_border(t, v);
     this->calculate_widget_size();
 }
 
-void ui::label::set_margin(GLuint t, void *v)
+void ui::label::set_margin(GLuint t, const void *v)
 {
     this->widget::set_margin(t, v);
     this->calculate_widget_size();
@@ -212,7 +213,7 @@ ui::label::~label()
         delete this->font;
 }
 
-int ui::label::get(GLuint e, GLuint t, void *v)
+int ui::label::get(GLuint e, GLuint t, void *v) const
 {
     switch (e)
     {
@@ -223,7 +224,7 @@ int ui::label::get(GLuint e, GLuint t, void *v)
     }
 }
 
-void ui::label::set(GLuint e, GLuint t, void *v)
+void ui::label::set(GLuint e, GLuint t, const void *v)
 {
     switch (e)
     {

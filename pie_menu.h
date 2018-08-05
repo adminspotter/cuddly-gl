@@ -1,9 +1,9 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 07 Nov 2017, 08:23:07 tquirk
+ *   last updated 28 Jul 2018, 08:01:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,9 +40,9 @@ namespace ui
       protected:
         int popup_button;
 
-        int get_popup(GLuint, void *);
-        void set_popup(GLuint, void *);
-        virtual void set_resize(GLuint, void *) override;
+        int get_popup(GLuint, void *) const;
+        void set_popup(GLuint, const void *);
+        virtual void set_resize(GLuint, const void *) override;
 
         static void show(active *, void *, void *);
         static void hide(active *, void *, void *);
@@ -58,8 +58,8 @@ namespace ui
         pie_menu(composite *, GLuint, GLuint);
         virtual ~pie_menu();
 
-        virtual int get(GLuint, GLuint, void *) override;
-        virtual void set(GLuint, GLuint, void *) override;
+        virtual int get(GLuint, GLuint, void *) const override;
+        virtual void set(GLuint, GLuint, const void *) override;
 
         virtual void mouse_pos_callback(glm::ivec2&) override;
         virtual void mouse_btn_callback(ui::btn_call_data&) override;
