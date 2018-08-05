@@ -43,7 +43,7 @@ namespace ui
     {
         unsigned char r, g, b, a;
 
-        cell_tag(const glm::vec4& v)
+        explicit cell_tag(const glm::vec4& v)
             {
                 this->r = truncf(glm::clamp(v.r, 0.0f, 1.0f) * 255);
                 this->g = truncf(glm::clamp(v.g, 0.0f, 1.0f) * 255);
@@ -62,7 +62,7 @@ namespace ui
 
         struct cell_tag& operator|=(const glm::vec4& v)
             {
-                struct cell_tag t = v;
+                struct cell_tag t(v);
                 return *this |= t;
             }
     } __attribute__ ((__packed__))

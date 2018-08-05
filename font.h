@@ -1,6 +1,6 @@
 /* font.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 21 May 2018, 08:39:18 tquirk
+ *   last updated 05 Aug 2018, 07:46:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -121,7 +121,7 @@ namespace ui
                      const glm::vec4&, const glm::vec4&);
 
       public:
-        base_font(std::string&);
+        explicit base_font(std::string&);
         virtual ~base_font();
 
         void max_cell_size(std::vector<int>&);
@@ -162,7 +162,7 @@ namespace ui
         virtual int line_height(void) override;
 
       public:
-        font_set(std::string&);
+        explicit font_set(std::string&);
         virtual ~font_set();
 
         font_set& operator<<(font_spec&);
