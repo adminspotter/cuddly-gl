@@ -342,6 +342,7 @@ void ui::base_font::load_glyph(FT_Face face, FT_ULong code)
             g.cells[j].r = slot->bitmap.buffer[i + 2];
             g.cells[j].a = slot->bitmap.buffer[i + 3];
         }
+    // cppcheck-suppress memleak symbolName=g.bitmap
 }
 
 void ui::base_font::kern(FT_ULong a, FT_ULong b, FT_Vector *k)
