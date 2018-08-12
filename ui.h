@@ -1,6 +1,6 @@
 /* ui.h                                                    -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:07:48 tquirk
+ *   last updated 12 Aug 2018, 07:05:53 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -53,6 +53,8 @@ namespace ui
         ~context();
 
         virtual int get(GLuint, GLuint, void *) const override;
+
+        GET_VA;
 
         void draw(void);
     };

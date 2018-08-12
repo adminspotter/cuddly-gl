@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 08:06:24 tquirk
+ *   last updated 10 Aug 2018, 22:39:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -157,8 +157,8 @@ void ui::button::deactivate(ui::active *a, void *call, void *client)
     bool active = false;
 
     if (b != NULL)
-        b->set_va(ui::element::state, ui::state::active, &active,
-                  ui::element::state, ui::state::armed, &active, 0);
+        b->set(ui::element::state, ui::state::active, &active,
+               ui::element::state, ui::state::armed, &active);
 }
 
 void ui::button::arm(ui::active *a, void *call, void *client)

@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 09 Oct 2016, 14:43:09 tquirk
+ *   last updated 10 Aug 2018, 23:05:43 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -42,8 +42,8 @@ int ui::quadtree::classify(ui::widget *p)
     glm::ivec2 ul, lr;
     int retval = 0;
 
-    p->get_va(ui::element::position, ui::position::all, &ul,
-              ui::element::size, ui::size::all, &lr, 0);
+    p->get(ui::element::position, ui::position::all, &ul,
+           ui::element::size, ui::size::all, &lr);
     /* Width and height are not absolute screen coords */
     lr += ul;
     retval |= this->quad_mask(ul);
@@ -158,8 +158,8 @@ ui::widget *ui::quadtree::search(const glm::ivec2& pt)
     {
         glm::ivec2 ul, lr;
 
-        (*i)->get_va(ui::element::position, ui::position::all, &ul,
-                     ui::element::size, ui::size::all, &lr, 0);
+        (*i)->get(ui::element::position, ui::position::all, &ul,
+                  ui::element::size, ui::size::all, &lr);
         lr += ul;
         if (pt.x >= ul.x && pt.x < lr.x && pt.y >= ul.y && pt.y < lr.y)
             return *i;

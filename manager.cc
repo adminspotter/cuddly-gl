@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:25:40 tquirk
+ *   last updated 10 Aug 2018, 22:39:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -113,8 +113,8 @@ glm::ivec2 ui::manager::calculate_max_point(void)
     {
         glm::ivec2 c_sz, c_pos;
 
-        (*i)->get_va(ui::element::size, ui::size::all, &c_sz,
-                     ui::element::position, ui::position::all, &c_pos, 0);
+        (*i)->get(ui::element::size, ui::size::all, &c_sz,
+                  ui::element::position, ui::position::all, &c_pos);
         c_sz += c_pos;
         max_pt.x = std::max(max_pt.x, c_sz.x);
         max_pt.y = std::max(max_pt.y, c_sz.y);

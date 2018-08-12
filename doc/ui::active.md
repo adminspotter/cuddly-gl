@@ -292,17 +292,15 @@ mappings to the underlying types, but with shorter names.
   to fire the timeout call, but in the general case, this method would
   probably not be used very often in user code.
 
-* **get(type, subtype, obj_ptr) const**
-* **set(type, subtype, obj_ptr)**
-* **get_va(type, subtype, obj_ptr, ...) const**
-* **set_va(type, subtype, obj_ptr, ...)**
+* **get(type, subtype, obj_ptr, ...) const**
+* **set(type, subtype, obj_ptr, ...)**
 
   Inherited from [`ui::rect`](ui::rect).
 
 ## NEW RESOURCES ##
 
 The `ui::active` adds no new resources which are accessed via the
-`get()/set()` and `get_va()/set_va()` methods.
+`get()/set()` methods.
 
 ## INHERITED RESOURCES ##
 

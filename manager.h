@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:58:02 tquirk
+ *   last updated 12 Aug 2018, 07:04:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -59,6 +59,9 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *) const override;
         virtual void set(GLuint, GLuint, const void *) override;
+
+        GET_VA;
+        SET_VA;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };

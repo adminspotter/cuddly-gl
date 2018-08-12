@@ -77,22 +77,22 @@ b->get(ui::element::string, 0, &some_string);
 /* some_string is now "Howdy!" */
 ```
 
-There are also vararg-type get and set functions for each object,
-`get_va` and `set_va`.  Syntax is mostly the same, sets of
-element/type/value, and ends with an extra 0.
+The get and set functions can also be used in a variable-length
+argument context.  Syntax is mostly the same, with sets of
+element/type/value.
 
 Examples:
 
 ```c++
 ui::widget *p = new ui::widget(parent, 100, 100);
 int margin = 5, border = 1;
-p->set_va(ui::element::margin, ui::side::all, &margin,
-          ui::element::border, ui::side::top, &border, 0);
+p->set(ui::element::margin, ui::side::all, &margin,
+       ui::element::border, ui::side::top, &border);
 
 margin = 123;
 border = 456;
-p->get_va(ui::element::margin, ui::side::right, &margin,
-          ui::element::border, ui::side::bottom, &border, 0);
+p->get(ui::element::margin, ui::side::right, &margin,
+       ui::element::border, ui::side::bottom, &border);
 /* margin is now 5, and border is now 1 */
 ```
 

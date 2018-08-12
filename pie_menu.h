@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:01:58 tquirk
+ *   last updated 12 Aug 2018, 07:04:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -60,6 +60,9 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *) const override;
         virtual void set(GLuint, GLuint, const void *) override;
+
+        GET_VA;
+        SET_VA;
 
         virtual void mouse_pos_callback(glm::ivec2&) override;
         virtual void mouse_btn_callback(ui::btn_call_data&) override;

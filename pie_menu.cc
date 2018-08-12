@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:26:16 tquirk
+ *   last updated 10 Aug 2018, 23:04:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -84,8 +84,8 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
         glm::ivec2 new_loc(bcd->location);
         new_loc.x -= pm->dim.x / 2;
         new_loc.y -= pm->dim.y / 2;
-        pm->set_va(ui::element::position, ui::position::all, &new_loc,
-                   ui::element::state, ui::state::visible, &t, 0);
+        pm->set(ui::element::position, ui::position::all, &new_loc,
+                ui::element::state, ui::state::visible, &t);
         pm->composite::parent->move_child(pm);
     }
 }

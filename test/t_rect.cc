@@ -154,7 +154,7 @@ void test_set_size(void)
 
 void test_va_get(void)
 {
-    std::string test = "va_get: ", st;
+    std::string test = "varargs get: ", st;
     test_rect *r = NULL;
     GLuint dim = 0;
     glm::ivec2 sz = {6, 5};
@@ -170,22 +170,22 @@ void test_va_get(void)
     }
 
     st = "single: ";
-    r->get_va(ui::element::size, ui::size::width, &dim,
-              ui::element::size, ui::size::height, &dim, 0);
+    r->get(ui::element::size, ui::size::width, &dim,
+           ui::element::size, ui::size::height, &dim);
     is(dim, 87, test + st + "expected size");
 
     st = "vector: ";
-    r->get_va(ui::element::size, ui::size::all, &sz, 0);
+    r->get(ui::element::size, ui::size::all, &sz);
     is(sz.x, 9, test + st + "expected width");
     is(sz.y, 87, test + st + "expected height");
 
     st = "bad element type: ";
     dim = 4;
-    r->get_va(99999, ui::size::width, &dim, 0);
+    r->get(99999, ui::size::width, &dim);
     is(dim, 4, test + st + "value unchanged");
 
     st = "bad element subtype: ";
-    r->get_va(ui::element::size, 99999, &dim, 0);
+    r->get(ui::element::size, 99999, &dim);
     is(dim, 4, test + st + "value unchanged");
 
     try
@@ -200,7 +200,7 @@ void test_va_get(void)
 
 void test_va_set(void)
 {
-    std::string test = "va_set: ", st;
+    std::string test = "varargs set: ", st;
     test_rect *r = NULL;
     GLuint dim = 42;
     glm::ivec2 sz = {6, 5};
@@ -216,22 +216,22 @@ void test_va_set(void)
     }
 
     st = "single: ";
-    r->set_va(ui::element::size, ui::size::width, &dim,
-              ui::element::size, ui::size::height, &dim, 0);
+    r->set(ui::element::size, ui::size::width, &dim,
+           ui::element::size, ui::size::height, &dim);
     is(r->dim.x, dim, test + st + "expected width");
     is(r->dim.y, dim, test + st + "expected height");
 
     st = "vector: ";
-    r->set_va(ui::element::size, ui::size::all, &sz, 0);
+    r->set(ui::element::size, ui::size::all, &sz);
     is(r->dim.x, sz.x, test + st + "expected width");
     is(r->dim.y, sz.y, test + st + "expected height");
 
     st = "bad element type: ";
-    r->set_va(99999, ui::size::width, &dim, 0);
+    r->set(99999, ui::size::width, &dim);
     isnt(r->dim.x, dim, test + st + "width unchanged");
 
     st = "bad element subtype: ";
-    r->set_va(ui::element::size, 99999, &dim, 0);
+    r->set(ui::element::size, 99999, &dim);
     isnt(r->dim.x, dim, test + st + "width unchanged");
     isnt(r->dim.y, dim, test + st + "height unchanged");
 

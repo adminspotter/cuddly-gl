@@ -1,6 +1,6 @@
 /* row_column.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 08:04:54 tquirk
+ *   last updated 12 Aug 2018, 07:05:29 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -57,6 +57,9 @@ namespace ui
 
         virtual int get(GLuint, GLuint, void *) const override;
         virtual void set(GLuint, GLuint, const void *) override;
+
+        GET_VA;
+        SET_VA;
     };
 }
 

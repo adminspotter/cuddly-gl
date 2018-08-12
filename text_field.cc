@@ -440,15 +440,15 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
     this->cursor_active = false;
     this->cursor_element_count = 0;
 
-    this->parent->get_va(ui::element::attribute,
-                         ui::attribute::position,
-                         &pos_attr,
-                         ui::element::attribute,
-                         ui::attribute::color,
-                         &color_attr,
-                         ui::element::attribute,
-                         ui::attribute::texture,
-                         &texture_attr, 0);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::position,
+                      &pos_attr,
+                      ui::element::attribute,
+                      ui::attribute::color,
+                      &color_attr,
+                      ui::element::attribute,
+                      ui::attribute::texture,
+                      &texture_attr);
 
     glGenVertexArrays(1, &this->cursor_vao);
     glBindVertexArray(this->cursor_vao);

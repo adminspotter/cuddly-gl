@@ -485,15 +485,15 @@ ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     this->parent = c;
     this->parent->add_child(this);
 
-    this->parent->get_va(ui::element::attribute,
-                         ui::attribute::position,
-                         &pos_attr,
-                         ui::element::attribute,
-                         ui::attribute::color,
-                         &color_attr,
-                         ui::element::attribute,
-                         ui::attribute::texture,
-                         &texture_attr, 0);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::position,
+                      &pos_attr,
+                      ui::element::attribute,
+                      ui::attribute::color,
+                      &color_attr,
+                      ui::element::attribute,
+                      ui::attribute::texture,
+                      &texture_attr);
 
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);

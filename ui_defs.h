@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 23 May 2018, 08:34:40 tquirk
+ *   last updated 12 Aug 2018, 07:06:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -70,6 +70,18 @@ namespace ui
         glm::ivec2 new_size;
     }
     resize_call_data;
+
+#define GET_VA template<typename... Args> \
+               int get(GLuint e, GLuint t, void *v, Args... args) const \
+               { \
+                   return this->get(e, t, v) + this->get(args...); \
+               };
+#define SET_VA template<typename... Args> \
+               void set(GLuint e, GLuint t, const void *v, Args... args) \
+               { \
+                   this->set(e, t, v); \
+                   this->set(args...); \
+               };
 
     namespace element
     {
