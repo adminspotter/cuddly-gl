@@ -9,7 +9,9 @@ TS = fonttest \
 
 if HAVE_TEST_PREREQS
 TC += uitest
+if WANT_GUI_TESTS
 TS += run-uitest
+endif
 endif
 
 SUBDIRS = tap++ .
