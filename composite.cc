@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:22:26 tquirk
+ *   last updated 08 Sep 2018, 07:51:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,7 +36,7 @@
 
 const int ui::composite::tree_max_depth = 4;
 
-void ui::composite::set_size(GLuint d, const void *v)
+void ui::composite::set_size(GLuint d, GLuint v)
 {
     ui::resize_call_data call_data;
 
@@ -48,18 +48,28 @@ void ui::composite::set_size(GLuint d, const void *v)
         (*i)->call_callbacks(ui::callback::resize, &call_data);
 }
 
+void ui::composite::set_size(GLuint d, const glm::ivec2& v)
+{
+    ui::resize_call_data call_data;
+
+    this->rect::set_size(d, v);
+    this->regenerate_children();
+    this->regenerate_search_tree();
+    call_data.new_size = this->dim;
+    for (auto i : this->children)
+        i->call_callbacks(ui::callback::resize, &call_data);
+}
+
 int ui::composite::get_resize(GLuint t, void *v) const
 {
     *reinterpret_cast<GLuint *>(v) = this->resize;
     return 0;
 }
 
-void ui::composite::set_resize(GLuint t, const void *v)
+void ui::composite::set_resize(GLuint t, GLuint v)
 {
-    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
-
-    if (new_v <= ui::resize::all)
-        this->resize = new_v;
+    if (v <= ui::resize::all)
+        this->resize = v;
 }
 
 int ui::composite::get_pixel_size(GLuint t, void *v) const
@@ -186,13 +196,12 @@ int ui::composite::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::composite::set(GLuint e, GLuint t, const void *v)
+void ui::composite::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
     {
       case ui::element::size:    this->set_size(t, v);    break;
       case ui::element::resize:  this->set_resize(t, v);  break;
-      default:                   return;
     }
 }
 

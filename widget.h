@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2018, 07:06:44 tquirk
+ *   last updated 02 Sep 2018, 07:44:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -75,16 +75,18 @@ namespace ui
         bool visible;
 
         int get_position(GLuint, void *) const;
-        void set_position(GLuint, const void *);
+        void set_position(GLuint, GLuint);
+        void set_position(GLuint, const glm::ivec2&);
         virtual int get_state(GLuint, void *) const;
-        virtual void set_state(GLuint, const void *);
+        virtual void set_state(GLuint, bool);
         virtual int get_border(GLuint, void *) const;
-        virtual void set_border(GLuint, const void *);
+        virtual void set_border(GLuint, GLuint);
         virtual int get_margin(GLuint, void *) const;
-        virtual void set_margin(GLuint, const void *);
+        virtual void set_margin(GLuint, GLuint);
         int get_color(GLuint, void *) const;
-        void set_color(GLuint, const void *);
-        virtual void set_size(GLuint, const void *) override;
+        void set_color(GLuint, const glm::vec4&);
+        virtual void set_size(GLuint, GLuint) override;
+        virtual void set_size(GLuint, const glm::ivec2&) override;
 
         virtual void recalculate_transformation_matrix(void);
         virtual vertex_buffer *generate_points(void);
@@ -95,7 +97,11 @@ namespace ui
         virtual ~widget();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, const void *) override;
+        using ui::rect::set;
+        virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, const glm::ivec2&) override;
+        virtual void set(GLuint, GLuint, bool);
+        virtual void set(GLuint, GLuint, const glm::vec4&);
 
         GET_VA;
         SET_VA;

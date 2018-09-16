@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2018, 07:05:42 tquirk
+ *   last updated 04 Sep 2018, 06:49:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -47,12 +47,13 @@ namespace ui
         bool cursor_visible, cursor_active;
 
         virtual int get_size(GLuint, void *) const override;
-        virtual void set_size(GLuint, const void *) override;
+        using ui::label::set_size;
+        virtual void set_size(GLuint, GLuint) override;
         virtual int get_cursor(GLuint, void *) const;
-        virtual void set_cursor(GLuint, const void *);
-        virtual void set_font(GLuint, const void *) override;
-        virtual void set_string(GLuint, const void *) override;
-        virtual void set_image(GLuint, const void *) final;
+        virtual void set_cursor(GLuint, GLuint);
+        virtual void set_font(GLuint, const ui::base_font *) override;
+        virtual void set_string(GLuint, const std::string&) override;
+        virtual void set_image(GLuint, const ui::image&) final;
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
@@ -89,7 +90,8 @@ namespace ui
         virtual ~text_field();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, const void *) override;
+        using ui::label::set;
+        virtual void set(GLuint, GLuint, GLuint) override;
 
         GET_VA;
         SET_VA;

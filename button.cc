@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Aug 2018, 22:39:42 tquirk
+ *   last updated 02 Sep 2018, 08:28:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -47,43 +47,40 @@ int ui::button::get_state(GLuint t, void *v) const
     }
 }
 
-void ui::button::set_state(GLuint t, const void *v)
+void ui::button::set_state(GLuint t, bool v)
 {
-    bool val = *reinterpret_cast<const bool *>(v);
-
     switch (t)
     {
-      case ui::state::active:  this->set_active_state(val);   break;
-      case ui::state::armed:   this->set_arm_state(val);      break;
+      case ui::state::active:  this->set_active_state(v);     break;
+      case ui::state::armed:   this->set_arm_state(v);        break;
       default:                 this->label::set_state(t, v);  break;
     }
 }
 
-void ui::button::set_margin(GLuint s, const void *v)
+void ui::button::set_margin(GLuint s, GLuint v)
 {
-    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);
 
     if (s & ui::side::top || s & ui::side::bottom)
         if (this->border[0] + this->border[3]
-            + ((s & ui::side::top) ? new_v : this->margin[0])
-            + ((s & ui::side::bottom) ? new_v : this->margin[3]) <= this->dim.y)
+            + ((s & ui::side::top) ? v : this->margin[0])
+            + ((s & ui::side::bottom) ? v : this->margin[3]) <= this->dim.y)
         {
             if (s & ui::side::top)
-                this->margin[0] = std::max(new_v, min_val);
+                this->margin[0] = std::max(v, min_val);
             if (s & ui::side::bottom)
-                this->margin[3] = std::max(new_v, min_val);
+                this->margin[3] = std::max(v, min_val);
         }
 
     if (s & ui::side::left || s & ui::side::right)
         if (this->border[1] + this->border[2]
-            + ((s & ui::side::left) ? new_v : this->margin[1])
-            + ((s & ui::side::right) ? new_v : this->margin[2]) <= this->dim.x)
+            + ((s & ui::side::left) ? v : this->margin[1])
+            + ((s & ui::side::right) ? v : this->margin[2]) <= this->dim.x)
         {
             if (s & ui::side::left)
-                this->margin[1] = std::max(new_v, min_val);
+                this->margin[1] = std::max(v, min_val);
             if (s & ui::side::right)
-                this->margin[2] = std::max(new_v, min_val);
+                this->margin[2] = std::max(v, min_val);
         }
     this->populate_buffers();
 }
@@ -144,39 +141,35 @@ void ui::button::shrink_border(void)
 void ui::button::activate(ui::active *a, void *call, void *client)
 {
     ui::button *b = dynamic_cast<ui::button *>(a);
-    bool active = true;
 
     if (b != NULL)
-        b->set(ui::element::state, ui::state::active, &active);
+        b->set(ui::element::state, ui::state::active, true);
 }
 
 /* ARGSUSED */
 void ui::button::deactivate(ui::active *a, void *call, void *client)
 {
     ui::button *b = dynamic_cast<ui::button *>(a);
-    bool active = false;
 
     if (b != NULL)
-        b->set(ui::element::state, ui::state::active, &active,
-               ui::element::state, ui::state::armed, &active);
+        b->set(ui::element::state, ui::state::active, false,
+               ui::element::state, ui::state::armed, false);
 }
 
 void ui::button::arm(ui::active *a, void *call, void *client)
 {
     ui::button *b = dynamic_cast<ui::button *>(a);
-    bool armed = true;
 
     if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, &armed);
+        b->set(ui::element::state, ui::state::armed, true);
 }
 
 void ui::button::disarm(ui::active *a, void *call, void *client)
 {
     ui::button *b = dynamic_cast<ui::button *>(a);
-    bool armed = false;
 
     if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, &armed);
+        b->set(ui::element::state, ui::state::armed, false);
 }
 
 ui::button::button(ui::composite *c, GLuint w, GLuint h)

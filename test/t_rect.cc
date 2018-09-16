@@ -118,28 +118,28 @@ void test_set_size(void)
     }
 
     st = "set_size single: ";
-    r->set_size(ui::size::height, &dim);
+    r->set_size(ui::size::height, dim);
     is(r->dim.y, 42, test + st + "expected height");
 
     st = "set_size vector: ";
-    r->set_size(ui::size::all, &sz);
+    r->set_size(ui::size::all, sz);
     is(r->dim.x, 6, test + st + "expected x-dim");
     is(r->dim.y, 5, test + st + "expected y-dim");
 
     st = "set_size bad element subtype: ";
     dim = 9876;
-    r->set_size(-1, &dim);
+    r->set_size(-1, dim);
     is(r->dim.x, 6, test + st + "x-dim unchanged");
     is(r->dim.y, 5, test + st + "y-dim unchanged");
 
     st = "set single: ";
     dim = 42;
-    r->set(ui::element::size, ui::size::width, &dim);
+    r->set(ui::element::size, ui::size::width, dim);
     is(r->dim.x, 42, test + st + "expected width");
 
     st = "set bad element type: ";
     dim = 9876;
-    r->set(-1, ui::size::width, &dim);
+    r->set(-1, ui::size::width, dim);
     isnt(r->dim.x, 9876, test + st + "width unchanged");
 
     try
@@ -216,22 +216,22 @@ void test_va_set(void)
     }
 
     st = "single: ";
-    r->set(ui::element::size, ui::size::width, &dim,
-           ui::element::size, ui::size::height, &dim);
+    r->set(ui::element::size, ui::size::width, dim,
+           ui::element::size, ui::size::height, dim);
     is(r->dim.x, dim, test + st + "expected width");
     is(r->dim.y, dim, test + st + "expected height");
 
     st = "vector: ";
-    r->set(ui::element::size, ui::size::all, &sz);
+    r->set(ui::element::size, ui::size::all, sz);
     is(r->dim.x, sz.x, test + st + "expected width");
     is(r->dim.y, sz.y, test + st + "expected height");
 
     st = "bad element type: ";
-    r->set(99999, ui::size::width, &dim);
+    r->set(99999, ui::size::width, dim);
     isnt(r->dim.x, dim, test + st + "width unchanged");
 
     st = "bad element subtype: ";
-    r->set(ui::element::size, 99999, &dim);
+    r->set(ui::element::size, 99999, dim);
     isnt(r->dim.x, dim, test + st + "width unchanged");
     isnt(r->dim.y, dim, test + st + "height unchanged");
 
