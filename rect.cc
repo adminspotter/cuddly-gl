@@ -1,6 +1,6 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 08:11:37 tquirk
+ *   last updated 06 Sep 2018, 09:26:51 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -52,19 +52,20 @@ int ui::rect::get_size(GLuint t, void *v) const
     return ret;
 }
 
-void ui::rect::set_size(GLuint t, const void *v)
+void ui::rect::set_size(GLuint t, GLuint v)
 {
     switch (t)
     {
-      case ui::size::all:
-        this->dim = *reinterpret_cast<const glm::ivec2 *>(v);
-        break;
-      case ui::size::width:
-        this->dim.x = *reinterpret_cast<const int *>(v);
-        break;
-      case ui::size::height:
-        this->dim.y = *reinterpret_cast<const int *>(v);
-        break;
+      case ui::size::width:   this->dim.x = v;  break;
+      case ui::size::height:  this->dim.y = v;  break;
+    }
+}
+
+void ui::rect::set_size(GLuint t, const glm::ivec2& v)
+{
+    switch (t)
+    {
+      case ui::size::all:  this->dim = v;  break;
     }
 }
 
@@ -86,40 +87,19 @@ int ui::rect::get(GLuint e, GLuint t, void *v) const
     return ret;
 }
 
-void ui::rect::set(GLuint e, GLuint t, const void *v)
+void ui::rect::set(GLuint e, GLuint t, int v)
+{
+    this->set(e, t, (GLuint)v);
+}
+
+void ui::rect::set(GLuint e, GLuint t, GLuint v)
 {
     if (e == ui::element::size)
         this->set_size(t, v);
 }
 
-void ui::rect::get_va(GLuint e, GLuint t, void *v, ...) const
+void ui::rect::set(GLuint e, GLuint t, const glm::ivec2& v)
 {
-    va_list args;
-    GLuint item[2];
-
-    this->get(e, t, v);
-    va_start(args, v);
-    while ((item[0] = va_arg(args, GLuint)) != 0)
-    {
-        item[1] = va_arg(args, GLuint);
-        void *ptr = va_arg(args, void *);
-        this->get(item[0], item[1], ptr);
-    }
-    va_end(args);
-}
-
-void ui::rect::set_va(GLuint e, GLuint t, const void *v, ...)
-{
-    va_list args;
-    GLuint item[2];
-
-    this->set(e, t, v);
-    va_start(args, v);
-    while ((item[0] = va_arg(args, GLuint)) != 0)
-    {
-        item[1] = va_arg(args, GLuint);
-        void *ptr = va_arg(args, void *);
-        this->set(item[0], item[1], ptr);
-    }
-    va_end(args);
+    if (e == ui::element::size)
+        this->set_size(t, v);
 }

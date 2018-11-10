@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Aug 2018, 15:35:08 tquirk
+ *   last updated 04 Sep 2018, 06:48:26 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -46,13 +46,13 @@ int ui::label::get_font(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_font(GLuint t, const void *v)
+void ui::label::set_font(GLuint t, const ui::base_font *v)
 {
     if (t == ui::ownership::shared)
         this->shared_font = true;
     else
         this->shared_font = false;
-    this->font = (ui::base_font *)v;
+    this->font = const_cast<ui::base_font *>(v);
     this->generate_string_image();
 }
 
@@ -64,9 +64,9 @@ int ui::label::get_string(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_string(GLuint t, const void *v)
+void ui::label::set_string(GLuint t, const std::string& v)
 {
-    this->str = ui::utf8tou32str(*reinterpret_cast<const std::string *>(v));
+    this->str = ui::utf8tou32str(v);
     this->generate_string_image();
 }
 
@@ -78,20 +78,20 @@ int ui::label::get_image(GLuint t, void *v) const
 }
 
 /* ARGSUSED */
-void ui::label::set_image(GLuint t, const void *v)
+void ui::label::set_image(GLuint t, const ui::image& v)
 {
     this->str.clear();
-    this->img = *reinterpret_cast<const ui::image *>(v);
+    this->img = v;
     this->calculate_widget_size();
 }
 
-void ui::label::set_border(GLuint t, const void *v)
+void ui::label::set_border(GLuint t, GLuint v)
 {
     this->widget::set_border(t, v);
     this->calculate_widget_size();
 }
 
-void ui::label::set_margin(GLuint t, const void *v)
+void ui::label::set_margin(GLuint t, GLuint v)
 {
     this->widget::set_margin(t, v);
     this->calculate_widget_size();
@@ -126,7 +126,7 @@ void ui::label::calculate_widget_size(void)
         size.y = this->img.height
             + this->margin[0] + this->margin[3]
             + this->border[0] + this->border[3] + 2;
-        this->set_size(ui::size::all, &size);
+        this->set_size(ui::size::all, size);
     }
 }
 
@@ -224,15 +224,22 @@ int ui::label::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::label::set(GLuint e, GLuint t, const void *v)
+void ui::label::set(GLuint e, GLuint t, const ui::base_font *v)
 {
-    switch (e)
-    {
-      case ui::element::font:    this->set_font(t, v);      break;
-      case ui::element::string:  this->set_string(t, v);    break;
-      case ui::element::image:   this->set_image(t, v);     break;
-      default:                   ui::widget::set(e, t, v);  break;
-    }
+    if (e == ui::element::font)
+        this->set_font(t, v);
+}
+
+void ui::label::set(GLuint e, GLuint t, const std::string& v)
+{
+    if (e == ui::element::string)
+        this->set_string(t, v);
+}
+
+void ui::label::set(GLuint e, GLuint t, const ui::image& v)
+{
+    if (e == ui::element::image)
+        this->set_image(t, v);
 }
 
 void ui::label::draw(GLuint trans_uniform, const glm::mat4& parent_trans)

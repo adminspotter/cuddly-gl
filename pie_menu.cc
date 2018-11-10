@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:26:16 tquirk
+ *   last updated 02 Sep 2018, 15:13:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -58,13 +58,13 @@ int ui::pie_menu::get_popup(GLuint t, void *v) const
     return ret;
 }
 
-void ui::pie_menu::set_popup(GLuint t, const void *v)
+void ui::pie_menu::set_popup(GLuint t, GLuint v)
 {
     if (t == ui::popup::button)
-        this->popup_button = *reinterpret_cast<const int *>(v);
+        this->popup_button = v;
 }
 
-void ui::pie_menu::set_resize(GLuint t, const void *v)
+void ui::pie_menu::set_resize(GLuint t, GLuint v)
 {
     /* No-op, since we don't want this to change */
 }
@@ -80,12 +80,11 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
     {
-        bool t = true;
         glm::ivec2 new_loc(bcd->location);
         new_loc.x -= pm->dim.x / 2;
         new_loc.y -= pm->dim.y / 2;
-        pm->set_va(ui::element::position, ui::position::all, &new_loc,
-                   ui::element::state, ui::state::visible, &t, 0);
+        pm->set(ui::element::position, ui::position::all, new_loc,
+                ui::element::state, ui::state::visible, true);
         pm->composite::parent->move_child(pm);
     }
 }
@@ -100,10 +99,7 @@ void ui::pie_menu::hide(ui::active *a, void *call, void *client)
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
     if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
-    {
-        bool f = false;
-        pm->set(ui::element::state, ui::state::visible, &f);
-    }
+        pm->set(ui::element::state, ui::state::visible, false);
 }
 
 void ui::pie_menu::set_desired_size(void)
@@ -130,7 +126,7 @@ void ui::pie_menu::set_desired_size(void)
                 - (child_size.x / 2);
             child_pos.y = center.y + (int)truncf((float)middle.y * sin(angle))
                 - (child_size.y / 2);
-            (*child)->set(ui::element::position, ui::position::all, &child_pos);
+            (*child)->set(ui::element::position, ui::position::all, child_pos);
         }
     }
     this->dirty = false;
@@ -276,7 +272,7 @@ int ui::pie_menu::get(GLuint e, GLuint t, void *v) const
     return this->manager::get(e, t, v);
 }
 
-void ui::pie_menu::set(GLuint e, GLuint t, const void *v)
+void ui::pie_menu::set(GLuint e, GLuint t, GLuint v)
 {
     if (e == ui::element::popup)
         this->set_popup(t, v);

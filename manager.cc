@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:25:40 tquirk
+ *   last updated 06 Sep 2018, 09:56:25 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -58,32 +58,33 @@ int ui::manager::get_child_spacing(GLuint t, void *v) const
     return ret;
 }
 
-void ui::manager::set_child_spacing(GLuint t, const void *v)
+void ui::manager::set_child_spacing(GLuint t, GLuint v)
 {
     switch (t)
     {
-      case ui::size::all:
-        this->child_spacing = *reinterpret_cast<const glm::ivec2 *>(v);
-        break;
-      case ui::size::width:
-        this->child_spacing.x = *reinterpret_cast<const int *>(v);
-        break;
-      case ui::size::height:
-        this->child_spacing.y = *reinterpret_cast<const int *>(v);
-        break;
+      case ui::size::width:   this->child_spacing.x = v;  break;
+      case ui::size::height:  this->child_spacing.y = v;  break;
+      default:                                            return;
     }
     this->reposition_children();
     this->regenerate_search_tree();
     this->populate_buffers();
 }
 
-void ui::manager::set_resize(GLuint t, const void *v)
+void ui::manager::set_child_spacing(GLuint t, const glm::ivec2& v)
 {
-    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
+    if (t == ui::size::all)
+    {
+        this->child_spacing = v;
+        this->reposition_children();
+        this->regenerate_search_tree();
+        this->populate_buffers();
+    }
+}
 
-    if (new_v <= ui::resize::all)
-        this->resize = new_v;
-
+void ui::manager::set_resize(GLuint t, GLuint v)
+{
+    this->composite::set_resize(t, v);
     this->set_desired_size();
 }
 
@@ -92,7 +93,13 @@ int ui::manager::get_size(GLuint t, void *v) const
     return this->composite::get_size(t, v);
 }
 
-void ui::manager::set_size(GLuint t, const void *v)
+void ui::manager::set_size(GLuint t, GLuint v)
+{
+    this->composite::set_size(t, v);
+    this->widget::set_size(t, v);
+}
+
+void ui::manager::set_size(GLuint t, const glm::ivec2& v)
 {
     this->composite::set_size(t, v);
     this->widget::set_size(t, v);
@@ -113,8 +120,8 @@ glm::ivec2 ui::manager::calculate_max_point(void)
     {
         glm::ivec2 c_sz, c_pos;
 
-        (*i)->get_va(ui::element::size, ui::size::all, &c_sz,
-                     ui::element::position, ui::position::all, &c_pos, 0);
+        (*i)->get(ui::element::size, ui::size::all, &c_sz,
+                  ui::element::position, ui::position::all, &c_pos);
         c_sz += c_pos;
         max_pt.x = std::max(max_pt.x, c_sz.x);
         max_pt.y = std::max(max_pt.y, c_sz.y);
@@ -205,15 +212,19 @@ int ui::manager::get(GLuint e, GLuint t, void *v) const
     return 1;
 }
 
-void ui::manager::set(GLuint e, GLuint t, const void *v)
+void ui::manager::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
     {
       case ui::element::child_spacing:  this->set_child_spacing(t, v);  break;
-      case ui::element::resize:
-      case ui::element::pixel_size:     this->composite::set(e, t, v);  break;
+      case ui::element::resize:         this->composite::set(e, t, v);  break;
       default:                          this->widget::set(e, t, v);     break;
     }
+}
+
+void ui::manager::set(GLuint e, GLuint t, const glm::ivec2& v)
+{
+    this->widget::set(e, t, v);
 }
 
 void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)

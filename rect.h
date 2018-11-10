@@ -1,6 +1,6 @@
 /* rect.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:53:52 tquirk
+ *   last updated 04 Sep 2018, 07:06:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -30,8 +30,6 @@
 #ifndef __INC_CUDDLY_RECT_H__
 #define __INC_CUDDLY_RECT_H__
 
-#include <stdarg.h>
-
 #include <GL/gl.h>
 
 #include <glm/vec2.hpp>
@@ -44,16 +42,20 @@ namespace ui
         glm::ivec2 dim;
 
         virtual int get_size(GLuint, void *) const;
-        virtual void set_size(GLuint, const void *);
+        virtual void set_size(GLuint, GLuint);
+        virtual void set_size(GLuint, const glm::ivec2&);
 
       public:
         rect(GLuint, GLuint);
         virtual ~rect();
 
         virtual int get(GLuint, GLuint, void *) const;
-        virtual void set(GLuint, GLuint, const void *);
-        void get_va(GLuint, GLuint, void *, ...) const;
-        void set_va(GLuint, GLuint, const void *, ...);
+        virtual void set(GLuint, GLuint, int);
+        virtual void set(GLuint, GLuint, GLuint);
+        virtual void set(GLuint, GLuint, const glm::ivec2&);
+
+        GET_VA;
+        SET_VA;
     };
 }
 

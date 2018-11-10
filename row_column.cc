@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 09:57:57 tquirk
+ *   last updated 02 Sep 2018, 13:29:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -59,26 +59,22 @@ int ui::row_column::get_size(GLuint t, void *v) const
     return ret;
 }
 
-void ui::row_column::set_size(GLuint t, const void *v)
+void ui::row_column::set_size(GLuint t, GLuint v)
 {
     switch (t)
     {
-      case ui::size::all:
-      case ui::size::width:
-      case ui::size::height:
-        this->manager::set_size(t, v);
-        break;
-
-      case ui::size::grid:
-        this->grid_sz = *reinterpret_cast<const glm::ivec2 *>(v);
-        break;
-      case ui::size::rows:
-        this->grid_sz.y = *reinterpret_cast<const int *>(v);
-        break;
-      case ui::size::columns:
-        this->grid_sz.x = *reinterpret_cast<const int *>(v);
-        break;
+      case ui::size::rows:     this->grid_sz.y = v;  break;
+      case ui::size::columns:  this->grid_sz.x = v;  break;
+      default:                 this->manager::set_size(t, v);
     }
+}
+
+void ui::row_column::set_size(GLuint t, const glm::ivec2& v)
+{
+    if (t == ui::size::grid)
+        this->grid_sz = v;
+    else
+        this->manager::set_size(t, v);
 }
 
 int ui::row_column::get_order(GLuint t, void *v) const
@@ -87,12 +83,10 @@ int ui::row_column::get_order(GLuint t, void *v) const
     return 0;
 }
 
-void ui::row_column::set_order(GLuint t, const void *v)
+void ui::row_column::set_order(GLuint t, GLuint v)
 {
-    GLuint new_v = *reinterpret_cast<const GLuint *>(v);
-
-    if (new_v == ui::order::row || new_v == ui::order::column)
-        this->pack_order = new_v;
+    if (v == ui::order::row || v == ui::order::column)
+        this->pack_order = v;
 }
 
 glm::ivec2 ui::row_column::calculate_cell_size(void)
@@ -183,7 +177,7 @@ void ui::row_column::insert_row_major(glm::ivec2& grid, glm::ivec2& cell)
         for (int j = 0; j < grid.x; ++j)
         {
             cur_pos.x = pos.x + ((cell.x + this->child_spacing.x) * j);
-            (*c)->set(ui::element::position, ui::position::all, &cur_pos);
+            (*c)->set(ui::element::position, ui::position::all, cur_pos);
 
             if (++c == this->children.end())
                 return;
@@ -204,7 +198,7 @@ void ui::row_column::insert_column_major(glm::ivec2& grid, glm::ivec2& cell)
         for (int j = 0; j < grid.y; ++j)
         {
             cur_pos.y = pos.y + ((cell.y + this->child_spacing.y) * j);
-            (*c)->set(ui::element::position, ui::position::all, &cur_pos);
+            (*c)->set(ui::element::position, ui::position::all, cur_pos);
 
             if (++c == this->children.end())
                 return;
@@ -230,7 +224,7 @@ int ui::row_column::get(GLuint e, GLuint t, void *v) const
     return this->manager::get(e, t, v);
 }
 
-void ui::row_column::set(GLuint e, GLuint t, const void *v)
+void ui::row_column::set(GLuint e, GLuint t, GLuint v)
 {
     if (e == ui::element::order)
         this->set_order(t, v);

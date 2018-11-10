@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 08:09:42 tquirk
+ *   last updated 04 Sep 2018, 06:49:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -48,20 +48,17 @@ int ui::text_field::get_size(GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set_size(GLuint t, const void *v)
+void ui::text_field::set_size(GLuint t, GLuint v)
 {
-    switch (t)
+    if (t == ui::size::max_width)
     {
-      case ui::size::max_width:
-        this->max_length = *reinterpret_cast<const int *>(v);
+        this->max_length = v;
         this->calculate_widget_size();
         this->populate_buffers();
         this->reset_cursor();
-        break;
-      default:
-        this->label::set_size(t, v);
-        break;
     }
+    else
+        this->label::set_size(t, v);
 }
 
 int ui::text_field::get_cursor(GLuint t, void *v) const
@@ -76,20 +73,19 @@ int ui::text_field::get_cursor(GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set_cursor(GLuint t, const void *v)
+void ui::text_field::set_cursor(GLuint t, GLuint v)
 {
-    GLuint val = *reinterpret_cast<const GLuint *>(v);
-
     switch (t)
     {
-      case ui::cursor::position:  this->set_cursor_pos(val);    break;
-      case ui::cursor::blink:     this->set_cursor_blink(val);  break;
+      case ui::cursor::position:  this->set_cursor_pos(v);    break;
+      case ui::cursor::blink:     this->set_cursor_blink(v);  break;
+      default:                                                return;
     }
     this->generate_string_image();
     this->reset_cursor();
 }
 
-void ui::text_field::set_font(GLuint t, const void *v)
+void ui::text_field::set_font(GLuint t, const ui::base_font *v)
 {
     this->label::set_font(t, v);
 
@@ -99,7 +95,7 @@ void ui::text_field::set_font(GLuint t, const void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_string(GLuint t, const void *v)
+void ui::text_field::set_string(GLuint t, const std::string& v)
 {
     this->label::set_string(t, v);
     this->cursor_pos = this->str.size();
@@ -107,7 +103,7 @@ void ui::text_field::set_string(GLuint t, const void *v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_image(GLuint t, const void *v)
+void ui::text_field::set_image(GLuint t, const ui::image& v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
 }
@@ -357,7 +353,7 @@ void ui::text_field::calculate_widget_size(void)
     size.y = font_max[1] + font_max[2]
         + this->border[0] + this->border[3]
         + this->margin[0] + this->margin[3] + 2;
-    this->set_size(ui::size::all, &size);
+    this->set_size(ui::size::all, size);
 }
 
 void ui::text_field::generate_cursor(void)
@@ -440,15 +436,15 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
     this->cursor_active = false;
     this->cursor_element_count = 0;
 
-    this->parent->get_va(ui::element::attribute,
-                         ui::attribute::position,
-                         &pos_attr,
-                         ui::element::attribute,
-                         ui::attribute::color,
-                         &color_attr,
-                         ui::element::attribute,
-                         ui::attribute::texture,
-                         &texture_attr, 0);
+    this->parent->get(ui::element::attribute,
+                      ui::attribute::position,
+                      &pos_attr,
+                      ui::element::attribute,
+                      ui::attribute::color,
+                      &color_attr,
+                      ui::element::attribute,
+                      ui::attribute::texture,
+                      &texture_attr);
 
     glGenVertexArrays(1, &this->cursor_vao);
     glBindVertexArray(this->cursor_vao);
@@ -495,7 +491,7 @@ int ui::text_field::get(GLuint e, GLuint t, void *v) const
     }
 }
 
-void ui::text_field::set(GLuint e, GLuint t, const void *v)
+void ui::text_field::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
     {

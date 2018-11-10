@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2018, 07:58:02 tquirk
+ *   last updated 02 Sep 2018, 09:34:51 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -42,10 +42,12 @@ namespace ui
         glm::ivec2 child_spacing;
 
         int get_child_spacing(GLuint, void *) const;
-        void set_child_spacing(GLuint, const void *);
-        virtual void set_resize(GLuint, const void *) override;
+        void set_child_spacing(GLuint, GLuint);
+        void set_child_spacing(GLuint, const glm::ivec2&);
+        virtual void set_resize(GLuint, GLuint) override;
         virtual int get_size(GLuint, void *) const override;
-        virtual void set_size(GLuint, const void *) override;
+        virtual void set_size(GLuint, GLuint) override;
+        virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_pixel_size(GLuint, void *) const override;
 
         glm::ivec2 calculate_max_point(void);
@@ -58,7 +60,13 @@ namespace ui
         virtual ~manager();
 
         virtual int get(GLuint, GLuint, void *) const override;
-        virtual void set(GLuint, GLuint, const void *) override;
+        using ui::widget::set;
+        using ui::composite::set;
+        virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, const glm::ivec2&) override;
+
+        GET_VA;
+        SET_VA;
 
         virtual void draw(GLuint, const glm::mat4&) override;
     };
