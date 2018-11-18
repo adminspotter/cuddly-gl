@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Sep 2018, 06:49:06 tquirk
+ *   last updated 18 Nov 2018, 09:30:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -51,7 +51,7 @@ namespace ui
         virtual void set_size(GLuint, GLuint) override;
         virtual int get_cursor(GLuint, void *) const;
         virtual void set_cursor(GLuint, GLuint);
-        virtual void set_font(GLuint, const ui::base_font *) override;
+        virtual void set_font(GLuint, ui::base_font *) override;
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
 
