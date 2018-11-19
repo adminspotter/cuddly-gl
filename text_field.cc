@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Sep 2018, 06:49:22 tquirk
+ *   last updated 18 Nov 2018, 09:30:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -85,7 +85,7 @@ void ui::text_field::set_cursor(GLuint t, GLuint v)
     this->reset_cursor();
 }
 
-void ui::text_field::set_font(GLuint t, const ui::base_font *v)
+void ui::text_field::set_font(GLuint t, ui::base_font *v)
 {
     this->label::set_font(t, v);
 

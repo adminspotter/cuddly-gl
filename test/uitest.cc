@@ -120,7 +120,7 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::y, 50);
     std::cout << "creating label 1" << std::endl;
     l1 = new ui::label(ctx, 0, 0);
-    l1->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)std_font,
+    l1->set(ui::element::font, ui::ownership::shared, std_font,
             ui::element::string, 0, greeting,
             ui::element::color, ui::color::foreground, fg1,
             ui::element::border, ui::side::all, 1,
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::y, 175);
     std::cout << "creating password 1" << std::endl;
     pw1 = new ui::password(ctx, 0, 0);
-    pw1->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)std_font,
+    pw1->set(ui::element::font, ui::ownership::shared, std_font,
              ui::element::border, ui::side::all, 1,
              ui::element::color, ui::color::foreground, fg1,
              ui::element::color, ui::color::background, bg2,
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
             ui::element::child_spacing, ui::size::height, 10);
     std::cout << "creating button 2" << std::endl;
     b2 = new ui::button(m1, 0, 0);
-    b2->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)std_font,
+    b2->set(ui::element::font, ui::ownership::shared, std_font,
             ui::element::color, ui::color::foreground, fg2,
             ui::element::string, 0, greeting,
             ui::element::margin, ui::side::all, 5,
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::y, 10);
     std::cout << "creating text field 1" << std::endl;
     t1 = new ui::text_field(m1, 0, 0);
-    t1->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)std_font,
+    t1->set(ui::element::font, ui::ownership::shared, std_font,
             ui::element::string, 0, greeting,
             ui::element::size, ui::size::max_width, 10,
             ui::element::border, ui::side::all, 1,
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
         ui::label *l = new ui::label(r1, 0, 0);
 
         s << "Label " << q << "\n" << greeting;
-        l->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)std_font,
+        l->set(ui::element::font, ui::ownership::shared, std_font,
                ui::element::string, 0, s.str(),
                ui::element::border, ui::side::all, 1,
                ui::element::size, ui::size::width, 100);
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
         ui::label *pul = new ui::label(pu1, 0, 0);
 
         s << (char)('a' + q);
-        pul->set(ui::element::font, ui::ownership::shared, (const ui::base_font *)tiny_font,
+        pul->set(ui::element::font, ui::ownership::shared, tiny_font,
                  ui::element::string, 0, s.str());
         pul->add_callback(ui::callback::btn_up, menu_callback, (void *)q);
         pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
