@@ -4,12 +4,19 @@ matrix:
     - os: linux
       sudo: required
       dist: trusty
+      compiler:
+      - clang
+      - gcc
     - os: linux
       sudo: required
       dist: xenial
-compiler:
-- clang
-- gcc
+      compiler:
+      - clang
+      - gcc
+      addons:
+        apt:
+          packages:
+          - libglu1-mesa-dev
 addons:
   apt:
     packages:
