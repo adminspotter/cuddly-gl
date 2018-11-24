@@ -4,19 +4,29 @@ matrix:
     - os: linux
       sudo: required
       dist: trusty
-      compiler:
-      - clang
-      - gcc
+      compiler: clang
+    - os: linux
+      sudo: required
+      dist: trusty
+      compiler: gcc
     - os: linux
       sudo: required
       dist: xenial
-      compiler:
-      - clang
-      - gcc
+      compiler: clang
       addons:
         apt:
           packages:
           - libglu1-mesa-dev
+          - x11proto-randr-dev
+    - os: linux
+      sudo: required
+      dist: xenial
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+          - libglu1-mesa-dev
+          - x11proto-randr-dev
 addons:
   apt:
     packages:
