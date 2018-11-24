@@ -1,8 +1,12 @@
 language: cpp
-os:
-- linux
-sudo: required
-dist: trusty
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: trusty
+    - os: linux
+      sudo: required
+      dist: xenial
 compiler:
 - clang
 - gcc
