@@ -1,11 +1,22 @@
 language: cpp
-os:
-- linux
-sudo: required
-dist: trusty
-compiler:
-- clang
-- gcc
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: trusty
+      compiler: clang
+    - os: linux
+      sudo: required
+      dist: trusty
+      compiler: gcc
+    - os: linux
+      sudo: required
+      dist: xenial
+      compiler: clang
+    - os: linux
+      sudo: required
+      dist: xenial
+      compiler: gcc
 addons:
   apt:
     packages:
@@ -14,17 +25,16 @@ addons:
     - gettext
     - libboost-dev
     - libgl1-mesa-dev
+    - libglu1-mesa-dev
     - libglm-dev
     - libfreetype6-dev
     - libx11-guitest-perl
     - perl-doc
     - python3-pip
     - x11-apps
+    - x11proto-randr-dev
     - xorg-dev
     - xvfb
-  artifacts:
-    paths:
-    - $PWD/test/uitest.xwd
 before_script:
 - wget https://github.com/glfw/glfw/releases/download/3.2/glfw-3.2.zip -O /tmp/glfw-3.2.zip
 - unzip /tmp/glfw-3.2.zip
