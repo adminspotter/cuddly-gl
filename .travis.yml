@@ -35,9 +35,6 @@ addons:
     - x11proto-randr-dev
     - xorg-dev
     - xvfb
-  artifacts:
-    paths:
-    - $PWD/test/uitest.xwd
 before_script:
 - wget https://github.com/glfw/glfw/releases/download/3.2/glfw-3.2.zip -O /tmp/glfw-3.2.zip
 - unzip /tmp/glfw-3.2.zip
