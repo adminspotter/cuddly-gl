@@ -119,14 +119,14 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::x, 50,
             ui::element::position, ui::position::y, 50);
     std::cout << "creating label 1" << std::endl;
-    l1 = new ui::label(ctx, 0, 0);
-    l1->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::string, 0, greeting,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::border, ui::side::all, 1,
-            ui::element::margin, ui::side::all, 1,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 125);
+    l1 = new ui::label(ctx,
+                       ui::element::font, ui::ownership::shared, std_font,
+                       ui::element::string, 0, greeting,
+                       ui::element::color, ui::color::foreground, fg1,
+                       ui::element::border, ui::side::all, 1,
+                       ui::element::margin, ui::side::all, 1,
+                       ui::element::position, ui::position::x, 50,
+                       ui::element::position, ui::position::y, 125);
     std::cout << "creating button 1" << std::endl;
     b1 = new ui::button(ctx,
                         ui::element::image, 0, img,
@@ -189,7 +189,7 @@ int main(int argc, char **argv)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::label *l = new ui::label(r1, 0, 0);
+        ui::label *l = new ui::label(r1);
 
         s << "Label " << q << "\n" << greeting;
         l->set(ui::element::font, ui::ownership::shared, std_font,
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::label *pul = new ui::label(pu1, 0, 0);
+        ui::label *pul = new ui::label(pu1);
 
         s << (char)('a' + q);
         pul->set(ui::element::font, ui::ownership::shared, tiny_font,

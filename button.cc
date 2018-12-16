@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:11:06 tquirk
+ *   last updated 15 Dec 2018, 18:17:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -188,7 +188,7 @@ void ui::button::init(ui::composite *c)
 }
 
 ui::button::button(ui::composite *c)
-    : ui::label::label(c, 0, 0), ui::active::active(0, 0), ui::rect::rect(0, 0)
+    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
 {
     this->init(c);
 }

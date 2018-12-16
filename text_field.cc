@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 17:49:46 tquirk
+ *   last updated 15 Dec 2018, 18:21:32 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -474,7 +474,7 @@ void ui::text_field::init(ui::composite *c)
 }
 
 ui::text_field::text_field(ui::composite *c)
-    : ui::label::label(c, 0, 0), ui::active::active(0, 0), ui::rect::rect(0, 0),
+    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
       cursor_transform()
 {
     this->init(c);

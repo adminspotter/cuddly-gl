@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2018, 09:34:58 tquirk
+ *   last updated 15 Dec 2018, 18:25:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -64,8 +64,17 @@ namespace ui
         virtual vertex_buffer *generate_points(void) override;
         virtual void populate_buffers(void) override;
 
+        void init(composite *);
+
       public:
-        label(composite *, GLuint = 0, GLuint = 0);
+        explicit label(composite *);
+        template<typename... Args>
+        label(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), widget(c, 0, 0), str(), img()
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~label();
 
         virtual int get(GLuint, GLuint, void *) const override;

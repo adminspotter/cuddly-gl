@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 17:45:00 tquirk
+ *   last updated 15 Dec 2018, 18:26:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -91,7 +91,7 @@ namespace ui
         explicit text_field(composite *);
         template<typename... Args>
         text_field(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), label(c, 0, 0), cursor_transform()
+            : rect(0, 0), active(0, 0), label(c), cursor_transform()
             {
                 this->init(c);
                 this->set(args...);
