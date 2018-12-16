@@ -1,6 +1,6 @@
 /* row_column.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 13:29:03 tquirk
+ *   last updated 15 Dec 2018, 18:43:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -53,8 +53,17 @@ namespace ui
         void insert_row_major(glm::ivec2&, glm::ivec2&);
         void insert_column_major(glm::ivec2&, glm::ivec2&);
 
+        void init(composite *c);
+
       public:
-        row_column(composite *, GLuint, GLuint);
+        explicit row_column(composite *);
+        template<typename... Args>
+        row_column(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), manager(c), grid_sz(1, 0)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~row_column();
 
         virtual int get(GLuint, GLuint, void *) const override;

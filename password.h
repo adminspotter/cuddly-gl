@@ -1,9 +1,9 @@
 /* password.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 May 2018, 15:01:17 tquirk
+ *   last updated 15 Dec 2018, 17:53:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2018  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,7 +46,13 @@ namespace ui
         virtual int get_raw_cursor_pos(void) override;
 
       public:
-        password(composite *, GLuint, GLuint);
+        explicit password(composite *);
+        template<typename... Args>
+        password(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), text_field(c)
+            {
+                this->set(args...);
+            };
         virtual ~password();
     };
 }

@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 15:07:45 tquirk
+ *   last updated 15 Dec 2018, 18:46:29 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -54,8 +54,17 @@ namespace ui
         int which_sector(glm::ivec2&);
         ui::widget *which_child(glm::ivec2&);
 
+        void init(composite *);
+
       public:
-        pie_menu(composite *, GLuint, GLuint);
+        explicit pie_menu(composite *);
+        template<typename... Args>
+        pie_menu(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), manager(c)
+            {
+                this->init(c);
+                this->set(args...);
+            }
         virtual ~pie_menu();
 
         virtual int get(GLuint, GLuint, void *) const override;

@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 09:34:51 tquirk
+ *   last updated 15 Dec 2018, 19:07:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -55,8 +55,18 @@ namespace ui
 
         virtual void recalculate_transformation_matrix(void) override;
 
+        void init(composite *);
+
       public:
-        manager(composite *, GLuint, GLuint);
+        explicit manager(composite *);
+        template<typename... Args>
+        manager(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), widget(c), composite(c),
+              child_spacing(0, 0)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~manager();
 
         virtual int get(GLuint, GLuint, void *) const override;

@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2018, 09:30:42 tquirk
+ *   last updated 15 Dec 2018, 18:26:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -85,8 +85,17 @@ namespace ui
         void generate_cursor(void);
         virtual vertex_buffer *generate_points(void) override;
 
+        void init(composite *);
+
       public:
-        text_field(composite *, GLuint = 0, GLuint = 0);
+        explicit text_field(composite *);
+        template<typename... Args>
+        text_field(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), label(c), cursor_transform()
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~text_field();
 
         virtual int get(GLuint, GLuint, void *) const override;

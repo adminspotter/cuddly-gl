@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 08:26:33 tquirk
+ *   last updated 15 Dec 2018, 18:21:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -58,8 +58,17 @@ namespace ui
         static void arm(active *, void *, void *);
         static void disarm(active *, void *, void *);
 
+        void init(composite *);
+
       public:
-        button(composite *, GLuint = 0, GLuint = 0);
+        explicit button(composite *);
+        template<typename... Args>
+        button(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), label(c)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~button();
     };
 }
