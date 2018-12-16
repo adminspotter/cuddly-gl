@@ -174,16 +174,16 @@ int main(int argc, char **argv)
                             ui::element::position, ui::position::x, 10,
                             ui::element::position, ui::position::y, 100);
     std::cout << "creating row-column 1" << std::endl;
-    r1 = new ui::row_column(ctx, 10, 10);
-    r1->set(ui::element::border, ui::side::all, 1,
-            ui::element::size, ui::size::columns, 1,
-            ui::element::size, ui::size::rows, 0,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg1,
-            ui::element::position, ui::position::x, 520,
-            ui::element::position, ui::position::y, 35,
-            ui::element::child_spacing, ui::size::width, 10,
-            ui::element::child_spacing, ui::size::height, 10);
+    r1 = new ui::row_column(ctx,
+                            ui::element::border, ui::side::all, 1,
+                            ui::element::size, ui::size::columns, 1,
+                            ui::element::size, ui::size::rows, 0,
+                            ui::element::color, ui::color::foreground, fg1,
+                            ui::element::color, ui::color::background, bg1,
+                            ui::element::position, ui::position::x, 520,
+                            ui::element::position, ui::position::y, 35,
+                            ui::element::child_spacing, ui::size::width, 10,
+                            ui::element::child_spacing, ui::size::height, 10);
     r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
