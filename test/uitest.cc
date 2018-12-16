@@ -128,14 +128,14 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::x, 50,
             ui::element::position, ui::position::y, 125);
     std::cout << "creating button 1" << std::endl;
-    b1 = new ui::button(ctx, 0, 0);
-    b1->set(ui::element::image, 0, img,
-            ui::element::margin, ui::side::all, 0,
-            ui::element::border, ui::side::all, 0,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg3,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 175);
+    b1 = new ui::button(ctx,
+                        ui::element::image, 0, img,
+                        ui::element::margin, ui::side::all, 0,
+                        ui::element::border, ui::side::all, 0,
+                        ui::element::color, ui::color::foreground, fg1,
+                        ui::element::color, ui::color::background, bg3,
+                        ui::element::position, ui::position::x, 50,
+                        ui::element::position, ui::position::y, 175);
     std::cout << "creating password 1" << std::endl;
     pw1 = new ui::password(ctx,
                            ui::element::font, ui::ownership::shared, std_font,
@@ -155,14 +155,14 @@ int main(int argc, char **argv)
             ui::element::child_spacing, ui::size::width, 10,
             ui::element::child_spacing, ui::size::height, 10);
     std::cout << "creating button 2" << std::endl;
-    b2 = new ui::button(m1, 0, 0);
-    b2->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::color, ui::color::foreground, fg2,
-            ui::element::string, 0, greeting,
-            ui::element::margin, ui::side::all, 5,
-            ui::element::border, ui::side::all, 5,
-            ui::element::position, ui::position::x, 10,
-            ui::element::position, ui::position::y, 10);
+    b2 = new ui::button(m1,
+                        ui::element::font, ui::ownership::shared, std_font,
+                        ui::element::color, ui::color::foreground, fg2,
+                        ui::element::string, 0, greeting,
+                        ui::element::margin, ui::side::all, 5,
+                        ui::element::border, ui::side::all, 5,
+                        ui::element::position, ui::position::x, 10,
+                        ui::element::position, ui::position::y, 10);
     std::cout << "creating text field 1" << std::endl;
     t1 = new ui::text_field(m1,
                             ui::element::font, ui::ownership::shared, std_font,
