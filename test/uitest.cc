@@ -199,11 +199,14 @@ int main(int argc, char **argv)
         l->add_callback(ui::callback::btn_down, print_sizes, NULL);
     }
     std::cout << "creating popup 1" << std::endl;
-    pu1 = new ui::pie_menu(ctx, 200, 125);
-    pu1->set(ui::element::border, ui::side::outer, 1,
-             ui::element::margin, ui::side::outer, 1,
-             ui::element::border, ui::side::inner, 1,
-             ui::element::popup, ui::popup::button, ui::mouse::button0);
+    pu1 = new ui::pie_menu(ctx,
+                           ui::element::size, ui::size::width, 200,
+                           ui::element::size, ui::size::height, 125,
+                           ui::element::border, ui::side::outer, 1,
+                           ui::element::margin, ui::side::outer, 1,
+                           ui::element::border, ui::side::inner, 1,
+                           ui::element::popup, ui::popup::button,
+                           ui::mouse::button0);
     for (intptr_t q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;

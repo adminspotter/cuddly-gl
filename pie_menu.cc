@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 15:13:06 tquirk
+ *   last updated 02 Dec 2018, 09:18:23 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -235,8 +235,7 @@ ui::widget *ui::pie_menu::which_child(glm::ivec2& loc)
     return (*child);
 }
 
-ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h), ui::active::active(w, h), ui::rect(w, h)
+void ui::pie_menu::init(ui::composite *c)
 {
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
@@ -250,6 +249,12 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
     this->populate_buffers();
+}
+
+ui::pie_menu::pie_menu(composite *c)
+    : ui::manager::manager(c, 0, 0), ui::active::active(0, 0), ui::rect(0, 0)
+{
+    this->init(c);
 }
 
 ui::pie_menu::~pie_menu()
