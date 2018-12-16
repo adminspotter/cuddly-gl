@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 09:03:26 tquirk
+ *   last updated 15 Dec 2018, 18:52:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -72,8 +72,17 @@ namespace ui
 
         void child_motion(widget *, GLuint, glm::ivec2&);
 
+        void init(composite *);
+
       public:
-        composite(composite *, GLuint, GLuint);
+        explicit composite(composite *);
+        template<typename... Args>
+        composite(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), children(), to_remove(), old_pos(0, 0)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~composite();
 
         virtual int get(GLuint, GLuint, void *) const override;

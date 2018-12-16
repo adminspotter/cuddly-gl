@@ -72,7 +72,7 @@ void ui::context::init(void)
 }
 
 ui::context::context()
-    : ui::composite::composite(NULL, 0, 0), ui::active::active(0, 0),
+    : ui::composite::composite(NULL), ui::active::active(0, 0),
       ui::rect::rect(0, 0)
 {
     this->init();

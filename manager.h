@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:43:36 tquirk
+ *   last updated 15 Dec 2018, 18:53:04 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -61,7 +61,7 @@ namespace ui
         explicit manager(composite *);
         template<typename... Args>
         manager(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), widget(c, 0, 0), composite(c, 0, 0),
+            : rect(0, 0), active(0, 0), widget(c, 0, 0), composite(c),
               child_spacing(0, 0)
             {
                 this->init(c);
