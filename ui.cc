@@ -1,6 +1,6 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Jul 2018, 10:00:05 tquirk
+ *   last updated 15 Dec 2018, 18:58:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -58,9 +58,7 @@ int ui::context::get_attribute(GLuint t, void *v) const
     return ret;
 }
 
-ui::context::context(GLuint w, GLuint h)
-    : ui::composite::composite(NULL, w, h), ui::active::active(w, h),
-      ui::rect::rect(w, h)
+void ui::context::init(void)
 {
     this->vert_shader = load_shader(GL_VERTEX_SHADER);
     this->frag_shader = load_shader(GL_FRAGMENT_SHADER);
@@ -71,6 +69,13 @@ ui::context::context(GLuint w, GLuint h)
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
     this->text_bgnd_uniform = glGetUniformLocation(shader_pgm, "text_bgnd");
     this->translate_uniform = glGetUniformLocation(shader_pgm, "translate");
+}
+
+ui::context::context()
+    : ui::composite::composite(NULL, 0, 0), ui::active::active(0, 0),
+      ui::rect::rect(0, 0)
+{
+    this->init();
 }
 
 ui::context::~context()

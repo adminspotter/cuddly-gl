@@ -106,7 +106,8 @@ int main(int argc, char **argv)
     create_image(wid, hei);
 
     std::cout << "creating context" << std::endl;
-    ctx = new ui::context(800, 600);
+    ctx = new ui::context(ui::element::size, ui::size::width, 800,
+                          ui::element::size, ui::size::height, 600);
     ui_connect_glfw(ctx, w);
     ctx->add_callback(ui::callback::key_down, close_key_callback, w);
 
