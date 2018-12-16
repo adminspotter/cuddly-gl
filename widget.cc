@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Sep 2018, 08:07:07 tquirk
+ *   last updated 15 Dec 2018, 19:09:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -474,10 +474,7 @@ void ui::widget::populate_buffers(void)
     delete vb;
 }
 
-ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
-    : ui::active::active(w, h), ui::rect::rect(w, h),
-      pos(0, 0), pos_transform(),
-      foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
+void ui::widget::init(ui::composite *c)
 {
     GLuint pos_attr, color_attr, texture_attr;
 
@@ -519,6 +516,14 @@ ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     this->visible = true;
 
     this->populate_buffers();
+}
+
+ui::widget::widget(ui::composite *c)
+    : ui::active::active(0, 0), ui::rect::rect(0, 0),
+      pos(0, 0), pos_transform(),
+      foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
+{
+    this->init(c);
 }
 
 ui::widget::~widget()

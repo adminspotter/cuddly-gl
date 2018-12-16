@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:17:25 tquirk
+ *   last updated 15 Dec 2018, 23:52:01 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -205,7 +205,7 @@ void ui::label::init(ui::composite *c)
 }
 
 ui::label::label(ui::composite *c)
-    : ui::widget::widget(c, 0, 0), ui::active::active(0, 0),
+    : ui::widget::widget(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0), str(), img()
 {
     this->init(c);

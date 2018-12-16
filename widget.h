@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 07:44:35 tquirk
+ *   last updated 15 Dec 2018, 19:11:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -92,8 +92,19 @@ namespace ui
         virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
 
+        void init(composite *);
+
       public:
-        widget(composite *, GLuint, GLuint);
+        explicit widget(composite *);
+        template<typename... Args>
+        widget(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), pos(0, 0), pos_transform(),
+              foreground(1.0f, 1.0f, 1.0f, 1.0f),
+              background(0.5f, 0.5f, 0.5f, 1.0f)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~widget();
 
         virtual int get(GLuint, GLuint, void *) const override;

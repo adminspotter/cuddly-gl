@@ -112,13 +112,15 @@ int main(int argc, char **argv)
     ctx->add_callback(ui::callback::key_down, close_key_callback, w);
 
     std::cout << "creating widget 1" << std::endl;
-    w1 = new ui::widget(ctx, 50, 50);
-    w1->set(ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, fg2,
-            ui::element::border, ui::side::all, 2,
-            ui::element::margin, ui::side::all, 2,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 50);
+    w1 = new ui::widget(ctx,
+                        ui::element::size, ui::size::width, 50,
+                        ui::element::size, ui::size::height, 50,
+                        ui::element::color, ui::color::foreground, fg1,
+                        ui::element::color, ui::color::background, fg2,
+                        ui::element::border, ui::side::all, 2,
+                        ui::element::margin, ui::side::all, 2,
+                        ui::element::position, ui::position::x, 50,
+                        ui::element::position, ui::position::y, 50);
     std::cout << "creating label 1" << std::endl;
     l1 = new ui::label(ctx,
                        ui::element::font, ui::ownership::shared, std_font,

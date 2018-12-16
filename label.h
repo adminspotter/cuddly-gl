@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:25:40 tquirk
+ *   last updated 15 Dec 2018, 23:51:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -70,7 +70,7 @@ namespace ui
         explicit label(composite *);
         template<typename... Args>
         label(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), widget(c, 0, 0), str(), img()
+            : rect(0, 0), active(0, 0), widget(c), str(), img()
             {
                 this->init(c);
                 this->set(args...);
