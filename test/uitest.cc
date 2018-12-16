@@ -137,14 +137,14 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::x, 50,
             ui::element::position, ui::position::y, 175);
     std::cout << "creating password 1" << std::endl;
-    pw1 = new ui::password(ctx, 0, 0);
-    pw1->set(ui::element::font, ui::ownership::shared, std_font,
-             ui::element::border, ui::side::all, 1,
-             ui::element::color, ui::color::foreground, fg1,
-             ui::element::color, ui::color::background, bg2,
-             ui::element::position, ui::position::x, 50,
-             ui::element::position, ui::position::y, 250,
-             ui::element::size, ui::size::max_width, 5);
+    pw1 = new ui::password(ctx,
+                           ui::element::font, ui::ownership::shared, std_font,
+                           ui::element::border, ui::side::all, 1,
+                           ui::element::color, ui::color::foreground, fg1,
+                           ui::element::color, ui::color::background, bg2,
+                           ui::element::position, ui::position::x, 50,
+                           ui::element::position, ui::position::y, 250,
+                           ui::element::size, ui::size::max_width, 5);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx, 200, 200);
     m1->set(ui::element::border, ui::side::all, 1,
