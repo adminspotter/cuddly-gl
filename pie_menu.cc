@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Dec 2018, 09:18:23 tquirk
+ *   last updated 15 Dec 2018, 18:46:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -252,7 +252,7 @@ void ui::pie_menu::init(ui::composite *c)
 }
 
 ui::pie_menu::pie_menu(composite *c)
-    : ui::manager::manager(c, 0, 0), ui::active::active(0, 0), ui::rect(0, 0)
+    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect(0, 0)
 {
     this->init(c);
 }

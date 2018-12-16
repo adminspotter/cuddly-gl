@@ -1,6 +1,6 @@
 /* row_column.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:35:57 tquirk
+ *   last updated 15 Dec 2018, 18:43:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -59,7 +59,7 @@ namespace ui
         explicit row_column(composite *);
         template<typename... Args>
         row_column(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), manager(c, 0, 0), grid_sz(1, 0)
+            : rect(0, 0), active(0, 0), manager(c), grid_sz(1, 0)
             {
                 this->init(c);
                 this->set(args...);

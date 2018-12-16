@@ -1,6 +1,6 @@
 /* pie_menu.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Dec 2018, 09:20:08 tquirk
+ *   last updated 15 Dec 2018, 18:46:29 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -60,7 +60,7 @@ namespace ui
         explicit pie_menu(composite *);
         template<typename... Args>
         pie_menu(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), manager(c, 0, 0)
+            : rect(0, 0), active(0, 0), manager(c)
             {
                 this->init(c);
                 this->set(args...);

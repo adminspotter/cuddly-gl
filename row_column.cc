@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:37:53 tquirk
+ *   last updated 15 Dec 2018, 18:44:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -212,7 +212,7 @@ void ui::row_column::init(ui::composite *c)
 }
 
 ui::row_column::row_column(ui::composite *c)
-    : ui::manager::manager(c, 0, 0), ui::active::active(0, 0),
+    : ui::manager::manager(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0), grid_sz(1, 0)
 {
     this->init(c);
