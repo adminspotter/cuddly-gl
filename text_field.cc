@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 18 Nov 2018, 09:30:55 tquirk
+ *   last updated 15 Dec 2018, 17:49:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -422,9 +422,7 @@ ui::vertex_buffer *ui::text_field::generate_points(void)
     return vb;
 }
 
-ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h), ui::active::active(w, h), ui::rect::rect(w, h),
-      cursor_transform()
+void ui::text_field::init(ui::composite *c)
 {
     GLuint pos_attr, color_attr, texture_attr;
 
@@ -473,6 +471,13 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
                        NULL);
 
     this->populate_buffers();
+}
+
+ui::text_field::text_field(ui::composite *c)
+    : ui::label::label(c, 0, 0), ui::active::active(0, 0), ui::rect::rect(0, 0),
+      cursor_transform()
+{
+    this->init(c);
 }
 
 ui::text_field::~text_field()

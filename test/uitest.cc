@@ -164,15 +164,15 @@ int main(int argc, char **argv)
             ui::element::position, ui::position::x, 10,
             ui::element::position, ui::position::y, 10);
     std::cout << "creating text field 1" << std::endl;
-    t1 = new ui::text_field(m1, 0, 0);
-    t1->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::string, 0, greeting,
-            ui::element::size, ui::size::max_width, 10,
-            ui::element::border, ui::side::all, 1,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg1,
-            ui::element::position, ui::position::x, 10,
-            ui::element::position, ui::position::y, 100);
+    t1 = new ui::text_field(m1,
+                            ui::element::font, ui::ownership::shared, std_font,
+                            ui::element::string, 0, greeting,
+                            ui::element::size, ui::size::max_width, 10,
+                            ui::element::border, ui::side::all, 1,
+                            ui::element::color, ui::color::foreground, fg1,
+                            ui::element::color, ui::color::background, bg1,
+                            ui::element::position, ui::position::x, 10,
+                            ui::element::position, ui::position::y, 100);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx, 10, 10);
     r1->set(ui::element::border, ui::side::all, 1,

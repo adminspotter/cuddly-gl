@@ -1,6 +1,6 @@
 /* password.h                                              -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 17:49:12 tquirk
+ *   last updated 15 Dec 2018, 17:53:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -49,7 +49,7 @@ namespace ui
         explicit password(composite *);
         template<typename... Args>
         password(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), text_field(c, 0, 0)
+            : rect(0, 0), active(0, 0), text_field(c)
             {
                 this->set(args...);
             };

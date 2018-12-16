@@ -1,6 +1,6 @@
 /* password.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 17:49:07 tquirk
+ *   last updated 15 Dec 2018, 17:53:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -72,7 +72,7 @@ int ui::password::get_raw_cursor_pos(void)
 }
 
 ui::password::password(ui::composite *c)
-    : ui::text_field::text_field(c, 0, 0), ui::active::active(0, 0),
+    : ui::text_field::text_field(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0)
 {
 }
