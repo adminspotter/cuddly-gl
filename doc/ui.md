@@ -26,74 +26,80 @@ floating-point [-1.0, 1.0] ranges in both dimensions, are only used
 internally when generating vertex buffers and the like, so any
 interaction with the UI widget set will be in pixels.
 
+### Resource tuples ###
+
+Whenever we refer to a widget's resource in any of the call structure,
+it will be in a tuple of three arguments:
+
+* element name (`GLuint`)  
+  A constant from the `ui::element` namespace.
+* type (`GLuint`)  
+  Most types have their own `ui::` namespaces for subtypes.  Some items
+  don't really have a subtype, so for them, this value doesn't matter.
+* value (_variable_)  
+  A variable of appropriate type.  Each resource has its own type
+  which it can accept.  Some resources may even be able to accept more
+  than one type.  `get` methods will always take `void *` here, as a
+  return argument.
+
+These are not tuples in the `std::tuple` sense, but are simply sets of
+three arguments in the argument list.
+
 ### Creation ###
 
 All our widgets take the same set of arguments to create:
 
 * parent (`ui::composite *`)
-* width (`GLuint`)
-* height (`GLuint`)
+* variable-length argument list of resource tuples
 
 Examples:
 
 ```c++
-ui::widget *p = new ui::widget(parent, 200, 100);
-ui::button *b = new ui::button(NULL, 60, 30);
+ui::widget *p = new ui::widget(parent,
+                               ui::element::size, ui::size::width, 200,
+                               ui::element::size, ui::size::height, 100);
+ui::button *b = new ui::button(NULL,
+                               ui::element::size, ui::size::width, 60,
+                               ui::element::size, ui::size::height, 30,
+                               ui::element::border, ui::border::all, 1);
 ```
 
 ### Getting and setting resources ###
 
-Some widgets need a bit more configuration than just size.  All
-widgets have a set of resources that can be configured however
-desired.  We can `get` or `set` any of them at any time, and the call
-interface for both is identical:
-
-* element name (`GLuint`)  
-  This will be a constant from the `ui::element` namespace.
-* type (`GLuint`)  
-  Most types have their own `ui::` namespaces for subtypes.  Some
-  items don't really have a subtype, so this value doesn't matter.
-* value (`void *`)  
-  Always a void pointer, which we cast internally to what it needs to
-  be.
+All widgets have a set of resources to govern their appearance and
+behaviour.  Any of these resources can be configured however desired.
+In addition to setting them at creation time, we can `get` or `set`
+any of them at any time.  Both of these methods have variable-length
+argument lists of resource tuples.
 
 Examples:
 
 ```c++
-ui::widget *p = new ui::widget(parent, 200, 100);
+ui::widget *p = new ui::widget(parent,
+                               ui::element::size, ui::size::width, 200,
+                               ui::element::size, ui::size::height, 100);
 int w = 300;
-p->set(ui::element::size, ui::size::width, &w);
+p->set(ui::element::size, ui::size::width, w);
 
 w = 937;
 p->get(ui::element::size, ui::size::width, &w);
 /* w is now 300 */
 
-ui::button *b = new ui::button(parent, 10, 10);
+p->set(ui::element::margin, ui::side::all, 5,
+       ui::element::border, ui::side::top, 1);
+
+GLuint margin = 123, border = 456;
+p->get(ui::element::margin, ui::side::right, &margin,
+       ui::element::border, ui::side::top, &border);
+/* margin is now 5, and border is now 1 */
+
 std::string some_string = "Howdy!";
-b->set(ui::element::string, 0, &some_string);
+ui::button *b = new ui::button(parent,
+                               ui::element::string, 0, some_string);
 
 some_string = "Buh-bye.";
 b->get(ui::element::string, 0, &some_string);
 /* some_string is now "Howdy!" */
-```
-
-The get and set functions can also be used in a variable-length
-argument context.  Syntax is mostly the same, with sets of
-element/type/value.
-
-Examples:
-
-```c++
-ui::widget *p = new ui::widget(parent, 100, 100);
-int margin = 5, border = 1;
-p->set(ui::element::margin, ui::side::all, &margin,
-       ui::element::border, ui::side::top, &border);
-
-margin = 123;
-border = 456;
-p->get(ui::element::margin, ui::side::right, &margin,
-       ui::element::border, ui::side::bottom, &border);
-/* margin is now 5, and border is now 1 */
 ```
 
 ### Callbacks ###
@@ -141,7 +147,7 @@ struct something
 }
 some_struct;
 
-ui::button *b = new ui::button(parent, 100, 50);
+ui::button *b = new ui::button(parent);
 b->add_callback(ui::callback::btn_down, some_callback, NULL);
 b->add_callback(ui::callback::btn_down, some_callback, &some_struct);
 
@@ -213,7 +219,7 @@ callback lists and handling.  The full implementation is found in
 There is a single call to close any widget-derived widget:
 
 ```c++
-ui::widget *p = new ui::widget(context, 123, 456);
+ui::widget *p = new ui::widget(context);
 
 /* ... */
 
@@ -239,14 +245,13 @@ instantiated, but serve to add basic functionality in a layered way.
 The `ui::rect` class ([rect.h](../client/ui/rect.h) and
 [rect.cc](../client/ui/rect.cc)) provides a rectangle of a given size.
 All the widget classes in the CuddlyGL UI toolkit derive from the
-`ui::rect`.  It provides the `va_get` and `va_set` methods for all
-other classes.
+`ui::rect`.
 
 ##### Rect Resources #####
 
 * `ui::element::size`
-  * `ui::size::width` (`int`)
-  * `ui::size::height` (`int`)
+  * `ui::size::width` (`GLuint`)
+  * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`glm::ivec2`)
 
 #### Active ####
@@ -284,8 +289,8 @@ callback handling is available.
 ##### Widget Resources #####
 
 * `ui::element::position`
-  * `ui::position::x` (`int`)
-  * `ui::position::y` (`int`)
+  * `ui::position::x` (`GLuint`)
+  * `ui::position::y` (`GLuint`)
   * `ui::position::all` (`glm::ivec2`)
 * `ui::element::border`
   * `ui::side::top` (`GLuint`)
@@ -339,8 +344,8 @@ Images use the [`ui::image`](#image) support type.
 ##### Label resources #####
 
 * `ui::element::font`
-  * `ui::ownership::shared` ([`ui::font`](#font))
-  * `ui::ownership::owned` ([`ui::font`](#font))
+  * `ui::ownership::shared` ([`ui::font *`](#font))
+  * `ui::ownership::owned` ([`ui::font *`](#font))
 * `ui::element::string`
   * No subtypes (`std::string`)
 * `ui::element::image`
@@ -489,13 +494,14 @@ The `ui::context` ([ui.h](../client/ui/ui.h) and
 most of the other classes.  It functions as the top-level "window",
 and manages the OpenGL shaders which we use to draw our widgets.
 
-The context's constructor also has a different signature, and only
-takes `width` and `height`.  It has no parent because it is the
-ultimate parent; all toolkit elements are owned, directly or
-indirectly, by the context.
+The context's constructor also has a different signature, with no
+required arguments.  It has no parent because it is the ultimate
+parent; all toolkit elements are owned, directly or indirectly, by the
+context.
 
 ```c++
-ui::context *ctx = new ui::context(800, 600);
+ui::context *ctx = new ui::context(ui::element::size, ui::size::width, 800,
+                                   ui::element::size, ui::size::height, 600);
 ```
 
 ##### Context resources #####
@@ -534,8 +540,8 @@ and the edges of the manager, for purposes of grow/shrink.
 ##### Manager resources #####
 
 * `ui::element::child_spacing`
-  * `ui::size::width` (`int`)
-  * `ui::size::height` (`int`)
+  * `ui::size::width` (`GLuint`)
+  * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`glm::ivec2`)
 
 ###### Manager inherited resources ######
@@ -572,7 +578,7 @@ satisfactory for this resource.
   * `ui::side::inner` (`GLuint`)
   * `ui::side::outer` (`GLuint`)
 * `ui::element::popup`
-  * `ui::popup::button` (`int`)
+  * `ui::popup::button` (`GLuint`)
 
 ###### Pie menu inherited resources ######
 
@@ -607,8 +613,8 @@ widget to include the spacing between its grid elements.
 ##### Row column resources #####
 
 * `ui::element::size`
-  * `ui::size::rows` (`int`)
-  * `ui::size::columns` (`int`)
+  * `ui::size::rows` (`GLuint`)
+  * `ui::size::columns` (`GLuint`)
   * `ui::size::grid` (`glm::ivec2`)
 * `ui::element::order`
   * No subtypes, but defined value arguments (`GLuint`)
