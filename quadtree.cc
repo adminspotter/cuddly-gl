@@ -1,6 +1,6 @@
 /* quadtree.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 Aug 2018, 23:05:43 tquirk
+ *   last updated 20 Dec 2018, 08:15:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2016  Trinity Annabelle Quirk
@@ -153,16 +153,15 @@ ui::widget *ui::quadtree::search(const glm::ivec2& pt)
     if (this->quadrant[which] != NULL)
         return this->quadrant[which]->search(pt);
 
-    std::list<ui::widget *>::iterator i;
-    for (i = this->contents.begin(); i != this->contents.end(); ++i)
+    for (auto& i : this->contents)
     {
         glm::ivec2 ul, lr;
 
-        (*i)->get(ui::element::position, ui::position::all, &ul,
-                  ui::element::size, ui::size::all, &lr);
+        i->get(ui::element::position, ui::position::all, &ul,
+               ui::element::size, ui::size::all, &lr);
         lr += ul;
         if (pt.x >= ul.x && pt.x < lr.x && pt.y >= ul.y && pt.y < lr.y)
-            return *i;
+            return i;
     }
     return NULL;
 }

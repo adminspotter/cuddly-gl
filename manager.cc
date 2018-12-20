@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Sep 2018, 09:56:25 tquirk
+ *   last updated 20 Dec 2018, 08:19:53 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -116,12 +116,12 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 {
     glm::ivec2 max_pt(0, 0);
 
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
         glm::ivec2 c_sz, c_pos;
 
-        (*i)->get(ui::element::size, ui::size::all, &c_sz,
-                  ui::element::position, ui::position::all, &c_pos);
+        i->get(ui::element::size, ui::size::all, &c_sz,
+               ui::element::position, ui::position::all, &c_pos);
         c_sz += c_pos;
         max_pt.x = std::max(max_pt.x, c_sz.x);
         max_pt.y = std::max(max_pt.y, c_sz.y);
@@ -237,7 +237,7 @@ void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         glm::mat4 trans = this->pos_transform * parent_trans;
 
         this->widget::draw(trans_uniform, parent_trans);
-        for (auto i = this->children.begin(); i != this->children.end(); ++i)
-            (*i)->draw(trans_uniform, trans);
+        for (auto& i : this->children)
+            i->draw(trans_uniform, trans);
     }
 }

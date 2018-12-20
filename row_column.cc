@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 13:29:08 tquirk
+ *   last updated 20 Dec 2018, 08:15:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -93,9 +93,9 @@ glm::ivec2 ui::row_column::calculate_cell_size(void)
 {
     glm::ivec2 cell_size(0, 0), child_sz;
 
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
-        (*i)->get(ui::element::size, ui::size::all, &child_sz);
+        i->get(ui::element::size, ui::size::all, &child_sz);
         cell_size.x = std::max(cell_size.x, child_sz.x);
         cell_size.y = std::max(cell_size.y, child_sz.y);
     }

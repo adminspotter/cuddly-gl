@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 08 Sep 2018, 07:51:13 tquirk
+ *   last updated 20 Dec 2018, 08:10:18 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -44,8 +44,8 @@ void ui::composite::set_size(GLuint d, GLuint v)
     this->regenerate_children();
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->call_callbacks(ui::callback::resize, &call_data);
+    for (auto& i : this->children)
+        i->call_callbacks(ui::callback::resize, &call_data);
 }
 
 void ui::composite::set_size(GLuint d, const glm::ivec2& v)
@@ -107,16 +107,16 @@ void ui::composite::set_desired_size(void)
 
 void ui::composite::reposition_children(void)
 {
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->recalculate_transformation_matrix();
+    for (auto& i : this->children)
+        i->recalculate_transformation_matrix();
 }
 
 void ui::composite::regenerate_children(void)
 {
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
-        (*i)->recalculate_transformation_matrix();
-        (*i)->populate_buffers();
+        i->recalculate_transformation_matrix();
+        i->populate_buffers();
     }
 }
 
@@ -129,9 +129,9 @@ void ui::composite::regenerate_search_tree(void)
     this->tree = new ui::quadtree(NULL,
                                   ul, this->dim,
                                   ui::composite::tree_max_depth);
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        if ((*i)->visible == true)
-            this->tree->insert(*i);
+    for (auto& i : this->children)
+        if (i->visible == true)
+            this->tree->insert(i);
 }
 
 void ui::composite::clear_removed_children(void)
@@ -140,12 +140,10 @@ void ui::composite::clear_removed_children(void)
     {
         if (this->to_remove.size() != 0)
         {
-            for (auto i = this->to_remove.begin();
-                 i != this->to_remove.end();
-                 ++i)
+            for (auto& i : this->to_remove)
             {
-                this->children.remove(*i);
-                this->tree->remove(*i);
+                this->children.remove(i);
+                this->tree->remove(i);
             }
             this->to_remove.clear();
         }
@@ -180,8 +178,8 @@ ui::composite::composite(composite *c, GLuint w, GLuint h)
 ui::composite::~composite()
 {
     delete this->tree;
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        delete (*i);
+    for (auto& i : this->children)
+        delete i;
     this->children.clear();
 }
 
