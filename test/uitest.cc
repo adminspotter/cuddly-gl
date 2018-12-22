@@ -33,6 +33,7 @@ void leave_callback(ui::active *, void *, void *);
 void menu_callback(ui::active *, void *, void *);
 void reorient_callback(ui::active *, void *, void *);
 void print_widget_resources(ui::active *, void *, void *);
+void print_button_resources(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -134,6 +135,7 @@ int main(int argc, char **argv)
             ui::element::color, ui::color::background, bg3,
             ui::element::position, ui::position::x, 50,
             ui::element::position, ui::position::y, 175);
+    b1->add_callback(ui::callback::btn_down, print_button_resources, NULL);
     std::cout << "creating password 1" << std::endl;
     pw1 = new ui::password(ctx, 0, 0);
     pw1->set(ui::element::font, ui::ownership::shared, std_font,
@@ -339,6 +341,39 @@ void print_widget_resources(ui::active *a, void *call, void *client)
               << fg.b << ", " << fg.a << ">" << std::endl;
     std::cout << "background <" << bg.r << ", " << bg.g << ", "
               << bg.b << ", " << bg.a << ">" << std::endl;
+    if (visible == true)
+        std::cout << "visible" << std::endl;
+}
+
+void print_button_resources(ui::active *a, void *call, void *client)
+{
+    GLuint w, h, x, y;
+    ui::base_font *font;
+    std::string str;
+    ui::image img;
+    bool arm, active, visible;
+    ui::button *b = dynamic_cast<ui::button *>(a);
+
+    if (b == NULL)
+        return;
+
+    b->get(ui::element::position, ui::position::x, &x,
+           ui::element::position, ui::position::y, &y,
+           ui::element::size, ui::size::width, &w,
+           ui::element::size, ui::size::height, &h,
+           ui::element::string, 0, &str,
+           ui::element::font, 0, &font,
+           ui::element::image, 0, &img,
+           ui::element::state, ui::state::visible, &visible,
+           ui::element::state, ui::state::armed, &arm,
+           ui::element::state, ui::state::active, &active);
+    std::cout << "pos <" << x << ", " << y << ">" << std::endl;
+    std::cout << "size <" << w << ", " << h << ">" << std::endl;
+    std::cout << "string [" << str << "]" << std::endl;
+    if (arm == true)
+        std::cout << "armed" << std::endl;
+    if (active == true)
+        std::cout << "active" << std::endl;
     if (visible == true)
         std::cout << "visible" << std::endl;
 }

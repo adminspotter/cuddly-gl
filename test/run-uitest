@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 43;
+use Test::More 'tests' => 44;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -40,6 +40,8 @@ sub interact_with_button
     ok($status, "$test: moved mouse again");
     $status = ReleaseMouseButton(M_BTN1);
     ok($status, "$test: released button 1");
+    $status = ClickWindow($uitest, 60, 185, M_BTN2);
+    ok($status, "$test: clicked button 2");
 }
 
 sub interact_with_row_column
