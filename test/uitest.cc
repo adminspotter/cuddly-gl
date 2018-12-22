@@ -32,7 +32,7 @@ void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
 void menu_callback(ui::active *, void *, void *);
 void reorient_callback(ui::active *, void *, void *);
-void print_sizes(ui::active *, void *, void *);
+void print_widget_resources(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
                ui::element::string, 0, s.str(),
                ui::element::border, ui::side::all, 1,
                ui::element::size, ui::size::width, 100);
-        l->add_callback(ui::callback::btn_down, print_sizes, NULL);
+        l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
     }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx, 200, 125);
@@ -305,9 +305,10 @@ void reorient_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void print_sizes(ui::active *a, void *call, void *client)
+void print_widget_resources(ui::active *a, void *call, void *client)
 {
     glm::ivec2 pos, size;
+    glm::vec4 fg, bg;
     GLuint border[4], margin[4];
     bool visible;
     ui::widget *w = dynamic_cast<ui::widget *>(a);
@@ -325,13 +326,19 @@ void print_sizes(ui::active *a, void *call, void *client)
            ui::element::margin, ui::side::left, &margin[1],
            ui::element::margin, ui::side::right, &margin[2],
            ui::element::margin, ui::side::bottom, &margin[3],
-           ui::element::state, ui::state::visible, &visible);
+           ui::element::state, ui::state::visible, &visible,
+           ui::element::color, ui::color::foreground, &fg,
+           ui::element::color, ui::color::background, &bg);
     std::cout << "pos <" << pos.x << ", " << pos.y << ">" << std::endl;
     std::cout << "size <" << size.x << ", " << size.y << ">" << std::endl;
     std::cout << "border <" << border[0] << ", " << border[1] << ", "
               << border[2] << ", " << border[3] << ">" << std::endl;
     std::cout << "margin <" << margin[0] << ", " << margin[1] << ", "
               << margin[2] << ", " << margin[3] << ">" << std::endl;
+    std::cout << "foreground <" << fg.r << ", " << fg.g << ", "
+              << fg.b << ", " << fg.a << ">" << std::endl;
+    std::cout << "background <" << bg.r << ", " << bg.g << ", "
+              << bg.b << ", " << bg.a << ">" << std::endl;
     if (visible == true)
         std::cout << "visible" << std::endl;
 }
