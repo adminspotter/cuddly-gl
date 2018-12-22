@@ -1,6 +1,6 @@
 /* rect.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Sep 2018, 09:26:51 tquirk
+ *   last updated 20 Dec 2018, 07:56:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -30,26 +30,23 @@
 #include "ui_defs.h"
 #include "rect.h"
 
-int ui::rect::get_size(GLuint t, void *v) const
+int ui::rect::get_size(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-        *reinterpret_cast<glm::ivec2 *>(v) = this->dim;
-        break;
-      case ui::size::width:
-        *reinterpret_cast<int *>(v) = this->dim.x;
-        break;
-      case ui::size::height:
-        *reinterpret_cast<int *>(v) = this->dim.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::width:   *v = this->dim.x;  return 0;
+      case ui::size::height:  *v = this->dim.y;  return 0;
+      default:                                   return 1;
     }
-    return ret;
+}
+
+int ui::rect::get_size(GLuint t, glm::ivec2 *v) const
+{
+    switch (t)
+    {
+      case ui::size::all:  *v = this->dim;  return 0;
+      default:                              return 1;
+    }
 }
 
 void ui::rect::set_size(GLuint t, GLuint v)
@@ -78,13 +75,18 @@ ui::rect::~rect()
 {
 }
 
-int ui::rect::get(GLuint e, GLuint t, void *v) const
+int ui::rect::get(GLuint e, GLuint t, GLuint *v) const
 {
-    int ret = 1;
-
     if (e == ui::element::size)
-        ret = this->get_size(t, v);
-    return ret;
+        return this->get_size(t, v);
+    return 1;
+}
+
+int ui::rect::get(GLuint e, GLuint t, glm::ivec2 *v) const
+{
+    if (e == ui::element::size)
+        return this->get_size(t, v);
+    return 1;
 }
 
 void ui::rect::set(GLuint e, GLuint t, int v)

@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 09:34:51 tquirk
+ *   last updated 20 Dec 2018, 08:03:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -41,14 +41,17 @@ namespace ui
       protected:
         glm::ivec2 child_spacing;
 
-        int get_child_spacing(GLuint, void *) const;
+        int get_child_spacing(GLuint, GLuint *) const;
+        int get_child_spacing(GLuint, glm::ivec2 *) const;
         void set_child_spacing(GLuint, GLuint);
         void set_child_spacing(GLuint, const glm::ivec2&);
         virtual void set_resize(GLuint, GLuint) override;
-        virtual int get_size(GLuint, void *) const override;
+        virtual int get_size(GLuint, GLuint *) const override;
+        virtual int get_size(GLuint, glm::ivec2 *) const override;
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
-        virtual int get_pixel_size(GLuint, void *) const override;
+        virtual int get_pixel_size(GLuint, float *) const override;
+        virtual int get_pixel_size(GLuint, glm::vec3 *) const override;
 
         glm::ivec2 calculate_max_point(void);
         virtual void set_desired_size(void) override;
@@ -59,7 +62,10 @@ namespace ui
         manager(composite *, GLuint, GLuint);
         virtual ~manager();
 
-        virtual int get(GLuint, GLuint, void *) const override;
+        using ui::widget::get;
+        using ui::composite::get;
+        virtual int get(GLuint, GLuint, GLuint *) const override;
+        virtual int get(GLuint, GLuint, glm::ivec2 *) const override;
         using ui::widget::set;
         using ui::composite::set;
         virtual void set(GLuint, GLuint, GLuint) override;

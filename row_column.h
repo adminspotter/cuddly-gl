@@ -1,6 +1,6 @@
 /* row_column.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 13:29:03 tquirk
+ *   last updated 20 Dec 2018, 08:04:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -40,11 +40,13 @@ namespace ui
         glm::ivec2 grid_sz;
         GLuint pack_order;
 
-        virtual int get_size(GLuint, void *) const override;
+        using ui::manager::get_size;
+        virtual int get_size(GLuint, GLuint *) const override;
+        virtual int get_size(GLuint, glm::ivec2 *) const override;
         using ui::manager::set_size;
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
-        virtual int get_order(GLuint, void *) const;
+        virtual int get_order(GLuint, GLuint *) const;
         virtual void set_order(GLuint, GLuint);
 
         glm::ivec2 calculate_cell_size(void);
@@ -57,7 +59,8 @@ namespace ui
         row_column(composite *, GLuint, GLuint);
         virtual ~row_column();
 
-        virtual int get(GLuint, GLuint, void *) const override;
+        using ui::manager::get;
+        virtual int get(GLuint, GLuint, GLuint *) const override;
         using ui::manager::set;
         virtual void set(GLuint, GLuint, GLuint) override;
 

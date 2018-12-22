@@ -36,26 +36,24 @@
 #include "ui_defs.h"
 #include "manager.h"
 
-int ui::manager::get_child_spacing(GLuint t, void *v) const
+int ui::manager::get_child_spacing(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-        *reinterpret_cast<glm::ivec2 *>(v) = this->child_spacing;
-        break;
-      case ui::size::width:
-        *reinterpret_cast<int *>(v) = this->child_spacing.x;
-        break;
-      case ui::size::height:
-        *reinterpret_cast<int *>(v) = this->child_spacing.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::width:   *v = this->child_spacing.x;  return 0;
+      case ui::size::height:  *v = this->child_spacing.y;  return 0;
+      default:                                             return 1;
     }
-    return ret;
+}
+
+int ui::manager::get_child_spacing(GLuint t, glm::ivec2 *v) const
+{
+    if (t == ui::size::all)
+    {
+        *v = this->child_spacing;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::manager::set_child_spacing(GLuint t, GLuint v)
@@ -88,7 +86,12 @@ void ui::manager::set_resize(GLuint t, GLuint v)
     this->set_desired_size();
 }
 
-int ui::manager::get_size(GLuint t, void *v) const
+int ui::manager::get_size(GLuint t, GLuint *v) const
+{
+    return this->composite::get_size(t, v);
+}
+
+int ui::manager::get_size(GLuint t, glm::ivec2 *v) const
 {
     return this->composite::get_size(t, v);
 }
@@ -105,7 +108,14 @@ void ui::manager::set_size(GLuint t, const glm::ivec2& v)
     this->widget::set_size(t, v);
 }
 
-int ui::manager::get_pixel_size(GLuint t, void *v) const
+int ui::manager::get_pixel_size(GLuint t, float *v) const
+{
+    if (this->composite::parent != NULL)
+        return this->composite::parent->get(ui::element::pixel_size, t, v);
+    return 1;
+}
+
+int ui::manager::get_pixel_size(GLuint t, glm::vec3 *v) const
 {
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
@@ -196,20 +206,27 @@ ui::manager::~manager()
 {
 }
 
-int ui::manager::get(GLuint e, GLuint t, void *v) const
+int ui::manager::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
         /* Eventually, the context will be somebody's parent */
       case ui::element::attribute:
-      case ui::element::pixel_size:
-        return this->widget::parent->get(e, t, v);
-
+        if (this->composite::parent != NULL)
+            return this->widget::parent->get(e, t, v);
+        return 1;
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
       case ui::element::resize:         return this->composite::get(e, t, v);
       default:                          return this->widget::get(e, t, v);
     }
     return 1;
+}
+
+int ui::manager::get(GLuint e, GLuint t, glm::ivec2 *v) const
+{
+    if (e == ui::element::child_spacing)
+        return this->get_child_spacing(t, v);
+    return this->widget::get(e, t, v);
 }
 
 void ui::manager::set(GLuint e, GLuint t, GLuint v)

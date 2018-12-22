@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 08:26:33 tquirk
+ *   last updated 20 Dec 2018, 07:53:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -42,7 +42,7 @@ namespace ui
       protected:
         bool activated, armed;
 
-        virtual int get_state(GLuint, void *) const override;
+        virtual int get_state(GLuint, bool *) const override;
         virtual void set_state(GLuint, bool) override;
         virtual void set_margin(GLuint, GLuint) override;
 

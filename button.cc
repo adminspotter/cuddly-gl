@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Sep 2018, 08:28:02 tquirk
+ *   last updated 20 Dec 2018, 07:57:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -35,14 +35,12 @@
 #include "ui_defs.h"
 #include "button.h"
 
-int ui::button::get_state(GLuint t, void *v) const
+int ui::button::get_state(GLuint t, bool *v) const
 {
-    bool *val = reinterpret_cast<bool *>(v);
-
     switch (t)
     {
-      case ui::state::active:  return this->get_active_state(val);
-      case ui::state::armed:   return this->get_arm_state(val);
+      case ui::state::active:  return this->get_active_state(v);
+      case ui::state::armed:   return this->get_arm_state(v);
       default:                 return this->widget::get_state(t, v);
     }
 }

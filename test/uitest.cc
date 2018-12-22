@@ -70,8 +70,6 @@ ui::image img;
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len, spacing;
-    GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
     glm::vec4 bg3 = {0.0, 0.0, 0.0, 1.0};
@@ -103,7 +101,7 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(w);
     glfwSetWindowSizeCallback(w, window_size_callback);
     std::cout << "creating image" << std::endl;
-    create_image(wid, hei);
+    create_image(72, 48);
 
     std::cout << "creating context" << std::endl;
     ctx = new ui::context(800, 600);
@@ -228,8 +226,6 @@ int main(int argc, char **argv)
         glfwPollEvents();
     }
     delete ctx;
-    delete tiny_font;
-    delete std_font;
     glfwTerminate();
     return 0;
 }

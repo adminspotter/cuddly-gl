@@ -60,9 +60,9 @@ void ui::composite::set_size(GLuint d, const glm::ivec2& v)
         i->call_callbacks(ui::callback::resize, &call_data);
 }
 
-int ui::composite::get_resize(GLuint t, void *v) const
+int ui::composite::get_resize(GLuint t, GLuint *v) const
 {
-    *reinterpret_cast<GLuint *>(v) = this->resize;
+    *v = this->resize;
     return 0;
 }
 
@@ -72,32 +72,26 @@ void ui::composite::set_resize(GLuint t, GLuint v)
         this->resize = v;
 }
 
-int ui::composite::get_pixel_size(GLuint t, void *v) const
+int ui::composite::get_pixel_size(GLuint t, float *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-        {
-            glm::vec3 sz(2.0f / (float)this->dim.x,
-                         2.0f / (float)this->dim.y,
-                         0.0f);
-            *reinterpret_cast<glm::vec3 *>(v) = sz;
-            break;
-        }
-
-      case ui::size::width:
-        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.x;
-        break;
-      case ui::size::height:
-        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::width:   *v = 2.0f / (float)this->dim.x;  return 0;
+      case ui::size::height:  *v = 2.0f / (float)this->dim.y;  return 0;
+      default:                                                 return 1;
     }
-    return ret;
+}
+
+int ui::composite::get_pixel_size(GLuint t, glm::vec3 *v) const
+{
+    if (t == ui::size::all)
+    {
+        v->x = 2.0f / (float)this->dim.x;
+        v->y = 2.0f / (float)this->dim.y;
+        v->z = 0.0f;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::composite::set_desired_size(void)
@@ -183,15 +177,28 @@ ui::composite::~composite()
     this->children.clear();
 }
 
-int ui::composite::get(GLuint e, GLuint t, void *v) const
+int ui::composite::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
       case ui::element::size:        return this->get_size(t, v);
       case ui::element::resize:      return this->get_resize(t, v);
-      case ui::element::pixel_size:  return this->get_pixel_size(t, v);
       default:                       return 1;
     }
+}
+
+int ui::composite::get(GLuint e, GLuint t, float *v) const
+{
+    if (e == ui::element::pixel_size)
+        return this->get_pixel_size(t, v);
+    return 1;
+}
+
+int ui::composite::get(GLuint e, GLuint t, glm::vec3 *v) const
+{
+    if (e == ui::element::pixel_size)
+        return this->get_pixel_size(t, v);
+    return 1;
 }
 
 void ui::composite::set(GLuint e, GLuint t, GLuint v)
