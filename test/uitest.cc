@@ -309,6 +309,7 @@ void print_sizes(ui::active *a, void *call, void *client)
 {
     glm::ivec2 pos, size;
     GLuint border[4], margin[4];
+    bool visible;
     ui::widget *w = dynamic_cast<ui::widget *>(a);
 
     if (w == NULL)
@@ -323,11 +324,14 @@ void print_sizes(ui::active *a, void *call, void *client)
            ui::element::margin, ui::side::top, &margin[0],
            ui::element::margin, ui::side::left, &margin[1],
            ui::element::margin, ui::side::right, &margin[2],
-           ui::element::margin, ui::side::bottom, &margin[3]);
+           ui::element::margin, ui::side::bottom, &margin[3],
+           ui::element::state, ui::state::visible, &visible);
     std::cout << "pos <" << pos.x << ", " << pos.y << ">" << std::endl;
     std::cout << "size <" << size.x << ", " << size.y << ">" << std::endl;
     std::cout << "border <" << border[0] << ", " << border[1] << ", "
               << border[2] << ", " << border[3] << ">" << std::endl;
     std::cout << "margin <" << margin[0] << ", " << margin[1] << ", "
               << margin[2] << ", " << margin[3] << ">" << std::endl;
+    if (visible == true)
+        std::cout << "visible" << std::endl;
 }
