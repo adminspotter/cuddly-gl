@@ -34,6 +34,7 @@ void menu_callback(ui::active *, void *, void *);
 void reorient_callback(ui::active *, void *, void *);
 void print_widget_resources(ui::active *, void *, void *);
 void print_button_resources(ui::active *, void *, void *);
+void print_row_column_resources(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -190,6 +191,7 @@ int main(int argc, char **argv)
                             ui::element::child_spacing, ui::size::width, 10,
                             ui::element::child_spacing, ui::size::height, 10);
     r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
+    r1->add_callback(ui::callback::btn_down, print_row_column_resources, NULL);
     for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
@@ -384,4 +386,33 @@ void print_button_resources(ui::active *a, void *call, void *client)
         std::cout << "active" << std::endl;
     if (visible == true)
         std::cout << "visible" << std::endl;
+}
+
+void print_row_column_resources(ui::active *a, void *call, void *client)
+{
+    GLuint sx, sy, cx, cy, resize;
+    float px, py;
+    ui::row_column *r = dynamic_cast<ui::row_column *>(a);
+
+    if (r == NULL)
+        return;
+
+    r->get(ui::element::size, ui::size::rows, &sx,
+           ui::element::size, ui::size::columns, &sy,
+           ui::element::child_spacing, ui::size::width, &cx,
+           ui::element::child_spacing, ui::size::height, &cy,
+           ui::element::resize, 0, &resize,
+           ui::element::pixel_size, ui::size::width, &px,
+           ui::element::pixel_size, ui::size::height, &py);
+    std::cout << "grid size <" << sx << ", " << sy << ">" << std::endl;
+    std::cout << "spacing <" << cx << ", " << cy << ">" << std::endl;
+    std::cout << "pixel <" << px << ", " << py << ">" << std::endl;
+    switch (resize)
+    {
+      case ui::resize::none:    std::cout << "none" << std::endl;    break;
+      case ui::resize::shrink:  std::cout << "shrink" << std::endl;  break;
+      case ui::resize::grow:    std::cout << "grow" << std::endl;    break;
+      case ui::resize::all:     std::cout << "all" << std::endl;     break;
+      default:                  std::cout << "??" << std::endl;      break;
+    }
 }
