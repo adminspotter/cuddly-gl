@@ -39,8 +39,8 @@ it will be in a tuple of three arguments:
 * value (_variable_)  
   A variable of appropriate type.  Each resource has its own type
   which it can accept.  Some resources may even be able to accept more
-  than one type.  `get` methods will always take `void *` here, as a
-  return argument.
+  than one type.  `get` methods will take a pointer to the appropriate
+  type here, as a return argument.
 
 These are not tuples in the `std::tuple` sense, but are simply sets of
 three arguments in the argument list.

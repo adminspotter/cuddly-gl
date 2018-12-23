@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:52:19 tquirk
+ *   last updated 20 Dec 2018, 08:10:18 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -44,8 +44,8 @@ void ui::composite::set_size(GLuint d, GLuint v)
     this->regenerate_children();
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->call_callbacks(ui::callback::resize, &call_data);
+    for (auto& i : this->children)
+        i->call_callbacks(ui::callback::resize, &call_data);
 }
 
 void ui::composite::set_size(GLuint d, const glm::ivec2& v)
@@ -60,9 +60,9 @@ void ui::composite::set_size(GLuint d, const glm::ivec2& v)
         i->call_callbacks(ui::callback::resize, &call_data);
 }
 
-int ui::composite::get_resize(GLuint t, void *v) const
+int ui::composite::get_resize(GLuint t, GLuint *v) const
 {
-    *reinterpret_cast<GLuint *>(v) = this->resize;
+    *v = this->resize;
     return 0;
 }
 
@@ -72,32 +72,26 @@ void ui::composite::set_resize(GLuint t, GLuint v)
         this->resize = v;
 }
 
-int ui::composite::get_pixel_size(GLuint t, void *v) const
+int ui::composite::get_pixel_size(GLuint t, float *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-        {
-            glm::vec3 sz(2.0f / (float)this->dim.x,
-                         2.0f / (float)this->dim.y,
-                         0.0f);
-            *reinterpret_cast<glm::vec3 *>(v) = sz;
-            break;
-        }
-
-      case ui::size::width:
-        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.x;
-        break;
-      case ui::size::height:
-        *reinterpret_cast<float *>(v) = 2.0f / (float)this->dim.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::width:   *v = 2.0f / (float)this->dim.x;  return 0;
+      case ui::size::height:  *v = 2.0f / (float)this->dim.y;  return 0;
+      default:                                                 return 1;
     }
-    return ret;
+}
+
+int ui::composite::get_pixel_size(GLuint t, glm::vec3 *v) const
+{
+    if (t == ui::size::all)
+    {
+        v->x = 2.0f / (float)this->dim.x;
+        v->y = 2.0f / (float)this->dim.y;
+        v->z = 0.0f;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::composite::set_desired_size(void)
@@ -107,16 +101,16 @@ void ui::composite::set_desired_size(void)
 
 void ui::composite::reposition_children(void)
 {
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        (*i)->recalculate_transformation_matrix();
+    for (auto& i : this->children)
+        i->recalculate_transformation_matrix();
 }
 
 void ui::composite::regenerate_children(void)
 {
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
-        (*i)->recalculate_transformation_matrix();
-        (*i)->populate_buffers();
+        i->recalculate_transformation_matrix();
+        i->populate_buffers();
     }
 }
 
@@ -129,9 +123,9 @@ void ui::composite::regenerate_search_tree(void)
     this->tree = new ui::quadtree(NULL,
                                   ul, this->dim,
                                   ui::composite::tree_max_depth);
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        if ((*i)->visible == true)
-            this->tree->insert(*i);
+    for (auto& i : this->children)
+        if (i->visible == true)
+            this->tree->insert(i);
 }
 
 void ui::composite::clear_removed_children(void)
@@ -140,12 +134,10 @@ void ui::composite::clear_removed_children(void)
     {
         if (this->to_remove.size() != 0)
         {
-            for (auto i = this->to_remove.begin();
-                 i != this->to_remove.end();
-                 ++i)
+            for (auto& i : this->to_remove)
             {
-                this->children.remove(*i);
-                this->tree->remove(*i);
+                this->children.remove(i);
+                this->tree->remove(i);
             }
             this->to_remove.clear();
         }
@@ -185,20 +177,33 @@ ui::composite::composite(composite *c)
 ui::composite::~composite()
 {
     delete this->tree;
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
-        delete (*i);
+    for (auto& i : this->children)
+        delete i;
     this->children.clear();
 }
 
-int ui::composite::get(GLuint e, GLuint t, void *v) const
+int ui::composite::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
       case ui::element::size:        return this->get_size(t, v);
       case ui::element::resize:      return this->get_resize(t, v);
-      case ui::element::pixel_size:  return this->get_pixel_size(t, v);
       default:                       return 1;
     }
+}
+
+int ui::composite::get(GLuint e, GLuint t, float *v) const
+{
+    if (e == ui::element::pixel_size)
+        return this->get_pixel_size(t, v);
+    return 1;
+}
+
+int ui::composite::get(GLuint e, GLuint t, glm::vec3 *v) const
+{
+    if (e == ui::element::pixel_size)
+        return this->get_pixel_size(t, v);
+    return 1;
 }
 
 void ui::composite::set(GLuint e, GLuint t, GLuint v)

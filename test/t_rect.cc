@@ -158,6 +158,7 @@ void test_va_get(void)
     test_rect *r = NULL;
     GLuint dim = 0;
     glm::ivec2 sz = {6, 5};
+    int ret;
 
     try
     {
@@ -169,24 +170,36 @@ void test_va_get(void)
         return;
     }
 
+    /* Furthest to the right wins */
     st = "single: ";
-    r->get(ui::element::size, ui::size::width, &dim,
-           ui::element::size, ui::size::height, &dim);
+    ret = r->get(ui::element::size, ui::size::width, &dim,
+                 ui::element::size, ui::size::height, &dim);
+    is(ret, 0, test + st + "expected return");
     is(dim, 87, test + st + "expected size");
 
     st = "vector: ";
-    r->get(ui::element::size, ui::size::all, &sz);
+    ret = r->get(ui::element::size, ui::size::width, &dim,
+                 ui::element::size, ui::size::all, &sz);
+    is(ret, 0, test + st + "expected return");
     is(sz.x, 9, test + st + "expected width");
     is(sz.y, 87, test + st + "expected height");
 
     st = "bad element type: ";
     dim = 4;
-    r->get(99999, ui::size::width, &dim);
+    ret = r->get(99999, ui::size::width, &dim,
+                 45678, ui::size::all, &sz);
+    is(ret, 2, test + st + "expected return");
     is(dim, 4, test + st + "value unchanged");
+    is(sz.x, 9, test + st + "width unchanged");
+    is(sz.y, 87, test + st + "height unchanged");
 
     st = "bad element subtype: ";
-    r->get(ui::element::size, 99999, &dim);
+    ret = r->get(ui::element::size, 99999, &dim,
+                 ui::element::size, 12345, &sz);
+    is(ret, 2, test + st + "expected return");
     is(dim, 4, test + st + "value unchanged");
+    is(sz.x, 9, test + st + "width unchanged");
+    is(sz.y, 87, test + st + "height unchanged");
 
     try
     {
@@ -247,7 +260,7 @@ void test_va_set(void)
 
 int main(int argc, char **argv)
 {
-    plan(32);
+    plan(40);
 
     test_create_delete();
     test_get_size();

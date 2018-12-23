@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:21:32 tquirk
+ *   last updated 20 Dec 2018, 08:17:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,16 +36,14 @@
 #include "ui_defs.h"
 #include "text_field.h"
 
-int ui::text_field::get_size(GLuint t, void *v) const
+int ui::text_field::get_size(GLuint t, GLuint *v) const
 {
-    switch (t)
+    if (t == ui::size::max_width)
     {
-      case ui::size::max_width:
-        *reinterpret_cast<GLuint *>(v) = this->max_length;
+        *v = this->max_length;
         return 0;
-      default:
-        return this->label::get_size(t, v);
     }
+    return this->label::get_size(t, v);
 }
 
 void ui::text_field::set_size(GLuint t, GLuint v)
@@ -61,14 +59,12 @@ void ui::text_field::set_size(GLuint t, GLuint v)
         this->label::set_size(t, v);
 }
 
-int ui::text_field::get_cursor(GLuint t, void *v) const
+int ui::text_field::get_cursor(GLuint t, GLuint *v) const
 {
-    GLuint *val = reinterpret_cast<GLuint *>(v);
-
     switch (t)
     {
-      case ui::cursor::position:  return this->get_cursor_pos(val);
-      case ui::cursor::blink:     return this->get_cursor_blink(val);
+      case ui::cursor::position:  return this->get_cursor_pos(v);
+      case ui::cursor::blink:     return this->get_cursor_blink(v);
       default:                    return 1;
     }
 }
@@ -108,9 +104,7 @@ void ui::text_field::set_image(GLuint t, const ui::image& v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
-void ui::text_field::enter_callback(ui::active *a,
-                                    void *call,
-                                    void *client)
+void ui::text_field::enter_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
@@ -118,9 +112,7 @@ void ui::text_field::enter_callback(ui::active *a,
         t->activate_cursor();
 }
 
-void ui::text_field::leave_callback(ui::active *a,
-                                    void *call,
-                                    void *client)
+void ui::text_field::leave_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
@@ -128,9 +120,7 @@ void ui::text_field::leave_callback(ui::active *a,
         t->deactivate_cursor();
 }
 
-void ui::text_field::key_callback(ui::active *a,
-                                  void *call,
-                                  void *client)
+void ui::text_field::key_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::key_call_data *c = (ui::key_call_data *)call;
@@ -362,7 +352,7 @@ void ui::text_field::generate_cursor(void)
     {
         ui::vertex_buffer *vb = new ui::vertex_buffer(32, 6);
         float h, m[2], b[2];
-        glm::vec2 psz;
+        glm::vec3 psz;
 
         this->parent->get(ui::element::pixel_size, ui::size::all, &psz);
         psz.y = -psz.y;
@@ -487,7 +477,7 @@ ui::text_field::~text_field()
     glDeleteVertexArrays(1, &this->cursor_vao);
 }
 
-int ui::text_field::get(GLuint e, GLuint t, void *v) const
+int ui::text_field::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {

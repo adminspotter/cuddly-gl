@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:46:58 tquirk
+ *   last updated 20 Dec 2018, 08:14:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -42,20 +42,13 @@
 
 #define INNER_PCT  0.1f
 
-int ui::pie_menu::get_popup(GLuint t, void *v) const
+int ui::pie_menu::get_popup(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::popup::button:
-        *reinterpret_cast<int *>(v) = this->popup_button;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::popup::button:  *v = this->popup_button;  return 0;
+      default:                                           return 1;
     }
-    return ret;
 }
 
 void ui::pie_menu::set_popup(GLuint t, GLuint v)
@@ -135,7 +128,7 @@ void ui::pie_menu::set_desired_size(void)
 
 ui::vertex_buffer *ui::pie_menu::generate_points(void)
 {
-    glm::vec2 pixel_sz;
+    glm::vec3 pixel_sz;
     glm::vec2 center(-1.0f, 1.0f), m0, m3;
     glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
     float inner_pct = INNER_PCT, pct;
@@ -270,7 +263,7 @@ ui::pie_menu::~pie_menu()
     }
 }
 
-int ui::pie_menu::get(GLuint e, GLuint t, void *v) const
+int ui::pie_menu::get(GLuint e, GLuint t, GLuint *v) const
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);

@@ -1,6 +1,6 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 23:52:01 tquirk
+ *   last updated 20 Dec 2018, 08:11:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -38,10 +38,9 @@
 #include "label.h"
 
 /* ARGSUSED */
-int ui::label::get_font(GLuint t, void *v) const
+int ui::label::get_font(GLuint t, ui::base_font **v) const
 {
-    *reinterpret_cast<ui::base_font **>(v)
-        = const_cast<ui::base_font *>(this->font);
+    *v = this->font;
     return 0;
 }
 
@@ -57,9 +56,9 @@ void ui::label::set_font(GLuint t, ui::base_font *v)
 }
 
 /* ARGSUSED */
-int ui::label::get_string(GLuint t, void *v) const
+int ui::label::get_string(GLuint t, std::string *v) const
 {
-    *reinterpret_cast<std::string *>(v) = ui::u32strtoutf8(this->str);
+    *v = ui::u32strtoutf8(this->str);
     return 0;
 }
 
@@ -71,9 +70,9 @@ void ui::label::set_string(GLuint t, const std::string& v)
 }
 
 /* ARGSUSED */
-int ui::label::get_image(GLuint t, void *v) const
+int ui::label::get_image(GLuint t, ui::image *v) const
 {
-    *reinterpret_cast<ui::image *>(v) = this->img;
+    *v = this->img;
     return 0;
 }
 
@@ -218,15 +217,25 @@ ui::label::~label()
         delete this->font;
 }
 
-int ui::label::get(GLuint e, GLuint t, void *v) const
+int ui::label::get(GLuint e, GLuint t, ui::base_font **v) const
 {
-    switch (e)
-    {
-      case ui::element::font:    return this->get_font(t, v);
-      case ui::element::string:  return this->get_string(t, v);
-      case ui::element::image:   return this->get_image(t, v);
-      default:                   return ui::widget::get(e, t, v);
-    }
+    if (e == ui::element::font)
+        return this->get_font(t, v);
+    return 1;
+}
+
+int ui::label::get(GLuint e, GLuint t, std::string *v) const
+{
+    if (e == ui::element::string)
+        return this->get_string(t, v);
+    return 1;
+}
+
+int ui::label::get(GLuint e, GLuint t, ui::image *v) const
+{
+    if (e == ui::element::image)
+        return this->get_image(t, v);
+    return 1;
 }
 
 void ui::label::set(GLuint e, GLuint t, ui::base_font *v)

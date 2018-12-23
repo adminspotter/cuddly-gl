@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 19:09:48 tquirk
+ *   last updated 20 Dec 2018, 08:20:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -219,26 +219,24 @@ size_t ui::vertex_buffer::element_size(void)
     return sizeof(GLuint) * this->element_index;
 }
 
-int ui::widget::get_position(GLuint t, void *v) const
+int ui::widget::get_position(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::position::all:
-        *reinterpret_cast<glm::ivec2 *>(v) = this->pos;
-        break;
-      case ui::position::x:
-        *reinterpret_cast<int *>(v) = this->pos.x;
-        break;
-      case ui::position::y:
-        *reinterpret_cast<int *>(v) = this->pos.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::position::x:  *v = this->pos.x;  return 0;
+      case ui::position::y:  *v = this->pos.y;  return 0;
+      default:                                  return 1;
     }
-    return ret;
+}
+
+int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
+{
+    if (t == ui::position::all)
+    {
+        *v = this->pos;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::widget::set_position(GLuint t, GLuint v)
@@ -264,11 +262,11 @@ void ui::widget::set_position(GLuint t, const glm::ivec2& v)
     }
 }
 
-int ui::widget::get_state(GLuint t, void *v) const
+int ui::widget::get_state(GLuint t, bool *v) const
 {
     if (t == ui::state::visible)
     {
-        *reinterpret_cast<bool *>(v) = this->visible;
+        *v = this->visible;
         return 0;
     }
     return 1;
@@ -283,29 +281,16 @@ void ui::widget::set_state(GLuint t, bool v)
     }
 }
 
-int ui::widget::get_border(GLuint t, void *v) const
+int ui::widget::get_border(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::side::top:
-        *reinterpret_cast<GLuint *>(v) = this->border[0];
-        break;
-      case ui::side::left:
-        *reinterpret_cast<GLuint *>(v) = this->border[1];
-        break;
-      case ui::side::right:
-        *reinterpret_cast<GLuint *>(v) = this->border[2];
-        break;
-      case ui::side::bottom:
-        *reinterpret_cast<GLuint *>(v) = this->border[3];
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::side::top:     *v = this->border[0];  return 0;
+      case ui::side::left:    *v = this->border[1];  return 0;
+      case ui::side::right:   *v = this->border[2];  return 0;
+      case ui::side::bottom:  *v = this->border[3];  return 0;
+      default:                                       return 1;
     }
-    return ret;
 }
 
 void ui::widget::set_border(GLuint t, GLuint v)
@@ -318,29 +303,16 @@ void ui::widget::set_border(GLuint t, GLuint v)
     this->populate_buffers();
 }
 
-int ui::widget::get_margin(GLuint t, void *v) const
+int ui::widget::get_margin(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::side::top:
-        *reinterpret_cast<GLuint *>(v) = this->margin[0];
-        break;
-      case ui::side::left:
-        *reinterpret_cast<GLuint *>(v) = this->margin[1];
-        break;
-      case ui::side::right:
-        *reinterpret_cast<GLuint *>(v) = this->margin[2];
-        break;
-      case ui::side::bottom:
-        *reinterpret_cast<GLuint *>(v) = this->margin[3];
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::side::top:     *v = this->margin[0];  return 0;
+      case ui::side::left:    *v = this->margin[1];  return 0;
+      case ui::side::right:   *v = this->margin[2];  return 0;
+      case ui::side::bottom:  *v = this->margin[3];  return 0;
+      default:                                       return 1;
     }
-    return ret;
 }
 
 void ui::widget::set_margin(GLuint t, GLuint v)
@@ -353,25 +325,14 @@ void ui::widget::set_margin(GLuint t, GLuint v)
     this->populate_buffers();
 }
 
-int ui::widget::get_color(GLuint t, void *v) const
+int ui::widget::get_color(GLuint t, glm::vec4 *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::color::foreground:
-        memcpy(v, glm::value_ptr(this->foreground), sizeof(float) * 4);
-        break;
-
-      case ui::color::background:
-        memcpy(v, glm::value_ptr(this->background), sizeof(float) * 4);
-        break;
-
-      default:
-        ret = 1;
-        break;
+      case ui::color::foreground:  *v = this->foreground;  return 0;
+      case ui::color::background:  *v = this->background;  return 0;
+      default:                                             return 1;
     }
-    return ret;
 }
 
 void ui::widget::set_color(GLuint t, const glm::vec4& v)
@@ -411,7 +372,7 @@ ui::vertex_buffer *ui::widget::generate_points(void)
 {
     ui::vertex_buffer *vb = new ui::vertex_buffer(160, 60);
     float w = this->dim.x, h = this->dim.y, m[4], b[4];
-    glm::vec2 psz;
+    glm::vec3 psz;
 
     this->parent->get(ui::element::pixel_size, ui::size::all, &psz);
     psz.y = -psz.y;
@@ -476,7 +437,7 @@ void ui::widget::populate_buffers(void)
 
 void ui::widget::init(ui::composite *c)
 {
-    GLuint pos_attr, color_attr, texture_attr;
+    GLuint pos_attr = 0, color_attr = 0, texture_attr = 0;
 
     for (int i = 0; i < 4; ++i)
         this->border[i] = this->margin[i] = 0;
@@ -534,20 +495,40 @@ ui::widget::~widget()
     glDeleteVertexArrays(1, &this->vao);
 }
 
-int ui::widget::get(GLuint e, GLuint t, void *v) const
+int ui::widget::get(GLuint e, GLuint t, GLuint *v) const
 {
-    int ret;
-
     switch (e)
     {
-      case ui::element::position:  ret = this->get_position(t, v);    break;
-      case ui::element::state:     ret = this->get_state(t, v);       break;
-      case ui::element::border:    ret = this->get_border(t, v);      break;
-      case ui::element::margin:    ret = this->get_margin(t, v);      break;
-      case ui::element::color:     ret = this->get_color(t, v);       break;
-      default:                     ret = this->active::get(e, t, v);  break;
+      case ui::element::position:  return this->get_position(t, v);
+      case ui::element::border:    return this->get_border(t, v);
+      case ui::element::margin:    return this->get_margin(t, v);
+      case ui::element::size:      return this->get_size(t, v);
+      default:                     return 1;
     }
-    return ret;
+}
+
+int ui::widget::get(GLuint e, GLuint t, glm::ivec2 *v) const
+{
+    switch (e)
+    {
+      case ui::element::position:  return this->get_position(t, v);
+      case ui::element::size:      return this->get_size(t, v);
+      default:                     return 1;
+    }
+}
+
+int ui::widget::get(GLuint e, GLuint t, bool *v) const
+{
+    if (e == ui::element::state)
+        return this->get_state(t, v);
+    return 1;
+}
+
+int ui::widget::get(GLuint e, GLuint t, glm::vec4 *v) const
+{
+    if (e == ui::element::color)
+        return this->get_color(t, v);
+    return 1;
 }
 
 void ui::widget::set(GLuint e, GLuint t, GLuint v)

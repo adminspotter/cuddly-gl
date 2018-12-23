@@ -1,6 +1,6 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:44:00 tquirk
+ *   last updated 20 Dec 2018, 08:15:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -32,31 +32,24 @@
 #include "ui_defs.h"
 #include "row_column.h"
 
-int ui::row_column::get_size(GLuint t, void *v) const
+int ui::row_column::get_size(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-      case ui::size::width:
-      case ui::size::height:
-        return this->manager::get_size(t, v);
-
-      case ui::size::grid:
-        *reinterpret_cast<glm::ivec2 *>(v) = this->grid_sz;
-        break;
-      case ui::size::rows:
-        *reinterpret_cast<int *>(v) = this->grid_sz.x;
-        break;
-      case ui::size::columns:
-        *reinterpret_cast<int *>(v) = this->grid_sz.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::rows:     *v = this->grid_sz.x;  return 0;
+      case ui::size::columns:  *v = this->grid_sz.y;  return 0;
+      default:                 return this->manager::get_size(t, v);
     }
-    return ret;
+}
+
+int ui::row_column::get_size(GLuint t, glm::ivec2 *v) const
+{
+    if (t == ui::size::grid)
+    {
+        *v = this->grid_sz;
+        return 0;
+    }
+    return this->manager::get_size(t, v);
 }
 
 void ui::row_column::set_size(GLuint t, GLuint v)
@@ -77,9 +70,9 @@ void ui::row_column::set_size(GLuint t, const glm::ivec2& v)
         this->manager::set_size(t, v);
 }
 
-int ui::row_column::get_order(GLuint t, void *v) const
+int ui::row_column::get_order(GLuint t, GLuint *v) const
 {
-    *reinterpret_cast<GLuint *>(v) = this->pack_order;
+    *v = this->pack_order;
     return 0;
 }
 
@@ -93,9 +86,9 @@ glm::ivec2 ui::row_column::calculate_cell_size(void)
 {
     glm::ivec2 cell_size(0, 0), child_sz;
 
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
-        (*i)->get(ui::element::size, ui::size::all, &child_sz);
+        i->get(ui::element::size, ui::size::all, &child_sz);
         cell_size.x = std::max(cell_size.x, child_sz.x);
         cell_size.y = std::max(cell_size.y, child_sz.y);
     }
@@ -222,7 +215,7 @@ ui::row_column::~row_column()
 {
 }
 
-int ui::row_column::get(GLuint e, GLuint t, void *v) const
+int ui::row_column::get(GLuint e, GLuint t, GLuint *v) const
 {
     if (e == ui::element::order)
         return this->get_order(t, v);

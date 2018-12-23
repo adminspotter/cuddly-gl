@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Sep 2018, 06:59:13 tquirk
+ *   last updated 20 Dec 2018, 08:12:52 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -71,10 +71,10 @@ namespace ui
     }
     resize_call_data;
 
-#define GET_VA template<typename... Args> \
-               int get(GLuint e, GLuint t, void *v, Args... args) const \
-               { \
-                   return this->get(e, t, v) + this->get(args...); \
+#define GET_VA template<typename A, typename... Args>                \
+               int get(GLuint e, GLuint t, A *v, Args... args) const  \
+               {                                                     \
+                   return this->get(e, t, v) + this->get(args...);   \
                };
 
 #define SET_VA template<typename A, typename... Args>                \
@@ -164,7 +164,7 @@ namespace ui
 
     namespace cursor
     {
-        const int position = 1, blink = 2;
+        const GLuint position = 1, blink = 2;
     }
 
     namespace transform

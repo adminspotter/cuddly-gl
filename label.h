@@ -1,6 +1,6 @@
 /* label.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 23:51:46 tquirk
+ *   last updated 20 Dec 2018, 08:11:01 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -46,15 +46,15 @@ namespace ui
       protected:
         bool shared_font;
         std::u32string str;
-        image img;
+        ui::image img;
         ui::base_font *font;
         GLuint tex;
 
-        int get_font(GLuint, void *) const;
+        int get_font(GLuint, ui::base_font **) const;
         virtual void set_font(GLuint, ui::base_font *);
-        int get_string(GLuint, void *) const;
+        int get_string(GLuint, std::string *) const;
         virtual void set_string(GLuint, const std::string&);
-        int get_image(GLuint, void *) const;
+        int get_image(GLuint, ui::image *) const;
         virtual void set_image(GLuint, const ui::image&);
         virtual void set_border(GLuint, GLuint) override;
         virtual void set_margin(GLuint, GLuint) override;
@@ -77,7 +77,10 @@ namespace ui
             };
         virtual ~label();
 
-        virtual int get(GLuint, GLuint, void *) const override;
+        using ui::widget::get;
+        int get(GLuint, GLuint, ui::base_font **) const;
+        int get(GLuint, GLuint, std::string *) const;
+        int get(GLuint, GLuint, ui::image *) const;
         using ui::widget::set;
         virtual void set(GLuint, GLuint, ui::base_font *);
         virtual void set(GLuint a, GLuint b, ui::font *c)

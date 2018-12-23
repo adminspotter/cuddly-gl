@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:52:48 tquirk
+ *   last updated 20 Dec 2018, 08:00:46 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -58,9 +58,10 @@ namespace ui
 
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
-        virtual int get_resize(GLuint, void *) const;
+        virtual int get_resize(GLuint, GLuint *) const;
         virtual void set_resize(GLuint, GLuint);
-        virtual int get_pixel_size(GLuint, void *) const;
+        virtual int get_pixel_size(GLuint, float *) const;
+        virtual int get_pixel_size(GLuint, glm::vec3 *) const;
 
         virtual void set_desired_size(void);
 
@@ -85,7 +86,10 @@ namespace ui
             };
         virtual ~composite();
 
-        virtual int get(GLuint, GLuint, void *) const override;
+        using ui::rect::get;
+        virtual int get(GLuint, GLuint, GLuint *) const override;
+        virtual int get(GLuint, GLuint, float *) const;
+        virtual int get(GLuint, GLuint, glm::vec3 *) const;
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
 

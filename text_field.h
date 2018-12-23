@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 18:26:28 tquirk
+ *   last updated 20 Dec 2018, 07:58:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -46,10 +46,11 @@ namespace ui
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
 
-        virtual int get_size(GLuint, void *) const override;
+        using ui::label::get_size;
+        virtual int get_size(GLuint, GLuint *) const override;
         using ui::label::set_size;
         virtual void set_size(GLuint, GLuint) override;
-        virtual int get_cursor(GLuint, void *) const;
+        virtual int get_cursor(GLuint, GLuint *) const;
         virtual void set_cursor(GLuint, GLuint);
         virtual void set_font(GLuint, ui::base_font *) override;
         virtual void set_string(GLuint, const std::string&) override;
@@ -98,7 +99,8 @@ namespace ui
             };
         virtual ~text_field();
 
-        virtual int get(GLuint, GLuint, void *) const override;
+        using ui::label::get;
+        virtual int get(GLuint, GLuint, GLuint *) const override;
         using ui::label::set;
         virtual void set(GLuint, GLuint, GLuint) override;
 

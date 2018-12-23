@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 15 Dec 2018, 19:08:12 tquirk
+ *   last updated 20 Dec 2018, 08:19:53 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -36,26 +36,24 @@
 #include "ui_defs.h"
 #include "manager.h"
 
-int ui::manager::get_child_spacing(GLuint t, void *v) const
+int ui::manager::get_child_spacing(GLuint t, GLuint *v) const
 {
-    int ret = 0;
-
     switch (t)
     {
-      case ui::size::all:
-        *reinterpret_cast<glm::ivec2 *>(v) = this->child_spacing;
-        break;
-      case ui::size::width:
-        *reinterpret_cast<int *>(v) = this->child_spacing.x;
-        break;
-      case ui::size::height:
-        *reinterpret_cast<int *>(v) = this->child_spacing.y;
-        break;
-      default:
-        ret = 1;
-        break;
+      case ui::size::width:   *v = this->child_spacing.x;  return 0;
+      case ui::size::height:  *v = this->child_spacing.y;  return 0;
+      default:                                             return 1;
     }
-    return ret;
+}
+
+int ui::manager::get_child_spacing(GLuint t, glm::ivec2 *v) const
+{
+    if (t == ui::size::all)
+    {
+        *v = this->child_spacing;
+        return 0;
+    }
+    return 1;
 }
 
 void ui::manager::set_child_spacing(GLuint t, GLuint v)
@@ -88,7 +86,12 @@ void ui::manager::set_resize(GLuint t, GLuint v)
     this->set_desired_size();
 }
 
-int ui::manager::get_size(GLuint t, void *v) const
+int ui::manager::get_size(GLuint t, GLuint *v) const
+{
+    return this->composite::get_size(t, v);
+}
+
+int ui::manager::get_size(GLuint t, glm::ivec2 *v) const
 {
     return this->composite::get_size(t, v);
 }
@@ -105,7 +108,14 @@ void ui::manager::set_size(GLuint t, const glm::ivec2& v)
     this->widget::set_size(t, v);
 }
 
-int ui::manager::get_pixel_size(GLuint t, void *v) const
+int ui::manager::get_pixel_size(GLuint t, float *v) const
+{
+    if (this->composite::parent != NULL)
+        return this->composite::parent->get(ui::element::pixel_size, t, v);
+    return 1;
+}
+
+int ui::manager::get_pixel_size(GLuint t, glm::vec3 *v) const
 {
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
@@ -116,12 +126,12 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 {
     glm::ivec2 max_pt(0, 0);
 
-    for (auto i = this->children.begin(); i != this->children.end(); ++i)
+    for (auto& i : this->children)
     {
         glm::ivec2 c_sz, c_pos;
 
-        (*i)->get(ui::element::size, ui::size::all, &c_sz,
-                  ui::element::position, ui::position::all, &c_pos);
+        i->get(ui::element::size, ui::size::all, &c_sz,
+               ui::element::position, ui::position::all, &c_pos);
         c_sz += c_pos;
         max_pt.x = std::max(max_pt.x, c_sz.x);
         max_pt.y = std::max(max_pt.y, c_sz.y);
@@ -201,20 +211,27 @@ ui::manager::~manager()
 {
 }
 
-int ui::manager::get(GLuint e, GLuint t, void *v) const
+int ui::manager::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
         /* Eventually, the context will be somebody's parent */
       case ui::element::attribute:
-      case ui::element::pixel_size:
-        return this->widget::parent->get(e, t, v);
-
+        if (this->composite::parent != NULL)
+            return this->widget::parent->get(e, t, v);
+        return 1;
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
       case ui::element::resize:         return this->composite::get(e, t, v);
       default:                          return this->widget::get(e, t, v);
     }
     return 1;
+}
+
+int ui::manager::get(GLuint e, GLuint t, glm::ivec2 *v) const
+{
+    if (e == ui::element::child_spacing)
+        return this->get_child_spacing(t, v);
+    return this->widget::get(e, t, v);
 }
 
 void ui::manager::set(GLuint e, GLuint t, GLuint v)
@@ -242,7 +259,7 @@ void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         glm::mat4 trans = this->pos_transform * parent_trans;
 
         this->widget::draw(trans_uniform, parent_trans);
-        for (auto i = this->children.begin(); i != this->children.end(); ++i)
-            (*i)->draw(trans_uniform, trans);
+        for (auto& i : this->children)
+            i->draw(trans_uniform, trans);
     }
 }

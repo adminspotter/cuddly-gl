@@ -32,7 +32,9 @@ void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
 void menu_callback(ui::active *, void *, void *);
 void reorient_callback(ui::active *, void *, void *);
-void print_sizes(ui::active *, void *, void *);
+void print_widget_resources(ui::active *, void *, void *);
+void print_button_resources(ui::active *, void *, void *);
+void print_row_column_resources(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -70,8 +72,6 @@ ui::image img;
 int main(int argc, char **argv)
 {
     GLFWwindow *w;
-    GLuint border = 1, wid = 72, hei = 48, xpos, ypos, max_len, spacing;
-    GLuint gridx, gridy;
     glm::vec4 fg1 = {1.0, 1.0, 1.0, 1.0}, fg2 = {0.0, 1.0, 1.0, 1.0};
     glm::vec4 bg1 = {0.2, 0.2, 0.2, 1.0}, bg2 = {0.2, 0.2, 0.2, 0.2};
     glm::vec4 bg3 = {0.0, 0.0, 0.0, 1.0};
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     glfwMakeContextCurrent(w);
     glfwSetWindowSizeCallback(w, window_size_callback);
     std::cout << "creating image" << std::endl;
-    create_image(wid, hei);
+    create_image(72, 48);
 
     std::cout << "creating context" << std::endl;
     ctx = new ui::context(ui::element::size, ui::size::width, 800,
@@ -139,6 +139,7 @@ int main(int argc, char **argv)
                         ui::element::color, ui::color::background, bg3,
                         ui::element::position, ui::position::x, 50,
                         ui::element::position, ui::position::y, 175);
+    b1->add_callback(ui::callback::btn_down, print_button_resources, NULL);
     std::cout << "creating password 1" << std::endl;
     pw1 = new ui::password(ctx,
                            ui::element::font, ui::ownership::shared, std_font,
@@ -190,6 +191,7 @@ int main(int argc, char **argv)
                             ui::element::child_spacing, ui::size::width, 10,
                             ui::element::child_spacing, ui::size::height, 10);
     r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
+    r1->add_callback(ui::callback::btn_down, print_row_column_resources, NULL);
     for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
@@ -201,7 +203,7 @@ int main(int argc, char **argv)
                ui::element::string, 0, s.str(),
                ui::element::border, ui::side::all, 1,
                ui::element::size, ui::size::width, 100);
-        l->add_callback(ui::callback::btn_down, print_sizes, NULL);
+        l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
     }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx,
@@ -236,8 +238,6 @@ int main(int argc, char **argv)
         glfwPollEvents();
     }
     delete ctx;
-    delete tiny_font;
-    delete std_font;
     glfwTerminate();
     return 0;
 }
@@ -317,10 +317,12 @@ void reorient_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void print_sizes(ui::active *a, void *call, void *client)
+void print_widget_resources(ui::active *a, void *call, void *client)
 {
     glm::ivec2 pos, size;
+    glm::vec4 fg, bg;
     GLuint border[4], margin[4];
+    bool visible;
     ui::widget *w = dynamic_cast<ui::widget *>(a);
 
     if (w == NULL)
@@ -335,11 +337,82 @@ void print_sizes(ui::active *a, void *call, void *client)
            ui::element::margin, ui::side::top, &margin[0],
            ui::element::margin, ui::side::left, &margin[1],
            ui::element::margin, ui::side::right, &margin[2],
-           ui::element::margin, ui::side::bottom, &margin[3]);
+           ui::element::margin, ui::side::bottom, &margin[3],
+           ui::element::state, ui::state::visible, &visible,
+           ui::element::color, ui::color::foreground, &fg,
+           ui::element::color, ui::color::background, &bg);
     std::cout << "pos <" << pos.x << ", " << pos.y << ">" << std::endl;
     std::cout << "size <" << size.x << ", " << size.y << ">" << std::endl;
     std::cout << "border <" << border[0] << ", " << border[1] << ", "
               << border[2] << ", " << border[3] << ">" << std::endl;
     std::cout << "margin <" << margin[0] << ", " << margin[1] << ", "
               << margin[2] << ", " << margin[3] << ">" << std::endl;
+    std::cout << "foreground <" << fg.r << ", " << fg.g << ", "
+              << fg.b << ", " << fg.a << ">" << std::endl;
+    std::cout << "background <" << bg.r << ", " << bg.g << ", "
+              << bg.b << ", " << bg.a << ">" << std::endl;
+    if (visible == true)
+        std::cout << "visible" << std::endl;
+}
+
+void print_button_resources(ui::active *a, void *call, void *client)
+{
+    GLuint w, h, x, y;
+    ui::base_font *font;
+    std::string str;
+    ui::image img;
+    bool arm, active, visible;
+    ui::button *b = dynamic_cast<ui::button *>(a);
+
+    if (b == NULL)
+        return;
+
+    b->get(ui::element::position, ui::position::x, &x,
+           ui::element::position, ui::position::y, &y,
+           ui::element::size, ui::size::width, &w,
+           ui::element::size, ui::size::height, &h,
+           ui::element::string, 0, &str,
+           ui::element::font, 0, &font,
+           ui::element::image, 0, &img,
+           ui::element::state, ui::state::visible, &visible,
+           ui::element::state, ui::state::armed, &arm,
+           ui::element::state, ui::state::active, &active);
+    std::cout << "pos <" << x << ", " << y << ">" << std::endl;
+    std::cout << "size <" << w << ", " << h << ">" << std::endl;
+    std::cout << "string [" << str << "]" << std::endl;
+    if (arm == true)
+        std::cout << "armed" << std::endl;
+    if (active == true)
+        std::cout << "active" << std::endl;
+    if (visible == true)
+        std::cout << "visible" << std::endl;
+}
+
+void print_row_column_resources(ui::active *a, void *call, void *client)
+{
+    GLuint sx, sy, cx, cy, resize;
+    float px, py;
+    ui::row_column *r = dynamic_cast<ui::row_column *>(a);
+
+    if (r == NULL)
+        return;
+
+    r->get(ui::element::size, ui::size::rows, &sx,
+           ui::element::size, ui::size::columns, &sy,
+           ui::element::child_spacing, ui::size::width, &cx,
+           ui::element::child_spacing, ui::size::height, &cy,
+           ui::element::resize, 0, &resize,
+           ui::element::pixel_size, ui::size::width, &px,
+           ui::element::pixel_size, ui::size::height, &py);
+    std::cout << "grid size <" << sx << ", " << sy << ">" << std::endl;
+    std::cout << "spacing <" << cx << ", " << cy << ">" << std::endl;
+    std::cout << "pixel <" << px << ", " << py << ">" << std::endl;
+    switch (resize)
+    {
+      case ui::resize::none:    std::cout << "none" << std::endl;    break;
+      case ui::resize::shrink:  std::cout << "shrink" << std::endl;  break;
+      case ui::resize::grow:    std::cout << "grow" << std::endl;    break;
+      case ui::resize::all:     std::cout << "all" << std::endl;     break;
+      default:                  std::cout << "??" << std::endl;      break;
+    }
 }
