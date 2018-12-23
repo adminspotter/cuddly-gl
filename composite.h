@@ -73,8 +73,17 @@ namespace ui
 
         void child_motion(widget *, GLuint, glm::ivec2&);
 
+        void init(composite *);
+
       public:
-        composite(composite *, GLuint, GLuint);
+        explicit composite(composite *);
+        template<typename... Args>
+        composite(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), children(), to_remove(), old_pos(0, 0)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~composite();
 
         using ui::rect::get;

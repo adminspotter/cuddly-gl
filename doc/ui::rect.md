@@ -12,9 +12,9 @@ ui::rect
 
 ui::rect *r = new ui::rect(x, y);
 
-r->set(ui::element::size, ui::size::width, &different_x);
-r->set(ui::element::size, ui::size::width, &other_x,
-       ui::element::size, ui::size::height, &other_y);
+r->set(ui::element::size, ui::size::width, different_x);
+r->set(ui::element::size, ui::size::width, other_x,
+       ui::element::size, ui::size::height, other_y);
 
 r->get(ui::element::size, ui::size::all, &xy_vector);
 r->get(ui::element::size, ui::size::width, &x_target,
@@ -42,13 +42,14 @@ a base class with a size.
   `void *`.  The function can take any number of sets of these three
   arguments.
 
-* **set(type, subtype, obj_ptr, ...)**
+* **set(type, subtype, obj, ...)**
 
   Set resources within the object.  As with the `get()` method,
   arguments are provided in sets of three, with the `type` argument
   being an item from the `ui::element` namespace, the `subtype` from
-  the corresponding sub-namespace, and the `obj_ptr` a `const void *`.
-  This function can also take any number of three-argument sets.
+  the corresponding sub-namespace, and the `obj` a variable or constant
+  which is relevant for the type/subtype.
+  This function can take any number of three-argument sets.
 
 The variable-argument methods need to be added to each subclass which
 overrides either the get() or set() method.  They are added by

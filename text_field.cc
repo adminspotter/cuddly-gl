@@ -412,9 +412,7 @@ ui::vertex_buffer *ui::text_field::generate_points(void)
     return vb;
 }
 
-ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h), ui::active::active(w, h), ui::rect::rect(w, h),
-      cursor_transform()
+void ui::text_field::init(ui::composite *c)
 {
     GLuint pos_attr, color_attr, texture_attr;
 
@@ -463,6 +461,13 @@ ui::text_field::text_field(ui::composite *c, GLuint w, GLuint h)
                        NULL);
 
     this->populate_buffers();
+}
+
+ui::text_field::text_field(ui::composite *c)
+    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
+      cursor_transform()
+{
+    this->init(c);
 }
 
 ui::text_field::~text_field()

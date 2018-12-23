@@ -105,91 +105,96 @@ int main(int argc, char **argv)
     create_image(72, 48);
 
     std::cout << "creating context" << std::endl;
-    ctx = new ui::context(800, 600);
+    ctx = new ui::context(ui::element::size, ui::size::width, 800,
+                          ui::element::size, ui::size::height, 600);
     ui_connect_glfw(ctx, w);
     ctx->add_callback(ui::callback::key_down, close_key_callback, w);
 
     std::cout << "creating widget 1" << std::endl;
-    w1 = new ui::widget(ctx, 50, 50);
-    w1->set(ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, fg2,
-            ui::element::border, ui::side::all, 2,
-            ui::element::margin, ui::side::all, 2,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 50);
+    w1 = new ui::widget(ctx,
+                        ui::element::size, ui::size::width, 50,
+                        ui::element::size, ui::size::height, 50,
+                        ui::element::color, ui::color::foreground, fg1,
+                        ui::element::color, ui::color::background, fg2,
+                        ui::element::border, ui::side::all, 2,
+                        ui::element::margin, ui::side::all, 2,
+                        ui::element::position, ui::position::x, 50,
+                        ui::element::position, ui::position::y, 50);
     std::cout << "creating label 1" << std::endl;
-    l1 = new ui::label(ctx, 0, 0);
-    l1->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::string, 0, greeting,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::border, ui::side::all, 1,
-            ui::element::margin, ui::side::all, 1,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 125);
+    l1 = new ui::label(ctx,
+                       ui::element::font, ui::ownership::shared, std_font,
+                       ui::element::string, 0, greeting,
+                       ui::element::color, ui::color::foreground, fg1,
+                       ui::element::border, ui::side::all, 1,
+                       ui::element::margin, ui::side::all, 1,
+                       ui::element::position, ui::position::x, 50,
+                       ui::element::position, ui::position::y, 125);
     std::cout << "creating button 1" << std::endl;
-    b1 = new ui::button(ctx, 0, 0);
-    b1->set(ui::element::image, 0, img,
-            ui::element::margin, ui::side::all, 0,
-            ui::element::border, ui::side::all, 0,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg3,
-            ui::element::position, ui::position::x, 50,
-            ui::element::position, ui::position::y, 175);
+    b1 = new ui::button(ctx,
+                        ui::element::image, 0, img,
+                        ui::element::margin, ui::side::all, 0,
+                        ui::element::border, ui::side::all, 0,
+                        ui::element::color, ui::color::foreground, fg1,
+                        ui::element::color, ui::color::background, bg3,
+                        ui::element::position, ui::position::x, 50,
+                        ui::element::position, ui::position::y, 175);
     b1->add_callback(ui::callback::btn_down, print_button_resources, NULL);
     std::cout << "creating password 1" << std::endl;
-    pw1 = new ui::password(ctx, 0, 0);
-    pw1->set(ui::element::font, ui::ownership::shared, std_font,
-             ui::element::border, ui::side::all, 1,
-             ui::element::color, ui::color::foreground, fg1,
-             ui::element::color, ui::color::background, bg2,
-             ui::element::position, ui::position::x, 50,
-             ui::element::position, ui::position::y, 250,
-             ui::element::size, ui::size::max_width, 5);
+    pw1 = new ui::password(ctx,
+                           ui::element::font, ui::ownership::shared, std_font,
+                           ui::element::border, ui::side::all, 1,
+                           ui::element::color, ui::color::foreground, fg1,
+                           ui::element::color, ui::color::background, bg2,
+                           ui::element::position, ui::position::x, 50,
+                           ui::element::position, ui::position::y, 250,
+                           ui::element::size, ui::size::max_width, 5);
     std::cout << "creating manager 1" << std::endl;
-    m1 = new ui::manager(ctx, 200, 200);
-    m1->set(ui::element::border, ui::side::all, 1,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg2,
-            ui::element::position, ui::position::x, 250,
-            ui::element::position, ui::position::y, 35,
-            ui::element::child_spacing, ui::size::width, 10,
-            ui::element::child_spacing, ui::size::height, 10);
+    m1 = new ui::manager(ctx,
+                         ui::element::size, ui::size::width, 200,
+                         ui::element::size, ui::size::height, 200,
+                         ui::element::border, ui::side::all, 1,
+                         ui::element::color, ui::color::foreground, fg1,
+                         ui::element::color, ui::color::background, bg2,
+                         ui::element::position, ui::position::x, 250,
+                         ui::element::position, ui::position::y, 35,
+                         ui::element::child_spacing, ui::size::width, 10,
+                         ui::element::child_spacing, ui::size::height, 10);
     std::cout << "creating button 2" << std::endl;
-    b2 = new ui::button(m1, 0, 0);
-    b2->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::color, ui::color::foreground, fg2,
-            ui::element::string, 0, greeting,
-            ui::element::margin, ui::side::all, 5,
-            ui::element::border, ui::side::all, 5,
-            ui::element::position, ui::position::x, 10,
-            ui::element::position, ui::position::y, 10);
+    b2 = new ui::button(m1,
+                        ui::element::font, ui::ownership::shared, std_font,
+                        ui::element::color, ui::color::foreground, fg2,
+                        ui::element::string, 0, greeting,
+                        ui::element::margin, ui::side::all, 5,
+                        ui::element::border, ui::side::all, 5,
+                        ui::element::position, ui::position::x, 10,
+                        ui::element::position, ui::position::y, 10);
     std::cout << "creating text field 1" << std::endl;
-    t1 = new ui::text_field(m1, 0, 0);
-    t1->set(ui::element::font, ui::ownership::shared, std_font,
-            ui::element::string, 0, greeting,
-            ui::element::size, ui::size::max_width, 10,
-            ui::element::border, ui::side::all, 1,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg1,
-            ui::element::position, ui::position::x, 10,
-            ui::element::position, ui::position::y, 100);
+    t1 = new ui::text_field(m1,
+                            ui::element::font, ui::ownership::shared, std_font,
+                            ui::element::string, 0, greeting,
+                            ui::element::size, ui::size::max_width, 10,
+                            ui::element::border, ui::side::all, 1,
+                            ui::element::color, ui::color::foreground, fg1,
+                            ui::element::color, ui::color::background, bg1,
+                            ui::element::position, ui::position::x, 10,
+                            ui::element::position, ui::position::y, 100);
     std::cout << "creating row-column 1" << std::endl;
-    r1 = new ui::row_column(ctx, 10, 10);
-    r1->set(ui::element::border, ui::side::all, 1,
-            ui::element::size, ui::size::columns, 1,
-            ui::element::size, ui::size::rows, 0,
-            ui::element::color, ui::color::foreground, fg1,
-            ui::element::color, ui::color::background, bg1,
-            ui::element::position, ui::position::x, 520,
-            ui::element::position, ui::position::y, 35,
-            ui::element::child_spacing, ui::size::width, 10,
-            ui::element::child_spacing, ui::size::height, 10);
+    r1 = new ui::row_column(ctx,
+                            ui::element::border, ui::side::all, 1,
+                            ui::element::size, ui::size::columns, 1,
+                            ui::element::size, ui::size::rows, 0,
+                            ui::element::color, ui::color::foreground, fg1,
+                            ui::element::color, ui::color::background, bg1,
+                            ui::element::position, ui::position::x, 520,
+                            ui::element::position, ui::position::y, 35,
+                            ui::element::child_spacing, ui::size::width, 10,
+                            ui::element::child_spacing, ui::size::height, 10);
     r1->add_callback(ui::callback::btn_down, reorient_callback, NULL);
     for (int q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::label *l = new ui::label(r1, 0, 0);
+        ui::label *l = new ui::label(r1);
 
         s << "Label " << q << "\n" << greeting;
         l->set(ui::element::font, ui::ownership::shared, std_font,
@@ -199,16 +204,19 @@ int main(int argc, char **argv)
         l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
     }
     std::cout << "creating popup 1" << std::endl;
-    pu1 = new ui::pie_menu(ctx, 200, 125);
-    pu1->set(ui::element::border, ui::side::outer, 1,
-             ui::element::margin, ui::side::outer, 1,
-             ui::element::border, ui::side::inner, 1,
-             ui::element::popup, ui::popup::button, ui::mouse::button0);
+    pu1 = new ui::pie_menu(ctx,
+                           ui::element::size, ui::size::width, 200,
+                           ui::element::size, ui::size::height, 125,
+                           ui::element::border, ui::side::outer, 1,
+                           ui::element::margin, ui::side::outer, 1,
+                           ui::element::border, ui::side::inner, 1,
+                           ui::element::popup, ui::popup::button,
+                           ui::mouse::button0);
     for (intptr_t q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
         std::ostringstream s;
-        ui::label *pul = new ui::label(pu1, 0, 0);
+        ui::label *pul = new ui::label(pu1);
 
         s << (char)('a' + q);
         pul->set(ui::element::font, ui::ownership::shared, tiny_font,

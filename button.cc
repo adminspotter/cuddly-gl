@@ -170,8 +170,7 @@ void ui::button::disarm(ui::active *a, void *call, void *client)
         b->set(ui::element::state, ui::state::armed, false);
 }
 
-ui::button::button(ui::composite *c, GLuint w, GLuint h)
-    : ui::label::label(c, w, h), ui::active::active(w, h), ui::rect::rect(w, h)
+void ui::button::init(ui::composite *c)
 {
     this->activated = false;
     this->armed = false;
@@ -184,6 +183,12 @@ ui::button::button(ui::composite *c, GLuint w, GLuint h)
     this->add_callback(ui::callback::leave,     ui::button::deactivate, NULL);
     this->add_callback(ui::callback::btn_down,  ui::button::arm, NULL);
     this->add_callback(ui::callback::btn_up,    ui::button::disarm, NULL);
+}
+
+ui::button::button(ui::composite *c)
+    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
+{
+    this->init(c);
 }
 
 ui::button::~button()

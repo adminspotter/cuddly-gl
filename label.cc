@@ -188,9 +188,7 @@ void ui::label::populate_buffers(void)
     }
 }
 
-ui::label::label(ui::composite *c, GLuint w, GLuint h)
-    : ui::widget::widget(c, w, h), ui::active::active(w, h),
-      ui::rect::rect(w, h), str(), img()
+void ui::label::init(ui::composite *c)
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
@@ -203,6 +201,13 @@ ui::label::label(ui::composite *c, GLuint w, GLuint h)
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, black);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+ui::label::label(ui::composite *c)
+    : ui::widget::widget(c), ui::active::active(0, 0),
+      ui::rect::rect(0, 0), str(), img()
+{
+    this->init(c);
 }
 
 ui::label::~label()

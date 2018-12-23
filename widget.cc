@@ -435,10 +435,7 @@ void ui::widget::populate_buffers(void)
     delete vb;
 }
 
-ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
-    : ui::active::active(w, h), ui::rect::rect(w, h),
-      pos(0, 0), pos_transform(),
-      foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
+void ui::widget::init(ui::composite *c)
 {
     GLuint pos_attr = 0, color_attr = 0, texture_attr = 0;
 
@@ -480,6 +477,14 @@ ui::widget::widget(ui::composite *c, GLuint w, GLuint h)
     this->visible = true;
 
     this->populate_buffers();
+}
+
+ui::widget::widget(ui::composite *c)
+    : ui::active::active(0, 0), ui::rect::rect(0, 0),
+      pos(0, 0), pos_transform(),
+      foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
+{
+    this->init(c);
 }
 
 ui::widget::~widget()

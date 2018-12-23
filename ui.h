@@ -48,8 +48,17 @@ namespace ui
       protected:
         int get_attribute(GLuint, GLuint *) const;
 
+        void init(void);
+
       public:
-        context(GLuint, GLuint);
+        explicit context();
+        template<typename... Args>
+        context(Args... args)
+            : rect(0, 0), active(0, 0), composite(NULL)
+            {
+                this->init();
+                this->set(args...);
+            };
         ~context();
 
         using ui::composite::get;

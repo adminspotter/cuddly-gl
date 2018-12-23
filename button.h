@@ -58,8 +58,17 @@ namespace ui
         static void arm(active *, void *, void *);
         static void disarm(active *, void *, void *);
 
+        void init(composite *);
+
       public:
-        button(composite *, GLuint = 0, GLuint = 0);
+        explicit button(composite *);
+        template<typename... Args>
+        button(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), label(c)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~button();
     };
 }

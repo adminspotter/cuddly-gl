@@ -47,9 +47,7 @@ int ui::context::get_attribute(GLuint t, GLuint *v) const
     }
 }
 
-ui::context::context(GLuint w, GLuint h)
-    : ui::composite::composite(NULL, w, h), ui::active::active(w, h),
-      ui::rect::rect(w, h)
+void ui::context::init(void)
 {
     this->vert_shader = load_shader(GL_VERTEX_SHADER);
     this->frag_shader = load_shader(GL_FRAGMENT_SHADER);
@@ -60,6 +58,13 @@ ui::context::context(GLuint w, GLuint h)
     this->texture_attr = glGetAttribLocation(shader_pgm, "texture_uv");
     this->text_bgnd_uniform = glGetUniformLocation(shader_pgm, "text_bgnd");
     this->translate_uniform = glGetUniformLocation(shader_pgm, "translate");
+}
+
+ui::context::context()
+    : ui::composite::composite(NULL), ui::active::active(0, 0),
+      ui::rect::rect(0, 0)
+{
+    this->init();
 }
 
 ui::context::~context()

@@ -54,8 +54,17 @@ namespace ui
         int which_sector(glm::ivec2&);
         ui::widget *which_child(glm::ivec2&);
 
+        void init(composite *);
+
       public:
-        pie_menu(composite *, GLuint, GLuint);
+        explicit pie_menu(composite *);
+        template<typename... Args>
+        pie_menu(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), manager(c)
+            {
+                this->init(c);
+                this->set(args...);
+            }
         virtual ~pie_menu();
 
         using ui::manager::get;

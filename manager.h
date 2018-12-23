@@ -58,8 +58,18 @@ namespace ui
 
         virtual void recalculate_transformation_matrix(void) override;
 
+        void init(composite *);
+
       public:
-        manager(composite *, GLuint, GLuint);
+        explicit manager(composite *);
+        template<typename... Args>
+        manager(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), widget(c), composite(c),
+              child_spacing(0, 0)
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~manager();
 
         using ui::widget::get;

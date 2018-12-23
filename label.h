@@ -64,8 +64,17 @@ namespace ui
         virtual vertex_buffer *generate_points(void) override;
         virtual void populate_buffers(void) override;
 
+        void init(composite *);
+
       public:
-        label(composite *, GLuint = 0, GLuint = 0);
+        explicit label(composite *);
+        template<typename... Args>
+        label(composite *c, Args... args)
+            : rect(0, 0), active(0, 0), widget(c), str(), img()
+            {
+                this->init(c);
+                this->set(args...);
+            };
         virtual ~label();
 
         using ui::widget::get;

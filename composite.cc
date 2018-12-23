@@ -158,15 +158,20 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         w->call_callbacks(type, &call_data);
 }
 
-ui::composite::composite(composite *c, GLuint w, GLuint h)
-    : ui::active::active(w, h), ui::rect::rect(w, h),
-      children(), to_remove(), old_pos(0, 0)
+void ui::composite::init(ui::composite *c)
 {
     this->parent = c;
     this->tree = NULL;
     this->old_child = NULL;
     this->dirty = false;
     this->regenerate_search_tree();
+}
+
+ui::composite::composite(composite *c)
+    : ui::active::active(0, 0), ui::rect::rect(0, 0),
+      children(), to_remove(), old_pos(0, 0)
+{
+    this->init(c);
 }
 
 ui::composite::~composite()

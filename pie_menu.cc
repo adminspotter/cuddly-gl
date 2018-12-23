@@ -228,8 +228,7 @@ ui::widget *ui::pie_menu::which_child(glm::ivec2& loc)
     return (*child);
 }
 
-ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
-    : ui::manager::manager(c, w, h), ui::active::active(w, h), ui::rect(w, h)
+void ui::pie_menu::init(ui::composite *c)
 {
     this->popup_button = ui::mouse::button2;
     this->resize = ui::resize::none;
@@ -243,6 +242,12 @@ ui::pie_menu::pie_menu(composite *c, GLuint w, GLuint h)
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
     this->populate_buffers();
+}
+
+ui::pie_menu::pie_menu(composite *c)
+    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect(0, 0)
+{
+    this->init(c);
 }
 
 ui::pie_menu::~pie_menu()
