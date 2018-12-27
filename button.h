@@ -41,11 +41,10 @@ namespace ui
     class button : public armable
     {
       protected:
-        virtual void set_state(GLuint, bool) override;
         virtual void set_margin(GLuint, GLuint) override;
 
-        void set_active_state(bool);
-        void set_arm_state(bool);
+        virtual void set_active_state(bool) override;
+        virtual void set_arm_state(bool) override;
         void grow_border(void);
         void shrink_border(void);
 

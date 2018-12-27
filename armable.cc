@@ -22,7 +22,9 @@
  *
  * This file contains the armable object definitions.  This is an
  * intermediate class between the label and the various buttons.  It
- * adds the concepts of armed and active.
+ * adds the concepts of armed and active.  It is a pure virtual, so it is
+ * not instantiable; its subclasses must provide methods which define
+ * what happens when armed or active states are set.
  *
  * Things to do
  *
@@ -38,6 +40,16 @@ int ui::armable::get_state(GLuint t, bool *v) const
       case ui::state::active:  return this->get_active_state(v);
       case ui::state::armed:   return this->get_arm_state(v);
       default:                 return this->widget::get_state(t, v);
+    }
+}
+
+void ui::armable::set_state(GLuint t, bool v)
+{
+    switch (t)
+    {
+      case ui::state::active:  this->set_active_state(v);     break;
+      case ui::state::armed:   this->set_arm_state(v);        break;
+      default:                 this->label::set_state(t, v);  break;
     }
 }
 

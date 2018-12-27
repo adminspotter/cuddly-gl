@@ -35,16 +35,6 @@
 #include "ui_defs.h"
 #include "button.h"
 
-void ui::button::set_state(GLuint t, bool v)
-{
-    switch (t)
-    {
-      case ui::state::active:  this->set_active_state(v);     break;
-      case ui::state::armed:   this->set_arm_state(v);        break;
-      default:                 this->label::set_state(t, v);  break;
-    }
-}
-
 void ui::button::set_margin(GLuint s, GLuint v)
 {
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);

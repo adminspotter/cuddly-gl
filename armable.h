@@ -22,7 +22,9 @@
  *
  * This file contains the armable object declaration.  This is an
  * intermediate class between the label and the various buttons.  It
- * adds the concepts of armed and active.
+ * adds the concepts of armed and active.  It is a pure virtual, so it is
+ * not instantiable; its subclasses must provide methods which define
+ * what happens when armed or active states are set.
  *
  * Things to do
  *
@@ -41,9 +43,12 @@ namespace ui
         bool activated, armed;
 
         virtual int get_state(GLuint, bool *) const override;
+        virtual void set_state(GLuint, bool) override;
 
         int get_active_state(bool *) const;
+        virtual void set_active_state(bool) = 0;
         int get_arm_state(bool *) const;
+        virtual void set_arm_state(bool) = 0;
 
         void init(composite *);
 
