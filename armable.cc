@@ -22,7 +22,8 @@
  *
  * This file contains the armable object definitions.  This is an
  * intermediate class between the label and the various buttons.  It
- * adds the concepts of armed and active.  It is a pure virtual, so it is
+ * adds the concepts of armed and active, and adds some basic
+ * callbacks to perform those actions.  It is a pure virtual, so it is
  * not instantiable; its subclasses must provide methods which define
  * what happens when armed or active states are set.
  *
@@ -65,10 +66,52 @@ int ui::armable::get_arm_state(bool *v) const
     return 0;
 }
 
+/* ARGSUSED */
+void ui::armable::activate(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->set(ui::element::state, ui::state::active, true);
+}
+
+/* ARGSUSED */
+void ui::armable::deactivate(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->set(ui::element::state, ui::state::active, false,
+               ui::element::state, ui::state::armed, false);
+}
+
+/* ARGSUSED */
+void ui::armable::arm(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->set(ui::element::state, ui::state::armed, true);
+}
+
+/* ARGSUSED */
+void ui::armable::disarm(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->set(ui::element::state, ui::state::armed, false);
+}
+
 void ui::armable::init(ui::composite *c)
 {
     this->activated = false;
     this->armed = false;
+
+    this->add_callback(ui::callback::enter,     ui::armable::activate, NULL);
+    this->add_callback(ui::callback::leave,     ui::armable::deactivate, NULL);
+    this->add_callback(ui::callback::btn_down,  ui::armable::arm, NULL);
+    this->add_callback(ui::callback::btn_up,    ui::armable::disarm, NULL);
 }
 
 ui::armable::armable(ui::composite *c)

@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Dec 2018, 08:41:55 tquirk
+ *   last updated 27 Dec 2018, 09:28:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -22,8 +22,8 @@
  *
  * This file contains the basic button object declaration.  We derive
  * from the armable, which, via the label, takes care of the actual
- * text/image.  In this class, we'll actually implement some
- * callbacks.
+ * text/image.  In this class, we'll implement the arm/active logic
+ * for the armable's callbacks.
  *
  * Things to do
  *
@@ -47,11 +47,6 @@ namespace ui
         virtual void set_arm_state(bool) override;
         void grow_border(void);
         void shrink_border(void);
-
-        static void activate(active *, void *, void *);
-        static void deactivate(active *, void *, void *);
-        static void arm(active *, void *, void *);
-        static void disarm(active *, void *, void *);
 
         void init(composite *);
 

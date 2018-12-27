@@ -103,51 +103,11 @@ void ui::button::shrink_border(void)
     this->populate_buffers();
 }
 
-/* ARGSUSED */
-void ui::button::activate(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, true);
-}
-
-/* ARGSUSED */
-void ui::button::deactivate(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, false,
-               ui::element::state, ui::state::armed, false);
-}
-
-void ui::button::arm(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, true);
-}
-
-void ui::button::disarm(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, false);
-}
-
 void ui::button::init(ui::composite *c)
 {
     for (int i = 0; i < 4; ++i)
         this->margin[i] = std::max(this->margin[i], 2u);
     this->populate_buffers();
-
-    this->add_callback(ui::callback::enter,     ui::button::activate, NULL);
-    this->add_callback(ui::callback::leave,     ui::button::deactivate, NULL);
-    this->add_callback(ui::callback::btn_down,  ui::button::arm, NULL);
-    this->add_callback(ui::callback::btn_up,    ui::button::disarm, NULL);
 }
 
 ui::button::button(ui::composite *c)
