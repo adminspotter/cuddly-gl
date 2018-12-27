@@ -40,6 +40,11 @@ namespace ui
       protected:
         bool activated, armed;
 
+        virtual int get_state(GLuint, bool *) const override;
+
+        int get_active_state(bool *) const;
+        int get_arm_state(bool *) const;
+
         void init(composite *);
 
       public:

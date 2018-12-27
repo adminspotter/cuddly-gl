@@ -35,16 +35,6 @@
 #include "ui_defs.h"
 #include "button.h"
 
-int ui::button::get_state(GLuint t, bool *v) const
-{
-    switch (t)
-    {
-      case ui::state::active:  return this->get_active_state(v);
-      case ui::state::armed:   return this->get_arm_state(v);
-      default:                 return this->widget::get_state(t, v);
-    }
-}
-
 void ui::button::set_state(GLuint t, bool v)
 {
     switch (t)
@@ -83,12 +73,6 @@ void ui::button::set_margin(GLuint s, GLuint v)
     this->populate_buffers();
 }
 
-int ui::button::get_active_state(bool *v) const
-{
-    *v = this->activated;
-    return 0;
-}
-
 void ui::button::set_active_state(bool v)
 {
     if (v == this->activated)
@@ -97,12 +81,6 @@ void ui::button::set_active_state(bool v)
         this->grow_border();
     else
         this->shrink_border();
-}
-
-int ui::button::get_arm_state(bool *v) const
-{
-    *v = this->armed;
-    return 0;
 }
 
 void ui::button::set_arm_state(bool v)

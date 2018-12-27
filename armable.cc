@@ -1,6 +1,6 @@
 /* armable.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Dec 2018, 22:36:52 tquirk
+ *   last updated 27 Dec 2018, 08:54:00 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -28,7 +28,30 @@
  *
  */
 
+#include "ui_defs.h"
 #include "armable.h"
+
+int ui::armable::get_state(GLuint t, bool *v) const
+{
+    switch (t)
+    {
+      case ui::state::active:  return this->get_active_state(v);
+      case ui::state::armed:   return this->get_arm_state(v);
+      default:                 return this->widget::get_state(t, v);
+    }
+}
+
+int ui::armable::get_active_state(bool *v) const
+{
+    *v = this->activated;
+    return 0;
+}
+
+int ui::armable::get_arm_state(bool *v) const
+{
+    *v = this->armed;
+    return 0;
+}
 
 void ui::armable::init(ui::composite *c)
 {
