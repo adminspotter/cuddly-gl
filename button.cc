@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 07:57:08 tquirk
+ *   last updated 26 Dec 2018, 12:12:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -172,9 +172,6 @@ void ui::button::disarm(ui::active *a, void *call, void *client)
 
 void ui::button::init(ui::composite *c)
 {
-    this->activated = false;
-    this->armed = false;
-
     for (int i = 0; i < 4; ++i)
         this->margin[i] = std::max(this->margin[i], 2u);
     this->populate_buffers();
@@ -186,7 +183,7 @@ void ui::button::init(ui::composite *c)
 }
 
 ui::button::button(ui::composite *c)
-    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
+    : ui::armable::armable(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
 {
     this->init(c);
 }

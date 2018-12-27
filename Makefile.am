@@ -10,6 +10,7 @@ install-recursive: SUBDIRS = $(SD_INST)
 EXTRA_DIST = autogen.sh doc
 
 pkginclude_HEADERS = active.h \
+	armable.h \
 	bidi.h \
 	button.h \
 	composite.h \
@@ -34,6 +35,7 @@ connectordir = @datadir@/$(PACKAGE)/connectors
 connector_DATA = connect_glfw.cc connect_glfw.h
 
 libcuddly_gl_la_SOURCES = active.cc \
+	armable.cc \
 	bidi.cc \
 	bidi_classes.cc \
 	button.cc \

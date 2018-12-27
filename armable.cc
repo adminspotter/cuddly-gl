@@ -21,7 +21,8 @@
  *
  *
  * This file contains the armable object definitions.  This is an
- * intermediate class between the label and the various buttons.
+ * intermediate class between the label and the various buttons.  It
+ * adds the concepts of armed and active.
  *
  * Things to do
  *

@@ -1,6 +1,6 @@
 /* button.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 07:53:03 tquirk
+ *   last updated 27 Dec 2018, 08:41:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -21,8 +21,9 @@
  *
  *
  * This file contains the basic button object declaration.  We derive
- * from the label, which will take care of the actual text/image.  In
- * this class, we'll actually implement some event callbacks.
+ * from the armable, which, via the label, takes care of the actual
+ * text/image.  In this class, we'll actually implement some
+ * callbacks.
  *
  * Things to do
  *
@@ -33,15 +34,13 @@
 
 #include <list>
 
-#include "label.h"
+#include "armable.h"
 
 namespace ui
 {
-    class button : public label
+    class button : public armable
     {
       protected:
-        bool activated, armed;
-
         virtual int get_state(GLuint, bool *) const override;
         virtual void set_state(GLuint, bool) override;
         virtual void set_margin(GLuint, GLuint) override;
@@ -64,7 +63,7 @@ namespace ui
         explicit button(composite *);
         template<typename... Args>
         button(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), label(c)
+            : rect(0, 0), active(0, 0), armable(c)
             {
                 this->init(c);
                 this->set(args...);
