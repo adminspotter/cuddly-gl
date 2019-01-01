@@ -35,7 +35,7 @@ described in the NEW RESOURCES section, not here. -->
 <!-- Only describe the public call interface.  Protected or private
 methods should not be listed. -->
 
-* **method_name(arg1, arg2, arg3)**
+* **method_name(type1 _arg1_, type2 _arg2_, type3 _arg3_)**
 
   Description of the method and its arguments.
 
