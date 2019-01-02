@@ -24,6 +24,7 @@ pkginclude_HEADERS = active.h \
 	rect.h \
 	row_column.h \
 	text_field.h \
+	toggle.h \
 	ui.h \
 	ui_defs.h \
 	widget.h
@@ -50,6 +51,7 @@ libcuddly_gl_la_SOURCES = active.cc \
 	row_column.cc \
 	shader.cc \
 	text_field.cc \
+	toggle.cc \
 	ui.cc \
 	widget.cc
 libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
