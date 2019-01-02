@@ -1,6 +1,6 @@
 /* toggle.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jan 2019, 09:21:36 tquirk
+ *   last updated 02 Jan 2019, 12:31:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -59,6 +59,7 @@ void ui::toggle::set_checked_state(bool v)
         return;
     if (this->activated == true && this->armed == true)
         this->checked = v;
+    this->populate_buffers();
 }
 
 void ui::toggle::calculate_widget_size(void)
@@ -103,6 +104,41 @@ ui::vertex_buffer *ui::toggle::generate_points(void)
         + ((this->margin[2] + this->border[2] + 1) * pw);
     vb->vertex[22] = vb->vertex[6];
     vb->vertex[30] = vb->vertex[14];
+
+    glm::vec3 psz;
+    glm::vec2 ul, lr;
+
+    this->parent->get(ui::element::pixel_size, ui::size::all, &psz);
+    psz.y = -psz.y;
+    ul.x = vb->vertex[0] + ((this->margin[1] + this->border[1] + 1) * psz.x);
+    ul.y = vb->vertex[1] + ((this->margin[0] + this->border[0] + 1) * psz.y);
+    lr.x = ul.x + ((this->img.height - 1) * psz.x);
+    lr.y = ul.y + ((this->img.height - 1) * psz.y);
+
+    /* The activation box which surrounds the main checkbox. */
+    if (this->activated == true)
+    {
+        vb->generate_box(ul, glm::vec2(lr.x, ul.y + psz.y), this->foreground);
+        vb->generate_box(ul, glm::vec2(ul.x + psz.x, lr.y), this->foreground);
+        vb->generate_box(glm::vec2(lr.x - psz.x, ul.y), lr, this->foreground);
+        vb->generate_box(glm::vec2(ul.x, lr.y - psz.y), lr, this->foreground);
+    }
+
+    /* The actual checkbox. */
+    ul.x += 3 * psz.x;
+    ul.y += 3 * psz.y;
+    lr.x -= 3 * psz.x;
+    lr.y -= 3 * psz.y;
+
+    if (this->checked == true)
+        vb->generate_box(ul, lr, this->foreground);
+    else
+    {
+        vb->generate_box(ul, glm::vec2(lr.x, ul.y + psz.y), this->foreground);
+        vb->generate_box(ul, glm::vec2(ul.x + psz.x, lr.y), this->foreground);
+        vb->generate_box(glm::vec2(lr.x - psz.x, ul.y), lr, this->foreground);
+        vb->generate_box(glm::vec2(ul.x, lr.y - psz.y), lr, this->foreground);
+    }
 
     return vb;
 }
