@@ -1,6 +1,6 @@
 /* toggle.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 01 Jan 2019, 22:45:58 tquirk
+ *   last updated 02 Jan 2019, 09:21:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -45,6 +45,8 @@ namespace ui
 
         int get_checked_state(bool *) const;
         void set_checked_state(bool);
+
+        static void check(active *, void *, void *);
 
         void init(composite *);
 

@@ -1,6 +1,6 @@
 /* toggle.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jan 2019, 09:14:48 tquirk
+ *   last updated 02 Jan 2019, 09:21:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -61,9 +61,34 @@ void ui::toggle::set_checked_state(bool v)
         this->checked = v;
 }
 
+/* ARGSUSED */
+void ui::toggle::check(ui::active *a, void *call, void *client)
+{
+    ui::toggle *t = dynamic_cast<ui::toggle *>(a);
+
+    if (t != NULL)
+    {
+        bool active, armed, checked;
+
+        t->get(ui::element::state, ui::state::active, &active,
+               ui::element::state, ui::state::armed, &armed,
+               ui::element::state, ui::state::checked, &checked);
+        if (active == true && armed == true)
+            t->set(ui::element::state, ui::state::checked, !checked);
+    }
+}
+
 void ui::toggle::init(ui::composite *c)
 {
     this->checked = false;
+
+    /* We need to rearrange the callback list a bit, so that we can
+     * intercept the active/armed states before the armable might
+     * change them.
+     */
+    this->remove_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
+    this->add_callback(ui::callback::btn_up, ui::toggle::check, NULL);
+    this->add_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
 }
 
 ui::toggle::toggle(ui::composite *c)
