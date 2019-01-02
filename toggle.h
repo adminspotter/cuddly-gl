@@ -43,8 +43,13 @@ namespace ui
         virtual int get_state(GLuint, bool *) const override;
         virtual void set_state(GLuint, bool) override;
 
+        virtual void set_active_state(bool) override;
+        virtual void set_arm_state(bool) override;
         int get_checked_state(bool *) const;
         void set_checked_state(bool);
+
+        void empty_checkbox(void);
+        void fill_checkbox(void);
 
         virtual void calculate_widget_size(void) override;
         virtual vertex_buffer *generate_points(void) override;

@@ -47,6 +47,26 @@ void ui::toggle::set_state(GLuint t, bool v)
     }
 }
 
+void ui::toggle::set_active_state(bool v)
+{
+    this->activated = v;
+    this->populate_buffers();
+}
+
+void ui::toggle::set_arm_state(bool v)
+{
+    this->armed = v;
+    if (this->armed == true)
+    {
+        if (this->checked == true)
+            this->empty_checkbox();
+        else
+            this->fill_checkbox();
+    }
+    else
+        this->populate_buffers();
+}
+
 int ui::toggle::get_checked_state(bool *v) const
 {
     *v = this->checked;
@@ -60,6 +80,22 @@ void ui::toggle::set_checked_state(bool v)
     if (this->activated == true && this->armed == true)
         this->checked = v;
     this->populate_buffers();
+}
+
+void ui::toggle::empty_checkbox(void)
+{
+    bool saved_checked = this->checked;
+    this->checked = false;
+    this->populate_buffers();
+    this->checked = saved_checked;
+}
+
+void ui::toggle::fill_checkbox(void)
+{
+    bool saved_checked = this->checked;
+    this->checked = true;
+    this->populate_buffers();
+    this->checked = saved_checked;
 }
 
 void ui::toggle::calculate_widget_size(void)
