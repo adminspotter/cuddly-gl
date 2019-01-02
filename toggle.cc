@@ -61,6 +61,52 @@ void ui::toggle::set_checked_state(bool v)
         this->checked = v;
 }
 
+void ui::toggle::calculate_widget_size(void)
+{
+    glm::ivec2 size;
+
+    if (this->img.width > 0 && this->img.height > 0)
+    {
+        /* We want an extra pixel of space between the string and each
+         * side, even if there is no border or margin, thus the
+         * literal 2s.
+         *
+         * The extra img.height in the x-dimension is to accommodate
+         * the checkbox.
+         */
+        size.x = this->img.width + this->img.height
+            + this->margin[1] + this->margin[2]
+            + this->border[1] + this->border[2] + 2;
+        size.y = this->img.height
+            + this->margin[0] + this->margin[3]
+            + this->border[0] + this->border[3] + 2;
+        this->set_size(ui::size::all, size);
+    }
+}
+
+ui::vertex_buffer *ui::toggle::generate_points(void)
+{
+    ui::vertex_buffer *vb = this->label::generate_points();
+
+    if (this->img.data == NULL)
+        return vb;
+
+    float pw = 1.0f / (float)this->img.width;
+
+    /* We want the checkbox on the left, which is going to be as wide
+     * as the image is high (so we can make it square), so we need to
+     * scoot the image over to the right side.
+     */
+    vb->vertex[6]  = 0.0f
+        - ((this->margin[1] + this->border[1] + 1 + this->img.height) * pw);
+    vb->vertex[14] = 1.0f
+        + ((this->margin[2] + this->border[2] + 1) * pw);
+    vb->vertex[22] = vb->vertex[6];
+    vb->vertex[30] = vb->vertex[14];
+
+    return vb;
+}
+
 /* ARGSUSED */
 void ui::toggle::check(ui::active *a, void *call, void *client)
 {

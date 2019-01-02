@@ -46,6 +46,9 @@ namespace ui
         int get_checked_state(bool *) const;
         void set_checked_state(bool);
 
+        virtual void calculate_widget_size(void) override;
+        virtual vertex_buffer *generate_points(void) override;
+
         static void check(active *, void *, void *);
 
         void init(composite *);
