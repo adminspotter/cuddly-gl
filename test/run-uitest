@@ -27,20 +27,21 @@ sub run_program
 
 sub interact_with_button
 {
+    my ($loc_x, $loc_y) = @_;
     my $test = 'button';
 
     my ($x, $y) = GetWindowPos($uitest);
     ok(defined $x, "$test: x pos is defined");
     ok(defined $y, "$test: y pos is defined");
-    my $status = MoveMouseAbs($x + 60, $y + 185);
+    my $status = MoveMouseAbs($x + $loc_x, $y + $loc_y);
     ok($status, "$test: moved mouse to right spot");
     $status = PressMouseButton(M_BTN1);
     ok($status, "$test: pressed button 1");
-    $status = MoveMouseAbs($x + 100, $y + 185);
+    $status = MoveMouseAbs($x + $loc_x + 40, $y + $loc_y);
     ok($status, "$test: moved mouse again");
     $status = ReleaseMouseButton(M_BTN1);
     ok($status, "$test: released button 1");
-    $status = ClickWindow($uitest, 60, 185, M_BTN2);
+    $status = ClickWindow($uitest, $loc_x, $loc_y, M_BTN2);
     ok($status, "$test: clicked button 2");
 }
 
@@ -148,7 +149,7 @@ sub close_window
 
 run_program();
 BAIL_OUT("no window created, can't test anything else") if !$uitest;
-interact_with_button();
+interact_with_button(60, 185);
 interact_with_row_column();
 interact_with_text_field();
 interact_with_pie_menu();
