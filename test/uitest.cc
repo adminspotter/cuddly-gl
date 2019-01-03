@@ -16,6 +16,7 @@
 #include "../widget.h"
 #include "../label.h"
 #include "../button.h"
+#include "../toggle.h"
 #include "../text_field.h"
 #include "../password.h"
 #include "../manager.h"
@@ -40,6 +41,7 @@ ui::context *ctx;
 ui::widget *w1;
 ui::label *l1;
 ui::button *b1, *b2;
+ui::toggle *tgl1;
 ui::text_field *t1;
 ui::password *pw1;
 ui::manager *m1;
@@ -149,6 +151,15 @@ int main(int argc, char **argv)
                            ui::element::position, ui::position::x, 50,
                            ui::element::position, ui::position::y, 250,
                            ui::element::size, ui::size::max_width, 5);
+    std::cout << "creating toggle 1" << std::endl;
+    tgl1 = new ui::toggle(ctx,
+                          ui::element::font, ui::ownership::shared, std_font,
+                          ui::element::string, 0, greeting,
+                          ui::element::border, ui::side::all, 1,
+                          ui::element::color, ui::color::foreground, fg1,
+                          ui::element::color, ui::color::background, bg3,
+                          ui::element::position, ui::position::x, 50,
+                          ui::element::position, ui::position::y, 300);
     std::cout << "creating manager 1" << std::endl;
     m1 = new ui::manager(ctx,
                          ui::element::size, ui::size::width, 200,

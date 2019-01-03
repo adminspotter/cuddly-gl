@@ -33,23 +33,24 @@ a base class with a size.
 
 ## METHODS ##
 
-* **get(type, subtype, obj_ptr, ...) const**
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
 
   Retrieve resources from the object.  Arguments are given in sets of
-  three.  The `type` argument will be from the `ui::element`
-  namespace, and the `subtype` argument will be from a namespace which
-  corresponds to the primary type.  The `obj_ptr` argument is a
-  `void *`.  The function can take any number of sets of these three
-  arguments.
+  three.  The _type_ argument will be from the `ui::element`
+  namespace, and the _subtype_ argument will be from a namespace which
+  corresponds to the primary type.  The _obj_ptr_ argument is a
+  pointer to a type which corresponds with the resource being set; all
+  `ui::rect` resources are either `GLuint` or `glm::ivec2`.  The
+  method can take any number of sets of these three arguments.
 
-* **set(type, subtype, obj, ...)**
+* **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
   Set resources within the object.  As with the `get()` method,
-  arguments are provided in sets of three, with the `type` argument
-  being an item from the `ui::element` namespace, the `subtype` from
-  the corresponding sub-namespace, and the `obj` a variable or constant
-  which is relevant for the type/subtype.
-  This function can take any number of three-argument sets.
+  arguments are provided in sets of three, with the _type_ argument
+  being an item from the `ui::element` namespace, the _subtype_ from
+  the corresponding sub-namespace, and the _obj_ a variable or
+  constant which is relevant for the type/subtype.  This method can
+  take any number of three-argument sets.
 
 The variable-argument methods need to be added to each subclass which
 overrides either the get() or set() method.  They are added by

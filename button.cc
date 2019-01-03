@@ -1,6 +1,6 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 07:57:08 tquirk
+ *   last updated 26 Dec 2018, 12:12:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -35,26 +35,6 @@
 #include "ui_defs.h"
 #include "button.h"
 
-int ui::button::get_state(GLuint t, bool *v) const
-{
-    switch (t)
-    {
-      case ui::state::active:  return this->get_active_state(v);
-      case ui::state::armed:   return this->get_arm_state(v);
-      default:                 return this->widget::get_state(t, v);
-    }
-}
-
-void ui::button::set_state(GLuint t, bool v)
-{
-    switch (t)
-    {
-      case ui::state::active:  this->set_active_state(v);     break;
-      case ui::state::armed:   this->set_arm_state(v);        break;
-      default:                 this->label::set_state(t, v);  break;
-    }
-}
-
 void ui::button::set_margin(GLuint s, GLuint v)
 {
     GLuint min_val = (this->activated ? 0 : 1) + (this->armed ? 0 : 1);
@@ -83,12 +63,6 @@ void ui::button::set_margin(GLuint s, GLuint v)
     this->populate_buffers();
 }
 
-int ui::button::get_active_state(bool *v) const
-{
-    *v = this->activated;
-    return 0;
-}
-
 void ui::button::set_active_state(bool v)
 {
     if (v == this->activated)
@@ -97,12 +71,6 @@ void ui::button::set_active_state(bool v)
         this->grow_border();
     else
         this->shrink_border();
-}
-
-int ui::button::get_arm_state(bool *v) const
-{
-    *v = this->armed;
-    return 0;
 }
 
 void ui::button::set_arm_state(bool v)
@@ -135,58 +103,15 @@ void ui::button::shrink_border(void)
     this->populate_buffers();
 }
 
-/* ARGSUSED */
-void ui::button::activate(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, true);
-}
-
-/* ARGSUSED */
-void ui::button::deactivate(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, false,
-               ui::element::state, ui::state::armed, false);
-}
-
-void ui::button::arm(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, true);
-}
-
-void ui::button::disarm(ui::active *a, void *call, void *client)
-{
-    ui::button *b = dynamic_cast<ui::button *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, false);
-}
-
 void ui::button::init(ui::composite *c)
 {
-    this->activated = false;
-    this->armed = false;
-
     for (int i = 0; i < 4; ++i)
         this->margin[i] = std::max(this->margin[i], 2u);
     this->populate_buffers();
-
-    this->add_callback(ui::callback::enter,     ui::button::activate, NULL);
-    this->add_callback(ui::callback::leave,     ui::button::deactivate, NULL);
-    this->add_callback(ui::callback::btn_down,  ui::button::arm, NULL);
-    this->add_callback(ui::callback::btn_up,    ui::button::disarm, NULL);
 }
 
 ui::button::button(ui::composite *c)
-    : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
+    : ui::armable::armable(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
 {
     this->init(c);
 }

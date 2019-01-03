@@ -236,47 +236,45 @@ mappings to the underlying types, but with shorter names.
 
 ## METHODS ##
 
-* **add_callback(list, func_ptr, client_data)**
+* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void *_client_data_)**
 
-  Adds a callback to the provided `list`.  The `list` argument is an
-  element from the `ui::callback` namespace.  The `func_ptr` argument
-  is a `ui::cb_fptr`.
+  Adds a callback to the provided _list_.  The _list_ argument is an
+  element from the `ui::callback` namespace.
 
-  The `client_data` argument is a `void *`, which is saved as-is; if
-  the `client_data` is a pointer to something, whatever is at the
-  address at call time is what is available to the callback function.
+  The _client_data_ argument is saved as-is; if _client_data_ is a
+  pointer to something, whatever is at the address at call time is
+  what is available to the callback function.
 
-* **remove_callback(list, func_ptr, client_data)**
+* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void *_client_data_)**
 
-  Removes a callback to the provided `list` which has the provided
-  `client_data`.
+  Removes a callback to the provided _list_ which has the provided
+  _client_data_.
 
-  If a given `func_ptr`/`client_data` pair are contained in a callback
+  If a given _func_ptr_/_client_data_ pair are contained in a callback
   list more than once, a call to `remove_callback` will remove the
   *first* instance.
 
   If no matching callback is found in a list, the list will be
   unchanged.
 
-* **call_callbacks(list, call_data)**
+* **call_callbacks(GLuint _list_, void *_call_data_)**
 
-  Calls the callbacks in the provided `list`, passing `call_data` in
-  the second argument to each.  The `list` argument is an element from
-  the `ui::callback` namespace, and `call_data` is a `void *`.
+  Calls the callbacks in the provided _list_, passing _call_data_ in
+  the second argument to each.  The _list_ argument is an element from
+  the `ui::callback` namespace.
 
   This is the method which is used internally by the event-handling
   mechanism to trigger a set of callbacks.
 
-* **add_timeout(until, func_ptr, client_data)**
+* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void *_client_data_)**
 
-  Adds a timeout which will expire after the interval `until`.  The
-  `until` argument is a `ui::to_time::duration`, which is a type of
-  `std::chrono::steady_clock::duration`.  The `func_ptr` argument is a
-  `ui::to_fptr`.
+  Adds a timeout which will expire after the interval _until_.  The
+  _until_ argument is a type of `std::chrono::steady_clock::duration`,
+  so all related types are usable.
 
-  The `client_data` argument is a `void *`, which is saved as-is; if
-  the `client_data` is a pointer to something, whatever is at the
-  address at call time is what is available to the callback function.
+  The _client_data_ argument is saved as-is; if _client_data_ is a
+  pointer to something, whatever is at the address at call time is
+  what is available to the callback function.
 
 * **remove_timeout()**
 
@@ -292,8 +290,8 @@ mappings to the underlying types, but with shorter names.
   to fire the timeout call, but in the general case, this method would
   probably not be used very often in user code.
 
-* **get(type, subtype, obj_ptr, ...) const**
-* **set(type, subtype, obj_ptr, ...)**
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
+* **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
   Inherited from [`ui::rect`](ui::rect).
 

@@ -1,9 +1,9 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:20:03 tquirk
+ *   last updated 02 Jan 2019, 12:39:09 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -370,7 +370,11 @@ void ui::widget::recalculate_transformation_matrix(void)
 
 ui::vertex_buffer *ui::widget::generate_points(void)
 {
-    ui::vertex_buffer *vb = new ui::vertex_buffer(160, 60);
+    /* This vertex buffer contains enough space for the toggle button
+     * as well.  TODO:  make the vertex buffer sized dynamically, so
+     * we don't need to worry about doing this.
+     */
+    ui::vertex_buffer *vb = new ui::vertex_buffer(416, 108);
     float w = this->dim.x, h = this->dim.y, m[4], b[4];
     glm::vec3 psz;
 

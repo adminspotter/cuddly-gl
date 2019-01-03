@@ -27,10 +27,12 @@ sensible and predictable ways.
 * Labels
   * Text
   * Image
-  * Multi-line
 * Buttons
-* Text Fields
-  * Password Fields
+  * Push button
+  * Toggle button
+* Text fields
+  * Text input fields
+  * Password fields
 * Composite/Manager widgets
   * Row-Column
   * Pie Menus
@@ -40,7 +42,7 @@ sensible and predictable ways.
 CuddlyGL has been built and tested on
 
 * CentOS Linux 6/7
-* Ubuntu GNU/Linux Trusty (via [Travis CI](https://travis-ci.org))
+* Ubuntu GNU/Linux Trusty Tahr and Xenial Xerus (via [Travis CI](https://travis-ci.org))
 * MacOS X Mavericks - ElCapitan
 
 As long as you've got a new-enough GL stack, and a POSIX-y system with
