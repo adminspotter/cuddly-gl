@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:14:07 tquirk
+ *   last updated 04 Jan 2019, 08:57:23 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -50,7 +50,6 @@ namespace ui
 
         std::vector<float> vertex;
         std::vector<GLuint> element;
-        GLuint vertex_count;
 
         vertex_buffer();
         ~vertex_buffer();
