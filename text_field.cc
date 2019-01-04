@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 06:59:13 tquirk
+ *   last updated 04 Jan 2019, 06:59:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -350,7 +350,7 @@ void ui::text_field::generate_cursor(void)
 {
     if (this->font != NULL)
     {
-        ui::vertex_buffer *vb = new ui::vertex_buffer(32, 6);
+        ui::vertex_buffer *vb = new ui::vertex_buffer();
         float h, m[2], b[2];
         glm::vec3 psz;
 

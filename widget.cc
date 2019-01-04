@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 06:48:55 tquirk
+ *   last updated 04 Jan 2019, 07:15:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -38,10 +38,9 @@
 
 const float ui::vertex_buffer::no_texture = -1000.0;
 
-ui::vertex_buffer::vertex_buffer(GLuint verts, GLuint elts)
+ui::vertex_buffer::vertex_buffer()
+    : vertex(), element()
 {
-    this->vertex = new float[verts];
-    this->element = new GLuint[elts];
     this->vertex_index = 0;
     this->vertex_count = 0;
     this->element_index = 0;
@@ -49,13 +48,14 @@ ui::vertex_buffer::vertex_buffer(GLuint verts, GLuint elts)
 
 ui::vertex_buffer::~vertex_buffer()
 {
-    delete[] this->element;
-    delete[] this->vertex;
 }
 
 void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
                                      const glm::vec4& color)
 {
+    this->vertex.insert(this->vertex.end(), 32, 0.0f);
+    this->element.insert(this->element.end(), 6, 0);
+
     vertex[this->vertex_index] = ul.x;
     vertex[this->vertex_index + 1] = ul.y;
     memcpy(&vertex[this->vertex_index + 2],
@@ -118,6 +118,9 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
     if (segments < 15)  segments = 15;
     if (segments > 720) segments = 720;
 
+    this->vertex.insert(this->vertex.end(), 16 * segments, 0.0f);
+    this->element.insert(this->element.end(), 6 * segments, 0);
+
     glm::vec2 inner = radius * inner_pct;
     float increment = M_PI * 2.0f / (float)segments;
     GLuint vertex_start_count = this->vertex_count;
@@ -162,6 +165,9 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
                                                  float pct, float angle,
                                                  const glm::vec4& color)
 {
+    this->vertex.insert(this->vertex.end(), 32, 0.0f);
+    this->element.insert(this->element.end(), 6, 0);
+
     glm::vec2 inner = radius * pct;
 
     vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
@@ -211,7 +217,7 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
 
 const float *ui::vertex_buffer::vertex_data(void)
 {
-    return this->vertex;
+    return this->vertex.data();
 }
 
 size_t ui::vertex_buffer::vertex_size(void)
@@ -221,7 +227,7 @@ size_t ui::vertex_buffer::vertex_size(void)
 
 const GLuint *ui::vertex_buffer::element_data(void)
 {
-    return this->element;
+    return this->element.data();
 }
 
 size_t ui::vertex_buffer::element_size(void)
@@ -380,11 +386,7 @@ void ui::widget::recalculate_transformation_matrix(void)
 
 ui::vertex_buffer *ui::widget::generate_points(void)
 {
-    /* This vertex buffer contains enough space for the toggle button
-     * as well.  TODO:  make the vertex buffer sized dynamically, so
-     * we don't need to worry about doing this.
-     */
-    ui::vertex_buffer *vb = new ui::vertex_buffer(416, 108);
+    ui::vertex_buffer *vb = new ui::vertex_buffer();
     float w = this->dim.x, h = this->dim.y, m[4], b[4];
     glm::vec3 psz;
 

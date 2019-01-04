@@ -1,9 +1,9 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 06:47:40 tquirk
+ *   last updated 04 Jan 2019, 06:58:12 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,8 @@
 #ifndef __INC_CUDDLY_WIDGET_H__
 #define __INC_CUDDLY_WIDGET_H__
 
+#include <vector>
+
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -46,11 +48,11 @@ namespace ui
     {
         const static float no_texture;
 
-        float *vertex;
-        GLuint *element;
+        std::vector<float> vertex;
+        std::vector<GLuint> element;
         GLuint vertex_index, vertex_count, element_index;
 
-        vertex_buffer(GLuint verts, GLuint elts);
+        vertex_buffer();
         ~vertex_buffer();
 
         void generate_box(glm::vec2, glm::vec2, const glm::vec4&);

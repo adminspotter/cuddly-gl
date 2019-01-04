@@ -1,9 +1,9 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:14:37 tquirk
+ *   last updated 04 Jan 2019, 07:16:52 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -133,16 +133,7 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
     glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
     float inner_pct = INNER_PCT, pct;
     int count = std::max(this->dim.x / 3, 15);
-
-    /* We need room for 6 sets of points - inner and outer edges, plus
-     * possible inner and outer borders (2 points each).  Each point
-     * is 8 floats - 2 xy, 4 color, 2 texture st.  We also need
-     * dividers for each sector, so that's another 4 points per
-     * divider.
-     */
-    ui::vertex_buffer *vb = new ui::vertex_buffer(
-        (count * 48) + (this->children.size() * 32),
-        (count * 18) + (this->children.size() * 6));
+    ui::vertex_buffer *vb = new ui::vertex_buffer();
 
     this->composite::parent->get(ui::element::pixel_size,
                                  ui::size::all,
