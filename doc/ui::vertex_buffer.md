@@ -18,11 +18,12 @@ b->generate_ellipse(center, radii, inner_pct, segments, color);
 
 b->generate_ellipse_divider(center, radii, inner_pct, angle, color);
 
-size_t vert_count = b->vertex_size();
+size_t vert_sz = b->vertex_size();
 const float *verts = b->vertex_data();
 
-size_t elt_count = b->element_size();
+size_t elt_sz = b->element_size();
 const GLuint *elts = b->element_data();
+GLuint elt_count = b->element_count();
 ```
 
 ## DESCRIPTION ##
@@ -132,6 +133,10 @@ would correspond with `vertex[8]`, and so on.
   Return the size in bytes of the element buffer items which have been
   added via the generation methods above.  The `glBufferData` function
   requires this size directly.
+
+* **GLuint element_count(void)**
+
+  Return the number of elements in the element buffer.
 
 ## CONSTANTS ##
 
