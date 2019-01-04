@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:08:17 tquirk
+ *   last updated 04 Jan 2019, 06:47:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -59,7 +59,9 @@ namespace ui
         void generate_ellipse_divider(glm::vec2, glm::vec2, float, float,
                                       const glm::vec4&);
 
+        const float *vertex_data(void);
         size_t vertex_size(void);
+        const GLuint *element_data(void);
         size_t element_size(void);
     };
 

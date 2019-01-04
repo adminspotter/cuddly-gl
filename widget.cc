@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jan 2019, 12:39:09 tquirk
+ *   last updated 04 Jan 2019, 06:48:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -209,9 +209,19 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
     this->element_index += 6;
 }
 
+const float *ui::vertex_buffer::vertex_data(void)
+{
+    return this->vertex;
+}
+
 size_t ui::vertex_buffer::vertex_size(void)
 {
     return sizeof(float) * this->vertex_index;
+}
+
+const GLuint *ui::vertex_buffer::element_data(void)
+{
+    return this->element;
 }
 
 size_t ui::vertex_buffer::element_size(void)
@@ -430,11 +440,11 @@ void ui::widget::populate_buffers(void)
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 vb->vertex_size(), vb->vertex,
+                 vb->vertex_size(), vb->vertex_data(),
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 vb->element_size(), vb->element,
+                 vb->element_size(), vb->element_data(),
                  GL_DYNAMIC_DRAW);
     delete vb;
 }
