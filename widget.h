@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 06:58:12 tquirk
+ *   last updated 04 Jan 2019, 08:14:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -65,6 +65,7 @@ namespace ui
         size_t vertex_size(void);
         const GLuint *element_data(void);
         size_t element_size(void);
+        GLuint element_count(void);
     };
 
     class widget : public virtual active

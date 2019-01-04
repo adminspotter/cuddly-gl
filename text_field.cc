@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 06:59:40 tquirk
+ *   last updated 04 Jan 2019, 08:16:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -366,7 +366,7 @@ void ui::text_field::generate_cursor(void)
                                    - b[1] - psz.y - psz.y),
                          this->foreground);
 
-        this->cursor_element_count = vb->element_index;
+        this->cursor_element_count = vb->element_count();
         glBindVertexArray(this->cursor_vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
         glBufferData(GL_ARRAY_BUFFER,

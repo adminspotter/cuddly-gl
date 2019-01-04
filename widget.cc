@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 07:15:02 tquirk
+ *   last updated 04 Jan 2019, 08:16:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -235,6 +235,11 @@ size_t ui::vertex_buffer::element_size(void)
     return sizeof(GLuint) * this->element_index;
 }
 
+GLuint ui::vertex_buffer::element_count(void)
+{
+    return this->element_index;
+}
+
 int ui::widget::get_position(GLuint t, GLuint *v) const
 {
     switch (t)
@@ -438,7 +443,7 @@ void ui::widget::populate_buffers(void)
     if (vb == NULL)
         return;
 
-    this->element_count = vb->element_index;
+    this->element_count = vb->element_count();
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
