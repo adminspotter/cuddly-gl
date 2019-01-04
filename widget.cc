@@ -41,7 +41,6 @@ const float ui::vertex_buffer::no_texture = -1000.0;
 ui::vertex_buffer::vertex_buffer()
     : vertex(), element()
 {
-    this->vertex_index = 0;
     this->vertex_count = 0;
 }
 
@@ -52,39 +51,34 @@ ui::vertex_buffer::~vertex_buffer()
 void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
                                      const glm::vec4& color)
 {
-    int elt_idx = this->element.size();
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
 
     this->vertex.insert(this->vertex.end(), 32, 0.0f);
     this->element.insert(this->element.end(), 6, 0);
 
-    vertex[this->vertex_index] = ul.x;
-    vertex[this->vertex_index + 1] = ul.y;
-    memcpy(&vertex[this->vertex_index + 2],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx] = ul.x;
+    vertex[vert_idx + 1] = ul.y;
+    memcpy(&vertex[vert_idx + 2], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 8] = lr.x;
-    vertex[this->vertex_index + 9] = vertex[this->vertex_index + 1];
-    memcpy(&vertex[this->vertex_index + 10],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 8] = lr.x;
+    vertex[vert_idx + 9] = vertex[vert_idx + 1];
+    memcpy(&vertex[vert_idx + 10], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 16] = vertex[this->vertex_index];
-    vertex[this->vertex_index + 17] = lr.y;
-    memcpy(&vertex[this->vertex_index + 18],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 16] = vertex[vert_idx];
+    vertex[vert_idx + 17] = lr.y;
+    memcpy(&vertex[vert_idx + 18], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 22] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 23] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 24] = vertex[this->vertex_index + 8];
-    vertex[this->vertex_index + 25] = vertex[this->vertex_index + 17];
-    memcpy(&vertex[this->vertex_index + 26],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
-    this->vertex_index += 32;
+    vertex[vert_idx + 24] = vertex[vert_idx + 8];
+    vertex[vert_idx + 25] = vertex[vert_idx + 17];
+    memcpy(&vertex[vert_idx + 26], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 30] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 31] = ui::vertex_buffer::no_texture;
     this->vertex_count += 4;
 
     element[elt_idx] = this->vertex_count - 4;
@@ -111,7 +105,7 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
                                          float inner_pct, int segments,
                                          const glm::vec4& color)
 {
-    int elt_idx = this->element.size();
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
 
     /* Clamp inner_pct and segments to reasonable ranges */
     if (inner_pct < 0.0)  inner_pct = 0.0;
@@ -131,20 +125,20 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
     {
         float angle = increment * i;
 
-        vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
-        vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
-        memcpy(&vertex[this->vertex_index + 2],
+        vertex[vert_idx] = radius.x * cosf(angle) + center.x;
+        vertex[vert_idx + 1] = radius.y * sinf(angle) + center.y;
+        memcpy(&vertex[vert_idx + 2],
                glm::value_ptr(color), sizeof(float) * 4);
-        vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-        vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-        vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
-        vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
-        memcpy(&vertex[this->vertex_index + 10],
+        vertex[vert_idx + 8] = inner.x * cosf(angle) + center.x;
+        vertex[vert_idx + 9] = inner.y * sinf(angle) + center.y;
+        memcpy(&vertex[vert_idx + 10],
                glm::value_ptr(color), sizeof(float) * 4);
-        vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-        vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
-        this->vertex_index += 16;
+        vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
+        vert_idx += 16;
         this->vertex_count += 2;
 
         element[elt_idx] = this->vertex_count - 2;
@@ -167,26 +161,24 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
                                                  float pct, float angle,
                                                  const glm::vec4& color)
 {
-    int elt_idx = this->element.size();
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
 
     this->vertex.insert(this->vertex.end(), 32, 0.0f);
     this->element.insert(this->element.end(), 6, 0);
 
     glm::vec2 inner = radius * pct;
 
-    vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 2],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx] = radius.x * cosf(angle) + center.x;
+    vertex[vert_idx + 1] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 2], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 10],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 8] = inner.x * cosf(angle) + center.x;
+    vertex[vert_idx + 9] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 10], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
 
     /* Make the dividers one degree wide.  There's probably a nice way
      * to do this so the edges will be parallel, but these don't look
@@ -194,20 +186,17 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
      */
     angle += M_PI * 2.0f / 360;
 
-    vertex[this->vertex_index + 16] = radius.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 17] = radius.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 18],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 16] = radius.x * cosf(angle) + center.x;
+    vertex[vert_idx + 17] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 18], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 22] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 23] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 24] = inner.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 25] = inner.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 26],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
-    this->vertex_index += 32;
+    vertex[vert_idx + 24] = inner.x * cosf(angle) + center.x;
+    vertex[vert_idx + 25] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 26], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 30] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 31] = ui::vertex_buffer::no_texture;
     this->vertex_count += 4;
 
     element[elt_idx] = this->vertex_count - 4;
@@ -225,7 +214,7 @@ const float *ui::vertex_buffer::vertex_data(void)
 
 size_t ui::vertex_buffer::vertex_size(void)
 {
-    return sizeof(float) * this->vertex_index;
+    return sizeof(float) * this->vertex.size();
 }
 
 const GLuint *ui::vertex_buffer::element_data(void)
