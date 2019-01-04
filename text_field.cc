@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:17:16 tquirk
+ *   last updated 04 Jan 2019, 08:16:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -350,7 +350,7 @@ void ui::text_field::generate_cursor(void)
 {
     if (this->font != NULL)
     {
-        ui::vertex_buffer *vb = new ui::vertex_buffer(32, 6);
+        ui::vertex_buffer *vb = new ui::vertex_buffer();
         float h, m[2], b[2];
         glm::vec3 psz;
 
@@ -366,15 +366,15 @@ void ui::text_field::generate_cursor(void)
                                    - b[1] - psz.y - psz.y),
                          this->foreground);
 
-        this->cursor_element_count = vb->element_index;
+        this->cursor_element_count = vb->element_count();
         glBindVertexArray(this->cursor_vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->cursor_vbo);
         glBufferData(GL_ARRAY_BUFFER,
-                     vb->vertex_size(), vb->vertex,
+                     vb->vertex_size(), vb->vertex_data(),
                      GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->cursor_ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     vb->element_size(), vb->element,
+                     vb->element_size(), vb->element_data(),
                      GL_DYNAMIC_DRAW);
         delete vb;
     }

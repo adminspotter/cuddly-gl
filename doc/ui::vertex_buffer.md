@@ -10,13 +10,20 @@ ui::vertex_buffer
 ```c++
 #include <widget.h>
 
-ui::vertex_buffer *b = new ui::vertex_buffer(vert_sz, elt_sz);
+ui::vertex_buffer *b = new ui::vertex_buffer();
 
 b->generate_box(upper_left, lower_right, color);
 
 b->generate_ellipse(center, radii, inner_pct, segments, color);
 
 b->generate_ellipse_divider(center, radii, inner_pct, angle, color);
+
+size_t vert_sz = b->vertex_size();
+const float *verts = b->vertex_data();
+
+size_t elt_sz = b->element_size();
+const GLuint *elts = b->element_data();
+GLuint elt_count = b->element_count();
 ```
 
 ## DESCRIPTION ##
@@ -62,12 +69,9 @@ would correspond with `vertex[8]`, and so on.
 
 ## CONSTRUCTION ##
 
-* **vertex_buffer(GLuint _vertices_, GLuint _elements_)**
+* **vertex_buffer()**
 
-  Creates a vertex buffer with the specified number of vertices and
-  element items.  Vertex/element array sizes are static and allocated
-  at construction time, so the maximum possible number of vertices and
-  elements should be specified.
+  Creates a vertex buffer.
 
 ## METHODS ##
 
@@ -108,14 +112,21 @@ would correspond with `vertex[8]`, and so on.
   divider will be located.  0 is along the positive x-axis, and moves
   clockwise as the angle increases.
 
+* **const float *vertex_data(void)**
+
+  Return a vertex data array suitable for passing into the
+  `glBufferData` function.
+
 * **size_t vertex_size(void)**
 
   Return the size in bytes of the vertex buffer items which have been
   added via the generation methods above.  The `glBufferData` function
   requires this size directly.
 
-  This may be smaller than the total size of the internal vertex
-  array.
+* **const float *element_data(void)**
+
+  Return an element data array suitable for passing into the
+  `glBufferData` function.
 
 * **size_t element_size(void)**
 
@@ -123,8 +134,9 @@ would correspond with `vertex[8]`, and so on.
   added via the generation methods above.  The `glBufferData` function
   requires this size directly.
 
-  This may be smaller than the total size of the internal element
-  array.
+* **GLuint element_count(void)**
+
+  Return the number of elements in the element buffer.
 
 ## CONSTANTS ##
 
@@ -136,15 +148,6 @@ would correspond with `vertex[8]`, and so on.
   texture map is required for some piece of the generated primitives.
 
 ## BUGS ##
-
-No range checking is performed when adding vertices and elements to
-the arrays, so if the `ui::vertex_buffer` is too small for the
-required number of items, inadvertent overwriting of other memory will
-occur, possibly resulting in a segmentation fault.
-
-The number of items contained within the `ui::vertex_buffer` is
-static.  It should be dynamic, as with other C++ STL container
-classes.
 
 The texture mapping primitive is entirely manual, and relies
 completely on the caller knowing the internal structure of the vertex

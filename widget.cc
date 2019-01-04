@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jan 2019, 12:39:09 tquirk
+ *   last updated 04 Jan 2019, 08:57:09 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -38,61 +38,55 @@
 
 const float ui::vertex_buffer::no_texture = -1000.0;
 
-ui::vertex_buffer::vertex_buffer(GLuint verts, GLuint elts)
+ui::vertex_buffer::vertex_buffer()
+    : vertex(), element()
 {
-    this->vertex = new float[verts];
-    this->element = new GLuint[elts];
-    this->vertex_index = 0;
-    this->vertex_count = 0;
-    this->element_index = 0;
 }
 
 ui::vertex_buffer::~vertex_buffer()
 {
-    delete[] this->element;
-    delete[] this->vertex;
 }
 
 void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
                                      const glm::vec4& color)
 {
-    vertex[this->vertex_index] = ul.x;
-    vertex[this->vertex_index + 1] = ul.y;
-    memcpy(&vertex[this->vertex_index + 2],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
+    int vert_count = vert_idx / 8;
 
-    vertex[this->vertex_index + 8] = lr.x;
-    vertex[this->vertex_index + 9] = vertex[this->vertex_index + 1];
-    memcpy(&vertex[this->vertex_index + 10],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+    this->vertex.insert(this->vertex.end(), 32, 0.0f);
+    this->element.insert(this->element.end(), 6, 0);
 
-    vertex[this->vertex_index + 16] = vertex[this->vertex_index];
-    vertex[this->vertex_index + 17] = lr.y;
-    memcpy(&vertex[this->vertex_index + 18],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx] = ul.x;
+    vertex[vert_idx + 1] = ul.y;
+    memcpy(&vertex[vert_idx + 2], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 24] = vertex[this->vertex_index + 8];
-    vertex[this->vertex_index + 25] = vertex[this->vertex_index + 17];
-    memcpy(&vertex[this->vertex_index + 26],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
-    this->vertex_index += 32;
-    this->vertex_count += 4;
+    vertex[vert_idx + 8] = lr.x;
+    vertex[vert_idx + 9] = vertex[vert_idx + 1];
+    memcpy(&vertex[vert_idx + 10], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
 
-    element[this->element_index] = this->vertex_count - 4;
-    element[this->element_index + 1] = this->vertex_count - 2;
-    element[this->element_index + 2] = this->vertex_count - 3;
-    element[this->element_index + 3] = this->vertex_count - 2;
-    element[this->element_index + 4] = this->vertex_count - 1;
-    element[this->element_index + 5] = this->vertex_count - 3;
-    this->element_index += 6;
+    vertex[vert_idx + 16] = vertex[vert_idx];
+    vertex[vert_idx + 17] = lr.y;
+    memcpy(&vertex[vert_idx + 18], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 22] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 23] = ui::vertex_buffer::no_texture;
+
+    vertex[vert_idx + 24] = vertex[vert_idx + 8];
+    vertex[vert_idx + 25] = vertex[vert_idx + 17];
+    memcpy(&vertex[vert_idx + 26], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 30] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 31] = ui::vertex_buffer::no_texture;
+    vert_count += 4;
+
+    element[elt_idx] = vert_count - 4;
+    element[elt_idx + 1] = vert_count - 2;
+    element[elt_idx + 2] = vert_count - 3;
+    element[elt_idx + 3] = vert_count - 2;
+    element[elt_idx + 4] = vert_count - 1;
+    element[elt_idx + 5] = vert_count - 3;
 }
 
 /* We'll use a parametric function to draw our ellipse.
@@ -111,6 +105,9 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
                                          float inner_pct, int segments,
                                          const glm::vec4& color)
 {
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
+    int vert_count = vert_idx / 8, vertex_start_count = vert_count;
+
     /* Clamp inner_pct and segments to reasonable ranges */
     if (inner_pct < 0.0)  inner_pct = 0.0;
     if (inner_pct >= 1.0) inner_pct = 0.99;
@@ -118,43 +115,45 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
     if (segments < 15)  segments = 15;
     if (segments > 720) segments = 720;
 
+    this->vertex.insert(this->vertex.end(), 16 * segments, 0.0f);
+    this->element.insert(this->element.end(), 6 * segments, 0);
+
     glm::vec2 inner = radius * inner_pct;
     float increment = M_PI * 2.0f / (float)segments;
-    GLuint vertex_start_count = this->vertex_count;
 
     for (int i = 0; i < segments; ++i)
     {
         float angle = increment * i;
 
-        vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
-        vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
-        memcpy(&vertex[this->vertex_index + 2],
+        vertex[vert_idx] = radius.x * cosf(angle) + center.x;
+        vertex[vert_idx + 1] = radius.y * sinf(angle) + center.y;
+        memcpy(&vertex[vert_idx + 2],
                glm::value_ptr(color), sizeof(float) * 4);
-        vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-        vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-        vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
-        vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
-        memcpy(&vertex[this->vertex_index + 10],
+        vertex[vert_idx + 8] = inner.x * cosf(angle) + center.x;
+        vertex[vert_idx + 9] = inner.y * sinf(angle) + center.y;
+        memcpy(&vertex[vert_idx + 10],
                glm::value_ptr(color), sizeof(float) * 4);
-        vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-        vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
-        this->vertex_index += 16;
-        this->vertex_count += 2;
+        vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+        vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
+        vert_idx += 16;
+        vert_count += 2;
 
-        element[this->element_index] = this->vertex_count - 2;
-        element[this->element_index + 1] = this->vertex_count - 1;
-        element[this->element_index + 2] = this->vertex_count + 1;
-        element[this->element_index + 3] = this->vertex_count - 2;
-        element[this->element_index + 4] = this->vertex_count + 1;
-        element[this->element_index + 5] = this->vertex_count;
-        this->element_index += 6;
+        element[elt_idx] = vert_count - 2;
+        element[elt_idx + 1] = vert_count - 1;
+        element[elt_idx + 2] = vert_count + 1;
+        element[elt_idx + 3] = vert_count - 2;
+        element[elt_idx + 4] = vert_count + 1;
+        element[elt_idx + 5] = vert_count;
+        elt_idx += 6;
     }
 
     /* Fix up the last segment */
-    element[this->element_index - 4] = vertex_start_count + 1;
-    element[this->element_index - 2] = vertex_start_count + 1;
-    element[this->element_index - 1] = vertex_start_count;
+    element[elt_idx - 4] = vertex_start_count + 1;
+    element[elt_idx - 2] = vertex_start_count + 1;
+    element[elt_idx - 1] = vertex_start_count;
 }
 
 void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
@@ -162,21 +161,25 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
                                                  float pct, float angle,
                                                  const glm::vec4& color)
 {
+    int vert_idx = this->vertex.size(), elt_idx = this->element.size();
+    int vert_count = vert_idx / 8;
+
+    this->vertex.insert(this->vertex.end(), 32, 0.0f);
+    this->element.insert(this->element.end(), 6, 0);
+
     glm::vec2 inner = radius * pct;
 
-    vertex[this->vertex_index] = radius.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 1] = radius.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 2],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 6] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 7] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx] = radius.x * cosf(angle) + center.x;
+    vertex[vert_idx + 1] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 2], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 6] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 7] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 8] = inner.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 9] = inner.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 10],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 14] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 15] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 8] = inner.x * cosf(angle) + center.x;
+    vertex[vert_idx + 9] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 10], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 14] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 15] = ui::vertex_buffer::no_texture;
 
     /* Make the dividers one degree wide.  There's probably a nice way
      * to do this so the edges will be parallel, but these don't look
@@ -184,39 +187,50 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
      */
     angle += M_PI * 2.0f / 360;
 
-    vertex[this->vertex_index + 16] = radius.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 17] = radius.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 18],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 22] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 23] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 16] = radius.x * cosf(angle) + center.x;
+    vertex[vert_idx + 17] = radius.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 18], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 22] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 23] = ui::vertex_buffer::no_texture;
 
-    vertex[this->vertex_index + 24] = inner.x * cosf(angle) + center.x;
-    vertex[this->vertex_index + 25] = inner.y * sinf(angle) + center.y;
-    memcpy(&vertex[this->vertex_index + 26],
-           glm::value_ptr(color), sizeof(float) * 4);
-    vertex[this->vertex_index + 30] = ui::vertex_buffer::no_texture;
-    vertex[this->vertex_index + 31] = ui::vertex_buffer::no_texture;
-    this->vertex_index += 32;
-    this->vertex_count += 4;
+    vertex[vert_idx + 24] = inner.x * cosf(angle) + center.x;
+    vertex[vert_idx + 25] = inner.y * sinf(angle) + center.y;
+    memcpy(&vertex[vert_idx + 26], glm::value_ptr(color), sizeof(float) * 4);
+    vertex[vert_idx + 30] = ui::vertex_buffer::no_texture;
+    vertex[vert_idx + 31] = ui::vertex_buffer::no_texture;
+    vert_count += 4;
 
-    element[this->element_index] = this->vertex_count - 4;
-    element[this->element_index + 1] = this->vertex_count - 2;
-    element[this->element_index + 2] = this->vertex_count - 3;
-    element[this->element_index + 3] = this->vertex_count - 2;
-    element[this->element_index + 4] = this->vertex_count - 1;
-    element[this->element_index + 5] = this->vertex_count - 3;
-    this->element_index += 6;
+    element[elt_idx] = vert_count - 4;
+    element[elt_idx + 1] = vert_count - 2;
+    element[elt_idx + 2] = vert_count - 3;
+    element[elt_idx + 3] = vert_count - 2;
+    element[elt_idx + 4] = vert_count - 1;
+    element[elt_idx + 5] = vert_count - 3;
+}
+
+const float *ui::vertex_buffer::vertex_data(void)
+{
+    return this->vertex.data();
 }
 
 size_t ui::vertex_buffer::vertex_size(void)
 {
-    return sizeof(float) * this->vertex_index;
+    return sizeof(float) * this->vertex.size();
+}
+
+const GLuint *ui::vertex_buffer::element_data(void)
+{
+    return this->element.data();
 }
 
 size_t ui::vertex_buffer::element_size(void)
 {
-    return sizeof(GLuint) * this->element_index;
+    return sizeof(GLuint) * this->element.size();
+}
+
+GLuint ui::vertex_buffer::element_count(void)
+{
+    return this->element.size();
 }
 
 int ui::widget::get_position(GLuint t, GLuint *v) const
@@ -370,11 +384,7 @@ void ui::widget::recalculate_transformation_matrix(void)
 
 ui::vertex_buffer *ui::widget::generate_points(void)
 {
-    /* This vertex buffer contains enough space for the toggle button
-     * as well.  TODO:  make the vertex buffer sized dynamically, so
-     * we don't need to worry about doing this.
-     */
-    ui::vertex_buffer *vb = new ui::vertex_buffer(416, 108);
+    ui::vertex_buffer *vb = new ui::vertex_buffer();
     float w = this->dim.x, h = this->dim.y, m[4], b[4];
     glm::vec3 psz;
 
@@ -426,15 +436,15 @@ void ui::widget::populate_buffers(void)
     if (vb == NULL)
         return;
 
-    this->element_count = vb->element_index;
+    this->element_count = vb->element_count();
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 vb->vertex_size(), vb->vertex,
+                 vb->vertex_size(), vb->vertex_data(),
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 vb->element_size(), vb->element,
+                 vb->element_size(), vb->element_data(),
                  GL_DYNAMIC_DRAW);
     delete vb;
 }
