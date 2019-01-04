@@ -50,7 +50,7 @@ namespace ui
 
         std::vector<float> vertex;
         std::vector<GLuint> element;
-        GLuint vertex_index, vertex_count, element_index;
+        GLuint vertex_index, vertex_count;
 
         vertex_buffer();
         ~vertex_buffer();

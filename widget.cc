@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:16:08 tquirk
+ *   last updated 04 Jan 2019, 08:21:30 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -43,7 +43,6 @@ ui::vertex_buffer::vertex_buffer()
 {
     this->vertex_index = 0;
     this->vertex_count = 0;
-    this->element_index = 0;
 }
 
 ui::vertex_buffer::~vertex_buffer()
@@ -53,6 +52,8 @@ ui::vertex_buffer::~vertex_buffer()
 void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
                                      const glm::vec4& color)
 {
+    int elt_idx = this->element.size();
+
     this->vertex.insert(this->vertex.end(), 32, 0.0f);
     this->element.insert(this->element.end(), 6, 0);
 
@@ -86,13 +87,12 @@ void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
     this->vertex_index += 32;
     this->vertex_count += 4;
 
-    element[this->element_index] = this->vertex_count - 4;
-    element[this->element_index + 1] = this->vertex_count - 2;
-    element[this->element_index + 2] = this->vertex_count - 3;
-    element[this->element_index + 3] = this->vertex_count - 2;
-    element[this->element_index + 4] = this->vertex_count - 1;
-    element[this->element_index + 5] = this->vertex_count - 3;
-    this->element_index += 6;
+    element[elt_idx] = this->vertex_count - 4;
+    element[elt_idx + 1] = this->vertex_count - 2;
+    element[elt_idx + 2] = this->vertex_count - 3;
+    element[elt_idx + 3] = this->vertex_count - 2;
+    element[elt_idx + 4] = this->vertex_count - 1;
+    element[elt_idx + 5] = this->vertex_count - 3;
 }
 
 /* We'll use a parametric function to draw our ellipse.
@@ -111,6 +111,8 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
                                          float inner_pct, int segments,
                                          const glm::vec4& color)
 {
+    int elt_idx = this->element.size();
+
     /* Clamp inner_pct and segments to reasonable ranges */
     if (inner_pct < 0.0)  inner_pct = 0.0;
     if (inner_pct >= 1.0) inner_pct = 0.99;
@@ -145,19 +147,19 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
         this->vertex_index += 16;
         this->vertex_count += 2;
 
-        element[this->element_index] = this->vertex_count - 2;
-        element[this->element_index + 1] = this->vertex_count - 1;
-        element[this->element_index + 2] = this->vertex_count + 1;
-        element[this->element_index + 3] = this->vertex_count - 2;
-        element[this->element_index + 4] = this->vertex_count + 1;
-        element[this->element_index + 5] = this->vertex_count;
-        this->element_index += 6;
+        element[elt_idx] = this->vertex_count - 2;
+        element[elt_idx + 1] = this->vertex_count - 1;
+        element[elt_idx + 2] = this->vertex_count + 1;
+        element[elt_idx + 3] = this->vertex_count - 2;
+        element[elt_idx + 4] = this->vertex_count + 1;
+        element[elt_idx + 5] = this->vertex_count;
+        elt_idx += 6;
     }
 
     /* Fix up the last segment */
-    element[this->element_index - 4] = vertex_start_count + 1;
-    element[this->element_index - 2] = vertex_start_count + 1;
-    element[this->element_index - 1] = vertex_start_count;
+    element[elt_idx - 4] = vertex_start_count + 1;
+    element[elt_idx - 2] = vertex_start_count + 1;
+    element[elt_idx - 1] = vertex_start_count;
 }
 
 void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
@@ -165,6 +167,8 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
                                                  float pct, float angle,
                                                  const glm::vec4& color)
 {
+    int elt_idx = this->element.size();
+
     this->vertex.insert(this->vertex.end(), 32, 0.0f);
     this->element.insert(this->element.end(), 6, 0);
 
@@ -206,13 +210,12 @@ void ui::vertex_buffer::generate_ellipse_divider(glm::vec2 center,
     this->vertex_index += 32;
     this->vertex_count += 4;
 
-    element[this->element_index] = this->vertex_count - 4;
-    element[this->element_index + 1] = this->vertex_count - 2;
-    element[this->element_index + 2] = this->vertex_count - 3;
-    element[this->element_index + 3] = this->vertex_count - 2;
-    element[this->element_index + 4] = this->vertex_count - 1;
-    element[this->element_index + 5] = this->vertex_count - 3;
-    this->element_index += 6;
+    element[elt_idx] = this->vertex_count - 4;
+    element[elt_idx + 1] = this->vertex_count - 2;
+    element[elt_idx + 2] = this->vertex_count - 3;
+    element[elt_idx + 3] = this->vertex_count - 2;
+    element[elt_idx + 4] = this->vertex_count - 1;
+    element[elt_idx + 5] = this->vertex_count - 3;
 }
 
 const float *ui::vertex_buffer::vertex_data(void)
@@ -232,12 +235,12 @@ const GLuint *ui::vertex_buffer::element_data(void)
 
 size_t ui::vertex_buffer::element_size(void)
 {
-    return sizeof(GLuint) * this->element_index;
+    return sizeof(GLuint) * this->element.size();
 }
 
 GLuint ui::vertex_buffer::element_count(void)
 {
-    return this->element_index;
+    return this->element.size();
 }
 
 int ui::widget::get_position(GLuint t, GLuint *v) const
