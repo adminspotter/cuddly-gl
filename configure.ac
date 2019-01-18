@@ -75,6 +75,9 @@ AC_ARG_WITH([glfw-libraries],
             [with_glfw="yes"],
             [with_glfw_libraries="no"])
 
+AC_ARG_WITH([ronn],
+            AS_HELP_STRING([--without-ronn], [Disable manpage generation]))
+
 # Development flags (debugging, profiling)
 AS_IF([test "$enable_profile" == "yes"],
       [AX_ENABLE_PROFILE])
@@ -229,10 +232,22 @@ AC_TYPE_UINT32_T
 
 AC_CHECK_FUNCS([memcpy memmove memset strerror_r])
 
+AS_IF([test "x$with_ronn" != "xno"],
+      [
+        AS_IF([test "x$with_ronn" == "xyes"],
+              [RONN=ronn],
+              [RONN=$with_ronn])
+        AC_SUBST([RONN])
+        have_ronn=1
+      ],
+      [AC_MSG_NOTICE([Manpage generation disabled by configure option])])
+AM_CONDITIONAL([GENERATE_MANPAGES], [test "x$have_ronn" == "x1"])
+
 AC_CONFIG_FILES([Makefile
                  test/Makefile
                  test/tap++/Makefile
-                 shaders/Makefile])
+                 shaders/Makefile
+                 doc/Makefile])
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AC_OUTPUT

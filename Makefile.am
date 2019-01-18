@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SD = . test
-SD_INST = . shaders
+SD = . test doc
+SD_INST = . shaders doc
 
 SUBDIRS = $(SD)
 
