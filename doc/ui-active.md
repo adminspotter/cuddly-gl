@@ -318,5 +318,5 @@ initialize the `ui::rect`.
 
 ## RELATED ##
 
-[ui::rect](ui::rect)(3), [ui::widget](ui::widget)(3),
-[ui::composite](ui::composite)(3)
+[ui::rect](ui-rect.md)(3), [ui::widget](ui-widget.md)(3),
+[ui::composite](ui-composite.md)(3)
