@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2019, 08:16:36 tquirk
+ *   last updated 27 Oct 2019, 22:23:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -220,13 +220,43 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         w->call_callbacks(type, &call_data);
 }
 
+void ui::composite::set_focused_child(ui::widget *w)
+{
+    if (this->focused != w)
+    {
+        ui::focus_call_data fcd;
+        if (this->focused != NULL)
+        {
+            fcd.focus = false;
+            this->focused->call_callbacks(ui::callback::focus, &fcd);
+        }
+        fcd.focus = true;
+        this->focused = w;
+        if (w != NULL)
+            this->focused->call_callbacks(ui::callback::focus, &fcd);
+    }
+}
+
+void ui::composite::focus_callback(ui::active *a, void *call, void *client)
+{
+    ui::composite *c = dynamic_cast<ui::composite *>(a);
+
+    if (c != NULL && ((ui::focus_call_data *)call)->focus == false)
+        c->set_focused_child(NULL);
+}
+
 void ui::composite::init(ui::composite *c)
 {
     this->parent = c;
     this->tree = NULL;
+    this->focused = NULL;
     this->old_child = NULL;
     this->dirty = false;
     this->regenerate_search_tree();
+
+    this->add_callback(ui::callback::focus,
+                       ui::composite::focus_callback,
+                       NULL);
 }
 
 ui::composite::composite(composite *c)
@@ -320,6 +350,8 @@ void ui::composite::remove_child(ui::widget *w)
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found != this->children.end())
     {
+        if (this->focused == w)
+            this->focused = NULL;
         this->to_remove.push_back(w);
         this->dirty = true;
     }
@@ -387,6 +419,7 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
                     : ui::callback::btn_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
+    this->set_focused_child(w);
     if (w != NULL)
     {
         glm::ivec2 obj;
@@ -405,7 +438,7 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
     /* w might no longer exist at this position.  Let's search again,
      * just to make sure.
      */
-    this->old_child = this->tree->search(this->old_pos);
+    this->set_focused_child(this->tree->search(this->old_pos));
 }
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
@@ -420,25 +453,19 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
     GLuint which = (call_data.state == ui::key::up
                     ? ui::callback::key_up
                     : ui::callback::key_down);
-    ui::widget *w = this->tree->search(this->old_pos);
 
-    if (w != NULL)
+    if (this->focused != NULL)
     {
         glm::ivec2 obj;
-        ui::composite *c = dynamic_cast<ui::composite *>(w);
+        ui::composite *c = dynamic_cast<ui::composite *>(this->focused);
 
-        w->get(ui::element::position, ui::position::all, &obj);
+        this->focused->get(ui::element::position, ui::position::all, &obj);
         call_data.location -= obj;
         if (c != NULL)
             c->key_callback(call_data);
         else
-            w->call_callbacks(which, &call_data);
+            this->focused->call_callbacks(which, &call_data);
     }
     else
         this->call_callbacks(which, &call_data);
-
-    /* w might no longer exist at this position.  Let's search again,
-     * just to make sure.
-     */
-    this->old_child = this->tree->search(this->old_pos);
 }
