@@ -44,8 +44,8 @@ points for widgets.
 
 A *callback list* is a set of functions which are called in response
 to some event.  Events which the `ui::active` recognizes are *enter*,
-*leave*, *motion*, *btn_down*, *btn_up*, *key_down*, *key_up*, and
-*resize*.
+*leave*, *motion*, *btn_down*, *btn_up*, *key_down*, *key_up*,
+*resize*, and *focus*.
 
 Callback functions receive a *call_data* argument, which contains data
 relevant to the individual event.  For example, a *motion* event will
@@ -91,6 +91,7 @@ invocations of the same function, with varying, or even the same,
   | ui::callback::key_down |
   | ui::callback::key_up   |
   | ui::callback::resize   |
+  | ui::callback::focus    |
 
 * `ui::mouse_call_data`
 
@@ -158,6 +159,20 @@ invocations of the same function, with varying, or even the same,
 
   The *resize* callbacks are mostly meant for handling resizes in the
   top-level UI context, but could be used in other widgets.
+
+* `ui::focus_call_data`
+
+  The call-data structure which is passed to *focus* callback
+  functions.
+
+  ```cpp
+  struct {
+      bool focus;
+  }
+  ```
+
+  The *focus* callbacks are informed only of whether focus is in or
+  out of the widget.
 
 ## TIMEOUTS ##
 
