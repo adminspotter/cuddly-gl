@@ -1,9 +1,9 @@
 /* active.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 07:15:08 tquirk
+ *   last updated 25 Jan 2019, 22:07:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,13 +45,14 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
       case ui::callback::key_down:  return this->key_down_cb;
       case ui::callback::key_up:    return this->key_up_cb;
       case ui::callback::resize:    return this->resize_cb;
+      case ui::callback::focus:     return this->focus_cb;
     }
 }
 
 ui::active::active(GLuint w, GLuint h)
     : ui::rect(w, h),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
-      key_down_cb(), key_up_cb(), resize_cb()
+      key_down_cb(), key_up_cb(), resize_cb(), focus_cb()
 {
     this->timeout = ui::zero_time;
     this->timeout_func = NULL;
