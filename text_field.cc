@@ -140,7 +140,7 @@ void ui::text_field::leave_callback(ui::active *a, void *call, void *client)
         t->deactivate_cursor();
 }
 
-void ui::text_field::key_callback(ui::active *a, void *call, void *client)
+void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::key_call_data *c = (ui::key_call_data *)call;
@@ -148,7 +148,42 @@ void ui::text_field::key_callback(ui::active *a, void *call, void *client)
     if (t != NULL)
     {
         t->apply_key(c);
+        ui::key_call_data *k = new ui::key_call_data;
+        memcpy(k, call, sizeof(ui::key_call_data));
+        t->add_timeout(std::chrono::milliseconds(t->repeat_initial),
+                       ui::text_field::key_timeout,
+                       k);
     }
+}
+
+void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::key_call_data *c = (ui::key_call_data *)call;
+
+    if (t != NULL && t->timeout_arg != NULL)
+    {
+        ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
+        if (k != NULL
+            && k->key == c->key
+            && k->character == c->character
+            && k->mods == c->mods)
+        {
+            t->remove_timeout();
+            delete k;
+        }
+    }
+}
+
+void ui::text_field::key_timeout(ui::active *a, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::key_call_data *c = (ui::key_call_data *)client;
+
+    t->apply_key(c);
+    t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
+                   ui::text_field::key_timeout,
+                   c);
 }
 
 int ui::text_field::get_cursor_pos(GLuint *v) const
@@ -507,7 +542,10 @@ void ui::text_field::init(ui::composite *c)
                        ui::text_field::leave_callback,
                        NULL);
     this->add_callback(ui::callback::key_down,
-                       ui::text_field::key_callback,
+                       ui::text_field::key_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::key_up,
+                       ui::text_field::key_up_callback,
                        NULL);
 
     this->populate_buffers();

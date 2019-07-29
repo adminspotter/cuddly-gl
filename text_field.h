@@ -61,7 +61,9 @@ namespace ui
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
-        static void key_callback(active *, void *, void *);
+        static void key_down_callback(active *, void *, void *);
+        static void key_up_callback(active *, void *, void *);
+        static void key_timeout(active *, void *);
 
         int get_cursor_pos(GLuint *) const;
         void set_cursor_pos(GLuint);
