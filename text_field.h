@@ -1,9 +1,9 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 07:58:14 tquirk
+ *   last updated 28 Jul 2019, 17:35:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,7 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
+        GLuint repeat_initial, repeat_delay;
         GLuint cursor_vao, cursor_vbo, cursor_ebo, cursor_element_count;
         glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
@@ -52,6 +53,8 @@ namespace ui
         virtual void set_size(GLuint, GLuint) override;
         virtual int get_cursor(GLuint, GLuint *) const;
         virtual void set_cursor(GLuint, GLuint);
+        virtual int get_repeat(GLuint, GLuint *) const;
+        virtual void set_repeat(GLuint, GLuint);
         virtual void set_font(GLuint, ui::base_font *) override;
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
@@ -64,6 +67,10 @@ namespace ui
         void set_cursor_pos(GLuint);
         int get_cursor_blink(GLuint *) const;
         void set_cursor_blink(GLuint);
+        int get_initial_repeat(GLuint *) const;
+        void set_initial_repeat(GLuint);
+        int get_secondary_repeat(GLuint *) const;
+        void set_secondary_repeat(GLuint);
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);
