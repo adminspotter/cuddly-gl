@@ -1,9 +1,9 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 22 Dec 2018, 23:16:08 tquirk
+ *   last updated 28 Jul 2019, 22:18:04 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -91,7 +91,7 @@ namespace ui
         const GLuint radius = 7;
         const GLuint font = 8, string = 9, image = 10;
         const GLuint state = 11;
-        const GLuint cursor = 13;
+        const GLuint cursor = 13, repeat = 14;
         const GLuint transform = 15, pixel_size = 16, child_spacing = 17;
         const GLuint resize = 18;
         const GLuint order = 19;
@@ -165,6 +165,11 @@ namespace ui
     namespace cursor
     {
         const GLuint position = 1, blink = 2;
+    }
+
+    namespace repeat
+    {
+        const GLuint initial = 1, secondary = 2;
     }
 
     namespace transform
