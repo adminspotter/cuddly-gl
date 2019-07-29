@@ -71,6 +71,7 @@ namespace ui
         void set_initial_repeat(GLuint);
         int get_secondary_repeat(GLuint *) const;
         void set_secondary_repeat(GLuint);
+        void apply_key(const ui::key_call_data *);
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);

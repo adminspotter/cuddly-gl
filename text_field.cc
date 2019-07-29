@@ -147,18 +147,7 @@ void ui::text_field::key_callback(ui::active *a, void *call, void *client)
 
     if (t != NULL)
     {
-        if (c->key == ui::key::no_key && c->character != 0)
-            t->insert_char(c->character);
-        else
-            switch (c->key)
-            {
-              case ui::key::l_arrow:  t->previous_char();         break;
-              case ui::key::r_arrow:  t->next_char();             break;
-              case ui::key::home:     t->first_char();            break;
-              case ui::key::end:      t->last_char();             break;
-              case ui::key::bkspc:    t->remove_previous_char();  break;
-              case ui::key::del:      t->remove_next_char();      break;
-            }
+        t->apply_key(c);
     }
 }
 
@@ -210,6 +199,22 @@ int ui::text_field::get_secondary_repeat(GLuint *v) const
 void ui::text_field::set_secondary_repeat(GLuint v)
 {
     this->repeat_delay = v;
+}
+
+void ui::text_field::apply_key(const ui::key_call_data *c)
+{
+    if (c->key == ui::key::no_key && c->character != 0)
+        this->insert_char(c->character);
+    else
+        switch (c->key)
+        {
+          case ui::key::l_arrow:  this->previous_char();         break;
+          case ui::key::r_arrow:  this->next_char();             break;
+          case ui::key::home:     this->first_char();            break;
+          case ui::key::end:      this->last_char();             break;
+          case ui::key::bkspc:    this->remove_previous_char();  break;
+          case ui::key::del:      this->remove_next_char();      break;
+        }
 }
 
 void ui::text_field::reset_cursor(void)
