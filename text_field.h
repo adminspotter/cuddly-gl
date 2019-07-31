@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2019, 17:35:27 tquirk
+ *   last updated 31 Jul 2019, 06:36:37 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -32,6 +32,7 @@
 #define __INC_CUDDLY_TEXT_FIELD_H__
 
 #include <chrono>
+#include <mutex>
 
 #include "label.h"
 
@@ -46,6 +47,7 @@ namespace ui
         glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
+        std::mutex repeat_mutex;
 
         using ui::label::get_size;
         virtual int get_size(GLuint, GLuint *) const override;

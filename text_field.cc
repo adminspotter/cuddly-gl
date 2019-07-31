@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2019, 22:07:29 tquirk
+ *   last updated 05 Aug 2019, 08:39:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -161,14 +161,12 @@ void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::key_call_data *c = (ui::key_call_data *)call;
 
-    if (t != NULL && t->timeout_arg != NULL)
+    if (t != NULL)
     {
-        ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
-        if (k != NULL
-            && k->key == c->key
-            && k->character == c->character
-            && k->mods == c->mods)
+        std::lock_guard<std::mutex> lock(t->repeat_mutex);
+        if (t->timeout_arg != NULL)
         {
+            ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
             t->remove_timeout();
             delete k;
         }
@@ -178,12 +176,19 @@ void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
 void ui::text_field::key_timeout(ui::active *a, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *c = (ui::key_call_data *)client;
 
-    t->apply_key(c);
-    t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
-                   ui::text_field::key_timeout,
-                   c);
+    if (t != NULL && client != NULL)
+    {
+        if (!t->repeat_mutex.try_lock())
+            return;
+
+        ui::key_call_data *c = (ui::key_call_data *)client;
+        t->apply_key(c);
+        t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
+                       ui::text_field::key_timeout,
+                       c);
+        t->repeat_mutex.unlock();
+    }
 }
 
 int ui::text_field::get_cursor_pos(GLuint *v) const
@@ -553,7 +558,7 @@ void ui::text_field::init(ui::composite *c)
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      cursor_transform()
+      cursor_transform(), repeat_mutex()
 {
     this->init(c);
 }
