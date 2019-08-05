@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Jul 2019, 22:18:04 tquirk
+ *   last updated 05 Aug 2019, 08:59:06 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -150,9 +150,37 @@ namespace ui
     namespace key
     {
         const int no_key = 0;
-        const int l_arrow = 1, r_arrow = 2, u_arrow = 3, d_arrow = 4;
-        const int pg_up = 5, pg_down = 6, home = 7, end = 8;
-        const int bkspc = 9, del = 10, esc = 11;
+        /* Regular keys */
+        const int space = 1, apostrophe = 2, comma = 3, dash = 4, period = 5;
+        const int slash = 6, semicolon = 7, equal = 8, grave = 9;
+        const int backslash = 10, l_bracket = 11, r_bracket = 12;
+        const int key_0 = 13, key_1 = 14, key_2 = 15, key_3 = 16, key_4 = 17;
+        const int key_5 = 18, key_6 = 19, key_7 = 20, key_8 = 21, key_9 = 22;
+        const int a = 23, b = 24, c = 25, d = 26, e = 27, f = 28;
+        const int g = 29, h = 30, i = 31, j = 32, k = 33, l = 34;
+        const int m = 35, n = 36, o = 37, p = 38, q = 39, r = 40;
+        const int s = 41, t = 42, u = 43, v = 44, w = 45, x = 46;
+        const int y = 47, z = 48;
+        /* Keypad keys */
+        const int kp_0 = 49, kp_1 = 50, kp_2 = 51, kp_3 = 52, kp_4 = 53;
+        const int kp_5 = 54, kp_6 = 55, kp_7 = 56, kp_8 = 57, kp_9 = 58;
+        const int kp_period = 59, kp_slash = 60, kp_asterisk = 61;
+        const int kp_dash = 62, kp_plus = 63;
+        /* Nonprinting keys */
+        const int non_printing = 64;
+        const int kp_enter = 65, esc = 66, enter = 67, tab = 68, bkspc = 69;
+        const int ins = 70, del = 71;
+        const int l_arrow = 72, r_arrow = 73, u_arrow = 74, d_arrow = 75;
+        const int pg_up = 76, pg_down = 77, home = 78, end = 79;
+        const int prt_scr = 80, pause = 81;
+        const int num_lk = 82, scroll_lk = 83, caps_lk = 84;
+        /* Function keys */
+        const int f1 = 85, f2 = 86, f3 = 87, f4 = 88, f5 = 89, f6 = 90;
+        const int f7 = 91, f8 = 92, f9 = 93, f10 = 94, f11 = 95, f12 = 96;
+        const int f13 = 97, f14 = 98, f15 = 99, f16 = 100, f17 = 101, f18 = 102;
+        const int f19 = 103, f20 = 104, f21 = 105, f22 = 106, f23 = 107;
+        const int f24 = 108;
+
         const int down = 254, up = 255;
     }
 
