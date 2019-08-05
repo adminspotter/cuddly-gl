@@ -38,6 +38,7 @@ void key_callback(GLFWwindow *, int, int, int, int);
 void char_callback(GLFWwindow *, unsigned int, int);
 void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
+void window_size_callback(GLFWwindow *, int, int);
 
 static std::map<int, int> glfw_key_map =
 {
@@ -82,6 +83,7 @@ void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
     glfwSetCharModsCallback(w, char_callback);
     glfwSetMouseButtonCallback(w, mouse_button_callback);
     glfwSetCursorPosCallback(w, mouse_position_callback);
+    glfwSetWindowSizeCallback(w, window_size_callback);
 }
 
 int convert_glfw_mods(int mods)
@@ -134,4 +136,11 @@ void mouse_button_callback(GLFWwindow *w, int button, int action, int mods)
     ui_mods = convert_glfw_mods(mods);
 
     context->mouse_btn_callback(btn, act, ui_mods);
+}
+
+void window_size_callback(GLFWwindow *w, int width, int height)
+{
+    glm::ivec2 sz(width, height);
+
+    context->set(ui::element::size, ui::size::all, sz);
 }

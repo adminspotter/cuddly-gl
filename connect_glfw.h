@@ -1,6 +1,6 @@
 /* connect_glfw.h                                          -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 07:07:06 tquirk
+ *   last updated 05 Aug 2019, 07:59:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2017  Trinity Annabelle Quirk
@@ -38,5 +38,6 @@
 #include "ui.h"
 
 void ui_connect_glfw(ui::context *, GLFWwindow *);
+void ui_disconnect_glfw(ui::context *, GLFWwindow *);
 
 #endif /* __INC_CONNECT_GLFW_H__ */
