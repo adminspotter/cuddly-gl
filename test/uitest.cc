@@ -26,7 +26,6 @@
 #include "../connect_glfw.h"
 
 void error_callback(int, const char *);
-void window_size_callback(GLFWwindow *w, int, int);
 void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
@@ -103,7 +102,7 @@ int main(int argc, char **argv)
         return -1;
     }
     glfwMakeContextCurrent(w);
-    glfwSetWindowSizeCallback(w, window_size_callback);
+
     std::cout << "creating image" << std::endl;
     create_image(72, 48);
 
@@ -248,6 +247,7 @@ int main(int argc, char **argv)
         glfwSwapBuffers(w);
         glfwPollEvents();
     }
+    ui_disconnect_glfw(ctx, w);
     delete ctx;
     glfwTerminate();
     return 0;
@@ -256,13 +256,6 @@ int main(int argc, char **argv)
 void error_callback(int err, const char *desc)
 {
     std::cout << "glfw error: " << desc << " (" << err << ')' << std::endl;
-}
-
-void window_size_callback(GLFWwindow *w, int width, int height)
-{
-    glm::ivec2 sz(width, height);
-
-    ctx->set(ui::element::size, ui::size::all, sz);
 }
 
 void create_image(int width, int height)

@@ -94,6 +94,11 @@ AS_CASE([$host_os],
     CXXFLAGS="$CXXFLAGS -I/opt/X11/include"
         ],
         [
+    AC_SEARCH_LIBS([XAutoRepeatOff], [X11],
+        [],
+        [AC_MSG_ERROR([libX11 not valid, can not build library.])],
+        [$LDFLAGS])
+
     AC_SEARCH_LIBS([glBindVertexArray], [GL],
         [],
         [AC_MSG_ERROR([libGL not valid, can not build library.])],
@@ -103,6 +108,9 @@ AS_CASE([$host_os],
         [],
         [AC_MSG_ERROR([libGLU not valid, can not build library.])],
         [$LDFLAGS])
+
+    X11_DEFS="-DUSING_X11"
+    AC_SUBST(X11_DEFS)
         ])
 
 # Check for Freetype2

@@ -35,7 +35,7 @@ t_bidi_CXXFLAGS = -Itap++
 t_bidi_LDADD = tap++/libtap++.la ../libcuddly_gl.la
 
 uitest_SOURCES = uitest.cc ../connect_glfw.cc
-uitest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES)
+uitest_CXXFLAGS = $(CXXFLAGS) $(GLFW_INCLUDES) $(X11_DEFS)
 uitest_LDFLAGS = $(LDFLAGS) $(GLFW_LDFLAGS)
 uitest_LDADD = ../libcuddly_gl.la $(GLFW_LDLIBS) $(LDLIBS)
 
