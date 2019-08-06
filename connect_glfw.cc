@@ -202,6 +202,11 @@ void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
     glfwSetWindowCloseCallback(w, close_callback);
 }
 
+void ui_disconnect_glfw(ui::context *ctx, GLFWwindow *w)
+{
+    close_callback(w);
+}
+
 int convert_glfw_mods(int mods)
 {
     int retval = 0;

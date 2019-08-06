@@ -247,6 +247,7 @@ int main(int argc, char **argv)
         glfwSwapBuffers(w);
         glfwPollEvents();
     }
+    ui_disconnect_glfw(ctx, w);
     delete ctx;
     glfwTerminate();
     return 0;
