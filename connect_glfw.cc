@@ -1,9 +1,9 @@
 /* connect_glfw.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 13 Nov 2017, 06:57:37 tquirk
+ *   last updated 05 Aug 2019, 08:59:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,8 +30,15 @@
 #include "ui_defs.h"
 #include "connect_glfw.h"
 
-#include <iostream>
 #include <map>
+
+#if USING_X11
+#include <X11/Xlib.h>
+#define GLFW_EXPOSE_NATIVE_X11
+#include <GLFW/glfw3native.h>
+
+static int global_auto_repeat = 0;
+#endif /* USING X11 */
 
 static int convert_glfw_mods(int);
 void key_callback(GLFWwindow *, int, int, int, int);
@@ -39,6 +46,8 @@ void char_callback(GLFWwindow *, unsigned int, int);
 void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 void window_size_callback(GLFWwindow *, int, int);
+void focus_callback(GLFWwindow *, int);
+void close_callback(GLFWwindow *);
 
 static std::map<int, int> glfw_key_map =
 {
@@ -177,12 +186,20 @@ static ui::context *context = NULL;
 void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
 {
     context = ctx;
+#if USING_X11
+    XKeyboardState kb_state;
+
+    XGetKeyboardControl(glfwGetX11Display(), &kb_state);
+    global_auto_repeat = kb_state.global_auto_repeat;
+#endif /* USING_X11 */
 
     glfwSetKeyCallback(w, key_callback);
     glfwSetCharModsCallback(w, char_callback);
     glfwSetMouseButtonCallback(w, mouse_button_callback);
     glfwSetCursorPosCallback(w, mouse_position_callback);
     glfwSetWindowSizeCallback(w, window_size_callback);
+    glfwSetWindowFocusCallback(w, focus_callback);
+    glfwSetWindowCloseCallback(w, close_callback);
 }
 
 int convert_glfw_mods(int mods)
@@ -243,4 +260,25 @@ void window_size_callback(GLFWwindow *w, int width, int height)
     glm::ivec2 sz(width, height);
 
     context->set(ui::element::size, ui::size::all, sz);
+}
+
+void focus_callback(GLFWwindow *w, int focused)
+{
+#if USING_X11
+    if (global_auto_repeat == 1)
+    {
+        if (focused)
+            XAutoRepeatOff(glfwGetX11Display());
+        else
+            XAutoRepeatOn(glfwGetX11Display());
+    }
+#endif /* USING_X11 */
+}
+
+void close_callback(GLFWwindow *w)
+{
+#if USING_X11
+    if (global_auto_repeat == 1)
+        XAutoRepeatOn(glfwGetX11Display());
+#endif /* USING_X11 */
 }
