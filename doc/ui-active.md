@@ -19,7 +19,7 @@ a->call_callbacks(ui::callback::btn_down, btn_call_data);
 
 a->remove_callback(ui::callback::enter, enter_callback, NULL);
 
-ui::to_until<Gluint, std::milli> expire(500);
+ui::to_until<GLuint, std::milli> expire(500);
 
 a->add_timeout(until, timeout_callback, NULL);
 
@@ -183,7 +183,7 @@ timeout at the end of the timeout function.
 
 ```cpp
 ui::active *a = new ui::active(x, y);
-ui::to_until<Gluint, std::milli> expire(500);
+ui::to_until<GLuint, std::milli> expire(500);
 
 a->add_timeout(expire, timeout_func, NULL);
 
