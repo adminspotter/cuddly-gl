@@ -11,7 +11,7 @@ endif
 man3_MANS = $(MANPAGES)
 
 .md.3: $<
-	$(RONN) --manual='CuddlyGL' < $< > $@
+	$(RONN) --roff --pipe --name="$(basename $<)" --section=3 --date='2019-08-07' --manual="CuddlyGL Programmer's Manual" --organization="CuddlyGL $(VERSION)" < $< > $@
 
 clean-local:
 	rm -rf $(MANPAGES)

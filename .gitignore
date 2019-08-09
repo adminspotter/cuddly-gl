@@ -44,3 +44,5 @@ test-driver
 
 # Xcode
 *.xcodeproj/
+
+doc/*.3
