@@ -13,6 +13,8 @@ endif
 # the filenames we want.
 noinst_DATA = $(MANPAGES)
 
+# ronn may add an extra NAME section that we don't need, so we strip
+# it out with the sed command.
 .md.3:
 	$(RONN) --roff --pipe \
 		--name="$(subst -,::,$(basename $<))" \
@@ -21,6 +23,10 @@ noinst_DATA = $(MANPAGES)
 		--organization="$(PACKAGE_STRING)" \
 		--date='2019-08-10' \
 		< $< > $@
+	if [ "$$(grep -c '^\.SH "NAME"$$' $@)" != "1" ] ;\
+	then \
+	  sed -i -e '/\.SH "NAME"/{N;/- $(subst -,::,$(basename $<))$$/{s/\n//;d;}}' $@ ;\
+	fi
 
 if GENERATE_MANPAGES
 install-data-local:
