@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2019, 08:59:06 tquirk
+ *   last updated 11 Aug 2019, 09:14:54 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -228,6 +228,7 @@ namespace ui
     namespace state
     {
         const GLuint visible = 1, active = 2, armed = 3, checked = 4;
+        const GLuint radio_box = 5;
     }
 }
 

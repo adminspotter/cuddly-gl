@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:10:18 tquirk
+ *   last updated 11 Aug 2019, 09:34:17 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -35,6 +35,17 @@
 #include "composite.h"
 
 const int ui::composite::tree_max_depth = 4;
+
+int ui::composite::get_radio_state(bool *v) const
+{
+    *v = this->radio_box;
+    return 0;
+}
+
+void ui::composite::set_radio_state(bool v)
+{
+    this->radio_box = v;
+}
 
 void ui::composite::set_size(GLuint d, GLuint v)
 {
@@ -92,6 +103,19 @@ int ui::composite::get_pixel_size(GLuint t, glm::vec3 *v) const
         return 0;
     }
     return 1;
+}
+
+int ui::composite::get_state(GLuint t, bool *v) const
+{
+    if (t == ui::state::radio_box)
+        return this->get_radio_state(v);
+    return 0;
+}
+
+void ui::composite::set_state(GLuint t, bool v)
+{
+    if (t == ui::state::radio_box)
+        this->set_radio_state(v);
 }
 
 void ui::composite::set_desired_size(void)
@@ -206,6 +230,13 @@ int ui::composite::get(GLuint e, GLuint t, glm::vec3 *v) const
     return 1;
 }
 
+int ui::composite::get(GLuint e, GLuint t, bool *v) const
+{
+    if (e == ui::element::state)
+        return this->get_state(t, v);
+    return 1;
+}
+
 void ui::composite::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
@@ -213,6 +244,12 @@ void ui::composite::set(GLuint e, GLuint t, GLuint v)
       case ui::element::size:    this->set_size(t, v);    break;
       case ui::element::resize:  this->set_resize(t, v);  break;
     }
+}
+
+void ui::composite::set(GLuint e, GLuint t, bool v)
+{
+    if (e == ui::element::state)
+        this->set_state(t, v);
 }
 
 void ui::composite::add_child(ui::widget *w)
