@@ -1,9 +1,9 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:03:27 tquirk
+ *   last updated 11 Aug 2019, 09:37:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,6 +52,8 @@ namespace ui
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_pixel_size(GLuint, float *) const override;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const override;
+        virtual int get_state(GLuint, bool *) const override;
+        virtual void set_state(GLuint, bool) override;
 
         glm::ivec2 calculate_max_point(void);
         virtual void set_desired_size(void) override;

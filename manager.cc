@@ -1,9 +1,9 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:19:53 tquirk
+ *   last updated 11 Aug 2019, 09:38:13 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,6 +120,21 @@ int ui::manager::get_pixel_size(GLuint t, glm::vec3 *v) const
     if (this->composite::parent != NULL)
         return this->composite::parent->get(ui::element::pixel_size, t, v);
     return 1;
+}
+
+int ui::manager::get_state(GLuint t, bool *v) const
+{
+    if (t == ui::state::radio_box)
+        return this->composite::get_state(t, v);
+    return this->widget::get_state(t, v);
+}
+
+void ui::manager::set_state(GLuint t, bool v)
+{
+    if (t == ui::state::radio_box)
+        this->composite::set_state(t, v);
+    else
+        this->widget::set_state(t, v);
 }
 
 glm::ivec2 ui::manager::calculate_max_point(void)
