@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 09:27:20 tquirk
+ *   last updated 11 Aug 2019, 16:47:24 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -98,6 +98,7 @@ namespace ui
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, bool);
+        virtual void set(GLuint, GLuint, ui::widget *);
 
         GET_VA;
         SET_VA;

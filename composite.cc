@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 09:34:17 tquirk
+ *   last updated 11 Aug 2019, 22:48:30 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
@@ -33,6 +33,7 @@
 #include <glm/vec3.hpp>
 
 #include "composite.h"
+#include "toggle.h"
 
 const int ui::composite::tree_max_depth = 4;
 
@@ -250,6 +251,24 @@ void ui::composite::set(GLuint e, GLuint t, bool v)
 {
     if (e == ui::element::state)
         this->set_state(t, v);
+}
+
+void ui::composite::set(GLuint e, GLuint t, ui::widget *w)
+{
+    auto found = std::find(this->children.begin(), this->children.end(), w);
+    if (this->radio_box == true
+        && e == ui::element::child
+        && t == ui::child::radio
+        && found != this->children.end())
+    {
+        ui::toggle *set_radio = dynamic_cast<ui::toggle *>(w);
+        for (auto i : this->children)
+        {
+            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
+            if (r != NULL && r != set_radio)
+                r->set(ui::element::state, ui::state::checked, false);
+        }
+    }
 }
 
 void ui::composite::add_child(ui::widget *w)
