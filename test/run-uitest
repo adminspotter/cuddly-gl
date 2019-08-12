@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 51;
+use Test::More 'tests' => 72;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -154,4 +154,7 @@ interact_with_button(60, 310);
 interact_with_row_column();
 interact_with_text_field();
 interact_with_pie_menu();
+interact_with_button(140, 360);
+interact_with_button(140, 385);
+interact_with_button(140, 415);
 close_window();
