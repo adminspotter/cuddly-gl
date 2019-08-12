@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 09:38:13 tquirk
+ *   last updated 12 Aug 2019, 09:23:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -249,6 +249,13 @@ int ui::manager::get(GLuint e, GLuint t, glm::ivec2 *v) const
     return this->widget::get(e, t, v);
 }
 
+int ui::manager::get(GLuint e, GLuint t, bool *v) const
+{
+    if (t == ui::state::radio_box)
+        return this->composite::get(e, t, v);
+    return this->widget::get(e, t, v);
+}
+
 void ui::manager::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
@@ -262,6 +269,14 @@ void ui::manager::set(GLuint e, GLuint t, GLuint v)
 void ui::manager::set(GLuint e, GLuint t, const glm::ivec2& v)
 {
     this->widget::set(e, t, v);
+}
+
+void ui::manager::set(GLuint e, GLuint t, bool v)
+{
+    if (t == ui::state::radio_box)
+        this->composite::set(e, t, v);
+    else
+        this->widget::set(e, t, v);
 }
 
 void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
