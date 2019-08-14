@@ -1,9 +1,9 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 22:48:30 tquirk
+ *   last updated 14 Aug 2019, 08:16:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,6 +46,21 @@ int ui::composite::get_radio_state(bool *v) const
 void ui::composite::set_radio_state(bool v)
 {
     this->radio_box = v;
+}
+
+void ui::composite::set_radio_child(GLuint t, ui::widget *v)
+{
+    auto found = std::find(this->children.begin(), this->children.end(), v);
+    if (t == ui::child::radio && found != this->children.end())
+    {
+        ui::toggle *set_radio = dynamic_cast<ui::toggle *>(v);
+        for (auto i : this->children)
+        {
+            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
+            if (r != NULL && r != set_radio)
+                r->set(ui::element::state, ui::state::checked, false);
+        }
+    }
 }
 
 void ui::composite::set_size(GLuint d, GLuint v)
@@ -253,22 +268,10 @@ void ui::composite::set(GLuint e, GLuint t, bool v)
         this->set_state(t, v);
 }
 
-void ui::composite::set(GLuint e, GLuint t, ui::widget *w)
+void ui::composite::set(GLuint e, GLuint t, ui::widget *v)
 {
-    auto found = std::find(this->children.begin(), this->children.end(), w);
-    if (this->radio_box == true
-        && e == ui::element::child
-        && t == ui::child::radio
-        && found != this->children.end())
-    {
-        ui::toggle *set_radio = dynamic_cast<ui::toggle *>(w);
-        for (auto i : this->children)
-        {
-            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
-            if (r != NULL && r != set_radio)
-                r->set(ui::element::state, ui::state::checked, false);
-        }
-    }
+    if (this->radio_box == true && e == ui::element::child)
+        this->set_radio_child(t, v);
 }
 
 void ui::composite::add_child(ui::widget *w)

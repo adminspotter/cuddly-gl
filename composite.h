@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 16:47:24 tquirk
+ *   last updated 14 Aug 2019, 08:17:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -58,6 +58,7 @@ namespace ui
 
         int get_radio_state(bool *) const;
         void set_radio_state(bool);
+        void set_radio_child(GLuint, ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_resize(GLuint, GLuint *) const;
