@@ -35,6 +35,7 @@ void reorient_callback(ui::active *, void *, void *);
 void print_widget_resources(ui::active *, void *, void *);
 void print_button_resources(ui::active *, void *, void *);
 void print_row_column_resources(ui::active *, void *, void *);
+void print_radio(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -237,6 +238,7 @@ int main(int argc, char **argv)
                  ui::element::string, 0, s.str(),
                  ui::element::color, ui::color::foreground, fg1,
                  ui::element::color, ui::color::background, bg1);
+        rbt->add_callback(ui::callback::btn_up, print_radio, rb1);
     }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx,
@@ -443,4 +445,17 @@ void print_row_column_resources(ui::active *a, void *call, void *client)
       case ui::resize::all:     std::cout << "all" << std::endl;     break;
       default:                  std::cout << "??" << std::endl;      break;
     }
+}
+
+void print_radio(ui::active *a, void *call, void *client)
+{
+    bool is_radio = false;
+    ui::widget *w = NULL;
+    ui::row_column *r = reinterpret_cast<ui::row_column *>(client);
+
+    r->get(ui::element::child, ui::child::radio, &w,
+           ui::element::state, ui::state::radio_box, &is_radio);
+    std::cout << "is " << (is_radio == true ? "" : "not ") << "a radio box, "
+              << std::hex << w << std::dec << " is the checked child"
+              << std::endl;
 }

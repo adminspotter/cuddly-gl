@@ -58,6 +58,7 @@ namespace ui
 
         int get_radio_state(bool *) const;
         void set_radio_state(bool);
+        int get_radio_child(GLuint, ui::widget **) const;
         void set_radio_child(GLuint, ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
@@ -96,6 +97,7 @@ namespace ui
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
         virtual int get(GLuint, GLuint, bool *) const;
+        virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, bool);

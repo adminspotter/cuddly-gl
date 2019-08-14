@@ -48,6 +48,28 @@ void ui::composite::set_radio_state(bool v)
     this->radio_box = v;
 }
 
+int ui::composite::get_radio_child(GLuint t, ui::widget **v) const
+{
+    if (t == ui::child::radio)
+    {
+        bool checked;
+        for (auto i : this->children)
+        {
+            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
+            if (r == NULL)
+                continue;
+            r->get(ui::element::state, ui::state::checked, &checked);
+            if (checked == true)
+            {
+                *v = i;
+                break;
+            }
+        }
+        return 0;
+    }
+    return 1;
+}
+
 void ui::composite::set_radio_child(GLuint t, ui::widget *v)
 {
     auto found = std::find(this->children.begin(), this->children.end(), v);
@@ -250,6 +272,13 @@ int ui::composite::get(GLuint e, GLuint t, bool *v) const
 {
     if (e == ui::element::state)
         return this->get_state(t, v);
+    return 1;
+}
+
+int ui::composite::get(GLuint e, GLuint t, ui::widget **v) const
+{
+    if (this->radio_box == true && e == ui::element::child)
+        return this->get_radio_child(t, v);
     return 1;
 }
 
