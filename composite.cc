@@ -110,7 +110,7 @@ int ui::composite::get_state(GLuint t, bool *v) const
 {
     if (t == ui::state::radio_box)
         return this->get_radio_state(v);
-    return 0;
+    return 1;
 }
 
 void ui::composite::set_state(GLuint t, bool v)
