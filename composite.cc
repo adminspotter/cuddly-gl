@@ -1,9 +1,9 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:10:18 tquirk
+ *   last updated 14 Aug 2019, 08:16:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,8 +33,57 @@
 #include <glm/vec3.hpp>
 
 #include "composite.h"
+#include "toggle.h"
 
 const int ui::composite::tree_max_depth = 4;
+
+int ui::composite::get_radio_state(bool *v) const
+{
+    *v = this->radio_box;
+    return 0;
+}
+
+void ui::composite::set_radio_state(bool v)
+{
+    this->radio_box = v;
+}
+
+int ui::composite::get_radio_child(GLuint t, ui::widget **v) const
+{
+    if (t == ui::child::radio)
+    {
+        bool checked;
+        for (auto i : this->children)
+        {
+            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
+            if (r == NULL)
+                continue;
+            r->get(ui::element::state, ui::state::checked, &checked);
+            if (checked == true)
+            {
+                *v = i;
+                break;
+            }
+        }
+        return 0;
+    }
+    return 1;
+}
+
+void ui::composite::set_radio_child(GLuint t, ui::widget *v)
+{
+    auto found = std::find(this->children.begin(), this->children.end(), v);
+    if (t == ui::child::radio && found != this->children.end())
+    {
+        ui::toggle *set_radio = dynamic_cast<ui::toggle *>(v);
+        for (auto i : this->children)
+        {
+            ui::toggle *r = dynamic_cast<ui::toggle *>(i);
+            if (r != NULL && r != set_radio)
+                r->set(ui::element::state, ui::state::checked, false);
+        }
+    }
+}
 
 void ui::composite::set_size(GLuint d, GLuint v)
 {
@@ -92,6 +141,19 @@ int ui::composite::get_pixel_size(GLuint t, glm::vec3 *v) const
         return 0;
     }
     return 1;
+}
+
+int ui::composite::get_state(GLuint t, bool *v) const
+{
+    if (t == ui::state::radio_box)
+        return this->get_radio_state(v);
+    return 1;
+}
+
+void ui::composite::set_state(GLuint t, bool v)
+{
+    if (t == ui::state::radio_box)
+        this->set_radio_state(v);
 }
 
 void ui::composite::set_desired_size(void)
@@ -206,6 +268,20 @@ int ui::composite::get(GLuint e, GLuint t, glm::vec3 *v) const
     return 1;
 }
 
+int ui::composite::get(GLuint e, GLuint t, bool *v) const
+{
+    if (e == ui::element::state)
+        return this->get_state(t, v);
+    return 1;
+}
+
+int ui::composite::get(GLuint e, GLuint t, ui::widget **v) const
+{
+    if (this->radio_box == true && e == ui::element::child)
+        return this->get_radio_child(t, v);
+    return 1;
+}
+
 void ui::composite::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
@@ -213,6 +289,18 @@ void ui::composite::set(GLuint e, GLuint t, GLuint v)
       case ui::element::size:    this->set_size(t, v);    break;
       case ui::element::resize:  this->set_resize(t, v);  break;
     }
+}
+
+void ui::composite::set(GLuint e, GLuint t, bool v)
+{
+    if (e == ui::element::state)
+        this->set_state(t, v);
+}
+
+void ui::composite::set(GLuint e, GLuint t, ui::widget *v)
+{
+    if (this->radio_box == true && e == ui::element::child)
+        this->set_radio_child(t, v);
 }
 
 void ui::composite::add_child(ui::widget *w)

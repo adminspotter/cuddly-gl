@@ -1,9 +1,9 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:00:46 tquirk
+ *   last updated 14 Aug 2019, 08:17:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,19 +49,25 @@ namespace ui
         std::list<widget *> children, to_remove;
         quadtree *tree;
         GLuint resize;
-        bool dirty;
+        bool dirty, radio_box;
 
         glm::ivec2 old_pos;
         widget *old_child;
 
         const static int tree_max_depth;
 
+        int get_radio_state(bool *) const;
+        void set_radio_state(bool);
+        int get_radio_child(GLuint, ui::widget **) const;
+        void set_radio_child(GLuint, ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_resize(GLuint, GLuint *) const;
         virtual void set_resize(GLuint, GLuint);
         virtual int get_pixel_size(GLuint, float *) const;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
+        virtual int get_state(GLuint, bool *) const;
+        virtual void set_state(GLuint, bool);
 
         virtual void set_desired_size(void);
 
@@ -90,8 +96,12 @@ namespace ui
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
+        virtual int get(GLuint, GLuint, bool *) const;
+        virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, bool);
+        virtual void set(GLuint, GLuint, ui::widget *);
 
         GET_VA;
         SET_VA;

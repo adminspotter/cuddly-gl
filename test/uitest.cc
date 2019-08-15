@@ -35,6 +35,7 @@ void reorient_callback(ui::active *, void *, void *);
 void print_widget_resources(ui::active *, void *, void *);
 void print_button_resources(ui::active *, void *, void *);
 void print_row_column_resources(ui::active *, void *, void *);
+void print_radio(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -44,7 +45,7 @@ ui::toggle *tgl1;
 ui::text_field *t1;
 ui::password *pw1;
 ui::manager *m1;
-ui::row_column *r1;
+ui::row_column *r1, *rb1;
 ui::pie_menu *pu1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
@@ -215,6 +216,30 @@ int main(int argc, char **argv)
                ui::element::size, ui::size::width, 100);
         l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
     }
+    std::cout << "creating radio box 1" << std::endl;
+    rb1 = new ui::row_column(ctx,
+                             ui::element::position, ui::position::x, 50,
+                             ui::element::position, ui::position::y, 350,
+                             ui::element::color, ui::color::foreground, fg1,
+                             ui::element::color, ui::color::background, bg1,
+                             ui::element::state, ui::state::radio_box, true,
+                             ui::element::size, ui::size::columns, 1,
+                             ui::element::size, ui::size::rows, 0,
+                             ui::element::child_spacing, ui::size::width, 2,
+                             ui::element::child_spacing, ui::size::height, 5);
+    for (int q = 0; q < 3; ++q)
+    {
+        std::cout << "  creating radio " << q << std::endl;
+        std::ostringstream s;
+        ui::toggle *rbt = new ui::toggle(rb1);
+
+        s << "radio " << (char)('a' + q);
+        rbt->set(ui::element::font, ui::ownership::shared, std_font,
+                 ui::element::string, 0, s.str(),
+                 ui::element::color, ui::color::foreground, fg1,
+                 ui::element::color, ui::color::background, bg1);
+        rbt->add_callback(ui::callback::btn_up, print_radio, rb1);
+    }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx,
                            ui::element::size, ui::size::width, 200,
@@ -237,6 +262,7 @@ int main(int argc, char **argv)
         pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
         pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
     }
+
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
@@ -419,4 +445,17 @@ void print_row_column_resources(ui::active *a, void *call, void *client)
       case ui::resize::all:     std::cout << "all" << std::endl;     break;
       default:                  std::cout << "??" << std::endl;      break;
     }
+}
+
+void print_radio(ui::active *a, void *call, void *client)
+{
+    bool is_radio = false;
+    ui::widget *w = NULL;
+    ui::row_column *r = reinterpret_cast<ui::row_column *>(client);
+
+    r->get(ui::element::child, ui::child::radio, &w,
+           ui::element::state, ui::state::radio_box, &is_radio);
+    std::cout << "is " << (is_radio == true ? "" : "not ") << "a radio box, "
+              << std::hex << w << std::dec << " is the checked child"
+              << std::endl;
 }
