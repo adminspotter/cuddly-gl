@@ -293,7 +293,7 @@ mappings to the underlying types, but with shorter names.
 * **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
 * **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
-  Inherited from [`ui::rect`](ui::rect).
+  Inherited from [`ui::rect`](ui-rect.md).
 
 ## NEW RESOURCES ##
 
@@ -302,7 +302,7 @@ The `ui::active` adds no new resources which are accessed via the
 
 ## INHERITED RESOURCES ##
 
-* **ui::element::size** ([`ui::rect`](ui::rect))
+* **ui::element::size** ([`ui::rect`](ui-rect.md))
 
   | Subtype              | Data type  |
   | -------------------- | ---------- |
