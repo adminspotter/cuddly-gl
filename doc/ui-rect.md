@@ -33,7 +33,7 @@ a base class with a size.
 
 ## METHODS ##
 
-* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
 
   Retrieve resources from the object.  Arguments are given in sets of
   three.  The _type_ argument will be from the `ui::element`

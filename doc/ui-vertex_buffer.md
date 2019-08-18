@@ -112,7 +112,7 @@ would correspond with `vertex[8]`, and so on.
   divider will be located.  0 is along the positive x-axis, and moves
   clockwise as the angle increases.
 
-* **const float *vertex_data(void)**
+* **const float \*vertex_data(void)**
 
   Return a vertex data array suitable for passing into the
   `glBufferData` function.
@@ -123,7 +123,7 @@ would correspond with `vertex[8]`, and so on.
   added via the generation methods above.  The `glBufferData` function
   requires this size directly.
 
-* **const float *element_data(void)**
+* **const float \*element_data(void)**
 
   Return an element data array suitable for passing into the
   `glBufferData` function.

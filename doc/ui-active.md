@@ -236,7 +236,7 @@ mappings to the underlying types, but with shorter names.
 
 ## METHODS ##
 
-* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void *_client_data_)**
+* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void \*_client_data_)**
 
   Adds a callback to the provided _list_.  The _list_ argument is an
   element from the `ui::callback` namespace.
@@ -245,7 +245,7 @@ mappings to the underlying types, but with shorter names.
   pointer to something, whatever is at the address at call time is
   what is available to the callback function.
 
-* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void *_client_data_)**
+* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void \*_client_data_)**
 
   Removes a callback to the provided _list_ which has the provided
   _client_data_.
@@ -257,7 +257,7 @@ mappings to the underlying types, but with shorter names.
   If no matching callback is found in a list, the list will be
   unchanged.
 
-* **call_callbacks(GLuint _list_, void *_call_data_)**
+* **call_callbacks(GLuint _list_, void \*_call_data_)**
 
   Calls the callbacks in the provided _list_, passing _call_data_ in
   the second argument to each.  The _list_ argument is an element from
@@ -266,7 +266,7 @@ mappings to the underlying types, but with shorter names.
   This is the method which is used internally by the event-handling
   mechanism to trigger a set of callbacks.
 
-* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void *_client_data_)**
+* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void \*_client_data_)**
 
   Adds a timeout which will expire after the interval _until_.  The
   _until_ argument is a type of `std::chrono::steady_clock::duration`,
@@ -290,7 +290,7 @@ mappings to the underlying types, but with shorter names.
   to fire the timeout call, but in the general case, this method would
   probably not be used very often in user code.
 
-* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
 * **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
   Inherited from [`ui::rect`](ui-rect.md).
