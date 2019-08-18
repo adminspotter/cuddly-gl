@@ -43,11 +43,11 @@ methods should not be listed. -->
 to that manual page.  Links should go to where the methods are
 *defined*, rather than immediate superclasses (where different). -->
 
+Inherited from [ui::super](ui-super.md):
+
 * **inherited_one()**
 * **inherited_two()**
 * **inherited_three()**
-
-  Inherited from [ui::super](ui-super.md).
 
 ## NEW RESOURCES ##
 

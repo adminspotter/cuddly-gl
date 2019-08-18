@@ -290,10 +290,10 @@ mappings to the underlying types, but with shorter names.
   to fire the timeout call, but in the general case, this method would
   probably not be used very often in user code.
 
+Inherited from [`ui::rect`](ui-rect.md):
+
 * **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
 * **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
-
-  Inherited from [`ui::rect`](ui-rect.md).
 
 ## NEW RESOURCES ##
 

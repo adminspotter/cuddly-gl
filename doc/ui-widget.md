@@ -65,10 +65,12 @@ of the object.
   and removed from its parent's search tree.  It may not be deleted
   immediately.
 
+Inherited from [`ui::rect`](ui-rect.md):
+
 * **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
 * **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
-  Inherited from [`ui::rect`](ui::rect.md).
+Inherited from [`ui::active`](ui-active.md):
 
 * **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void \*_client_data_)**
 * **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void \*_client_data_)**
@@ -76,8 +78,6 @@ of the object.
 * **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void \*_client_data_)**
 * **remove_timeout()**
 * **call_timeout()**
-
-  Inherited from [`ui::active`](ui::active.md).
 
 ## NEW RESOURCES ##
 
