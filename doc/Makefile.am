@@ -5,7 +5,8 @@ MANPAGES =
 if GENERATE_MANPAGES
 MANPAGES += ui-rect.3 \
 	ui-active.3 \
-	ui-vertex_buffer.3
+	ui-vertex_buffer.3 \
+	ui-widget.3
 endif
 
 # Make is not properly able to handle filenames with colons, so we
