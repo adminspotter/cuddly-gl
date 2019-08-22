@@ -21,8 +21,9 @@ w->close();
 
 The `ui::widget` class is the most basic element of the CuddlyGL
 toolkit which can be drawn on the screen.  It adds OpenGL handling of
-VAO, VBO, and EBO buffers, interaction with the `ui::vertex_buffer`,
-and a set of basic visual elements:  _position_, _border_, _margin_,
+VAO, VBO, and EBO buffers, interaction with the
+[`ui::vertex_buffer`](ui-vertex_buffer.md)(3), and a set of basic
+visual elements:  _position_, _border_, _margin_,
 foreground/background _color_, and _visibility_.
 
 The _border_ is a set of lines which define the edge of the usable
@@ -42,9 +43,9 @@ and the usable space extends to the edges of the widget's area.
 +----------------------+
 ```
 
-The widget's *parent*, a subclass of type `ui::composite`, must be
-specified at creation time, and can not be changed during the lifetime
-of the object.
+The widget's _parent_, a subclass of type
+[`ui::composite`](ui-composite.md)(3), must be specified at creation
+time, and can not be changed during the lifetime of the object.
 
 ## METHODS ##
 

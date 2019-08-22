@@ -35,10 +35,10 @@ The `ui::active` class is an intermediate class which adds event
 handling.  It subclasses the `ui::rect` to add *callback lists* and
 *timeouts*.
 
-As with the `ui::rect`, the `ui::active` has no interaction with
-OpenGL, and can not be drawn on the screen.  It is meant to layer
-functionality in a segmented way, and provide a variety of inheritance
-points for widgets.
+As with the [`ui::rect`](ui-rect.md)(3), the `ui::active` has no
+interaction with OpenGL, and can not be drawn on the screen.  It is
+meant to layer functionality in a segmented way, and provide a variety
+of inheritance points for widgets.
 
 ## CALLBACK LISTS ##
 
