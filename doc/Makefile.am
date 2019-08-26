@@ -1,14 +1,17 @@
 SUFFIXES = .md .3
 
+MANPAGE_DOCS = ui-rect.md \
+	ui-active.md \
+	ui-vertex_buffer.md \
+	ui-widget.md \
+	ui-label.md
 MANPAGES =
 
 if GENERATE_MANPAGES
-MANPAGES += ui-rect.3 \
-	ui-active.3 \
-	ui-vertex_buffer.3 \
-	ui-widget.3 \
-	ui-label.3
+MANPAGES += $(MANPAGE_DOCS:.md=.3)
 endif
+
+dist_doc_DATA = ui.md template.md $(MANPAGE_DOCS)
 
 # Make is not properly able to handle filenames with colons, so we
 # need to resort to this madness to get the manpages installed with
