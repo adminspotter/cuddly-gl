@@ -1,21 +1,19 @@
-SUFFIXES = .md .3
-
 MANPAGE_DOCS = ui-rect.md \
 	ui-active.md \
 	ui-vertex_buffer.md \
 	ui-widget.md \
 	ui-label.md
-MANPAGES =
-
-if GENERATE_MANPAGES
-MANPAGES += $(MANPAGE_DOCS:.md=.3)
-endif
 
 dist_doc_DATA = ui.md template.md $(MANPAGE_DOCS)
 
 # Make is not properly able to handle filenames with colons, so we
 # need to resort to this madness to get the manpages installed with
 # the filenames we want.
+if GENERATE_MANPAGES
+SUFFIXES = .md .3
+
+MANPAGES = $(MANPAGE_DOCS:.md=.3)
+
 noinst_DATA = $(MANPAGES)
 
 # ronn may add an extra NAME section that we don't need, so we strip
@@ -33,7 +31,6 @@ noinst_DATA = $(MANPAGES)
 	  sed -i -e '/\.SH "NAME"/{N;/- $(subst -,::,$(basename $<))$$/{s/\n//;d;}}' $@ ;\
 	fi
 
-if GENERATE_MANPAGES
 install-data-local:
 	$(mkdir_p) $(mandir)/man3
 	for man in $(MANPAGES) ;\
