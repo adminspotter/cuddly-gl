@@ -1,9 +1,9 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 08:12:13 tquirk
+ *   last updated 27 Aug 2019, 07:01:14 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -166,7 +166,7 @@ std::u32string ui::utf8tou32str(const std::string& str)
         else if ((*i & 0x80) == 0x00)
             ch = *i;
         else
-            ch = '.';
+            ch = 0xfffd;
 
         newstr.push_back(ch);
         ++i;
