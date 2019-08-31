@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2019, 08:29:59 tquirk
+ *   last updated 31 Aug 2019, 09:05:58 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -424,7 +424,7 @@ void ui::text_field::calculate_widget_size(void)
     glm::ivec2 size;
 
     this->font->max_cell_size(max_width, max_height);
-    size.x = (max_width + this->max_length)
+    size.x = (max_width * this->max_length)
         + this->border[1] + this->border[2]
         + this->margin[1] + this->margin[2] + 2;
     size.y = max_height
