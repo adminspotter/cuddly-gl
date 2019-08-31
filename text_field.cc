@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2019, 08:39:14 tquirk
+ *   last updated 31 Aug 2019, 08:29:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -420,15 +420,14 @@ void ui::text_field::generate_string_image(void)
 
 void ui::text_field::calculate_widget_size(void)
 {
-    std::vector<int> font_max = {0, 0, 0};
+    int max_width, max_height;
     glm::ivec2 size;
 
-    this->font->max_cell_size(font_max);
-    font_max[0] *= this->max_length;
-    size.x = font_max[0]
+    this->font->max_cell_size(max_width, max_height);
+    size.x = (max_width + this->max_length)
         + this->border[1] + this->border[2]
         + this->margin[1] + this->margin[2] + 2;
-    size.y = font_max[1] + font_max[2]
+    size.y = max_height
         + this->border[0] + this->border[3]
         + this->margin[0] + this->margin[3] + 2;
     this->set_size(ui::size::all, size);
@@ -478,23 +477,23 @@ void ui::text_field::generate_cursor(void)
 ui::vertex_buffer *ui::text_field::generate_points(void)
 {
     ui::vertex_buffer *vb = this->label::generate_points();
-    std::vector<int> font_max = {0, 0, 0};
+    int max_width, max_asc, max_desc;
     GLuint w, a, d;
     float ph;
 
     if (this->img.data == NULL)
         return vb;
 
-    this->font->max_cell_size(font_max);
+    this->font->max_cell_size(max_width, max_asc, max_desc);
     this->get_string_size(this->str, w, a, d);
 
     ph = 1.0f / (float)this->img.height;
 
     vb->vertex[7] = 1.0f + ((this->margin[0] + this->border[0] + 1
-                             + font_max[1] - a) * ph);
+                             + max_asc - a) * ph);
     vb->vertex[15] = vb->vertex[7];
     vb->vertex[23] = 0.0f - ((this->margin[3] + this->border[3] + 1
-                              + font_max[2] - d) * ph);
+                              + max_desc - d) * ph);
     vb->vertex[31] = vb->vertex[23];
 
     return vb;
