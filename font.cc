@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Aug 2019, 07:01:14 tquirk
+ *   last updated 31 Aug 2019, 08:31:21 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -409,11 +409,17 @@ ui::base_font::~base_font()
 {
 }
 
-void ui::base_font::max_cell_size(std::vector<int>& v)
+void ui::base_font::max_cell_size(int& width, int& height)
 {
-    v[0] = this->bbox_w;
-    v[1] = this->bbox_a;
-    v[2] = this->bbox_d;
+    width = this->bbox_w;
+    height = this->bbox_a + this->bbox_d;
+}
+
+void ui::base_font::max_cell_size(int& width, int& asc, int& desc)
+{
+    width = this->bbox_w;
+    asc = this->bbox_a;
+    desc = this->bbox_d;
 }
 
 /* This gets a little complicated, because a glyph which has no
