@@ -3,7 +3,8 @@ MANPAGE_DOCS = ui-rect.md \
 	ui-vertex_buffer.md \
 	ui-widget.md \
 	ui-label.md \
-	ui-font.md
+	ui-font.md \
+	ui-utf8tou32str.md
 
 dist_doc_DATA = ui.md template.md $(MANPAGE_DOCS)
 
