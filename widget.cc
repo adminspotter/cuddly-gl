@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:57:09 tquirk
+ *   last updated 05 Oct 2019, 07:57:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -233,7 +233,7 @@ GLuint ui::vertex_buffer::element_count(void)
     return this->element.size();
 }
 
-int ui::widget::get_position(GLuint t, GLuint *v) const
+int ui::widget::get_position(GLuint t, int *v) const
 {
     switch (t)
     {
@@ -253,7 +253,7 @@ int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
     return 1;
 }
 
-void ui::widget::set_position(GLuint t, GLuint v)
+void ui::widget::set_position(GLuint t, int v)
 {
     switch (t)
     {
@@ -373,12 +373,20 @@ void ui::widget::set_size(GLuint t, const glm::ivec2& v)
 
 void ui::widget::recalculate_transformation_matrix(void)
 {
+    glm::ivec2 parent_sz;
     glm::vec3 pixel_sz;
     glm::mat4 new_trans;
 
-    this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
-    pixel_sz.x *= this->pos.x;
-    pixel_sz.y = -(pixel_sz.y * this->pos.y);
+    this->parent->get(ui::element::size, ui::size::all, &parent_sz,
+                      ui::element::pixel_size, ui::size::all, &pixel_sz);
+    if (this->pos.x >= 0)
+        pixel_sz.x *= this->pos.x;
+    else
+        pixel_sz.x *= parent_sz.x + this->pos.x - this->dim.x;
+    if (this->pos.y >= 0)
+        pixel_sz.y = -(pixel_sz.y * this->pos.y);
+    else
+        pixel_sz.y = -(pixel_sz.y * (parent_sz.y + this->pos.y - this->dim.y));
     this->pos_transform = glm::translate(new_trans, pixel_sz);
 }
 
@@ -513,7 +521,6 @@ int ui::widget::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
-      case ui::element::position:  return this->get_position(t, v);
       case ui::element::border:    return this->get_border(t, v);
       case ui::element::margin:    return this->get_margin(t, v);
       case ui::element::size:      return this->get_size(t, v);
@@ -529,6 +536,13 @@ int ui::widget::get(GLuint e, GLuint t, glm::ivec2 *v) const
       case ui::element::size:      return this->get_size(t, v);
       default:                     return 1;
     }
+}
+
+int ui::widget::get(GLuint e, GLuint t, int *v) const
+{
+    if (e == ui::element::position)
+        return this->get_position(t, v);
+    return 1;
 }
 
 int ui::widget::get(GLuint e, GLuint t, bool *v) const
@@ -550,7 +564,6 @@ void ui::widget::set(GLuint e, GLuint t, GLuint v)
     switch (e)
     {
       case ui::element::size:      this->set_size(t, v);      break;
-      case ui::element::position:  this->set_position(t, v);  break;
       case ui::element::border:    this->set_border(t, v);    break;
       case ui::element::margin:    this->set_margin(t, v);    break;
     }
@@ -563,6 +576,14 @@ void ui::widget::set(GLuint e, GLuint t, const glm::ivec2& v)
       case ui::element::size:      this->set_size(t, v);      break;
       case ui::element::position:  this->set_position(t, v);  break;
     }
+}
+
+void ui::widget::set(GLuint e, GLuint t, int v)
+{
+    if (e == ui::element::position)
+        this->set_position(t, v);
+    else
+        this->rect::set(e, t, v);
 }
 
 void ui::widget::set(GLuint e, GLuint t, bool v)

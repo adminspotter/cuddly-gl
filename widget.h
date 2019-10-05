@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:57:23 tquirk
+ *   last updated 05 Oct 2019, 07:40:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -78,9 +78,9 @@ namespace ui
         glm::vec4 foreground, background;
         bool visible;
 
-        int get_position(GLuint, GLuint *) const;
+        int get_position(GLuint, int *) const;
         int get_position(GLuint, glm::ivec2 *) const;
-        void set_position(GLuint, GLuint);
+        void set_position(GLuint, int);
         void set_position(GLuint, const glm::ivec2&);
         virtual int get_state(GLuint, bool *) const;
         virtual void set_state(GLuint, bool);
@@ -115,11 +115,13 @@ namespace ui
         using ui::rect::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, glm::ivec2 *) const override;
+        virtual int get(GLuint, GLuint, int *) const;
         virtual int get(GLuint, GLuint, bool *) const;
         virtual int get(GLuint, GLuint, glm::vec4 *) const;
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, const glm::ivec2&) override;
+        virtual void set(GLuint, GLuint, int) override;
         virtual void set(GLuint, GLuint, bool);
         virtual void set(GLuint, GLuint, const glm::vec4&);
 
