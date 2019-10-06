@@ -1,6 +1,6 @@
 /* widget.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2019, 13:50:25 tquirk
+ *   last updated 05 Oct 2019, 21:57:17 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -92,6 +92,8 @@ namespace ui
         void set_color(GLuint, const glm::vec4&);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
+
+        static void reposition(active *, void *, void *);
 
         virtual void recalculate_absolute_pos(void);
         virtual void recalculate_transformation_matrix(void);

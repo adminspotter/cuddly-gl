@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2019, 13:49:49 tquirk
+ *   last updated 05 Oct 2019, 22:02:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -378,6 +378,17 @@ void ui::widget::set_size(GLuint t, const glm::ivec2& v)
     this->parent->move_child(this);
 }
 
+void ui::widget::reposition(ui::active *a, void *call, void *client)
+{
+    ui::widget *w = dynamic_cast<ui::widget *>(a);
+
+    if (w != NULL && (w->relative_pos.x < 0 || w->relative_pos.y < 0))
+    {
+        w->recalculate_absolute_pos();
+        w->recalculate_transformation_matrix();
+    }
+}
+
 void ui::widget::recalculate_absolute_pos(void)
 {
     if (this->relative_pos != this->pos)
@@ -513,6 +524,8 @@ void ui::widget::init(ui::composite *c)
     this->visible = true;
 
     this->populate_buffers();
+
+    this->add_callback(ui::callback::resize, ui::widget::reposition, NULL);
 }
 
 ui::widget::widget(ui::composite *c)
