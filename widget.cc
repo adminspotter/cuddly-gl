@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2019, 07:57:50 tquirk
+ *   last updated 05 Oct 2019, 13:49:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -237,9 +237,9 @@ int ui::widget::get_position(GLuint t, int *v) const
 {
     switch (t)
     {
-      case ui::position::x:  *v = this->pos.x;  return 0;
-      case ui::position::y:  *v = this->pos.y;  return 0;
-      default:                                  return 1;
+      case ui::position::x:  *v = this->relative_pos.x;  return 0;
+      case ui::position::y:  *v = this->relative_pos.y;  return 0;
+      default:                                           return 1;
     }
 }
 
@@ -247,7 +247,7 @@ int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
 {
     if (t == ui::position::all)
     {
-        *v = this->pos;
+        *v = this->relative_pos;
         return 0;
     }
     return 1;
@@ -257,11 +257,12 @@ void ui::widget::set_position(GLuint t, int v)
 {
     switch (t)
     {
-      case ui::position::x:  this->pos.x = v;  break;
-      case ui::position::y:  this->pos.y = v;  break;
-      default:                                 return;
+      case ui::position::x:  this->relative_pos.x = v;  break;
+      case ui::position::y:  this->relative_pos.y = v;  break;
+      default:                                          return;
     }
 
+    this->recalculate_absolute_pos();
     this->parent->move_child(this);
     this->recalculate_transformation_matrix();
 }
@@ -270,7 +271,8 @@ void ui::widget::set_position(GLuint t, const glm::ivec2& v)
 {
     if (t == ui::position::all)
     {
-        this->pos = v;
+        this->relative_pos = v;
+        this->recalculate_absolute_pos();
         this->parent->move_child(this);
         this->recalculate_transformation_matrix();
     }
@@ -371,22 +373,29 @@ void ui::widget::set_size(GLuint t, const glm::ivec2& v)
     this->parent->move_child(this);
 }
 
+void ui::widget::recalculate_absolute_pos(void)
+{
+    if (this->relative_pos != this->pos)
+    {
+        glm::ivec2 parent_sz;
+
+        this->parent->get(ui::element::size, ui::size::all, &parent_sz);
+        this->pos = this->relative_pos;
+        if (this->pos.x < 0)
+            this->pos.x += parent_sz.x - this->dim.x;
+        if (this->pos.y < 0)
+            this->pos.y += parent_sz.y - this->dim.y;
+    }
+}
+
 void ui::widget::recalculate_transformation_matrix(void)
 {
-    glm::ivec2 parent_sz;
     glm::vec3 pixel_sz;
     glm::mat4 new_trans;
 
-    this->parent->get(ui::element::size, ui::size::all, &parent_sz,
-                      ui::element::pixel_size, ui::size::all, &pixel_sz);
-    if (this->pos.x >= 0)
-        pixel_sz.x *= this->pos.x;
-    else
-        pixel_sz.x *= parent_sz.x + this->pos.x - this->dim.x;
-    if (this->pos.y >= 0)
-        pixel_sz.y = -(pixel_sz.y * this->pos.y);
-    else
-        pixel_sz.y = -(pixel_sz.y * (parent_sz.y + this->pos.y - this->dim.y));
+    this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
+    pixel_sz.x *= this->pos.x;
+    pixel_sz.y = -(pixel_sz.y * this->pos.y);
     this->pos_transform = glm::translate(new_trans, pixel_sz);
 }
 
@@ -503,7 +512,7 @@ void ui::widget::init(ui::composite *c)
 
 ui::widget::widget(ui::composite *c)
     : ui::active::active(0, 0), ui::rect::rect(0, 0),
-      pos(0, 0), pos_transform(),
+      pos(0, 0), relative_pos(0, 0), pos_transform(),
       foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
     this->init(c);
