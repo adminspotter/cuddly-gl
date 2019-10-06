@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 11 Aug 2019, 21:51:44 tquirk
+ *   last updated 05 Oct 2019, 13:28:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -132,7 +132,7 @@ namespace ui
 
     namespace position
     {
-        const GLuint x = 1, y = 2, all = 3;
+        const GLuint x = 1, y = 2, all = 3, absolute = 4;
     }
 
     namespace callback
