@@ -235,19 +235,24 @@ GLuint ui::vertex_buffer::element_count(void)
 
 int ui::widget::get_position(GLuint t, int *v) const
 {
-    switch (t)
+    if (t & ui::position::x)
     {
-      case ui::position::x:  *v = this->relative_pos.x;  return 0;
-      case ui::position::y:  *v = this->relative_pos.y;  return 0;
-      default:                                           return 1;
+        *v = (t & ui::position::absolute ? this->pos.x : this->relative_pos.x);
+        return 0;
     }
+    if (t & ui::position::y)
+    {
+        *v = (t & ui::position::absolute ? this->pos.y : this->relative_pos.y);
+        return 0;
+    }
+    return 1;
 }
 
 int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
 {
-    if (t == ui::position::all)
+    if (t & ui::position::all)
     {
-        *v = this->relative_pos;
+        *v = (t & ui::position::absolute ? this->pos : this->relative_pos);
         return 0;
     }
     return 1;
@@ -255,7 +260,7 @@ int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
 
 void ui::widget::set_position(GLuint t, int v)
 {
-    switch (t)
+    switch (t & ~ui::position::absolute)
     {
       case ui::position::x:  this->relative_pos.x = v;  break;
       case ui::position::y:  this->relative_pos.y = v;  break;
@@ -269,7 +274,7 @@ void ui::widget::set_position(GLuint t, int v)
 
 void ui::widget::set_position(GLuint t, const glm::ivec2& v)
 {
-    if (t == ui::position::all)
+    if (t & ui::position::all)
     {
         this->relative_pos = v;
         this->recalculate_absolute_pos();
