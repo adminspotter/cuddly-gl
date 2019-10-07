@@ -1,6 +1,6 @@
 /* font.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2019, 08:31:21 tquirk
+ *   last updated 06 Oct 2019, 22:08:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -466,8 +466,8 @@ void ui::base_font::get_string_size(const std::u32string& str,
             width += g.width;
         else
             width += g.x_advance;
-        asc = std::max(asc, (GLuint)g.top);
-        desc = std::max(desc, (GLuint)(g.height - g.top));
+        asc = std::max(asc, (GLuint)std::max(0, g.top));
+        desc = std::max(desc, (GLuint)std::max(0, g.height - g.top));
     }
 }
 
@@ -493,8 +493,8 @@ void ui::base_font::get_string_size(const std::vector<bidi::mirror_t>& str,
             width += g.width;
         else
             width += g.x_advance;
-        asc = std::max(asc, (GLuint)g.top);
-        desc = std::max(desc, (GLuint)(g.height - g.top));
+        asc = std::max(asc, (GLuint)std::max(0, g.top));
+        desc = std::max(desc, (GLuint)std::max(0, g.height - g.top));
     }
 }
 
