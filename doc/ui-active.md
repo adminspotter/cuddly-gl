@@ -21,11 +21,11 @@ a->remove_callback(ui::callback::enter, enter_callback, NULL);
 
 ui::to_until<GLuint, std::milli> expire(500);
 
-a->add_timeout(until, timeout_callback, NULL);
+a->add_timeout(expire, timeout_callback, NULL);
 
 a->call_timeout();
 
-a->add_timeout(until, timeout_callback, NULL);
+a->add_timeout(expire, timeout_callback, NULL);
 a->remove_timeout();
 ```
 
