@@ -47,6 +47,12 @@ The widget's _parent_, a subclass of type
 [`ui::composite`](ui-composite.md)(3), must be specified at creation
 time, and can not be changed during the lifetime of the object.
 
+The _position_ is the location of the widget within the parent's area.
+Positive values for the x position denote offset from the left of the
+parent; negative values denote offset from the right.  Likewise with
+the y position, positive values offset from the top, negative from the
+bottom of the parent.
+
 ## METHODS ##
 
 * **draw(GLuint _translation_uniform_, const glm::mat4& _parent_translation_)**
@@ -83,13 +89,24 @@ Inherited from [`ui::active`](ui-active.md):
 ## NEW RESOURCES ##
 
 * **ui::element::position** - position of the object within its
-    parent's boundary
+    parent's boundary.  The subtype flags function as a mask, and can
+    be or'ed together.  The `ui::position::all` subtype is a
+    convenience flag for both `ui::position::x` and `ui::position::y`
+    flags or'ed together, and does require a change of data type.
 
-  | Subtype               | Data type  | Notes                               |
-  | --------------------- | ---------- | ----------------------------------- |
-  | **ui::position::x**   | GLuint     |                                     |
-  | **ui::position::x**   | GLuint     |                                     |
-  | **ui::position::all** | glm::ivec2 | Set both x and y parameters at once |
+  | Subtype                    | Data type  |
+  | -------------------------- | ---------- |
+  | **ui::position::x**        | int        |
+  | **ui::position::y**        | int        |
+  | **ui::position::all**      | glm::ivec2 |
+  | **ui::position::absolute** | see below  |
+
+    The `ui::position::absolute` subtype is only used in a read
+    context, to retrieve the absolute positioning of the widget within
+    the parent.  By default, retrieving position will always yield the
+    relative positions, either positive or negative.  When or'ed with
+    any of the other values, the `absolute` subtype will yield only
+    positive offsets from the top left of the parent.
 
 * **ui::element::border** - width of the border segments for each
     side.  The subtype flags function as a mask, and can be or'ed

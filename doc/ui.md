@@ -289,9 +289,10 @@ callback handling is available.
 ##### Widget Resources #####
 
 * `ui::element::position`
-  * `ui::position::x` (`GLuint`)
-  * `ui::position::y` (`GLuint`)
+  * `ui::position::x` (`int`)
+  * `ui::position::y` (`int`)
   * `ui::position::all` (`glm::ivec2`)
+  * `ui::position::absolute` (*)
 * `ui::element::border`
   * `ui::side::top` (`GLuint`)
   * `ui::side::bottom` (`GLuint`)
@@ -309,6 +310,11 @@ callback handling is available.
   * `ui::color::background` (`glm::vec4`)
 * `ui::element::state`
   * `ui::state::visible` (`bool`)
+
+The `ui::position::absolute` resource type is not a subtype of its
+own, but a flag which can be or'ed with any of the other position
+subtypes in a read context.  It will always return positive offsets
+from the top left of the widget's parent.
 
 The side subtypes for `border` and `margin` will function as masks,
 and can be combined arbitrarily.

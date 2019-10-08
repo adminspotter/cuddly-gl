@@ -107,11 +107,12 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::position** ([ui::widget](ui-widget.md))
 
-  | Subtype               | Data type  |
-  | --------------------- | ---------- |
-  | **ui::position::x**   | GLuint     |
-  | **ui::position::x**   | GLuint     |
-  | **ui::position::all** | glm::ivec2 |
+  | Subtype                    | Data type  |
+  | -------------------------- | ---------- |
+  | **ui::position::x**        | int        |
+  | **ui::position::y**        | int        |
+  | **ui::position::all**      | glm::ivec2 |
+  | **ui::position::absolute** | *special*  |
 
 * **ui::element::border** ([ui::widget](ui-widget.md))
 
