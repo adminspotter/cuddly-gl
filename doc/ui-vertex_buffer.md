@@ -84,7 +84,7 @@ would correspond with `vertex[8]`, and so on.
   _lower_right_ point.  These points are in OpenGL floating-point
   screen coordinates.  _color_ is an RGBA tuple.
 
-* **void generate_ellipse(glm::vec2 _center_, glm::vec2 _radius_, float _inner_pct_, int _segments_, const glm::vec4& _color_)**
+* **void generate_ellipse(glm::vec2 _center_, glm::vec2 _radii_, float _inner_pct_, int _segments_, const glm::vec4& _color_)**
 
   Add the vertices and elements for an ellipse in the object.  Each
   segment of the ellipse consists of 16 vertex items (2 coordinates)
@@ -101,7 +101,7 @@ would correspond with `vertex[8]`, and so on.
   wedge-shaped segments which are used to draw the ellipse.  _color_
   is an RGBA tuple, as with `generate_box`.
 
-* **void generate_ellipse_divider(glm::vec2 _center_, glm::vec2 _radius_, float _inner_pct_, float _angle_, const glm::vec4& _color_)**
+* **void generate_ellipse_divider(glm::vec2 _center_, glm::vec2 _radii_, float _inner_pct_, float _angle_, const glm::vec4& _color_)**
 
   Add the vertices and elements for an ellipse divider to the object.
   Each divider consists of 32 vertex items (4 coordinates) and 6
