@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Aug 2019, 09:05:58 tquirk
+ *   last updated 27 Oct 2019, 15:21:49 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -124,20 +124,17 @@ void ui::text_field::set_image(GLuint t, const ui::image& v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
-void ui::text_field::enter_callback(ui::active *a, void *call, void *client)
+void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
     if (t != NULL)
-        t->activate_cursor();
-}
-
-void ui::text_field::leave_callback(ui::active *a, void *call, void *client)
-{
-    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-
-    if (t != NULL)
-        t->deactivate_cursor();
+    {
+        if (((ui::focus_call_data *)call)->focus == true)
+            t->activate_cursor();
+        else
+            t->deactivate_cursor();
+    }
 }
 
 void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
@@ -539,11 +536,8 @@ void ui::text_field::init(ui::composite *c)
     glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void *)(sizeof(float) * 6));
 
-    this->add_callback(ui::callback::enter,
-                       ui::text_field::enter_callback,
-                       NULL);
-    this->add_callback(ui::callback::leave,
-                       ui::text_field::leave_callback,
+    this->add_callback(ui::callback::focus,
+                       ui::text_field::focus_callback,
                        NULL);
     this->add_callback(ui::callback::key_down,
                        ui::text_field::key_down_callback,

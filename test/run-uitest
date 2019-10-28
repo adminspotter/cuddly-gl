@@ -66,8 +66,8 @@ sub interact_with_text_field
     my ($x, $y) = GetWindowPos($uitest);
     ok(defined $x, "$test: x pos is defined");
     ok(defined $y, "$test: y pos is defined");
-    my $status = MoveMouseAbs($x + 265, $y + 140);
-    ok($status, "$test: moved mouse to text field");
+    my $status = ClickWindow($uitest, $x + 265, $y + 140, M_BTN1);
+    ok($status, "$test: clicked in text field");
     $status = SendKeys('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
     ok($status, "$test: lots of text");
     $status = SendKeys('{LEF}' x 62);
@@ -137,8 +137,10 @@ sub close_window
     my $test = 'close';
 
     my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
-    my $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
-    ok($status, "$test: moved mouse to upper left");
+    my $status = ClickWindow($uitest,
+                             $x + $borderWidth + 1,
+                             $y + $borderWidth + 1);
+    ok($status, "$test: clicked mouse in upper left");
 
     $status = SendKeys('{ESC}');
     ok($status, "$test: escape key sent");
