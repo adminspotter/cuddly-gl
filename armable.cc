@@ -1,9 +1,9 @@
 /* armable.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Dec 2018, 08:54:00 tquirk
+ *   last updated 29 Oct 2019, 05:33:45 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,41 +66,57 @@ int ui::armable::get_arm_state(bool *v) const
     return 0;
 }
 
-/* ARGSUSED */
-void ui::armable::activate(ui::active *a, void *call, void *client)
+void ui::armable::activate(void)
 {
-    ui::armable *b = dynamic_cast<ui::armable *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, true);
+    this->set(ui::element::state, ui::state::active, true);
 }
 
-/* ARGSUSED */
-void ui::armable::deactivate(ui::active *a, void *call, void *client)
+void ui::armable::deactivate(void)
 {
-    ui::armable *b = dynamic_cast<ui::armable *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::active, false,
-               ui::element::state, ui::state::armed, false);
+    this->set(ui::element::state, ui::state::active, false,
+              ui::element::state, ui::state::armed, false);
 }
 
-/* ARGSUSED */
-void ui::armable::arm(ui::active *a, void *call, void *client)
+void ui::armable::arm(void)
 {
-    ui::armable *b = dynamic_cast<ui::armable *>(a);
-
-    if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, true);
+    this->set(ui::element::state, ui::state::armed, true);
 }
 
-/* ARGSUSED */
-void ui::armable::disarm(ui::active *a, void *call, void *client)
+void ui::armable::disarm(void)
+{
+    this->set(ui::element::state, ui::state::armed, false);
+}
+
+void ui::armable::enter_callback(ui::active *a, void *call, void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
     if (b != NULL)
-        b->set(ui::element::state, ui::state::armed, false);
+        b->activate();
+}
+
+void ui::armable::leave_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->deactivate();
+}
+
+void ui::armable::mouse_down_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->arm();
+}
+
+void ui::armable::mouse_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+        b->disarm();
 }
 
 void ui::armable::init(ui::composite *c)
@@ -108,10 +124,14 @@ void ui::armable::init(ui::composite *c)
     this->activated = false;
     this->armed = false;
 
-    this->add_callback(ui::callback::enter,     ui::armable::activate, NULL);
-    this->add_callback(ui::callback::leave,     ui::armable::deactivate, NULL);
-    this->add_callback(ui::callback::btn_down,  ui::armable::arm, NULL);
-    this->add_callback(ui::callback::btn_up,    ui::armable::disarm, NULL);
+    this->add_callback(ui::callback::enter, ui::armable::enter_callback, NULL);
+    this->add_callback(ui::callback::leave, ui::armable::leave_callback, NULL);
+    this->add_callback(ui::callback::btn_down,
+                       ui::armable::mouse_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::btn_up,
+                       ui::armable::mouse_up_callback,
+                       NULL);
 }
 
 ui::armable::armable(ui::composite *c)
