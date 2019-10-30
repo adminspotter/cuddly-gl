@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Oct 2019, 22:18:18 tquirk
+ *   last updated 29 Oct 2019, 08:56:57 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -58,8 +58,10 @@ namespace ui
 
         int get_radio_state(bool *) const;
         void set_radio_state(bool);
-        int get_radio_child(GLuint, ui::widget **) const;
-        void set_radio_child(GLuint, ui::widget *);
+        int get_radio_child(ui::widget **) const;
+        void set_radio_child(ui::widget *);
+        int get_focused_child(ui::widget **) const;
+        void set_focused_child(ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_resize(GLuint, GLuint *) const;
@@ -68,6 +70,8 @@ namespace ui
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
         virtual int get_state(GLuint, bool *) const;
         virtual void set_state(GLuint, bool);
+        virtual int get_child(GLuint, ui::widget **) const;
+        virtual void set_child(GLuint, ui::widget *);
 
         virtual void set_desired_size(void);
 
@@ -78,8 +82,6 @@ namespace ui
         void clear_removed_children(void);
 
         void child_motion(widget *, GLuint, glm::ivec2&);
-
-        void set_focused_child(widget *);
 
         static void focus_callback(active *, void *, void *);
 

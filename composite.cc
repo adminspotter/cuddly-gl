@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Oct 2019, 22:23:16 tquirk
+ *   last updated 29 Oct 2019, 08:58:22 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -48,9 +48,9 @@ void ui::composite::set_radio_state(bool v)
     this->radio_box = v;
 }
 
-int ui::composite::get_radio_child(GLuint t, ui::widget **v) const
+int ui::composite::get_radio_child(ui::widget **v) const
 {
-    if (t == ui::child::radio)
+    if (this->radio_box == true)
     {
         bool checked;
         for (auto i : this->children)
@@ -70,10 +70,10 @@ int ui::composite::get_radio_child(GLuint t, ui::widget **v) const
     return 1;
 }
 
-void ui::composite::set_radio_child(GLuint t, ui::widget *v)
+void ui::composite::set_radio_child(ui::widget *v)
 {
     auto found = std::find(this->children.begin(), this->children.end(), v);
-    if (t == ui::child::radio && found != this->children.end())
+    if (this->radio_box == true && found != this->children.end())
     {
         ui::toggle *set_radio = dynamic_cast<ui::toggle *>(v);
         for (auto i : this->children)
@@ -82,6 +82,29 @@ void ui::composite::set_radio_child(GLuint t, ui::widget *v)
             if (r != NULL && r != set_radio)
                 r->set(ui::element::state, ui::state::checked, false);
         }
+    }
+}
+
+int ui::composite::get_focused_child(ui::widget **v) const
+{
+    *v = this->focused;
+    return 0;
+}
+
+void ui::composite::set_focused_child(ui::widget *w)
+{
+    if (this->focused != w)
+    {
+        ui::focus_call_data fcd;
+        if (this->focused != NULL)
+        {
+            fcd.focus = false;
+            this->focused->call_callbacks(ui::callback::focus, &fcd);
+        }
+        fcd.focus = true;
+        this->focused = w;
+        if (w != NULL)
+            this->focused->call_callbacks(ui::callback::focus, &fcd);
     }
 }
 
@@ -156,6 +179,25 @@ void ui::composite::set_state(GLuint t, bool v)
         this->set_radio_state(v);
 }
 
+int ui::composite::get_child(GLuint t, ui::widget **v) const
+{
+    switch (t)
+    {
+      case ui::child::radio:    return this->get_radio_child(v);
+      case ui::child::focused:  return this->get_focused_child(v);
+      default:                  return 1;
+    }
+}
+
+void ui::composite::set_child(GLuint t, ui::widget *v)
+{
+    switch (t)
+    {
+      case ui::child::radio:    this->set_radio_child(v);    break;
+      case ui::child::focused:  this->set_focused_child(v);  break;
+    }
+}
+
 void ui::composite::set_desired_size(void)
 {
     this->clear_removed_children();
@@ -218,23 +260,6 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         c->mouse_pos_callback(call_data.location);
     else
         w->call_callbacks(type, &call_data);
-}
-
-void ui::composite::set_focused_child(ui::widget *w)
-{
-    if (this->focused != w)
-    {
-        ui::focus_call_data fcd;
-        if (this->focused != NULL)
-        {
-            fcd.focus = false;
-            this->focused->call_callbacks(ui::callback::focus, &fcd);
-        }
-        fcd.focus = true;
-        this->focused = w;
-        if (w != NULL)
-            this->focused->call_callbacks(ui::callback::focus, &fcd);
-    }
 }
 
 void ui::composite::focus_callback(ui::active *a, void *call, void *client)
@@ -307,8 +332,8 @@ int ui::composite::get(GLuint e, GLuint t, bool *v) const
 
 int ui::composite::get(GLuint e, GLuint t, ui::widget **v) const
 {
-    if (this->radio_box == true && e == ui::element::child)
-        return this->get_radio_child(t, v);
+    if (e == ui::element::child)
+        return this->get_child(t, v);
     return 1;
 }
 
@@ -329,8 +354,8 @@ void ui::composite::set(GLuint e, GLuint t, bool v)
 
 void ui::composite::set(GLuint e, GLuint t, ui::widget *v)
 {
-    if (this->radio_box == true && e == ui::element::child)
-        this->set_radio_child(t, v);
+    if (e == ui::element::child)
+        this->set_child(t, v);
 }
 
 void ui::composite::add_child(ui::widget *w)
