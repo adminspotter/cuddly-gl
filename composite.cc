@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Nov 2019, 07:09:24 tquirk
+ *   last updated 03 Nov 2019, 09:05:39 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -87,29 +87,32 @@ void ui::composite::set_radio_child(ui::widget *v)
 
 int ui::composite::get_focused_child(ui::widget **v) const
 {
-    *v = this->focused;
+    *v = (this->focused == this->children.end() ? NULL : *this->focused);
     return 0;
 }
 
 void ui::composite::set_focused_child(ui::widget *w)
 {
-    if (this->focused != w)
+    if (*this->focused == w
+        || (w == NULL && this->focused == this->children.end()))
+        return;
+
+    ui::focus_call_data fcd;
+    if (this->focused != this->children.end())
     {
-        ui::focus_call_data fcd;
-        if (this->focused != NULL)
-        {
-            fcd.focus = false;
-            this->focused->call_callbacks(ui::callback::focus, &fcd);
-        }
-        fcd.focus = true;
-        this->focused = w;
-        if (this->focused != NULL)
-            this->focused->call_callbacks(ui::callback::focus, &fcd);
-        else if (this->parent != NULL)
-            this->parent->set(ui::element::child,
-                              ui::child::focused,
-                              (ui::widget *)NULL);
+        fcd.focus = false;
+        (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
     }
+    fcd.focus = true;
+    this->focused = std::find(this->children.begin(),
+                              this->children.end(),
+                              w);
+    if (this->focused != this->children.end())
+        (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
+    else if (this->parent != NULL)
+        this->parent->set(ui::element::child,
+                          ui::child::focused,
+                          (ui::widget *)NULL);
 }
 
 void ui::composite::set_size(GLuint d, GLuint v)
@@ -278,7 +281,7 @@ void ui::composite::init(ui::composite *c)
 {
     this->parent = c;
     this->tree = NULL;
-    this->focused = NULL;
+    this->focused = this->children.end();
     this->old_child = NULL;
     this->dirty = false;
     this->regenerate_search_tree();
@@ -290,7 +293,7 @@ void ui::composite::init(ui::composite *c)
 
 ui::composite::composite(composite *c)
     : ui::active::active(0, 0), ui::rect::rect(0, 0),
-      children(), to_remove(), old_pos(0, 0)
+      children(), to_remove(), focused(), old_pos(0, 0)
 {
     this->init(c);
 }
@@ -379,8 +382,8 @@ void ui::composite::remove_child(ui::widget *w)
     auto found = std::find(this->children.begin(), this->children.end(), w);
     if (found != this->children.end())
     {
-        if (this->focused == w)
-            this->focused = NULL;
+        if ((*this->focused) == w)
+            this->focused = this->children.end();
         this->to_remove.push_back(w);
         this->dirty = true;
     }
@@ -479,17 +482,17 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
                     ? ui::callback::key_up
                     : ui::callback::key_down);
 
-    if (this->focused != NULL)
+    if (this->focused != this->children.end())
     {
         glm::ivec2 obj;
-        ui::composite *c = dynamic_cast<ui::composite *>(this->focused);
+        ui::composite *c = dynamic_cast<ui::composite *>(*this->focused);
 
-        this->focused->get(ui::element::position, ui::position::all, &obj);
+        (*this->focused)->get(ui::element::position, ui::position::all, &obj);
         call_data.location -= obj;
         if (c != NULL)
             c->key_callback(call_data);
         else
-            this->focused->call_callbacks(which, &call_data);
+            (*this->focused)->call_callbacks(which, &call_data);
     }
     else
         this->call_callbacks(which, &call_data);

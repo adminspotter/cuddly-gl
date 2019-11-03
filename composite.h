@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 08:56:57 tquirk
+ *   last updated 03 Nov 2019, 08:35:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -47,12 +47,13 @@ namespace ui
       protected:
         composite *parent;
         std::list<widget *> children, to_remove;
+        std::list<widget *>::iterator focused;
         quadtree *tree;
         GLuint resize;
         bool dirty, radio_box;
 
         glm::ivec2 old_pos;
-        widget *focused, *old_child;
+        widget *old_child;
 
         const static int tree_max_depth;
 
