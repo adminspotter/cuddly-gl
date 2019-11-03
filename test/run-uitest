@@ -85,10 +85,10 @@ sub interact_with_text_field
     $status = SendKeys('some more text');
     ok($status, "$test: inserted text at beginning");
     # Try out moving focus via keyboard
-    $status = SendKeys("\t");
-    ok($status, "$test: sent a tab");
-    $status = SendKeys("+(\t)");
-    ok($status, "$test: sent a shift-tab");
+    $status = SendKeys("\t\t\t");
+    ok($status, "$test: sent some tabs");
+    $status = SendKeys("+(\t\t\t)");
+    ok($status, "$test: sent some shift-tabs");
 }
 
 sub interact_with_pie_menu
