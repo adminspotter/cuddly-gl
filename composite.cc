@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 09:52:36 tquirk
+ *   last updated 03 Nov 2019, 10:07:40 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -278,6 +278,25 @@ void ui::composite::focus_child(std::list<widget *>::iterator new_focus)
     }
 }
 
+void ui::composite::focus_next_child(void)
+{
+    std::list<widget *>::iterator new_focus = this->focused;
+
+    if (++new_focus == this->children.end())
+        new_focus = this->children.begin();
+    this->focus_child(new_focus);
+}
+
+void ui::composite::focus_previous_child(void)
+{
+    std::list<widget *>::iterator new_focus = this->focused;
+
+    if (new_focus == this->children.begin())
+        new_focus = this->children.end();
+    --new_focus;
+    this->focus_child(new_focus);
+}
+
 void ui::composite::focus_callback(ui::active *a, void *call, void *client)
 {
     ui::composite *c = dynamic_cast<ui::composite *>(a);
@@ -491,7 +510,14 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
                     ? ui::callback::key_up
                     : ui::callback::key_down);
 
-    if (this->focused != this->children.end())
+    if (call_data.key == ui::key::tab && call_data.state == ui::key::down)
+    {
+        if (call_data.mods & ui::key_mod::shift)
+            this->focus_previous_child();
+        else
+            this->focus_next_child();
+    }
+    else if (this->focused != this->children.end())
     {
         glm::ivec2 obj;
         ui::composite *c = dynamic_cast<ui::composite *>(*this->focused);

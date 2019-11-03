@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 72;
+use Test::More 'tests' => 74;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -84,6 +84,11 @@ sub interact_with_text_field
     ok($status, "$test: beginning of string");
     $status = SendKeys('some more text');
     ok($status, "$test: inserted text at beginning");
+    # Try out moving focus via keyboard
+    $status = SendKeys("\t");
+    ok($status, "$test: sent a tab");
+    $status = SendKeys("+(\t)");
+    ok($status, "$test: sent a shift-tab");
 }
 
 sub interact_with_pie_menu
