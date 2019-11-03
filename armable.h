@@ -1,6 +1,6 @@
 /* armable.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 05:29:26 tquirk
+ *   last updated 29 Oct 2019, 05:46:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -42,6 +42,7 @@ namespace ui
     {
       protected:
         bool activated, armed;
+        int activations;
 
         virtual int get_state(GLuint, bool *) const override;
         virtual void set_state(GLuint, bool) override;
@@ -58,6 +59,7 @@ namespace ui
 
         static void enter_callback(active *, void *, void *);
         static void leave_callback(active *, void *, void *);
+        static void focus_callback(active *, void *, void *);
         static void mouse_down_callback(active *, void *, void *);
         static void mouse_up_callback(active *, void *, void *);
 

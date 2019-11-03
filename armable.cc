@@ -1,6 +1,6 @@
 /* armable.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 05:33:45 tquirk
+ *   last updated 02 Nov 2019, 07:11:51 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -68,13 +68,15 @@ int ui::armable::get_arm_state(bool *v) const
 
 void ui::armable::activate(void)
 {
+    ++this->activations;
     this->set(ui::element::state, ui::state::active, true);
 }
 
 void ui::armable::deactivate(void)
 {
-    this->set(ui::element::state, ui::state::active, false,
-              ui::element::state, ui::state::armed, false);
+    if (--this->activations == 0)
+        this->set(ui::element::state, ui::state::active, false,
+                  ui::element::state, ui::state::armed, false);
 }
 
 void ui::armable::arm(void)
@@ -103,6 +105,19 @@ void ui::armable::leave_callback(ui::active *a, void *call, void *client)
         b->deactivate();
 }
 
+void ui::armable::focus_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+    {
+        if (((ui::focus_call_data *)call)->focus == true)
+            b->activate();
+        else
+            b->deactivate();
+    }
+}
+
 void ui::armable::mouse_down_callback(ui::active *a, void *call, void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
@@ -116,16 +131,24 @@ void ui::armable::mouse_up_callback(ui::active *a, void *call, void *client)
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
     if (b != NULL)
+    {
         b->disarm();
+        if (b->parent != NULL)
+            b->parent->set(ui::element::child,
+                           ui::child::focused,
+                           (ui::widget *)NULL);
+    }
 }
 
 void ui::armable::init(ui::composite *c)
 {
     this->activated = false;
     this->armed = false;
+    this->activations = 0;
 
     this->add_callback(ui::callback::enter, ui::armable::enter_callback, NULL);
     this->add_callback(ui::callback::leave, ui::armable::leave_callback, NULL);
+    this->add_callback(ui::callback::focus, ui::armable::focus_callback, NULL);
     this->add_callback(ui::callback::btn_down,
                        ui::armable::mouse_down_callback,
                        NULL);
