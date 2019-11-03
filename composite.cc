@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 09:05:39 tquirk
+ *   last updated 03 Nov 2019, 09:52:36 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -97,22 +97,11 @@ void ui::composite::set_focused_child(ui::widget *w)
         || (w == NULL && this->focused == this->children.end()))
         return;
 
-    ui::focus_call_data fcd;
-    if (this->focused != this->children.end())
-    {
-        fcd.focus = false;
-        (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
-    }
-    fcd.focus = true;
-    this->focused = std::find(this->children.begin(),
-                              this->children.end(),
-                              w);
-    if (this->focused != this->children.end())
-        (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
-    else if (this->parent != NULL)
-        this->parent->set(ui::element::child,
-                          ui::child::focused,
-                          (ui::widget *)NULL);
+    std::list<widget *>::iterator new_focus
+        = std::find(this->children.begin(), this->children.end(), w);
+    this->focus_child(new_focus);
+    if (this->parent != NULL && w == NULL)
+        this->parent->set(ui::element::child, ui::child::focused, w);
 }
 
 void ui::composite::set_size(GLuint d, GLuint v)
@@ -267,6 +256,26 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         c->mouse_pos_callback(call_data.location);
     else
         w->call_callbacks(type, &call_data);
+}
+
+void ui::composite::focus_child(std::list<widget *>::iterator new_focus)
+{
+    if (new_focus != this->focused)
+    {
+        ui::focus_call_data fcd;
+
+        if (this->focused != this->children.end())
+        {
+            fcd.focus = false;
+            (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
+        }
+        this->focused = new_focus;
+        if (this->focused != this->children.end())
+        {
+            fcd.focus = true;
+            (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
+        }
+    }
 }
 
 void ui::composite::focus_callback(ui::active *a, void *call, void *client)

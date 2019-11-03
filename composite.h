@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 08:35:59 tquirk
+ *   last updated 03 Nov 2019, 09:51:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -83,6 +83,8 @@ namespace ui
         void clear_removed_children(void);
 
         void child_motion(widget *, GLuint, glm::ivec2&);
+
+        void focus_child(std::list<widget *>::iterator);
 
         static void focus_callback(active *, void *, void *);
 
