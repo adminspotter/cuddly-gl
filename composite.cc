@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 08:58:22 tquirk
+ *   last updated 02 Nov 2019, 07:09:24 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -103,8 +103,12 @@ void ui::composite::set_focused_child(ui::widget *w)
         }
         fcd.focus = true;
         this->focused = w;
-        if (w != NULL)
+        if (this->focused != NULL)
             this->focused->call_callbacks(ui::callback::focus, &fcd);
+        else if (this->parent != NULL)
+            this->parent->set(ui::element::child,
+                              ui::child::focused,
+                              (ui::widget *)NULL);
     }
 }
 
@@ -444,7 +448,8 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
                     : ui::callback::btn_down);
     ui::widget *w = this->tree->search(this->old_pos);
 
-    this->set_focused_child(w);
+    if (which == ui::callback::btn_down)
+        this->set_focused_child(w);
     if (w != NULL)
     {
         glm::ivec2 obj;
@@ -459,11 +464,6 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
     }
     else
         this->call_callbacks(which, &call_data);
-
-    /* w might no longer exist at this position.  Let's search again,
-     * just to make sure.
-     */
-    this->set_focused_child(this->tree->search(this->old_pos));
 }
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
