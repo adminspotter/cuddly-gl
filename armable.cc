@@ -1,6 +1,6 @@
 /* armable.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Nov 2019, 07:11:51 tquirk
+ *   last updated 03 Nov 2019, 16:20:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -131,12 +131,38 @@ void ui::armable::mouse_up_callback(ui::active *a, void *call, void *client)
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
     if (b != NULL)
-    {
         b->disarm();
-        if (b->parent != NULL)
-            b->parent->set(ui::element::child,
-                           ui::child::focused,
-                           (ui::widget *)NULL);
+}
+
+void ui::armable::key_down_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+    {
+        ui::key_call_data *kcd = (ui::key_call_data *)call;
+        if (kcd->key == ui::key::space || kcd->character == ' ')
+        {
+            ui::btn_call_data bcd
+                = {kcd->location, ui::mouse::button0, ui::mouse::down, 0};
+            b->call_callbacks(ui::callback::btn_down, &bcd);
+        }
+    }
+}
+
+void ui::armable::key_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::armable *b = dynamic_cast<ui::armable *>(a);
+
+    if (b != NULL)
+    {
+        ui::key_call_data *kcd = (ui::key_call_data *)call;
+        if (kcd->key == ui::key::space || kcd->character == ' ')
+        {
+            ui::btn_call_data bcd
+                = {kcd->location, ui::mouse::button0, ui::mouse::up, 0};
+            b->call_callbacks(ui::callback::btn_up, &bcd);
+        }
     }
 }
 
@@ -154,6 +180,12 @@ void ui::armable::init(ui::composite *c)
                        NULL);
     this->add_callback(ui::callback::btn_up,
                        ui::armable::mouse_up_callback,
+                       NULL);
+    this->add_callback(ui::callback::key_down,
+                       ui::armable::key_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::key_up,
+                       ui::armable::key_up_callback,
                        NULL);
 }
 

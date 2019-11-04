@@ -1,6 +1,6 @@
 /* armable.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 05:46:10 tquirk
+ *   last updated 03 Nov 2019, 15:57:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -62,6 +62,8 @@ namespace ui
         static void focus_callback(active *, void *, void *);
         static void mouse_down_callback(active *, void *, void *);
         static void mouse_up_callback(active *, void *, void *);
+        static void key_down_callback(active *, void *, void *);
+        static void key_up_callback(active *, void *, void *);
 
         void init(composite *);
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 74;
+use Test::More 'tests' => 79;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -43,6 +43,8 @@ sub interact_with_button
     ok($status, "$test: released button 1");
     $status = ClickWindow($uitest, $loc_x, $loc_y, M_BTN2);
     ok($status, "$test: clicked button 2");
+    $status = SendKeys(' ');
+    ok($status, "$test: clicked button with space");
 }
 
 sub interact_with_row_column
