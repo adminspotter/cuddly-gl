@@ -1,9 +1,9 @@
 /* armable.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Dec 2018, 22:38:21 tquirk
+ *   last updated 03 Nov 2019, 15:57:55 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,6 +42,7 @@ namespace ui
     {
       protected:
         bool activated, armed;
+        int activations;
 
         virtual int get_state(GLuint, bool *) const override;
         virtual void set_state(GLuint, bool) override;
@@ -51,10 +52,18 @@ namespace ui
         int get_arm_state(bool *) const;
         virtual void set_arm_state(bool) = 0;
 
-        static void activate(active *, void *, void *);
-        static void deactivate(active *, void *, void *);
-        static void arm(active *, void *, void *);
-        static void disarm(active *, void *, void *);
+        void activate(void);
+        void deactivate(void);
+        void arm(void);
+        void disarm(void);
+
+        static void enter_callback(active *, void *, void *);
+        static void leave_callback(active *, void *, void *);
+        static void focus_callback(active *, void *, void *);
+        static void mouse_down_callback(active *, void *, void *);
+        static void mouse_up_callback(active *, void *, void *);
+        static void key_down_callback(active *, void *, void *);
+        static void key_up_callback(active *, void *, void *);
 
         void init(composite *);
 

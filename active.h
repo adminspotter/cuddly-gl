@@ -1,9 +1,9 @@
 /* active.h                                                -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Nov 2016, 08:16:26 tquirk
+ *   last updated 25 Jan 2019, 22:06:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,7 +73,7 @@ namespace ui
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
         std::list<cb_list_elem> btn_down_cb, btn_up_cb;
         std::list<cb_list_elem> key_down_cb, key_up_cb;
-        std::list<cb_list_elem> resize_cb;
+        std::list<cb_list_elem> resize_cb, focus_cb;
         to_point timeout;
         to_fptr timeout_func;
         void *timeout_arg;

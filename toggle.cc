@@ -1,6 +1,6 @@
 /* toggle.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2019, 08:25:19 tquirk
+ *   last updated 29 Oct 2019, 05:32:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -213,9 +213,13 @@ void ui::toggle::init(ui::composite *c)
      * intercept the active/armed states before the armable might
      * change them.
      */
-    this->remove_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
+    this->remove_callback(ui::callback::btn_up,
+                          ui::armable::mouse_up_callback,
+                          NULL);
     this->add_callback(ui::callback::btn_up, ui::toggle::check, NULL);
-    this->add_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
+    this->add_callback(ui::callback::btn_up,
+                       ui::armable::mouse_up_callback,
+                       NULL);
 }
 
 ui::toggle::toggle(ui::composite *c)

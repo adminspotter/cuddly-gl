@@ -1,6 +1,6 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2019, 13:28:56 tquirk
+ *   last updated 29 Oct 2019, 08:05:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -71,6 +71,13 @@ namespace ui
     }
     resize_call_data;
 
+    /* Focus callback routines */
+    typedef struct focus_callback_call
+    {
+        bool focus;
+    }
+    focus_call_data;
+
 #define GET_VA template<typename A, typename... Args>                \
                int get(GLuint e, GLuint t, A *v, Args... args) const  \
                {                                                     \
@@ -139,6 +146,7 @@ namespace ui
     {
         const GLuint enter = 1, leave = 2, btn_down = 3, btn_up = 4;
         const GLuint motion = 5, key_down = 6, key_up = 7, resize = 8;
+        const GLuint focus = 9;
     }
 
     namespace mouse
@@ -234,7 +242,7 @@ namespace ui
 
     namespace child
     {
-        const GLuint radio = 1;
+        const GLuint radio = 1, focused = 2;
     }
 }
 

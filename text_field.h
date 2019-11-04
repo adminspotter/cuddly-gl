@@ -1,6 +1,6 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 31 Jul 2019, 06:36:37 tquirk
+ *   last updated 27 Oct 2019, 08:31:54 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -61,8 +61,7 @@ namespace ui
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
 
-        static void enter_callback(active *, void *, void *);
-        static void leave_callback(active *, void *, void *);
+        static void focus_callback(active *, void *, void *);
         static void key_down_callback(active *, void *, void *);
         static void key_up_callback(active *, void *, void *);
         static void key_timeout(active *, void *);

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 72;
+use Test::More 'tests' => 79;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -43,6 +43,8 @@ sub interact_with_button
     ok($status, "$test: released button 1");
     $status = ClickWindow($uitest, $loc_x, $loc_y, M_BTN2);
     ok($status, "$test: clicked button 2");
+    $status = SendKeys(' ');
+    ok($status, "$test: clicked button with space");
 }
 
 sub interact_with_row_column
@@ -66,8 +68,8 @@ sub interact_with_text_field
     my ($x, $y) = GetWindowPos($uitest);
     ok(defined $x, "$test: x pos is defined");
     ok(defined $y, "$test: y pos is defined");
-    my $status = MoveMouseAbs($x + 265, $y + 140);
-    ok($status, "$test: moved mouse to text field");
+    my $status = ClickWindow($uitest, $x + 265, $y + 140, M_BTN1);
+    ok($status, "$test: clicked in text field");
     $status = SendKeys('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
     ok($status, "$test: lots of text");
     $status = SendKeys('{LEF}' x 62);
@@ -84,6 +86,11 @@ sub interact_with_text_field
     ok($status, "$test: beginning of string");
     $status = SendKeys('some more text');
     ok($status, "$test: inserted text at beginning");
+    # Try out moving focus via keyboard
+    $status = SendKeys("\t\t\t");
+    ok($status, "$test: sent some tabs");
+    $status = SendKeys("+(\t\t\t)");
+    ok($status, "$test: sent some shift-tabs");
 }
 
 sub interact_with_pie_menu
@@ -137,8 +144,10 @@ sub close_window
     my $test = 'close';
 
     my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
-    my $status = MoveMouseAbs($x + $borderWidth + 1, $y + $borderWidth + 1);
-    ok($status, "$test: moved mouse to upper left");
+    my $status = ClickWindow($uitest,
+                             $x + $borderWidth + 1,
+                             $y + $borderWidth + 1);
+    ok($status, "$test: clicked mouse in upper left");
 
     $status = SendKeys('{ESC}');
     ok($status, "$test: escape key sent");

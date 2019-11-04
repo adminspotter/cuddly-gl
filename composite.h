@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 14 Aug 2019, 08:17:27 tquirk
+ *   last updated 03 Nov 2019, 10:07:44 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -47,6 +47,7 @@ namespace ui
       protected:
         composite *parent;
         std::list<widget *> children, to_remove;
+        std::list<widget *>::iterator focused;
         quadtree *tree;
         GLuint resize;
         bool dirty, radio_box;
@@ -58,8 +59,10 @@ namespace ui
 
         int get_radio_state(bool *) const;
         void set_radio_state(bool);
-        int get_radio_child(GLuint, ui::widget **) const;
-        void set_radio_child(GLuint, ui::widget *);
+        int get_radio_child(ui::widget **) const;
+        void set_radio_child(ui::widget *);
+        int get_focused_child(ui::widget **) const;
+        void set_focused_child(ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_resize(GLuint, GLuint *) const;
@@ -68,6 +71,8 @@ namespace ui
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
         virtual int get_state(GLuint, bool *) const;
         virtual void set_state(GLuint, bool);
+        virtual int get_child(GLuint, ui::widget **) const;
+        virtual void set_child(GLuint, ui::widget *);
 
         virtual void set_desired_size(void);
 
@@ -78,6 +83,12 @@ namespace ui
         void clear_removed_children(void);
 
         void child_motion(widget *, GLuint, glm::ivec2&);
+
+        void focus_child(std::list<widget *>::iterator);
+        void focus_next_child(void);
+        void focus_previous_child(void);
+
+        static void focus_callback(active *, void *, void *);
 
         void init(composite *);
 
