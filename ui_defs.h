@@ -139,7 +139,7 @@ namespace ui
 
     namespace position
     {
-        const GLuint x = 1, y = 2, all = 3;
+        const GLuint x = 1, y = 2, all = 3, absolute = 4;
     }
 
     namespace callback

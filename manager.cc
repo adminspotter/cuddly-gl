@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 12 Aug 2019, 09:23:36 tquirk
+ *   last updated 06 Oct 2019, 07:19:16 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -267,6 +267,11 @@ void ui::manager::set(GLuint e, GLuint t, GLuint v)
 }
 
 void ui::manager::set(GLuint e, GLuint t, const glm::ivec2& v)
+{
+    this->widget::set(e, t, v);
+}
+
+void ui::manager::set(GLuint e, GLuint t, int v)
 {
     this->widget::set(e, t, v);
 }

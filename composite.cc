@@ -250,7 +250,9 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
     ui::mouse_call_data call_data = {pos};
     ui::composite *c = dynamic_cast<ui::composite *>(w);
 
-    w->get(ui::element::position, ui::position::all, &obj);
+    w->get(ui::element::position,
+           ui::position::all | ui::position::absolute,
+           &obj);
     call_data.location -= obj;
     if (c != NULL)
         c->mouse_pos_callback(call_data.location);
@@ -487,7 +489,9 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
         glm::ivec2 obj;
         ui::composite *c = dynamic_cast<ui::composite *>(w);
 
-        w->get(ui::element::position, ui::position::all, &obj);
+        w->get(ui::element::position,
+               ui::position::all | ui::position::absolute,
+               &obj);
         call_data.location -= obj;
         if (c != NULL)
             c->mouse_btn_callback(call_data);
@@ -531,7 +535,9 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
     {
         glm::ivec2 obj;
 
-        (*this->focused)->get(ui::element::position, ui::position::all, &obj);
+        (*this->focused)->get(ui::element::position,
+                              ui::position::all | ui::position::absolute,
+                              &obj);
         call_data.location -= obj;
         if (c != NULL)
             c->key_callback(call_data);

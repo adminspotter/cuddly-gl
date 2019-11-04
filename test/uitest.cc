@@ -121,8 +121,8 @@ int main(int argc, char **argv)
                         ui::element::color, ui::color::background, fg2,
                         ui::element::border, ui::side::all, 2,
                         ui::element::margin, ui::side::all, 2,
-                        ui::element::position, ui::position::x, 50,
-                        ui::element::position, ui::position::y, 50);
+                        ui::element::position, ui::position::x, -50,
+                        ui::element::position, ui::position::y, -50);
     std::cout << "creating label 1" << std::endl;
     l1 = new ui::label(ctx,
                        ui::element::font, ui::ownership::shared, std_font,
@@ -387,7 +387,8 @@ void print_widget_resources(ui::active *a, void *call, void *client)
 
 void print_button_resources(ui::active *a, void *call, void *client)
 {
-    GLuint w, h, x, y;
+    GLuint w, h;
+    int x, y;
     ui::base_font *font;
     std::string str;
     ui::image img;

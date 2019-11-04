@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:57:09 tquirk
+ *   last updated 05 Oct 2019, 22:02:20 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -233,44 +233,51 @@ GLuint ui::vertex_buffer::element_count(void)
     return this->element.size();
 }
 
-int ui::widget::get_position(GLuint t, GLuint *v) const
+int ui::widget::get_position(GLuint t, int *v) const
 {
-    switch (t)
+    if (t & ui::position::x)
     {
-      case ui::position::x:  *v = this->pos.x;  return 0;
-      case ui::position::y:  *v = this->pos.y;  return 0;
-      default:                                  return 1;
+        *v = (t & ui::position::absolute ? this->pos.x : this->relative_pos.x);
+        return 0;
     }
-}
-
-int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
-{
-    if (t == ui::position::all)
+    if (t & ui::position::y)
     {
-        *v = this->pos;
+        *v = (t & ui::position::absolute ? this->pos.y : this->relative_pos.y);
         return 0;
     }
     return 1;
 }
 
-void ui::widget::set_position(GLuint t, GLuint v)
+int ui::widget::get_position(GLuint t, glm::ivec2 *v) const
 {
-    switch (t)
+    if (t & ui::position::all)
     {
-      case ui::position::x:  this->pos.x = v;  break;
-      case ui::position::y:  this->pos.y = v;  break;
-      default:                                 return;
+        *v = (t & ui::position::absolute ? this->pos : this->relative_pos);
+        return 0;
+    }
+    return 1;
+}
+
+void ui::widget::set_position(GLuint t, int v)
+{
+    switch (t & ~ui::position::absolute)
+    {
+      case ui::position::x:  this->relative_pos.x = v;  break;
+      case ui::position::y:  this->relative_pos.y = v;  break;
+      default:                                          return;
     }
 
+    this->recalculate_absolute_pos();
     this->parent->move_child(this);
     this->recalculate_transformation_matrix();
 }
 
 void ui::widget::set_position(GLuint t, const glm::ivec2& v)
 {
-    if (t == ui::position::all)
+    if (t & ui::position::all)
     {
-        this->pos = v;
+        this->relative_pos = v;
+        this->recalculate_absolute_pos();
         this->parent->move_child(this);
         this->recalculate_transformation_matrix();
     }
@@ -369,6 +376,32 @@ void ui::widget::set_size(GLuint t, const glm::ivec2& v)
     this->rect::set_size(t, v);
     this->populate_buffers();
     this->parent->move_child(this);
+}
+
+void ui::widget::reposition(ui::active *a, void *call, void *client)
+{
+    ui::widget *w = dynamic_cast<ui::widget *>(a);
+
+    if (w != NULL && (w->relative_pos.x < 0 || w->relative_pos.y < 0))
+    {
+        w->recalculate_absolute_pos();
+        w->recalculate_transformation_matrix();
+    }
+}
+
+void ui::widget::recalculate_absolute_pos(void)
+{
+    if (this->relative_pos != this->pos)
+    {
+        glm::ivec2 parent_sz;
+
+        this->parent->get(ui::element::size, ui::size::all, &parent_sz);
+        this->pos = this->relative_pos;
+        if (this->pos.x < 0)
+            this->pos.x += parent_sz.x - this->dim.x;
+        if (this->pos.y < 0)
+            this->pos.y += parent_sz.y - this->dim.y;
+    }
 }
 
 void ui::widget::recalculate_transformation_matrix(void)
@@ -491,11 +524,13 @@ void ui::widget::init(ui::composite *c)
     this->visible = true;
 
     this->populate_buffers();
+
+    this->add_callback(ui::callback::resize, ui::widget::reposition, NULL);
 }
 
 ui::widget::widget(ui::composite *c)
     : ui::active::active(0, 0), ui::rect::rect(0, 0),
-      pos(0, 0), pos_transform(),
+      pos(0, 0), relative_pos(0, 0), pos_transform(),
       foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
     this->init(c);
@@ -513,7 +548,6 @@ int ui::widget::get(GLuint e, GLuint t, GLuint *v) const
 {
     switch (e)
     {
-      case ui::element::position:  return this->get_position(t, v);
       case ui::element::border:    return this->get_border(t, v);
       case ui::element::margin:    return this->get_margin(t, v);
       case ui::element::size:      return this->get_size(t, v);
@@ -529,6 +563,13 @@ int ui::widget::get(GLuint e, GLuint t, glm::ivec2 *v) const
       case ui::element::size:      return this->get_size(t, v);
       default:                     return 1;
     }
+}
+
+int ui::widget::get(GLuint e, GLuint t, int *v) const
+{
+    if (e == ui::element::position)
+        return this->get_position(t, v);
+    return 1;
 }
 
 int ui::widget::get(GLuint e, GLuint t, bool *v) const
@@ -550,7 +591,6 @@ void ui::widget::set(GLuint e, GLuint t, GLuint v)
     switch (e)
     {
       case ui::element::size:      this->set_size(t, v);      break;
-      case ui::element::position:  this->set_position(t, v);  break;
       case ui::element::border:    this->set_border(t, v);    break;
       case ui::element::margin:    this->set_margin(t, v);    break;
     }
@@ -563,6 +603,14 @@ void ui::widget::set(GLuint e, GLuint t, const glm::ivec2& v)
       case ui::element::size:      this->set_size(t, v);      break;
       case ui::element::position:  this->set_position(t, v);  break;
     }
+}
+
+void ui::widget::set(GLuint e, GLuint t, int v)
+{
+    if (e == ui::element::position)
+        this->set_position(t, v);
+    else
+        this->rect::set(e, t, v);
 }
 
 void ui::widget::set(GLuint e, GLuint t, bool v)
