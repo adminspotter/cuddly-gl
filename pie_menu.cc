@@ -1,6 +1,6 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 07:16:52 tquirk
+ *   last updated 20 Nov 2019, 08:05:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -32,7 +32,7 @@
 #include <algorithm>
 
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/detail/func_geometric.hpp>
+#include <glm/geometric.hpp>
 
 #include "ui_defs.h"
 #include "ui.h"

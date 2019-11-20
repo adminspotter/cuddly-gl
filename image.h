@@ -1,9 +1,9 @@
 /* image.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 07:45:22 tquirk
+ *   last updated 20 Nov 2019, 08:03:08 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@
 
 #include <algorithm>
 
-#include <glm/detail/func_common.hpp>
+#include <glm/common.hpp>
 #include <glm/vec4.hpp>
 
 namespace ui
