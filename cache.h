@@ -1,9 +1,9 @@
 /* cache.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2018, 08:04:52 tquirk
+ *   last updated 29 Nov 2019, 15:16:34 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,8 +29,6 @@
 
 #ifndef __INC_CUDDLY_CACHE_H__
 #define __INC_CUDDLY_CACHE_H__
-
-#include <config.h>
 
 #include <string.h>
 #include <unistd.h>
