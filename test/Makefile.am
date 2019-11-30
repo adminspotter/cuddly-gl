@@ -1,10 +1,12 @@
 TC = fonttest \
 	t_active \
 	t_rect \
+	t_util \
 	t_bidi
 TS = fonttest \
 	t_active \
 	t_rect \
+	t_util \
 	t_bidi
 
 if HAVE_TEST_PREREQS
@@ -32,6 +34,10 @@ t_active_LDADD = tap++/libtap++.la ../libcuddly_gl.la
 t_rect_SOURCES = t_rect.cc
 t_rect_CXXFLAGS = -Itap++
 t_rect_LDADD = tap++/libtap++.la ../libcuddly_gl.la
+
+t_util_SOURCES = t_util.cc
+t_util_CXXFLAGS = -Itap++
+t_util_LDADD = tap++/libtap++.la ../libcuddly_gl.la
 
 t_bidi_SOURCES = t_bidi.cc
 t_bidi_CXXFLAGS = -Itap++
