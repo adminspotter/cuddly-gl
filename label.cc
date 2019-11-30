@@ -1,9 +1,9 @@
 /* label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:11:22 tquirk
+ *   last updated 29 Nov 2019, 15:25:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +36,7 @@
 
 #include "ui_defs.h"
 #include "label.h"
+#include "util.h"
 
 /* ARGSUSED */
 int ui::label::get_font(GLuint t, ui::base_font **v) const

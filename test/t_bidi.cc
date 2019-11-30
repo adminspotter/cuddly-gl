@@ -3,6 +3,7 @@
 using namespace TAP;
 
 #include "../bidi.h"
+#include "../util.h"
 #include "../font.h"
 
 class fake_bidi : public bidi
