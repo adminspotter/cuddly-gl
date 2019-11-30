@@ -81,9 +81,19 @@ void test_sixth_group(void)
     ok(str == result, test + "good round trip");
 }
 
+void test_bad_utf8(void)
+{
+    std::string test = "bad UTF-8: ";
+    std::string str = { static_cast<char>(0xfe), static_cast<char>(0xff) };
+    std::u32string expected = { 0xfffd, 0xfffd };
+    std::u32string converted = ui::utf8tou32str(str);
+
+    ok(converted == expected, test + "expected result");
+}
+
 int main(int argc, char **argv)
 {
-    plan(17);
+    plan(18);
 
     test_basic_string();
     test_second_group();
@@ -91,5 +101,6 @@ int main(int argc, char **argv)
     test_fourth_group();
     test_fifth_group();
     test_sixth_group();
+    test_bad_utf8();
     return exit_status();
 }
