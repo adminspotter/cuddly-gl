@@ -8,7 +8,7 @@ strings and 32-bit strings
 ## SYNOPSIS ##
 
 ```cpp
-#include <cuddly-gl/font.h>
+#include <cuddly-gl/util.h>
 
 std::string howdy = "howdy!"
 std::u32string howdy32 = utf8tou32str(howdy);
