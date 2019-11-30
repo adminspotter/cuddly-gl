@@ -13,6 +13,9 @@ if WANT_GUI_TESTS
 TS += run-uitest
 endif
 endif
+if VALIDATE_SHADERS
+TS += validate_shaders
+endif
 
 SUBDIRS = tap++ .
 

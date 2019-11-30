@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More 'tests' => 6;
+
+is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.2.glsl~),
+   0,
+   'version 120 fragment shader is OK');
+is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.3.glsl~),
+   0,
+   'version 130 fragment shader is OK');
+is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.4.glsl~),
+   0,
+   'version 330 fragment shader is OK');
+is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.2.glsl~),
+   0,
+   'version 120 vertex shader is OK');
+is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.3.glsl~),
+   0,
+   'version 130 vertex shader is OK');
+is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.4.glsl~),
+   0,
+   'version 330 vertex shader is OK');

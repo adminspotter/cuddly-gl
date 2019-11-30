@@ -164,6 +164,15 @@ CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp], [], [AC_MSG_ERROR([no valid GLM installation found, can not continue])])
 AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 
+# Perl module for the test suite
+AX_PROG_PERL_MODULES([Test::More],
+                     [have_test_more="yes"],
+                     [have_test_more="no"])
+
+# GLSL validation
+AC_CHECK_PROG([HAVE_GLSLANGVALIDATOR], [glslangValidator], [yes], [no])
+AM_CONDITIONAL([VALIDATE_SHADERS], [test "x$have_test_more" = "xyes" && test "x$HAVE_GLSLANGVALIDATOR" = "xyes"])
+
 # GLFW for the test suite
 can_do_tests="no"
 GLFW_INCLUDES=""
@@ -198,8 +207,8 @@ AS_IF([test "x$with_glfw" != "xno"],
                                ])])
         AX_RESTORE_FLAGS_WITH_PREFIX([GLFW],
                                      [[CPPFLAGS],[CXXFLAGS],[LDFLAGS],[LIBS]])
-        AS_IF([test "x$enable_gui_tests" != "xno"],
-              [AX_PROG_PERL_MODULES([Test::More X11::GUITest],
+        AS_IF([test "x$enable_gui_tests" != "xno" && test "x$have_test_more" = "xyes"],
+              [AX_PROG_PERL_MODULES([X11::GUITest],
                                     [AC_MSG_NOTICE([enabling GUI test suite])],
                                     [AC_MSG_NOTICE([X11::GUITest is installed enough for our purposes])],
                                     [
