@@ -1,9 +1,9 @@
 /* ui.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:25:46 tquirk
+ *   last updated 30 Nov 2019, 21:00:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,7 +86,7 @@ int ui::context::get(GLuint e, GLuint t, GLuint *v) const
 
 void ui::context::draw(void)
 {
-    glm::mat4 basic_trans;
+    glm::mat4 basic_trans(1.0f);
 
     glUseProgram(this->shader_pgm);
     for (auto& i : this->children)
