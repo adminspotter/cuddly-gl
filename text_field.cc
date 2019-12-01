@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Oct 2019, 15:21:49 tquirk
+ *   last updated 30 Nov 2019, 20:52:29 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -356,7 +356,7 @@ int ui::text_field::get_raw_cursor_pos(void)
 void ui::text_field::set_cursor_transform(int pixel_pos)
 {
     glm::vec3 dest;
-    glm::mat4 new_trans;
+    glm::mat4 new_trans(1.0);
 
     this->parent->get(ui::element::pixel_size, ui::size::all, &dest);
     dest.x *= this->margin[1] + this->border[1] + 1 + pixel_pos;

@@ -1,6 +1,6 @@
 /* widget.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Oct 2019, 22:02:20 tquirk
+ *   last updated 30 Nov 2019, 20:52:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -407,7 +407,7 @@ void ui::widget::recalculate_absolute_pos(void)
 void ui::widget::recalculate_transformation_matrix(void)
 {
     glm::vec3 pixel_sz;
-    glm::mat4 new_trans;
+    glm::mat4 new_trans(1.0f);
 
     this->parent->get(ui::element::pixel_size, ui::size::all, &pixel_sz);
     pixel_sz.x *= this->pos.x;
@@ -530,7 +530,7 @@ void ui::widget::init(ui::composite *c)
 
 ui::widget::widget(ui::composite *c)
     : ui::active::active(0, 0), ui::rect::rect(0, 0),
-      pos(0, 0), relative_pos(0, 0), pos_transform(),
+      pos(0, 0), relative_pos(0, 0), pos_transform(1.0f),
       foreground(1.0f, 1.0f, 1.0f, 1.0f), background(0.5f, 0.5f, 0.5f, 1.0f)
 {
     this->init(c);
@@ -631,7 +631,7 @@ void ui::widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 
     if (this->visible == true)
     {
-        glm::mat4 trans = pos_transform * parent_trans;
+        glm::mat4 trans = this->pos_transform * parent_trans;
 
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
