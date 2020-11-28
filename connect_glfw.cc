@@ -1,6 +1,6 @@
 /* connect_glfw.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2019, 08:59:35 tquirk
+ *   last updated 28 Nov 2020, 10:38:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -27,7 +27,6 @@
  *
  */
 
-#include "ui_defs.h"
 #include "connect_glfw.h"
 
 #include <map>

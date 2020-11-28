@@ -1,9 +1,9 @@
 /* pie_menu.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Nov 2019, 08:05:27 tquirk
+ *   last updated 28 Nov 2020, 10:33:28 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/geometric.hpp>
 
-#include "ui_defs.h"
 #include "ui.h"
 #include "pie_menu.h"
 

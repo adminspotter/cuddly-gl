@@ -2,7 +2,6 @@
 
 using namespace TAP;
 
-#include "../ui_defs.h"
 #include "../active.h"
 
 class test_active : public ui::active

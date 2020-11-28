@@ -1,9 +1,9 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 10:07:44 tquirk
+ *   last updated 28 Nov 2020, 10:32:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,6 @@
 
 #include <list>
 
-#include "ui_defs.h"
 #include "active.h"
 #include "quadtree.h"
 #include "widget.h"

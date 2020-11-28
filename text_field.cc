@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Nov 2019, 20:52:29 tquirk
+ *   last updated 28 Nov 2020, 10:37:24 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ui_defs.h"
 #include "text_field.h"
 
 int ui::text_field::get_size(GLuint t, GLuint *v) const

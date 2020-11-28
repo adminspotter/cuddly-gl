@@ -1,9 +1,9 @@
 /* armable.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 16:20:31 tquirk
+ *   last updated 28 Nov 2020, 10:31:56 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,6 @@
  *
  */
 
-#include "ui_defs.h"
 #include "armable.h"
 
 int ui::armable::get_state(GLuint t, bool *v) const
