@@ -2,7 +2,6 @@
 
 using namespace TAP;
 
-#include "../ui_defs.h"
 #include "../rect.h"
 
 class test_rect : public ui::rect

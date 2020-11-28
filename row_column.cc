@@ -1,9 +1,9 @@
 /* row_column.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:15:57 tquirk
+ *   last updated 28 Nov 2020, 10:34:50 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,7 +29,6 @@
 
 #include <algorithm>
 
-#include "ui_defs.h"
 #include "row_column.h"
 
 int ui::row_column::get_size(GLuint t, GLuint *v) const
