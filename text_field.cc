@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Nov 2020, 10:37:24 tquirk
+ *   last updated 17 Jan 2021, 09:00:32 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2020  Trinity Annabelle Quirk
+ * Copyright (C) 2021  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -239,7 +239,7 @@ void ui::text_field::set_secondary_repeat(GLuint v)
 
 void ui::text_field::apply_key(const ui::key_call_data *c)
 {
-    if (c->key == ui::key::no_key && c->character != 0)
+    if (c->character != 0)
         this->insert_char(c->character);
     else
         switch (c->key)
