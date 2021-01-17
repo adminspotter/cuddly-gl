@@ -1,6 +1,6 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jan 2021, 09:00:32 tquirk
+ *   last updated 17 Jan 2021, 10:01:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2021  Trinity Annabelle Quirk
@@ -34,6 +34,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "text_field.h"
+
+void (*ui::text_field::focus_hook)(bool) = NULL;
 
 int ui::text_field::get_size(GLuint t, GLuint *v) const
 {
@@ -130,9 +132,17 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     if (t != NULL)
     {
         if (((ui::focus_call_data *)call)->focus == true)
+        {
+            if (ui::text_field::focus_hook != NULL)
+                (*ui::text_field::focus_hook)(true);
             t->activate_cursor();
+        }
         else
+        {
             t->deactivate_cursor();
+            if (ui::text_field::focus_hook != NULL)
+                (*ui::text_field::focus_hook)(false);
+        }
     }
 }
 
