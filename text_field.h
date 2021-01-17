@@ -1,9 +1,9 @@
 /* text_field.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 27 Oct 2019, 08:31:54 tquirk
+ *   last updated 17 Jan 2021, 09:59:19 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2021  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -119,6 +119,8 @@ namespace ui
         SET_VA;
 
         virtual void draw(GLuint, const glm::mat4&) override;
+
+        static void (*focus_hook)(bool);
     };
 }
 

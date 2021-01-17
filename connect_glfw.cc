@@ -1,9 +1,9 @@
 /* connect_glfw.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Nov 2020, 10:38:28 tquirk
+ *   last updated 17 Jan 2021, 10:54:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2021  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,9 +39,16 @@
 static int global_auto_repeat = 0;
 #endif /* USING X11 */
 
+#include "text_field.h"
+
 static int convert_glfw_mods(int);
+
 void key_callback(GLFWwindow *, int, int, int, int);
-void char_callback(GLFWwindow *, unsigned int, int);
+void text_field_focus_hook(bool);
+static GLFWwindow *focus_window = NULL;
+static bool text_field_focus = false;
+void char_callback(GLFWwindow *, unsigned int);
+
 void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
 void window_size_callback(GLFWwindow *, int, int);
@@ -193,16 +200,19 @@ void ui_connect_glfw(ui::context *ctx, GLFWwindow *w)
 #endif /* USING_X11 */
 
     glfwSetKeyCallback(w, key_callback);
-    glfwSetCharModsCallback(w, char_callback);
     glfwSetMouseButtonCallback(w, mouse_button_callback);
     glfwSetCursorPosCallback(w, mouse_position_callback);
     glfwSetWindowSizeCallback(w, window_size_callback);
     glfwSetWindowFocusCallback(w, focus_callback);
     glfwSetWindowCloseCallback(w, close_callback);
+
+    ui::text_field::focus_hook = &text_field_focus_hook;
+    focus_window = w;
 }
 
 void ui_disconnect_glfw(ui::context *ctx, GLFWwindow *w)
 {
+    ui::text_field::focus_hook = NULL;
     close_callback(w);
 }
 
@@ -229,18 +239,26 @@ void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
     ui_state = glfw_key_map[action];
     ui_mods = convert_glfw_mods(mods);
 
-    /* Only deal with non-printing characters and key-up events here.
-     * The char_callback will handle key-down for printing chars.
+    /* Only deal with non-printing characters and key-up events here
+     * when the char_callback is active.
      */
-    if (ui_state == ui::key::up || ui_key > ui::key::non_printing)
+    if (text_field_focus == false
+        || (ui_state == ui::key::up || ui_key > ui::key::non_printing))
         context->key_callback(ui_key, 0, ui_state, ui_mods);
 }
 
-void char_callback(GLFWwindow *w, unsigned int c, int mods)
+void text_field_focus_hook(bool focus)
 {
-    int ui_mods = convert_glfw_mods(mods);
+    if (focus == true)
+        glfwSetCharCallback(focus_window, char_callback);
+    else
+        glfwSetCharCallback(focus_window, NULL);
+    text_field_focus = focus;
+}
 
-    context->key_callback(ui::key::no_key, c, ui::key::down, ui_mods);
+void char_callback(GLFWwindow *w, unsigned int c)
+{
+    context->key_callback(ui::key::no_key, c, ui::key::down, 0);
 }
 
 void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
