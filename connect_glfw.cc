@@ -1,6 +1,6 @@
 /* connect_glfw.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 17 Jan 2021, 10:31:18 tquirk
+ *   last updated 17 Jan 2021, 10:54:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2021  Trinity Annabelle Quirk
@@ -47,7 +47,7 @@ void key_callback(GLFWwindow *, int, int, int, int);
 void text_field_focus_hook(bool);
 static GLFWwindow *focus_window = NULL;
 static bool text_field_focus = false;
-void char_callback(GLFWwindow *, unsigned int, int);
+void char_callback(GLFWwindow *, unsigned int);
 
 void mouse_position_callback(GLFWwindow *, double, double);
 void mouse_button_callback(GLFWwindow *, int, int, int);
@@ -250,17 +250,15 @@ void key_callback(GLFWwindow *w, int key, int scan, int action, int mods)
 void text_field_focus_hook(bool focus)
 {
     if (focus == true)
-        glfwSetCharModsCallback(focus_window, char_callback);
+        glfwSetCharCallback(focus_window, char_callback);
     else
-        glfwSetCharModsCallback(focus_window, NULL);
+        glfwSetCharCallback(focus_window, NULL);
     text_field_focus = focus;
 }
 
-void char_callback(GLFWwindow *w, unsigned int c, int mods)
+void char_callback(GLFWwindow *w, unsigned int c)
 {
-    int ui_mods = convert_glfw_mods(mods);
-
-    context->key_callback(ui::key::no_key, c, ui::key::down, ui_mods);
+    context->key_callback(ui::key::no_key, c, ui::key::down, 0);
 }
 
 void mouse_position_callback(GLFWwindow *w, double xpos, double ypos)
