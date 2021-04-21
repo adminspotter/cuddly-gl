@@ -1,9 +1,9 @@
 /* button.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Dec 2018, 12:12:36 tquirk
+ *   last updated 28 Nov 2020, 10:32:15 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,6 @@
 
 #include <algorithm>
 
-#include "ui_defs.h"
 #include "button.h"
 
 void ui::button::set_margin(GLuint s, GLuint v)

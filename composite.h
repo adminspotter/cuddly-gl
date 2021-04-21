@@ -1,9 +1,9 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 20 Dec 2018, 08:00:46 tquirk
+ *   last updated 28 Nov 2020, 10:32:48 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,6 @@
 
 #include <list>
 
-#include "ui_defs.h"
 #include "active.h"
 #include "quadtree.h"
 #include "widget.h"
@@ -47,21 +46,32 @@ namespace ui
       protected:
         composite *parent;
         std::list<widget *> children, to_remove;
+        std::list<widget *>::iterator focused;
         quadtree *tree;
         GLuint resize;
-        bool dirty;
+        bool dirty, radio_box;
 
         glm::ivec2 old_pos;
         widget *old_child;
 
         const static int tree_max_depth;
 
+        int get_radio_state(bool *) const;
+        void set_radio_state(bool);
+        int get_radio_child(ui::widget **) const;
+        void set_radio_child(ui::widget *);
+        int get_focused_child(ui::widget **) const;
+        void set_focused_child(ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_resize(GLuint, GLuint *) const;
         virtual void set_resize(GLuint, GLuint);
         virtual int get_pixel_size(GLuint, float *) const;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
+        virtual int get_state(GLuint, bool *) const;
+        virtual void set_state(GLuint, bool);
+        virtual int get_child(GLuint, ui::widget **) const;
+        virtual void set_child(GLuint, ui::widget *);
 
         virtual void set_desired_size(void);
 
@@ -72,6 +82,12 @@ namespace ui
         void clear_removed_children(void);
 
         void child_motion(widget *, GLuint, glm::ivec2&);
+
+        void focus_child(std::list<widget *>::iterator);
+        void focus_next_child(void);
+        void focus_previous_child(void);
+
+        static void focus_callback(active *, void *, void *);
 
         void init(composite *);
 
@@ -90,8 +106,12 @@ namespace ui
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
+        virtual int get(GLuint, GLuint, bool *) const;
+        virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
         virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, bool);
+        virtual void set(GLuint, GLuint, ui::widget *);
 
         GET_VA;
         SET_VA;

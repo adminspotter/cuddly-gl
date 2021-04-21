@@ -27,6 +27,7 @@ pkginclude_HEADERS = active.h \
 	toggle.h \
 	ui.h \
 	ui_defs.h \
+	util.h \
 	widget.h
 lib_LTLIBRARIES = libcuddly_gl.la
 
@@ -53,6 +54,7 @@ libcuddly_gl_la_SOURCES = active.cc \
 	text_field.cc \
 	toggle.cc \
 	ui.cc \
+	util.cc \
 	widget.cc
 libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
 	-DSHADER_SRC_PATH=\"$(shaderdir)\" \

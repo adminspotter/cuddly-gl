@@ -1,9 +1,9 @@
-/* connect_glfw.h                                          -*- C++ -*-
+/* util.h                                                  -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 05 Aug 2019, 07:59:31 tquirk
+ *   last updated 29 Nov 2019, 15:28:59 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2017  Trinity Annabelle Quirk
+ * Copyright (C) 2019  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,24 +20,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains function prototypes for connecting the CuddlyGL
- * widget toolkit to the GLFW windowing system.
+ * This file contains the declarations for some string conversion functions.
  *
  * Things to do
  *
  */
 
-#ifndef __INC_CONNECT_GLFW_H__
-#define __INC_CONNECT_GLFW_H__
+#ifndef __INC_CUDDLY_UTIL_H__
+#define __INC_CUDDLY_UTIL_H__
 
-#ifndef GLFW_INCLUDE_GL_3
-#define GLFW_INCLUDE_GL_3
-#endif
-#include <GLFW/glfw3.h>
+#include <string>
 
-#include "ui.h"
+namespace ui
+{
+    std::u32string utf8tou32str(const std::string&);
+    std::string u32strtoutf8(const std::u32string&);
+}
 
-void ui_connect_glfw(ui::context *, GLFWwindow *);
-void ui_disconnect_glfw(ui::context *, GLFWwindow *);
-
-#endif /* __INC_CONNECT_GLFW_H__ */
+#endif /* __INC_CUDDLY_UTIL_H__ */

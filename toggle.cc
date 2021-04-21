@@ -1,9 +1,9 @@
 /* toggle.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 02 Jan 2019, 12:31:49 tquirk
+ *   last updated 28 Nov 2020, 10:35:03 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2020  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,6 @@
  *
  */
 
-#include "ui_defs.h"
 #include "toggle.h"
 
 int ui::toggle::get_state(GLuint t, bool *v) const
@@ -75,10 +74,19 @@ int ui::toggle::get_checked_state(bool *v) const
 
 void ui::toggle::set_checked_state(bool v)
 {
+    bool is_radio = false;
+
     if (v == this->checked)
         return;
-    if (this->activated == true && this->armed == true)
+    if (this->parent != NULL)
+        this->parent->get(ui::element::state, ui::state::radio_box, &is_radio);
+    if (this->activated == this->armed
+        && (this->armed == true || is_radio == true))
         this->checked = v;
+    if (is_radio == true && v == true)
+        this->parent->set(ui::element::child,
+                          ui::child::radio,
+                          (ui::widget *)this);
     this->populate_buffers();
 }
 
@@ -204,9 +212,13 @@ void ui::toggle::init(ui::composite *c)
      * intercept the active/armed states before the armable might
      * change them.
      */
-    this->remove_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
+    this->remove_callback(ui::callback::btn_up,
+                          ui::armable::mouse_up_callback,
+                          NULL);
     this->add_callback(ui::callback::btn_up, ui::toggle::check, NULL);
-    this->add_callback(ui::callback::btn_up, ui::armable::disarm, NULL);
+    this->add_callback(ui::callback::btn_up,
+                       ui::armable::mouse_up_callback,
+                       NULL);
 }
 
 ui::toggle::toggle(ui::composite *c)

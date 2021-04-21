@@ -26,7 +26,6 @@
 #include "../connect_glfw.h"
 
 void error_callback(int, const char *);
-void window_size_callback(GLFWwindow *w, int, int);
 void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
@@ -36,6 +35,7 @@ void reorient_callback(ui::active *, void *, void *);
 void print_widget_resources(ui::active *, void *, void *);
 void print_button_resources(ui::active *, void *, void *);
 void print_row_column_resources(ui::active *, void *, void *);
+void print_radio(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -45,7 +45,7 @@ ui::toggle *tgl1;
 ui::text_field *t1;
 ui::password *pw1;
 ui::manager *m1;
-ui::row_column *r1;
+ui::row_column *r1, *rb1;
 ui::pie_menu *pu1;
 
 std::string font_name("techover.ttf"), greeting("Howdy!");
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
         return -1;
     }
     glfwMakeContextCurrent(w);
-    glfwSetWindowSizeCallback(w, window_size_callback);
+
     std::cout << "creating image" << std::endl;
     create_image(72, 48);
 
@@ -121,8 +121,8 @@ int main(int argc, char **argv)
                         ui::element::color, ui::color::background, fg2,
                         ui::element::border, ui::side::all, 2,
                         ui::element::margin, ui::side::all, 2,
-                        ui::element::position, ui::position::x, 50,
-                        ui::element::position, ui::position::y, 50);
+                        ui::element::position, ui::position::x, -50,
+                        ui::element::position, ui::position::y, -50);
     std::cout << "creating label 1" << std::endl;
     l1 = new ui::label(ctx,
                        ui::element::font, ui::ownership::shared, std_font,
@@ -216,6 +216,30 @@ int main(int argc, char **argv)
                ui::element::size, ui::size::width, 100);
         l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
     }
+    std::cout << "creating radio box 1" << std::endl;
+    rb1 = new ui::row_column(ctx,
+                             ui::element::position, ui::position::x, 50,
+                             ui::element::position, ui::position::y, 350,
+                             ui::element::color, ui::color::foreground, fg1,
+                             ui::element::color, ui::color::background, bg1,
+                             ui::element::state, ui::state::radio_box, true,
+                             ui::element::size, ui::size::columns, 1,
+                             ui::element::size, ui::size::rows, 0,
+                             ui::element::child_spacing, ui::size::width, 2,
+                             ui::element::child_spacing, ui::size::height, 5);
+    for (int q = 0; q < 3; ++q)
+    {
+        std::cout << "  creating radio " << q << std::endl;
+        std::ostringstream s;
+        ui::toggle *rbt = new ui::toggle(rb1);
+
+        s << "radio " << (char)('a' + q);
+        rbt->set(ui::element::font, ui::ownership::shared, std_font,
+                 ui::element::string, 0, s.str(),
+                 ui::element::color, ui::color::foreground, fg1,
+                 ui::element::color, ui::color::background, bg1);
+        rbt->add_callback(ui::callback::btn_up, print_radio, rb1);
+    }
     std::cout << "creating popup 1" << std::endl;
     pu1 = new ui::pie_menu(ctx,
                            ui::element::size, ui::size::width, 200,
@@ -238,6 +262,7 @@ int main(int argc, char **argv)
         pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
         pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
     }
+
     std::cout << "done creating things" << std::endl;
 
     while (!glfwWindowShouldClose(w))
@@ -248,6 +273,7 @@ int main(int argc, char **argv)
         glfwSwapBuffers(w);
         glfwPollEvents();
     }
+    ui_disconnect_glfw(ctx, w);
     delete ctx;
     glfwTerminate();
     return 0;
@@ -256,13 +282,6 @@ int main(int argc, char **argv)
 void error_callback(int err, const char *desc)
 {
     std::cout << "glfw error: " << desc << " (" << err << ')' << std::endl;
-}
-
-void window_size_callback(GLFWwindow *w, int width, int height)
-{
-    glm::ivec2 sz(width, height);
-
-    ctx->set(ui::element::size, ui::size::all, sz);
 }
 
 void create_image(int width, int height)
@@ -368,7 +387,8 @@ void print_widget_resources(ui::active *a, void *call, void *client)
 
 void print_button_resources(ui::active *a, void *call, void *client)
 {
-    GLuint w, h, x, y;
+    GLuint w, h;
+    int x, y;
     ui::base_font *font;
     std::string str;
     ui::image img;
@@ -426,4 +446,17 @@ void print_row_column_resources(ui::active *a, void *call, void *client)
       case ui::resize::all:     std::cout << "all" << std::endl;     break;
       default:                  std::cout << "??" << std::endl;      break;
     }
+}
+
+void print_radio(ui::active *a, void *call, void *client)
+{
+    bool is_radio = false;
+    ui::widget *w = NULL;
+    ui::row_column *r = reinterpret_cast<ui::row_column *>(client);
+
+    r->get(ui::element::child, ui::child::radio, &w,
+           ui::element::state, ui::state::radio_box, &is_radio);
+    std::cout << "is " << (is_radio == true ? "" : "not ") << "a radio box, "
+              << std::hex << w << std::dec << " is the checked child"
+              << std::endl;
 }

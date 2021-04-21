@@ -2,7 +2,6 @@
 
 using namespace TAP;
 
-#include "../ui_defs.h"
 #include "../active.h"
 
 class test_active : public ui::active
@@ -17,6 +16,7 @@ class test_active : public ui::active
     using ui::active::key_down_cb;
     using ui::active::key_up_cb;
     using ui::active::resize_cb;
+    using ui::active::focus_cb;
     using ui::active::timeout_func;
     using ui::active::timeout_arg;
 
@@ -155,6 +155,9 @@ void test_which_callback(void)
     a->add_callback(ui::callback::resize, fake_callback, NULL);
     is(a->resize_cb.size(), 1, test + "picked resize");
 
+    a->add_callback(ui::callback::focus, fake_callback, NULL);
+    is(a->focus_cb.size(), 1, test + "picked focus");
+
     a->add_callback(99999, fake_callback, NULL);
     is(a->btn_down_cb.size(), 2, test + "default picked btn_down");
 
@@ -221,7 +224,7 @@ void test_timeout(void)
 
 int main(int argc, char **argv)
 {
-    plan(28);
+    plan(29);
 
     test_create_delete();
     test_callback();

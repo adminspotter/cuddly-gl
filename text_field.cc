@@ -1,9 +1,9 @@
 /* text_field.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 04 Jan 2019, 08:16:10 tquirk
+ *   last updated 17 Jan 2021, 10:01:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2021  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,8 +33,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ui_defs.h"
 #include "text_field.h"
+
+void (*ui::text_field::focus_hook)(bool) = NULL;
 
 int ui::text_field::get_size(GLuint t, GLuint *v) const
 {
@@ -81,6 +82,26 @@ void ui::text_field::set_cursor(GLuint t, GLuint v)
     this->reset_cursor();
 }
 
+int ui::text_field::get_repeat(GLuint t, GLuint *v) const
+{
+    switch (t)
+    {
+      case ui::repeat::initial:    return this->get_initial_repeat(v);
+      case ui::repeat::secondary:  return this->get_secondary_repeat(v);
+      default:                     return 1;
+    }
+}
+
+void ui::text_field::set_repeat(GLuint t, GLuint v)
+{
+    switch (t)
+    {
+      case ui::repeat::initial:    this->set_initial_repeat(v);    break;
+      case ui::repeat::secondary:  this->set_secondary_repeat(v);  break;
+      default:                                                     return;
+    }
+}
+
 void ui::text_field::set_font(GLuint t, ui::base_font *v)
 {
     this->label::set_font(t, v);
@@ -104,41 +125,75 @@ void ui::text_field::set_image(GLuint t, const ui::image& v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
-void ui::text_field::enter_callback(ui::active *a, void *call, void *client)
+void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
     if (t != NULL)
-        t->activate_cursor();
+    {
+        if (((ui::focus_call_data *)call)->focus == true)
+        {
+            if (ui::text_field::focus_hook != NULL)
+                (*ui::text_field::focus_hook)(true);
+            t->activate_cursor();
+        }
+        else
+        {
+            t->deactivate_cursor();
+            if (ui::text_field::focus_hook != NULL)
+                (*ui::text_field::focus_hook)(false);
+        }
+    }
 }
 
-void ui::text_field::leave_callback(ui::active *a, void *call, void *client)
-{
-    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-
-    if (t != NULL)
-        t->deactivate_cursor();
-}
-
-void ui::text_field::key_callback(ui::active *a, void *call, void *client)
+void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::key_call_data *c = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
-        if (c->key == ui::key::no_key && c->character != 0)
-            t->insert_char(c->character);
-        else
-            switch (c->key)
-            {
-              case ui::key::l_arrow:  t->previous_char();         break;
-              case ui::key::r_arrow:  t->next_char();             break;
-              case ui::key::home:     t->first_char();            break;
-              case ui::key::end:      t->last_char();             break;
-              case ui::key::bkspc:    t->remove_previous_char();  break;
-              case ui::key::del:      t->remove_next_char();      break;
-            }
+        t->apply_key(c);
+        ui::key_call_data *k = new ui::key_call_data;
+        memcpy(k, call, sizeof(ui::key_call_data));
+        t->add_timeout(std::chrono::milliseconds(t->repeat_initial),
+                       ui::text_field::key_timeout,
+                       k);
+    }
+}
+
+void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::key_call_data *c = (ui::key_call_data *)call;
+
+    if (t != NULL)
+    {
+        std::lock_guard<std::mutex> lock(t->repeat_mutex);
+        if (t->timeout_arg != NULL)
+        {
+            ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
+            t->remove_timeout();
+            delete k;
+        }
+    }
+}
+
+void ui::text_field::key_timeout(ui::active *a, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+
+    if (t != NULL && client != NULL)
+    {
+        if (!t->repeat_mutex.try_lock())
+            return;
+
+        ui::key_call_data *c = (ui::key_call_data *)client;
+        t->apply_key(c);
+        t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
+                       ui::text_field::key_timeout,
+                       c);
+        t->repeat_mutex.unlock();
     }
 }
 
@@ -167,6 +222,45 @@ void ui::text_field::set_cursor_blink(GLuint v)
 {
     this->blink = v;
     this->reset_cursor();
+}
+
+/* Repeat rates are also in milliseconds. */
+int ui::text_field::get_initial_repeat(GLuint *v) const
+{
+    *v = this->repeat_initial;
+    return 0;
+}
+
+void ui::text_field::set_initial_repeat(GLuint v)
+{
+    this->repeat_initial = v;
+}
+
+int ui::text_field::get_secondary_repeat(GLuint *v) const
+{
+    *v = this->repeat_delay;
+    return 0;
+}
+
+void ui::text_field::set_secondary_repeat(GLuint v)
+{
+    this->repeat_delay = v;
+}
+
+void ui::text_field::apply_key(const ui::key_call_data *c)
+{
+    if (c->character != 0)
+        this->insert_char(c->character);
+    else
+        switch (c->key)
+        {
+          case ui::key::l_arrow:  this->previous_char();         break;
+          case ui::key::r_arrow:  this->next_char();             break;
+          case ui::key::home:     this->first_char();            break;
+          case ui::key::end:      this->last_char();             break;
+          case ui::key::bkspc:    this->remove_previous_char();  break;
+          case ui::key::del:      this->remove_next_char();      break;
+        }
 }
 
 void ui::text_field::reset_cursor(void)
@@ -271,7 +365,7 @@ int ui::text_field::get_raw_cursor_pos(void)
 void ui::text_field::set_cursor_transform(int pixel_pos)
 {
     glm::vec3 dest;
-    glm::mat4 new_trans;
+    glm::mat4 new_trans(1.0);
 
     this->parent->get(ui::element::pixel_size, ui::size::all, &dest);
     dest.x *= this->margin[1] + this->border[1] + 1 + pixel_pos;
@@ -332,15 +426,14 @@ void ui::text_field::generate_string_image(void)
 
 void ui::text_field::calculate_widget_size(void)
 {
-    std::vector<int> font_max = {0, 0, 0};
+    int max_width, max_height;
     glm::ivec2 size;
 
-    this->font->max_cell_size(font_max);
-    font_max[0] *= this->max_length;
-    size.x = font_max[0]
+    this->font->max_cell_size(max_width, max_height);
+    size.x = (max_width * this->max_length)
         + this->border[1] + this->border[2]
         + this->margin[1] + this->margin[2] + 2;
-    size.y = font_max[1] + font_max[2]
+    size.y = max_height
         + this->border[0] + this->border[3]
         + this->margin[0] + this->margin[3] + 2;
     this->set_size(ui::size::all, size);
@@ -390,23 +483,23 @@ void ui::text_field::generate_cursor(void)
 ui::vertex_buffer *ui::text_field::generate_points(void)
 {
     ui::vertex_buffer *vb = this->label::generate_points();
-    std::vector<int> font_max = {0, 0, 0};
+    int max_width, max_asc, max_desc;
     GLuint w, a, d;
     float ph;
 
     if (this->img.data == NULL)
         return vb;
 
-    this->font->max_cell_size(font_max);
+    this->font->max_cell_size(max_width, max_asc, max_desc);
     this->get_string_size(this->str, w, a, d);
 
     ph = 1.0f / (float)this->img.height;
 
     vb->vertex[7] = 1.0f + ((this->margin[0] + this->border[0] + 1
-                             + font_max[1] - a) * ph);
+                             + max_asc - a) * ph);
     vb->vertex[15] = vb->vertex[7];
     vb->vertex[23] = 0.0f - ((this->margin[3] + this->border[3] + 1
-                              + font_max[2] - d) * ph);
+                              + max_desc - d) * ph);
     vb->vertex[31] = vb->vertex[23];
 
     return vb;
@@ -423,6 +516,8 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_visible = true;
     this->cursor_active = false;
     this->cursor_element_count = 0;
+    this->repeat_initial = 350;
+    this->repeat_delay = 150;
 
     this->parent->get(ui::element::attribute,
                       ui::attribute::position,
@@ -450,14 +545,14 @@ void ui::text_field::init(ui::composite *c)
     glVertexAttribPointer(texture_attr, 2, GL_FLOAT, GL_FALSE,
                           sizeof(float) * 8, (void *)(sizeof(float) * 6));
 
-    this->add_callback(ui::callback::enter,
-                       ui::text_field::enter_callback,
-                       NULL);
-    this->add_callback(ui::callback::leave,
-                       ui::text_field::leave_callback,
+    this->add_callback(ui::callback::focus,
+                       ui::text_field::focus_callback,
                        NULL);
     this->add_callback(ui::callback::key_down,
-                       ui::text_field::key_callback,
+                       ui::text_field::key_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::key_up,
+                       ui::text_field::key_up_callback,
                        NULL);
 
     this->populate_buffers();
@@ -465,7 +560,7 @@ void ui::text_field::init(ui::composite *c)
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      cursor_transform()
+      cursor_transform(), repeat_mutex()
 {
     this->init(c);
 }
@@ -482,6 +577,7 @@ int ui::text_field::get(GLuint e, GLuint t, GLuint *v) const
     switch (e)
     {
       case ui::element::cursor:  return this->get_cursor(t, v);
+      case ui::element::repeat:  return this->get_repeat(t, v);
       default:                   return this->label::get(e, t, v);
     }
 }
@@ -491,6 +587,7 @@ void ui::text_field::set(GLuint e, GLuint t, GLuint v)
     switch (e)
     {
       case ui::element::cursor:  this->set_cursor(t, v);     break;
+      case ui::element::repeat:  this->set_repeat(t, v);     break;
       default:                   this->label::set(e, t, v);  break;
     }
 }

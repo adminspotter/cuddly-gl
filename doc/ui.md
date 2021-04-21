@@ -419,6 +419,9 @@ be set but will be ignored.
   * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`GLuint`)
   * `ui::size::max_width` (`GLuint`)
+* `ui::element::repeat`
+  * `ui::repeat::initial` (`GLuint`)
+  * `ui::repeat::secondary` (`GLuint`)
 
 ###### Text field inherited resources ######
 
@@ -453,6 +456,7 @@ The password field does not add any new resources.
 * `ui::element::string` (`ui::label`)
 * `ui::element::cursor` ([`ui::text_field`](#text_field))
 * `ui::element::size` (`ui::text_field`)
+* `ui::element::repeat` (`ui::text_field`)
 
 ### Composite-derived widgets ###
 
