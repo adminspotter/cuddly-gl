@@ -139,12 +139,12 @@ invocations of the same function, with varying, or even the same,
   ```
 
   The `character` field will contain the textual character which is
-  associated with the event, where the `key` field will contain a
-  constant from the `ui::key` namespace.  If the event does have a
-  textual character, the `key` field will contain `ui::key::no_key`.
-  The `state` field will contain either `ui::key::down` or
-  `ui::key::up`.  The `mods` field will contain a bitmask of constants
-  from `ui::key_mod`.
+  associated with the event, if available; this may only occur within
+  the [`ui::text_field`](ui-text_field.md)(3) widget.  If no character
+  data is available, this field will contain `0`.  The `key` field
+  will contain a constant from the `ui::key` namespace.  The `state`
+  field will contain either `ui::key::down` or `ui::key::up`.  The
+  `mods` field will contain a bitmask of constants from `ui::key_mod`.
 
 * `ui::resize_call_data`
 
