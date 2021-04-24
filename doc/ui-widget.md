@@ -159,9 +159,10 @@ Inherited from [`ui::active`](ui-active.md):
 
 ## SUBCLASSING ##
 
-The `ui::widget` has a virtual inheritance from the `ui::rect` by way
-of the `ui::active` superclass, so the constructor of each subclass of
-the `ui::widget` must also explicitly initialize the `ui::rect`.
+The `ui::widget` has virtual inheritances from the `ui::rect` by way
+of the `ui::active` superclass, and from the `ui::active` superclass,
+so the constructor of each subclass of the `ui::widget` must also
+explicitly initialize the `ui::rect` and `ui::active`.
 
 Any special handling that needs to be performed when a subclass is
 _closed_ (as opposed to _deleted_) should be handled in an overridden

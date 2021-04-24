@@ -149,9 +149,11 @@ Inherited from [ui::widget](ui-widget.md):
 
 ## SUBCLASSING ##
 
-The `ui::label` has a virtual inheritance from the `ui::rect` by way
-of the `ui::active` superclass, so the constructor of each subclass of
-the `ui::label` must also explicitly initialize the `ui::rect`.
+The `ui::label` has virtual inheritances from the `ui::rect` by way of
+the `ui::active` superclass, and from the `ui::active` by way of the
+`ui::widget` superclass, so the constructor of each subclass of the
+`ui::label` must also explicitly initialize the `ui::rect` and
+`ui::active`.
 
 ## RELATED ##
 
