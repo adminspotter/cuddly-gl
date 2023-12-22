@@ -1,0 +1,29 @@
+name: coverage
+on: pull_request
+
+jobs:
+  coverage_report:
+    name: Generate coverage report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and test
+        uses: ./.github/actions/build-and-test
+      - name: Print test failures
+        if: ${{ failure() }}
+        run: |
+          for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done
+          exit 1
+      - name: Setup lcov
+        uses: hrishikesh-kadam/setup-lcov@v1
+      - name: Generate lcov data
+        run: |
+          lcov -c -q --directory . --output-file lcov.info --no-external --exclude '*/test/*'
+      - name: Report code coverage
+        uses: zgosalvez/github-actions-report-lcov@v4.1.2
+        with:
+          coverage-files: lcov.info
+          update-comment: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          minimum-coverage: 50

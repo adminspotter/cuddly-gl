@@ -1,0 +1,16 @@
+name: build-on-push
+on: push
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and test
+        uses: ./.github/actions/build-and-test
+      - name: Print test failures
+        if: ${{ failure() }}
+        run: |
+          for file in $(grep -l FAIL test/*.trs | sed -e 's/trs$/log/') ; do echo "$file" ; echo ; cat $file ; echo ; done
