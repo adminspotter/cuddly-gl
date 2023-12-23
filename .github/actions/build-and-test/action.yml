@@ -1,0 +1,23 @@
+name: build-and-test
+description: 'Build and test'
+
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        sudo apt install autopoint gettext glslang-tools libboost-dev libfreetype6-dev libgl1-mesa-dev libglfw3-dev libglm-dev libglu1-mesa-dev libx11-guitest-perl perl-doc x11-apps x11proto-randr-dev libx11-dev xvfb
+      shell: bash
+    - run: |
+        echo "CUDDLY_SHADER_PATH=$PWD/shaders" >> $GITHUB_ENV
+      shell: bash
+    - run: |
+        ./autogen.sh
+        ./configure --enable-profile --with-freetype-includes=/usr/include/freetype2
+        make
+      shell: bash
+    - env:
+        DISPLAY: :99
+      run: |
+        Xvfb $DISPLAY -reset -terminate -screen 0 1280x1024x24+32 -retro +extension XTEST -r 2>/dev/null &
+        make check
+      shell: bash
