@@ -16,18 +16,18 @@ ui::toggle *t = new ui::toggle(parent, ...);
 ## DESCRIPTION ##
 
 The `ui::toggle` displays a string or image button alongside a box
-which shows the _checked_ state of the widget.  The box is filled when
-the widget is _checked_, and unfilled when the widget is _unchecked_.
+which shows the *checked* state of the widget.  The box is filled when
+the widget is *checked*, and unfilled when the widget is *unchecked*.
 
-Sets of `ui::toggle` widgets can become a _radio_ group by being
+Sets of `ui::toggle` widgets can become a *radio group* by being
 direct children of a [`ui::composite`](ui-composite.md)(3) derivative
 with the `ui::state::radio_box` resource set to `true`.  A radio group
-may only have a single toggle checked at one time; _checking_ a
+may only have a single toggle checked at one time; checking a
 `ui::toggle` in a radio group unchecks all other `ui::toggle`s in that
 group.
 
 The `ui::toggle` is a subclass of [`ui::button`](ui-button.md)(3), so
-all typical button behaviour is present; _arming_ and _activating_ the
+all typical button behaviour is present; *arming* and *activating* the
 `ui::toggle` acts the same as the `ui::button`.
 
 ## METHODS ##
