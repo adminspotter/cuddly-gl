@@ -8,7 +8,7 @@ ui::active
 ## SYNOPSIS ##
 
 ```cpp
-#include <active.h>
+#include <cuddly-gl/active.h>
 
 ui::active *a = new ui::active(x, y);
 

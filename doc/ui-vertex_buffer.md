@@ -8,7 +8,7 @@ ui::vertex_buffer
 ## SYNOPSIS ##
 
 ```c++
-#include <widget.h>
+#include <cuddly-gl/widget.h>
 
 ui::vertex_buffer *b = new ui::vertex_buffer();
 

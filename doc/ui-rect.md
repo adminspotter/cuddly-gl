@@ -8,7 +8,7 @@ ui::rect
 ## SYNOPSIS ##
 
 ```c++
-#include <rect.h>
+#include <cuddly-gl/rect.h>
 
 ui::rect *r = new ui::rect(x, y);
 
