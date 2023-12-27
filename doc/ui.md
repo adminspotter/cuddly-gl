@@ -478,20 +478,6 @@ elements are read-only.
   * `ui::size::width` (`float`)
   * `ui::size::height` (`float`)
   * `ui::size::all` (`glm::vec2`)
-* `ui::element::resize`
-  * No subtypes, but defined value arguments (`GLuint`)
-    * `ui::resize::none`
-    * `ui::resize::shrink`
-    * `ui::resize::grow`
-    * `ui::resize::all`
-
-The resize value arguments function as a mask, so that we can shrink
-or grow independently.  `ui::resize::all` is the same as
-`ui::resize::shrink | ui::resize::grow`.  Also, each screen dimension
-is considered independently of the others, e.g. if a composite widget
-needs to shrink in the x dimension and grow in the y dimension, each
-will be compared against the resize resource to see if the required
-size change should be allowed.
 
 ##### Composite inherited resources #####
 
@@ -553,6 +539,20 @@ and the edges of the manager, for purposes of grow/shrink.
   * `ui::size::width` (`GLuint`)
   * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`glm::ivec2`)
+* `ui::element::resize`
+  * No subtypes, but defined value arguments (`GLuint`)
+    * `ui::resize::none`
+    * `ui::resize::shrink`
+    * `ui::resize::grow`
+    * `ui::resize::all`
+
+The resize value arguments function as a mask, so that we can shrink
+or grow independently.  `ui::resize::all` is the same as
+`ui::resize::shrink | ui::resize::grow`.  Also, each screen dimension
+is considered independently of the others, e.g. if a composite widget
+needs to shrink in the x dimension and grow in the y dimension, each
+will be compared against the resize resource to see if the required
+size change should be allowed.
 
 ###### Manager inherited resources ######
 
