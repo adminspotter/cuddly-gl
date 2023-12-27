@@ -1,6 +1,6 @@
 /* manager.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Oct 2019, 07:19:16 tquirk
+ *   last updated 25 Dec 2023, 21:04:38 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -80,10 +80,19 @@ void ui::manager::set_child_spacing(GLuint t, const glm::ivec2& v)
     }
 }
 
+int ui::manager::get_resize(GLuint t, GLuint *v) const
+{
+    *v = this->resize;
+    return 0;
+}
+
 void ui::manager::set_resize(GLuint t, GLuint v)
 {
-    this->composite::set_resize(t, v);
-    this->set_desired_size();
+    if (v <= ui::resize::all)
+    {
+        this->resize = v;
+        this->set_desired_size();
+    }
 }
 
 int ui::manager::get_size(GLuint t, GLuint *v) const
@@ -236,7 +245,7 @@ int ui::manager::get(GLuint e, GLuint t, GLuint *v) const
             return this->widget::parent->get(e, t, v);
         return 1;
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
-      case ui::element::resize:         return this->composite::get(e, t, v);
+      case ui::element::resize:         return this->get_resize(t, v);
       default:                          return this->widget::get(e, t, v);
     }
     return 1;
@@ -261,7 +270,7 @@ void ui::manager::set(GLuint e, GLuint t, GLuint v)
     switch (e)
     {
       case ui::element::child_spacing:  this->set_child_spacing(t, v);  break;
-      case ui::element::resize:         this->composite::set(e, t, v);  break;
+      case ui::element::resize:         this->set_resize(t, v);         break;
       default:                          this->widget::set(e, t, v);     break;
     }
 }
