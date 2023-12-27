@@ -1,6 +1,6 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 06 Oct 2019, 07:18:41 tquirk
+ *   last updated 26 Dec 2023, 17:31:02 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -39,13 +39,15 @@ namespace ui
     class manager : public widget, public composite
     {
       protected:
+        GLuint resize;
         glm::ivec2 child_spacing;
 
         int get_child_spacing(GLuint, GLuint *) const;
         int get_child_spacing(GLuint, glm::ivec2 *) const;
         void set_child_spacing(GLuint, GLuint);
         void set_child_spacing(GLuint, const glm::ivec2&);
-        virtual void set_resize(GLuint, GLuint) override;
+        virtual int get_resize(GLuint, GLuint *) const;
+        virtual void set_resize(GLuint, GLuint);
         virtual int get_size(GLuint, GLuint *) const override;
         virtual int get_size(GLuint, glm::ivec2 *) const override;
         virtual void set_size(GLuint, GLuint) override;
