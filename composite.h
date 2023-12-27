@@ -1,6 +1,6 @@
 /* composite.h                                             -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Nov 2020, 10:32:48 tquirk
+ *   last updated 25 Dec 2023, 21:04:42 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2020  Trinity Annabelle Quirk
@@ -48,7 +48,6 @@ namespace ui
         std::list<widget *> children, to_remove;
         std::list<widget *>::iterator focused;
         quadtree *tree;
-        GLuint resize;
         bool dirty, radio_box;
 
         glm::ivec2 old_pos;
@@ -64,8 +63,6 @@ namespace ui
         void set_focused_child(ui::widget *);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
-        virtual int get_resize(GLuint, GLuint *) const;
-        virtual void set_resize(GLuint, GLuint);
         virtual int get_pixel_size(GLuint, float *) const;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
         virtual int get_state(GLuint, bool *) const;
@@ -103,13 +100,11 @@ namespace ui
         virtual ~composite();
 
         using ui::rect::get;
-        virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
         virtual int get(GLuint, GLuint, bool *) const;
         virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
-        virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, bool);
         virtual void set(GLuint, GLuint, ui::widget *);
 

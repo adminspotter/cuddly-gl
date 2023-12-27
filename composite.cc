@@ -1,6 +1,6 @@
 /* composite.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 03 Nov 2019, 15:25:43 tquirk
+ *   last updated 25 Dec 2023, 21:04:41 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2019  Trinity Annabelle Quirk
@@ -126,18 +126,6 @@ void ui::composite::set_size(GLuint d, const glm::ivec2& v)
     call_data.new_size = this->dim;
     for (auto i : this->children)
         i->call_callbacks(ui::callback::resize, &call_data);
-}
-
-int ui::composite::get_resize(GLuint t, GLuint *v) const
-{
-    *v = this->resize;
-    return 0;
-}
-
-void ui::composite::set_resize(GLuint t, GLuint v)
-{
-    if (v <= ui::resize::all)
-        this->resize = v;
 }
 
 int ui::composite::get_pixel_size(GLuint t, float *v) const
@@ -337,16 +325,6 @@ ui::composite::~composite()
     this->children.clear();
 }
 
-int ui::composite::get(GLuint e, GLuint t, GLuint *v) const
-{
-    switch (e)
-    {
-      case ui::element::size:        return this->get_size(t, v);
-      case ui::element::resize:      return this->get_resize(t, v);
-      default:                       return 1;
-    }
-}
-
 int ui::composite::get(GLuint e, GLuint t, float *v) const
 {
     if (e == ui::element::pixel_size)
@@ -373,15 +351,6 @@ int ui::composite::get(GLuint e, GLuint t, ui::widget **v) const
     if (e == ui::element::child)
         return this->get_child(t, v);
     return 1;
-}
-
-void ui::composite::set(GLuint e, GLuint t, GLuint v)
-{
-    switch (e)
-    {
-      case ui::element::size:    this->set_size(t, v);    break;
-      case ui::element::resize:  this->set_resize(t, v);  break;
-    }
 }
 
 void ui::composite::set(GLuint e, GLuint t, bool v)
