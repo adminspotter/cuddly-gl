@@ -88,6 +88,39 @@ Inherited from [`ui::active`](ui-active.md):
 
 ## NEW RESOURCES ##
 
+* **ui::element::border** - width of the border segments for each
+    side.  The subtype flags function as a mask, and can be or'ed
+    together.  The `ui::side::all` subtype is a convenience flag of all
+    other flags or'ed together.
+
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::side::top**    | GLuint    |
+  | **ui::side::bottom** | GLuint    |
+  | **ui::side::left**   | GLuint    |
+  | **ui::side::right**  | GLuint    |
+  | **ui::side::all**    | GLuint    |
+
+* **ui::element::color** - colors for the widget, in RGBA format
+
+  | Subtype                   | Data type | Notes              |
+  | ------------------------- | --------- | ------------------ |
+  | **ui::color::foreground** | glm::vec4 | Used by the border |
+  | **ui::color::background** | glm::vec4 |                    |
+
+* **ui::element::margin** - width of the margins for each side.  The
+    subtype flags function as a mask, and can be or'ed together.  The
+    `ui::side::all` subtype is a convenience flag of all other flags
+    or'ed together.
+
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::side::top**    | GLuint    |
+  | **ui::side::bottom** | GLuint    |
+  | **ui::side::left**   | GLuint    |
+  | **ui::side::right**  | GLuint    |
+  | **ui::side::all**    | GLuint    |
+
 * **ui::element::position** - position of the object within its
     parent's boundary.  The subtype flags function as a mask, and can
     be or'ed together.  The `ui::position::all` subtype is a
@@ -107,39 +140,6 @@ Inherited from [`ui::active`](ui-active.md):
     relative positions, either positive or negative.  When or'ed with
     any of the other values, the `absolute` subtype will yield only
     positive offsets from the top left of the parent.
-
-* **ui::element::border** - width of the border segments for each
-    side.  The subtype flags function as a mask, and can be or'ed
-    together.  The `ui::side::all` subtype is a convenience flag of all
-    other flags or'ed together.
-
-  | Subtype              | Data type |
-  | -------------------- | --------- |
-  | **ui::side::top**    | GLuint    |
-  | **ui::side::bottom** | GLuint    |
-  | **ui::side::left**   | GLuint    |
-  | **ui::side::right**  | GLuint    |
-  | **ui::side::all**    | GLuint    |
-
-* **ui::element::margin** - width of the margins for each side.  The
-    subtype flags function as a mask, and can be or'ed together.  The
-    `ui::side::all` subtype is a convenience flag of all other flags
-    or'ed together.
-
-  | Subtype              | Data type |
-  | -------------------- | --------- |
-  | **ui::side::top**    | GLuint    |
-  | **ui::side::bottom** | GLuint    |
-  | **ui::side::left**   | GLuint    |
-  | **ui::side::right**  | GLuint    |
-  | **ui::side::all**    | GLuint    |
-
-* **ui::element::color** - colors for the widget, in RGBA format
-
-  | Subtype                   | Data type | Notes              |
-  | ------------------------- | --------- | ------------------ |
-  | **ui::color::foreground** | glm::vec4 | Used by the border |
-  | **ui::color::background** | glm::vec4 |                    |
 
 * **ui::element::state** - flags for the widget
 

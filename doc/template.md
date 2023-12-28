@@ -51,6 +51,8 @@ Inherited from [ui::super](ui-super.md):
 
 ## NEW RESOURCES ##
 
+<!-- Alphabetize resources by element -->
+
 * **ui::element::foo** - foo of the object
 
   | Subtype      | Data type | Notes           |
@@ -58,6 +60,8 @@ Inherited from [ui::super](ui-super.md):
   | ui::foo::bar | GLuint    | Optional column |
 
 ## INHERITED RESOURCES ##
+
+<!-- Alphabetize resources by element -->
 
 * **ui::element::inherited** ([ui::super](ui-super.md))
 

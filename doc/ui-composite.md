@@ -158,6 +158,13 @@ Inherited from [`ui::active`](ui-active.md):
 
 ## NEW RESOURCES ##
 
+* **ui::element::child** - get or set child widgets for specific actions
+
+  | Subtype            | Data type    | Notes                             |
+  | ------------------ | ------------ | --------------------------------- |
+  | ui::child::focused | ui::widget * | Child which has keyboard focus    |
+  | ui::child::radio   | ui::widget * | Checked member of the radio group |
+
 * **ui::element::pixel_size** - read-only resources used by child
   widgets to scale themselves properly for the size of the composite.
 
@@ -172,13 +179,6 @@ Inherited from [`ui::active`](ui-active.md):
   | Subtype              | Data type |
   | -------------------- | --------- |
   | ui::state::radio_box | bool      |
-
-* **ui::element::child** - get or set child widgets for specific actions
-
-  | Subtype            | Data type    | Notes                             |
-  | ------------------ | ------------ | --------------------------------- |
-  | ui::child::focused | ui::widget * | Child which has keyboard focus    |
-  | ui::child::radio   | ui::widget * | Checked member of the radio group |
 
 ## INHERITED RESOURCES ##
 

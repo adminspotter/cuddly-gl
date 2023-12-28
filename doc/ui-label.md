@@ -83,48 +83,21 @@ Inherited from [ui::widget](ui-widget.md):
   | ui::ownership::owned  | ui::base_font | Font will be deleted when the label is deleted     |
   | ui::ownership::shared | ui::base_font | Font will not be deleted when the label is deleted |
 
-* **ui::element::string** - string displayed in the object
-
-  | Subtype | Data type   | Notes           |
-  | ------- | ----------- | --------------- |
-  | none    | std::string | In UTF-8 format |
-
 * **ui::element::image** - image displayed in the object
 
   | Subtype | Data type |
   | ------- | --------- |
   | none    | ui::image |
 
+* **ui::element::string** - string displayed in the object
+
+  | Subtype | Data type   | Notes           |
+  | ------- | ----------- | --------------- |
+  | none    | std::string | In UTF-8 format |
+
 ## INHERITED RESOURCES ##
 
-* **ui::element::size** ([ui::rect](ui-rect.md))
-
-  | Subtype              | Data type  |
-  | -------------------- | ---------- |
-  | **ui::size::width**  | GLuint     |
-  | **ui::size::height** | GLuint     |
-  | **ui::size::all**    | glm::ivec2 |
-
-* **ui::element::position** ([ui::widget](ui-widget.md))
-
-  | Subtype                    | Data type  |
-  | -------------------------- | ---------- |
-  | **ui::position::x**        | int        |
-  | **ui::position::y**        | int        |
-  | **ui::position::all**      | glm::ivec2 |
-  | **ui::position::absolute** | *special*  |
-
 * **ui::element::border** ([ui::widget](ui-widget.md))
-
-  | Subtype              | Data type |
-  | -------------------- | --------- |
-  | **ui::side::top**    | GLuint    |
-  | **ui::side::bottom** | GLuint    |
-  | **ui::side::left**   | GLuint    |
-  | **ui::side::right**  | GLuint    |
-  | **ui::side::all**    | GLuint    |
-
-* **ui::element::margin** ([ui::widget](ui-widget.md))
 
   | Subtype              | Data type |
   | -------------------- | --------- |
@@ -140,6 +113,33 @@ Inherited from [ui::widget](ui-widget.md):
   | ------------------------- | --------- |
   | **ui::color::foreground** | glm::vec4 |
   | **ui::color::background** | glm::vec4 |
+
+* **ui::element::margin** ([ui::widget](ui-widget.md))
+
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::side::top**    | GLuint    |
+  | **ui::side::bottom** | GLuint    |
+  | **ui::side::left**   | GLuint    |
+  | **ui::side::right**  | GLuint    |
+  | **ui::side::all**    | GLuint    |
+
+* **ui::element::position** ([ui::widget](ui-widget.md))
+
+  | Subtype                    | Data type  |
+  | -------------------------- | ---------- |
+  | **ui::position::x**        | int        |
+  | **ui::position::y**        | int        |
+  | **ui::position::all**      | glm::ivec2 |
+  | **ui::position::absolute** | *special*  |
+
+* **ui::element::size** ([ui::rect](ui-rect.md))
+
+  | Subtype              | Data type  |
+  | -------------------- | ---------- |
+  | **ui::size::width**  | GLuint     |
+  | **ui::size::height** | GLuint     |
+  | **ui::size::all**    | glm::ivec2 |
 
 * **ui::element::state** ([ui::widget](ui-widget.md))
 
