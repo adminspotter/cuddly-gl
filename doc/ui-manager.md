@@ -10,7 +10,7 @@ ui::manager
 ```cpp
 #include <cuddly-gl/manager.h>
 
-ui::manager *t = new ui::manager(parent, ...);
+ui::manager *m = new ui::manager(parent, ...);
 ```
 
 ## DESCRIPTION ##

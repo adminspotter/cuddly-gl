@@ -10,7 +10,7 @@ ui::row_column
 ```cpp
 #include <cuddly-gl/row_column.h>
 
-ui::row_column *t = new ui::row_column(parent, ...);
+ui::row_column *r = new ui::row_column(parent, ...);
 ```
 
 ## DESCRIPTION ##
