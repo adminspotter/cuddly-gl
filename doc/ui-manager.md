@@ -58,15 +58,6 @@ Inherited from [ui::composite](ui-composite.md):
 * **key_callback(int _key_, uint32_t _char_, int _state_, int _mods_)**
 * **key_callback(ui::key_call_data& _call_data_)**
 
-Inherited from [`ui::active`](ui-active.md):
-
-* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void \*_client_data_)**
-* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void \*_client_data_)**
-* **call_callbacks(GLuint _list_, void \*_call_data_)**
-* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void \*_client_data_)**
-* **remove_timeout()**
-* **call_timeout()**
-
 ## NEW RESOURCES ##
 
 * **ui::element::child_spacing** - how many pixels of padding should
