@@ -78,10 +78,10 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::font** - font used in rendering the string
 
-  | Subtype               | Data type     | Notes                                              |
-  | --------------------- | ------------- | -------------------------------------------------- |
-  | ui::ownership::owned  | ui::base_font | Font will be deleted when the label is deleted     |
-  | ui::ownership::shared | ui::base_font | Font will not be deleted when the label is deleted |
+  | Subtype                   | Data type     | Notes                                              |
+  | ------------------------- | ------------- | -------------------------------------------------- |
+  | **ui::ownership::owned**  | ui::base_font | Font will be deleted when the label is deleted     |
+  | **ui::ownership::shared** | ui::base_font | Font will not be deleted when the label is deleted |
 
 * **ui::element::image** - image displayed in the object
 

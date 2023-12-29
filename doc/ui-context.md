@@ -66,29 +66,29 @@ Inherited from [`ui::active`](ui-active.md):
 * **ui::element::attribute** - read-only attributes used internally to
   inject CuddlyGL parameters into the OpenGL rendering program.
 
-  | Subtype                  | Data type |
-  | ------------------------ | --------- |
-  | ui::attribute::position  | GLuint    |
-  | ui::attribute::color     | GLuint    |
-  | ui::attribute::texture   | GLuint    |
-  | ui::attribute::text_bgnd | GLuint    |
+  | Subtype                      | Data type |
+  | ---------------------------- | --------- |
+  | **ui::attribute::position**  | GLuint    |
+  | **ui::attribute::color**     | GLuint    |
+  | **ui::attribute::texture**   | GLuint    |
+  | **ui::attribute::text_bgnd** | GLuint    |
 
 ## INHERITED RESOURCES ##
 
 * **ui::element::child** ([ui::composite](ui-composite.md))
 
-  | Subtype            | Data type    |
-  | ------------------ | ------------ |
-  | ui::child::focused | ui::widget * |
-  | ui::child::radio   | ui::widget * |
+  | Subtype                | Data type    |
+  | ---------------------- | ------------ |
+  | **ui::child::focused** | ui::widget * |
+  | **ui::child::radio**   | ui::widget * |
 
 * **ui::element::pixel_size** ([ui::composite](ui-composite.md))
 
-  | Subtype          | Data type |
-  | ---------------- | --------- |
-  | ui::size::width  | float     |
-  | ui::size::height | float     |
-  | ui::size::all    | glm::vec3 |
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::size::width**  | float     |
+  | **ui::size::height** | float     |
+  | **ui::size::all**    | glm::vec3 |
 
 * **ui::element::size** ([ui::rect](ui-rect.md))
 
@@ -100,9 +100,9 @@ Inherited from [`ui::active`](ui-active.md):
 
 * **ui::element::state** ([ui::composite](ui-composite.md))
 
-  | Subtype              | Data type |
-  | -------------------- | --------- |
-  | ui::state::radio_box | bool      |
+  | Subtype                  | Data type |
+  | ------------------------ | --------- |
+  | **ui::state::radio_box** | bool      |
 
 ## SUBCLASSING ##
 

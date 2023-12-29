@@ -58,9 +58,9 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::state** - state of the object
 
-  | Subtype            | Data type |
-  | ------------------ | --------- |
-  | ui::state::checked | bool      |
+  | Subtype                | Data type |
+  | ---------------------- | --------- |
+  | **ui::state::checked** | bool      |
 
 ## INHERITED RESOURCES ##
 

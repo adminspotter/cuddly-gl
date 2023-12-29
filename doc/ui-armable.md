@@ -71,10 +71,10 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::state** - state of the object
 
-  | Subtype           | Data type |
-  | ----------------- | --------- |
-  | ui::state::active | bool      |
-  | ui::state::armed  | bool      |
+  | Subtype               | Data type |
+  | --------------------- | --------- |
+  | **ui::state::active** | bool      |
+  | **ui::state::armed**  | bool      |
 
 ## INHERITED RESOURCES ##
 
@@ -97,10 +97,10 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::font** ([ui::label](ui-label.md))
 
-  | Subtype               | Data type     |
-  | --------------------- | ------------- |
-  | ui::ownership::owned  | ui::base_font |
-  | ui::ownership::shared | ui::base_font |
+  | Subtype                   | Data type     |
+  | ------------------------- | ------------- |
+  | **ui::ownership::owned**  | ui::base_font |
+  | **ui::ownership::shared** | ui::base_font |
 
 * **ui::element::image** ([ui::label](ui-label.md))
 

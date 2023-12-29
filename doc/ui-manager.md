@@ -75,11 +75,11 @@ Inherited from [`ui::active`](ui-active.md):
   `ui::size::width` and `ui::size::height` flags or'ed together, and
   does require a change of data type.
 
-  | Subtype          | Data type  |
-  | ---------------- | ---------- |
-  | ui::size::width  | GLuint     |
-  | ui::size::height | GLuint     |
-  | ui::size::all    | glm::ivec2 |
+  | Subtype              | Data type  |
+  | -------------------- | ---------- |
+  | **ui::size::width**  | GLuint     |
+  | **ui::size::height** | GLuint     |
+  | **ui::size::all**    | glm::ivec2 |
 
 * **ui::element::resize** - how the manager should/should not change
   its own size according to the placement of its children.  There are
@@ -88,12 +88,12 @@ Inherited from [`ui::active`](ui-active.md):
   `ui::resize::all` value is a convenience flag for both
   `ui::resize::shrink` and `ui::resize::grow`.
 
-  | Value              | Notes                          |
-  | ------------------ | ------------------------------ |
-  | ui::resize::none   | Do not change size             |
-  | ui::resize::shrink | Only shrink to fit children    |
-  | ui::resize::grow   | Grow to fit children as needed |
-  | ui::resize::all    | Change size as needed          |
+  | Value                  | Notes                          |
+  | ---------------------- | ------------------------------ |
+  | **ui::resize::none**   | Do not change size             |
+  | **ui::resize::shrink** | Only shrink to fit children    |
+  | **ui::resize::grow**   | Grow to fit children as needed |
+  | **ui::resize::all**    | Change size as needed          |
 
 ## INHERITED RESOURCES ##
 
@@ -109,10 +109,10 @@ Inherited from [`ui::active`](ui-active.md):
 
 * **ui::element::child** ([ui::composite](ui-composite.md))
 
-  | Subtype            | Data type    |
-  | ------------------ | ------------ |
-  | ui::child::focused | ui::widget * |
-  | ui::child::radio   | ui::widget * |
+  | Subtype                | Data type    |
+  | ---------------------- | ------------ |
+  | **ui::child::focused** | ui::widget * |
+  | **ui::child::radio**   | ui::widget * |
 
 * **ui::element::color** ([ui::widget](ui-widget.md))
 
@@ -133,11 +133,11 @@ Inherited from [`ui::active`](ui-active.md):
 
 * **ui::element::pixel_size** ([ui::composite](ui-composite.md))
 
-  | Subtype          | Data type |
-  | ---------------- | --------- |
-  | ui::size::width  | float     |
-  | ui::size::height | float     |
-  | ui::size::all    | glm::vec3 |
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::size::width**  | float     |
+  | **ui::size::height** | float     |
+  | **ui::size::all**    | glm::vec3 |
 
 * **ui::element::position** ([ui::widget](ui-widget.md))
 

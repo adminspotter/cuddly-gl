@@ -77,25 +77,25 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::cursor** - text cursor settings.
 
-  | Subtype              | Data type | Notes                                   |
-  | -------------------- | --------- | --------------------------------------- |
-  | ui::cursor::position | GLuint    | Character position                      |
-  | ui::cursor::blink    | GLuint    | Milliseconds per half-cycle, 0 disables |
+  | Subtype                  | Data type | Notes                                   |
+  | ------------------------ | --------- | --------------------------------------- |
+  | **ui::cursor::position** | GLuint    | Character position                      |
+  | **ui::cursor::blink**    | GLuint    | Milliseconds per half-cycle, 0 disables |
 
 * **ui::element::repeat** - how quickly character repeat starts, and
   how often it repeats.  Rates are in milliseconds.
 
-  | Subtype               | Data type |
-  | --------------------- | --------- |
-  | ui::repeat::initial   | GLuint    |
-  | ui::repeat::secondary | GLuint    |
+  | Subtype                   | Data type |
+  | ------------------------- | --------- |
+  | **ui::repeat::initial**   | GLuint    |
+  | **ui::repeat::secondary** | GLuint    |
 
 * **ui::element::size** - additional subtype to set maximum width in
   character cells, instead of pixels.
 
-  | Subtype             | Data type |
-  | ------------------- | --------- |
-  | ui::size::max_width | GLuint    |
+  | Subtype                 | Data type |
+  | ----------------------- | --------- |
+  | **ui::size::max_width** | GLuint    |
 
 ## INHERITED RESOURCES ##
 
@@ -118,10 +118,10 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::font** ([ui::label](ui-label.md))
 
-  | Subtype               | Data type     |
-  | --------------------- | ------------- |
-  | ui::ownership::owned  | ui::base_font |
-  | ui::ownership::shared | ui::base_font |
+  | Subtype                   | Data type     |
+  | ------------------------- | ------------- |
+  | **ui::ownership::owned**  | ui::base_font |
+  | **ui::ownership::shared** | ui::base_font |
 
 * **ui::element::image** ([ui::label](ui-label.md))
 

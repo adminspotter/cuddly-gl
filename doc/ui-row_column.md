@@ -72,20 +72,20 @@ Inherited from [`ui::active`](ui-active.md):
   There are no subtypes, but there are defined values of type `GLuint`
   to specify row-first packing or column-first packing.
 
-  | Value             |
-  | ----------------- |
-  | ui::order::row    |
-  | ui::order::column |
+  | Value                 |
+  | --------------------- |
+  | **ui::order::row**    |
+  | **ui::order::column** |
 
 * **ui::element::size** - new subtypes to specify the number of rows
   and/or columns.  Pixel size of the row-column is computed
   automatically for the specified layout.
 
-  | Subtype           | Data type  |
-  | ----------------- | ---------- |
-  | ui::size::rows    | GLuint     |
-  | ui::size::columns | GLuint     |
-  | ui::size::grid    | glm::ivec2 |
+  | Subtype               | Data type  |
+  | --------------------- | ---------- |
+  | **ui::size::rows**    | GLuint     |
+  | **ui::size::columns** | GLuint     |
+  | **ui::size::grid**    | glm::ivec2 |
 
   The existing `ui::size::width`, `ui::size::height`, and
   `ui::size::all` subtypes are still available, but the grid sizes
@@ -113,18 +113,18 @@ successive rows (`ui::size::height`) and successive columns
 
 * **ui::element::child** ([ui::composite](ui-composite.md))
 
-  | Subtype            | Data type    |
-  | ------------------ | ------------ |
-  | ui::child::focused | ui::widget * |
-  | ui::child::radio   | ui::widget * |
+  | Subtype                | Data type    |
+  | ---------------------- | ------------ |
+  | **ui::child::focused** | ui::widget * |
+  | **ui::child::radio**   | ui::widget * |
 
 * **ui::element::child_spacing**
 
-  | Subtype          | Data type  |
-  | ---------------- | ---------- |
-  | ui::size::width  | GLuint     |
-  | ui::size::height | GLuint     |
-  | ui::size::all    | glm::ivec2 |
+  | Subtype              | Data type  |
+  | -------------------- | ---------- |
+  | **ui::size::width**  | GLuint     |
+  | **ui::size::height** | GLuint     |
+  | **ui::size::all**    | glm::ivec2 |
 
 * **ui::element::color** ([ui::widget](ui-widget.md))
 
@@ -145,11 +145,11 @@ successive rows (`ui::size::height`) and successive columns
 
 * **ui::element::pixel_size** ([ui::composite](ui-composite.md))
 
-  | Subtype          | Data type |
-  | ---------------- | --------- |
-  | ui::size::width  | float     |
-  | ui::size::height | float     |
-  | ui::size::all    | glm::vec3 |
+  | Subtype              | Data type |
+  | -------------------- | --------- |
+  | **ui::size::width**  | float     |
+  | **ui::size::height** | float     |
+  | **ui::size::all**    | glm::vec3 |
 
 * **ui::element::position** ([ui::widget](ui-widget.md))
 
@@ -162,12 +162,12 @@ successive rows (`ui::size::height`) and successive columns
 
 * **ui::element::resize**
 
-  | Value              |
-  | ------------------ |
-  | ui::resize::none   |
-  | ui::resize::shrink |
-  | ui::resize::grow   |
-  | ui::resize::all    |
+  | Value                  |
+  | ---------------------- |
+  | **ui::resize::none**   |
+  | **ui::resize::shrink** |
+  | **ui::resize::grow**   |
+  | **ui::resize::all**    |
 
 * **ui::element::size** ([ui::rect](ui-rect.md))
 
