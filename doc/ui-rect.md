@@ -8,7 +8,7 @@ ui::rect
 ## SYNOPSIS ##
 
 ```c++
-#include <rect.h>
+#include <cuddly-gl/rect.h>
 
 ui::rect *r = new ui::rect(x, y);
 
@@ -33,7 +33,7 @@ a base class with a size.
 
 ## METHODS ##
 
-* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
 
   Retrieve resources from the object.  Arguments are given in sets of
   three.  The _type_ argument will be from the `ui::element`
@@ -68,4 +68,4 @@ preprocessor macros within `ui_defs.h`:  `GET_VA` and `SET_VA`.
 
 ## RELATED ##
 
-[ui::active](ui::active.md)(3)
+[ui::active](ui-active.md)(3)

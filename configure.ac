@@ -75,6 +75,11 @@ AC_ARG_WITH([glfw-libraries],
             [with_glfw="yes"],
             [with_glfw_libraries="no"])
 
+AC_ARG_WITH([manpages],
+            AS_HELP_STRING([--without-manpages], [Disable manpage generation]))
+AC_ARG_WITH([ronn],
+            AS_HELP_STRING([--with-ronn], [Path of the ronn program]))
+
 # Development flags (debugging, profiling)
 AS_IF([test "$enable_profile" == "yes"],
       [AX_ENABLE_PROFILE])
@@ -253,10 +258,31 @@ AC_TYPE_UINT32_T
 
 AC_CHECK_FUNCS([memcpy memmove memset strerror_r])
 
+AS_IF([test "x$with_manpages" != "xno"],
+      [
+        AC_MSG_CHECKING([for a new enough version of ronn])
+        AS_IF([test "x$with_ronn" != "x"],
+              [ronn_path=$with_ronn],
+              [ronn_path="ronn"])
+        ronn_version=$($ronn_path --version | sed -ne '1{s/.*v//;p;}')
+        AX_COMPARE_VERSION([$ronn_version], [ge], [0.7.5],
+                           [
+                             AC_MSG_RESULT([yes, $ronn_path])
+                             AC_SUBST([RONN], [$ronn_path])
+                           ],
+                           [
+                             AC_MSG_RESULT([no, disabling manpage generation])
+                             with_manpages="no"
+                           ])
+      ],
+      [AC_MSG_NOTICE([Manpage generation disabled by configure option])])
+AM_CONDITIONAL([GENERATE_MANPAGES], [test "x$with_manpages" == "xyes"])
+
 AC_CONFIG_FILES([Makefile
                  test/Makefile
                  test/tap++/Makefile
-                 shaders/Makefile])
+                 shaders/Makefile
+                 doc/Makefile])
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AC_OUTPUT

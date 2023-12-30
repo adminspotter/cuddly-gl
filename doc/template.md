@@ -43,13 +43,15 @@ methods should not be listed. -->
 to that manual page.  Links should go to where the methods are
 *defined*, rather than immediate superclasses (where different). -->
 
+Inherited from [ui::super](ui-super.md):
+
 * **inherited_one()**
 * **inherited_two()**
 * **inherited_three()**
 
-  Inherited from [ui::super](ui::super.md).
-
 ## NEW RESOURCES ##
+
+<!-- Alphabetize resources by element -->
 
 * **ui::element::foo** - foo of the object
 
@@ -59,19 +61,21 @@ to that manual page.  Links should go to where the methods are
 
 ## INHERITED RESOURCES ##
 
-* **ui::element::inherited** ([ui::super](ui::super.md))
+<!-- Alphabetize resources by element -->
 
-  | Subtype            | Data type | Class (optional)          |
-  | ------------------ | --------- | ------------------------- |
-  | ui::inherited::foo | GLuint    | [ui::super](ui::super.md) |
-  | ui::inherited::bar | GLuint    |                           |
+* **ui::element::inherited** ([ui::super](ui-super.md))
 
-* **ui::element::other** ([ui::other](ui::other))
+  | Subtype            | Data type | Class (optional)         |
+  | ------------------ | --------- | ------------------------ |
+  | ui::inherited::foo | GLuint    | [ui::super](ui-super.md) |
+  | ui::inherited::bar | GLuint    |                          |
 
-  | Subtype        | Data type | Class (optional)          |
-  | -------------- | --------- | ------------------------- |
-  | ui::other::foo | GLuint    | [ui::other](ui::other.md) |
-  | ui::other::bar | GLuint    |                           |
+* **ui::element::other** ([ui::other](ui-other.md))
+
+  | Subtype        | Data type | Class (optional)         |
+  | -------------- | --------- | ------------------------ |
+  | ui::other::foo | GLuint    | [ui::other](ui-other.md) |
+  | ui::other::bar | GLuint    |                          |
 
 <!-- If the entire type and all subtypes are inherited from a single
 class, link the class after the type name and omit the Class column
@@ -91,4 +95,4 @@ link should be followed with the parenthesized section number of the
 other page; programming libraries are always in section 3.  Links
 should be separated by commas. -->
 
-[ui::super](ui::super.md)(3), [ui::subclass](ui::subclass.md)(3)
+[ui::super](ui-super.md)(3), [ui::subclass](ui-subclass.md)(3)

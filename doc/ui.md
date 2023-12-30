@@ -289,9 +289,10 @@ callback handling is available.
 ##### Widget Resources #####
 
 * `ui::element::position`
-  * `ui::position::x` (`GLuint`)
-  * `ui::position::y` (`GLuint`)
+  * `ui::position::x` (`int`)
+  * `ui::position::y` (`int`)
   * `ui::position::all` (`glm::ivec2`)
+  * `ui::position::absolute` (*)
 * `ui::element::border`
   * `ui::side::top` (`GLuint`)
   * `ui::side::bottom` (`GLuint`)
@@ -309,6 +310,11 @@ callback handling is available.
   * `ui::color::background` (`glm::vec4`)
 * `ui::element::state`
   * `ui::state::visible` (`bool`)
+
+The `ui::position::absolute` resource type is not a subtype of its
+own, but a flag which can be or'ed with any of the other position
+subtypes in a read context.  It will always return positive offsets
+from the top left of the widget's parent.
 
 The side subtypes for `border` and `margin` will function as masks,
 and can be combined arbitrarily.
@@ -472,20 +478,6 @@ elements are read-only.
   * `ui::size::width` (`float`)
   * `ui::size::height` (`float`)
   * `ui::size::all` (`glm::vec2`)
-* `ui::element::resize`
-  * No subtypes, but defined value arguments (`GLuint`)
-    * `ui::resize::none`
-    * `ui::resize::shrink`
-    * `ui::resize::grow`
-    * `ui::resize::all`
-
-The resize value arguments function as a mask, so that we can shrink
-or grow independently.  `ui::resize::all` is the same as
-`ui::resize::shrink | ui::resize::grow`.  Also, each screen dimension
-is considered independently of the others, e.g. if a composite widget
-needs to shrink in the x dimension and grow in the y dimension, each
-will be compared against the resize resource to see if the required
-size change should be allowed.
 
 ##### Composite inherited resources #####
 
@@ -547,6 +539,20 @@ and the edges of the manager, for purposes of grow/shrink.
   * `ui::size::width` (`GLuint`)
   * `ui::size::height` (`GLuint`)
   * `ui::size::all` (`glm::ivec2`)
+* `ui::element::resize`
+  * No subtypes, but defined value arguments (`GLuint`)
+    * `ui::resize::none`
+    * `ui::resize::shrink`
+    * `ui::resize::grow`
+    * `ui::resize::all`
+
+The resize value arguments function as a mask, so that we can shrink
+or grow independently.  `ui::resize::all` is the same as
+`ui::resize::shrink | ui::resize::grow`.  Also, each screen dimension
+is considered independently of the others, e.g. if a composite widget
+needs to shrink in the x dimension and grow in the y dimension, each
+will be compared against the resize resource to see if the required
+size change should be allowed.
 
 ###### Manager inherited resources ######
 

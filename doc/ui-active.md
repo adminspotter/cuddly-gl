@@ -8,7 +8,7 @@ ui::active
 ## SYNOPSIS ##
 
 ```cpp
-#include <active.h>
+#include <cuddly-gl/active.h>
 
 ui::active *a = new ui::active(x, y);
 
@@ -21,11 +21,11 @@ a->remove_callback(ui::callback::enter, enter_callback, NULL);
 
 ui::to_until expire = std::chrono::milliseconds(500);
 
-a->add_timeout(until, timeout_callback, NULL);
+a->add_timeout(expire, timeout_callback, NULL);
 
 a->call_timeout();
 
-a->add_timeout(until, timeout_callback, NULL);
+a->add_timeout(expire, timeout_callback, NULL);
 a->remove_timeout();
 ```
 
@@ -35,10 +35,10 @@ The `ui::active` class is an intermediate class which adds event
 handling.  It subclasses the `ui::rect` to add *callback lists* and
 *timeouts*.
 
-As with the `ui::rect`, the `ui::active` has no interaction with
-OpenGL, and can not be drawn on the screen.  It is meant to layer
-functionality in a segmented way, and provide a variety of inheritance
-points for widgets.
+As with the [`ui::rect`](ui-rect.md)(3), the `ui::active` has no
+interaction with OpenGL, and can not be drawn on the screen.  It is
+meant to layer functionality in a segmented way, and provide a variety
+of inheritance points for widgets.
 
 ## CALLBACK LISTS ##
 
@@ -139,12 +139,12 @@ invocations of the same function, with varying, or even the same,
   ```
 
   The `character` field will contain the textual character which is
-  associated with the event, where the `key` field will contain a
-  constant from the `ui::key` namespace.  If the event does have a
-  textual character, the `key` field will contain `ui::key::no_key`.
-  The `state` field will contain either `ui::key::down` or
-  `ui::key::up`.  The `mods` field will contain a bitmask of constants
-  from `ui::key_mod`.
+  associated with the event, if available; this may only occur within
+  the [`ui::text_field`](ui-text_field.md)(3) widget.  If no character
+  data is available, this field will contain `0`.  The `key` field
+  will contain a constant from the `ui::key` namespace.  The `state`
+  field will contain either `ui::key::down` or `ui::key::up`.  The
+  `mods` field will contain a bitmask of constants from `ui::key_mod`.
 
 * `ui::resize_call_data`
 
@@ -251,7 +251,7 @@ mappings to the underlying types, but with shorter names.
 
 ## METHODS ##
 
-* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void *_client_data_)**
+* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void \*_client_data_)**
 
   Adds a callback to the provided _list_.  The _list_ argument is an
   element from the `ui::callback` namespace.
@@ -260,7 +260,7 @@ mappings to the underlying types, but with shorter names.
   pointer to something, whatever is at the address at call time is
   what is available to the callback function.
 
-* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void *_client_data_)**
+* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void \*_client_data_)**
 
   Removes a callback to the provided _list_ which has the provided
   _client_data_.
@@ -272,7 +272,7 @@ mappings to the underlying types, but with shorter names.
   If no matching callback is found in a list, the list will be
   unchanged.
 
-* **call_callbacks(GLuint _list_, void *_call_data_)**
+* **call_callbacks(GLuint _list_, void \*_call_data_)**
 
   Calls the callbacks in the provided _list_, passing _call_data_ in
   the second argument to each.  The _list_ argument is an element from
@@ -281,7 +281,7 @@ mappings to the underlying types, but with shorter names.
   This is the method which is used internally by the event-handling
   mechanism to trigger a set of callbacks.
 
-* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void *_client_data_)**
+* **add_timeout(ui::to_time::duration _until_, ui::to_fptr _func_ptr_, void \*_client_data_)**
 
   Adds a timeout which will expire after the interval _until_.  The
   _until_ argument is a type of `std::chrono::steady_clock::duration`,
@@ -305,10 +305,10 @@ mappings to the underlying types, but with shorter names.
   to fire the timeout call, but in the general case, this method would
   probably not be used very often in user code.
 
-* **get(GLuint _type_, GLuint _subtype_, _res_type_ *_obj_ptr_, ...) const**
-* **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
+Inherited from [`ui::rect`](ui-rect.md):
 
-  Inherited from [`ui::rect`](ui::rect).
+* **get(GLuint _type_, GLuint _subtype_, _res_type_ \*_obj_ptr_, ...) const**
+* **set(GLuint _type_, GLuint _subtype_, _res_type_ _obj_, ...)**
 
 ## NEW RESOURCES ##
 
@@ -317,7 +317,7 @@ The `ui::active` adds no new resources which are accessed via the
 
 ## INHERITED RESOURCES ##
 
-* **ui::element::size** ([`ui::rect`](ui::rect))
+* **ui::element::size** ([`ui::rect`](ui-rect.md))
 
   | Subtype              | Data type  |
   | -------------------- | ---------- |
@@ -333,5 +333,5 @@ initialize the `ui::rect`.
 
 ## RELATED ##
 
-[ui::rect](ui::rect)(3), [ui::widget](ui::widget)(3),
-[ui::composite](ui::composite)(3)
+[ui::rect](ui-rect.md)(3), [ui::widget](ui-widget.md)(3),
+[ui::composite](ui-composite.md)(3)
