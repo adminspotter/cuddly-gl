@@ -1,10 +1,20 @@
-MANPAGE_DOCS = ui-rect.md \
-	ui-active.md \
-	ui-vertex_buffer.md \
-	ui-widget.md \
-	ui-label.md \
+MANPAGE_DOCS = ui-active.md \
+	ui-armable.md \
+	ui-button.md \
+	ui-composite.md \
+	ui-context.md \
 	ui-font.md \
-	ui-utf8tou32str.md
+	ui-label.md \
+	ui-manager.md \
+	ui-password.md \
+	ui-pie_menu.md \
+	ui-rect.md \
+	ui-row_column.md \
+	ui-text_field.md \
+	ui-toggle.md \
+	ui-utf8tou32str.md \
+	ui-vertex_buffer.md \
+	ui-widget.md
 
 dist_doc_DATA = ui.md template.md $(MANPAGE_DOCS)
 
