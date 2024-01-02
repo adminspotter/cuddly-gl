@@ -46,7 +46,7 @@ void some_func(bool has_focus)
 ui::text_field::focus_hook = &some_func;
 ```
 
-Ii is a public part of the class, but is likely only of interest to
+It is a public part of the class, but is likely only of interest to
 writers of connector modules for windowing toolkits.
 
 ## METHODS ##
