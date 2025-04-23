@@ -5,6 +5,8 @@
 *.gcda
 *.gcno
 *.gcov
+lcov.info
+lcov/
 #*#
 .#*
 .DS_Store
