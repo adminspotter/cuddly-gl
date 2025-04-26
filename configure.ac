@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.63])
+AC_PREREQ([2.71])
 AC_INIT([CuddlyGL], [0.1], [], [cuddly-gl], [])
 AC_CONFIG_SRCDIR([rect.h])
 AC_CONFIG_HEADERS([config.h])
@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects])
 
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 
 # Default to empty CFLAGS/CXXFLAGS
