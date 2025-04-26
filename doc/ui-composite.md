@@ -65,39 +65,6 @@ in order of addition.  Nested composites act as a bit of a focus sink,
 in that once focus drops from one composite into a child composite, it
 will never come back to the parent by keyboard shortcuts alone.
 
-## RADIO BOX ##
-
-When the `ui::state::radio_box` resource of a `ui::composite` is set
-to `true`, all children of type [`ui::toggle`](ui-toggle.md)(3) are
-treated as a *radio group*.  The composite widget will manage which
-toggle of the group is checked, and will set all others to be
-unchecked.
-
-Querying which child is checked will return a pointer to the object in
-question.
-
-```cpp
-ui::composite *c = new ui::composite(...);
-ui::toggle *t1 = new ui::toggle(c, ...);
-ui::toggle *t2 = new ui::toggle(c, ...);
-
-c->set(ui::element::state, ui::state::radio_box, true);
-t1->set(ui::element::state, ui::state::checked, true);
-
-ui::toggle *checked_obj;
-
-c->get(ui::element::child, ui::child::radio, &checked_obj);
-
-/* checked_obj will be t1 */
-
-bool is_checked;
-
-t2->set(ui::element::state, ui::state::checked, true);
-t1->get(ui::element::state, ui::state::checked, &is_checked);
-
-/* is_checked will be false */
-```
-
 ## METHODS ##
 
 * **add_child(ui::widget \*_widget_)**
@@ -163,7 +130,6 @@ Inherited from [`ui::active`](ui-active.md):
   | Subtype                | Data type    | Notes                             |
   | ---------------------- | ------------ | --------------------------------- |
   | **ui::child::focused** | ui::widget * | Child which has keyboard focus    |
-  | **ui::child::radio**   | ui::widget * | Checked member of the radio group |
 
 * **ui::element::pixel_size** - read-only resources used by child
   widgets to scale themselves properly for the size of the composite.
@@ -173,12 +139,6 @@ Inherited from [`ui::active`](ui-active.md):
   | **ui::size::width**  | float     |
   | **ui::size::height** | float     |
   | **ui::size::all**    | glm::vec3 |
-
-* **ui::element::state** - boolean flags for changing widget behaviour
-
-  | Subtype                  | Data type |
-  | ------------------------ | --------- |
-  | **ui::state::radio_box** | bool      |
 
 ## INHERITED RESOURCES ##
 
