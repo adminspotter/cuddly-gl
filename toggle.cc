@@ -1,9 +1,9 @@
 /* toggle.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 28 Nov 2020, 10:35:03 tquirk
+ *   last updated 26 Apr 2025, 09:36:07 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2020  Trinity Annabelle Quirk
+ * Copyright (C) 2025  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,19 +74,9 @@ int ui::toggle::get_checked_state(bool *v) const
 
 void ui::toggle::set_checked_state(bool v)
 {
-    bool is_radio = false;
-
     if (v == this->checked)
         return;
-    if (this->parent != NULL)
-        this->parent->get(ui::element::state, ui::state::radio_box, &is_radio);
-    if (this->activated == this->armed
-        && (this->armed == true || is_radio == true))
-        this->checked = v;
-    if (is_radio == true && v == true)
-        this->parent->set(ui::element::child,
-                          ui::child::radio,
-                          (ui::widget *)this);
+    this->checked = v;
     this->populate_buffers();
 }
 

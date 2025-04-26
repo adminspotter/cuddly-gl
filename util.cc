@@ -1,9 +1,9 @@
 /* util.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Nov 2019, 15:29:33 tquirk
+ *   last updated 26 Apr 2025, 13:58:27 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2025  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,8 @@
  * Things to do
  *
  */
+
+#include <cstdint>
 
 #include "util.h"
 

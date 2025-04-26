@@ -107,7 +107,6 @@ successive rows (`ui::size::height`) and successive columns
   | Subtype                | Data type    |
   | ---------------------- | ------------ |
   | **ui::child::focused** | ui::widget * |
-  | **ui::child::radio**   | ui::widget * |
 
 * **ui::element::child_spacing**
 
@@ -173,7 +172,6 @@ successive rows (`ui::size::height`) and successive columns
   | Subtype                  | Data type | Class                              |
   | ------------------------ | --------- | ---------------------------------- |
   | **ui::state::visible**   | bool      | ([ui::widget](ui-widget.md))       |
-  | **ui::state::radio_box** | bool      | ([ui::composite](ui-composite.md)) |
 
 ## SUBCLASSING ##
 

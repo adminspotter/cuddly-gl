@@ -1,9 +1,9 @@
 /* ui_defs.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 29 Oct 2019, 08:05:41 tquirk
+ *   last updated 26 Apr 2025, 13:37:10 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019  Trinity Annabelle Quirk
+ * Copyright (C) 2025  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -237,7 +237,6 @@ namespace ui
     namespace state
     {
         const GLuint visible = 1, active = 2, armed = 3, checked = 4;
-        const GLuint radio_box = 5;
     }
 
     namespace child

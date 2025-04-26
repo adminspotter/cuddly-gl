@@ -109,7 +109,6 @@ Inherited from [ui::composite](ui-composite.md):
   | Subtype                | Data type    |
   | ---------------------- | ------------ |
   | **ui::child::focused** | ui::widget * |
-  | **ui::child::radio**   | ui::widget * |
 
 * **ui::element::child_spacing** ([ui::manager](ui-manager.md))
 
@@ -175,7 +174,6 @@ Inherited from [ui::composite](ui-composite.md):
   | Subtype                  | Data type | Class                              |
   | ------------------------ | --------- | ---------------------------------- |
   | **ui::state::visible**   | bool      | ([ui::widget](ui-widget.md))       |
-  | **ui::state::radio_box** | bool      | ([ui::composite](ui-composite.md)) |
 
 ## SUBCLASSING ##
 
