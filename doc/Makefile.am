@@ -8,6 +8,7 @@ MANPAGE_DOCS = ui-active.md \
 	ui-manager.md \
 	ui-password.md \
 	ui-pie_menu.md \
+	ui-radio_box.md \
 	ui-rect.md \
 	ui-row_column.md \
 	ui-text_field.md \
