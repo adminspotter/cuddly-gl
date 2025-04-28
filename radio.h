@@ -1,6 +1,5 @@
 /* radio.h                                                 -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 26 Apr 2025, 11:41:31 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2025  Trinity Annabelle Quirk

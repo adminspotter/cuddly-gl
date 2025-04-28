@@ -1,9 +1,8 @@
 /* manager.h                                               -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 30 Dec 2023, 21:43:05 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2023  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2025  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

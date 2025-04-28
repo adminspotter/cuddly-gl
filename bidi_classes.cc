@@ -1,6 +1,5 @@
 /* bidi_classes.cc
  *   by Trinity Quirk <tquirk@ymb.net>
- *   last updated 10 May 2018, 23:02:35 tquirk
  *
  * CuddlyGL OpenGL widget toolkit
  * Copyright (C) 2018  Trinity Annabelle Quirk
