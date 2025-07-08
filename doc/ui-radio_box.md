@@ -63,7 +63,7 @@ All methods correspond to that of the specialized class.
 
 ## INHERITED RESOURCES ##
 
-All other resources correspond to that of fhe specialized class.
+All other resources correspond to that of the specialized class.
 
 ## RELATED ##
 

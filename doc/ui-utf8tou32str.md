@@ -11,9 +11,9 @@ strings and 32-bit strings
 #include <cuddly-gl/util.h>
 
 std::string howdy = "howdy!"
-std::u32string howdy32 = utf8tou32str(howdy);
+std::u32string howdy32 = ui::utf8tou32str(howdy);
 
-std::string orig = u32strtoutf8(howdy32);
+std::string orig = ui::u32strtoutf8(howdy32);
 ```
 
 ## DESCRIPTION ##
