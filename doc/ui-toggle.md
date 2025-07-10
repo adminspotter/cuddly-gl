@@ -20,9 +20,8 @@ which shows the *checked* state of the widget.  The box is filled when
 the widget is *checked*, and unfilled when the widget is *unchecked*.
 
 Sets of `ui::toggle` widgets can become a *radio group* by being
-direct children of a [`ui::composite`](ui-composite.md)(3) derivative
-with the `ui::state::radio_box` resource set to `true`.  A radio group
-may only have a single toggle checked at one time; checking a
+direct children of a [`ui::radio_box`](ui-radio_box.md)(3).  A radio
+group may only have a single toggle checked at one time; checking a
 `ui::toggle` in a radio group unchecks all other `ui::toggle`s in that
 group.
 

@@ -157,12 +157,6 @@ way of the `ui::active` superclass, and from the `ui::active`
 superclass, so the constructor of each subclass of the `ui::composite`
 must also explicitly initialize the `ui::rect` and `ui::active`.
 
-## BUGS ##
-
-The radio box function should be implemented elsewhere.  It would be
-more appropriate as a decorator or template which can wrap any
-existing composite class.
-
 ## RELATED ##
 
 [ui::active](ui-active.md)(3), [ui::manager](ui-manager.md)(3),
