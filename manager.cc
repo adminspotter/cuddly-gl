@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -134,7 +134,7 @@ glm::ivec2 ui::manager::calculate_max_point(void)
 {
     glm::ivec2 max_pt(0, 0);
 
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
     {
         glm::ivec2 c_sz, c_pos;
 
@@ -272,7 +272,7 @@ void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
         glm::mat4 trans = this->pos_transform * parent_trans;
 
         this->widget::draw(trans_uniform, parent_trans);
-        for (auto& i : this->children)
+        for (ui::widget *i : this->children)
             i->draw(trans_uniform, trans);
     }
 }

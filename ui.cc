@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,6 +88,6 @@ void ui::context::draw(void)
     glm::mat4 basic_trans(1.0f);
 
     glUseProgram(this->shader_pgm);
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
         i->draw(this->translate_uniform, basic_trans);
 }

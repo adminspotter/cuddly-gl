@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@ void ui::composite::set_size(GLuint d, GLuint v)
     this->regenerate_children();
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
         i->call_callbacks(ui::callback::resize, &call_data);
 }
 
@@ -75,7 +75,7 @@ void ui::composite::set_size(GLuint d, const glm::ivec2& v)
     this->regenerate_children();
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
-    for (auto i : this->children)
+    for (ui::widget *i : this->children)
         i->call_callbacks(ui::callback::resize, &call_data);
 }
 
@@ -122,13 +122,13 @@ void ui::composite::set_desired_size(void)
 
 void ui::composite::reposition_children(void)
 {
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
         i->recalculate_transformation_matrix();
 }
 
 void ui::composite::regenerate_children(void)
 {
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
     {
         i->recalculate_transformation_matrix();
         i->populate_buffers();
@@ -144,7 +144,7 @@ void ui::composite::regenerate_search_tree(void)
     this->tree = new ui::quadtree(NULL,
                                   ul, this->dim,
                                   ui::composite::tree_max_depth);
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
         if (i->visible == true)
             this->tree->insert(i);
 }
@@ -155,7 +155,7 @@ void ui::composite::clear_removed_children(void)
     {
         if (this->to_remove.size() != 0)
         {
-            for (auto& i : this->to_remove)
+            for (ui::widget *i : this->to_remove)
             {
                 this->children.remove(i);
                 this->tree->remove(i);
@@ -253,7 +253,7 @@ ui::composite::composite(composite *c)
 ui::composite::~composite()
 {
     delete this->tree;
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
         delete i;
     this->children.clear();
 }

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,7 +84,7 @@ glm::ivec2 ui::row_column::calculate_cell_size(void)
 {
     glm::ivec2 cell_size(0, 0), child_sz;
 
-    for (auto& i : this->children)
+    for (ui::widget *i : this->children)
     {
         i->get(ui::element::size, ui::size::all, &child_sz);
         cell_size.x = std::max(cell_size.x, child_sz.x);

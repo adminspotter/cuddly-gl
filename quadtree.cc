@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -154,7 +154,7 @@ ui::widget *ui::quadtree::search(const glm::ivec2& pt)
     if (this->quadrant[which] != NULL)
         return this->quadrant[which]->search(pt);
 
-    for (auto& i : this->contents)
+    for (ui::widget *i : this->contents)
     {
         glm::ivec2 ul, lr;
 
