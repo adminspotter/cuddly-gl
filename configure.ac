@@ -169,14 +169,20 @@ CPPFLAGS="$CXXFLAGS"
 AC_CHECK_HEADERS([glm/vec3.hpp glm/gtc/matrix_transform.hpp glm/gtc/type_ptr.hpp], [], [AC_MSG_ERROR([no valid GLM installation found, can not continue])])
 AX_RESTORE_FLAGS_WITH_PREFIX([GLM], [[CPPFLAGS],[CXXFLAGS]])
 
-# Perl module for the test suite
+# Perl modules for the test suite
 AX_PROG_PERL_MODULES([Test::More],
                      [have_test_more="yes"],
                      [have_test_more="no"])
+AX_PROG_PERL_MODULES([Cwd],
+                     [have_cwd="yes"],
+                     [have_cwd="no"])
+AX_PROG_PERL_MODULES([File::Basename],
+                     [have_file_basename="yes"],
+                     [have_file_basename="no"])
 
 # GLSL validation
 AC_CHECK_PROG([HAVE_GLSLANGVALIDATOR], [glslangValidator], [yes], [no])
-AM_CONDITIONAL([VALIDATE_SHADERS], [test "x$have_test_more" = "xyes" && test "x$HAVE_GLSLANGVALIDATOR" = "xyes"])
+AM_CONDITIONAL([VALIDATE_SHADERS], [test "x$have_test_more" = "xyes" && test "x$have_cwd" = "xyes" && test "x$have_file_basename" = "xyes" && test "x$HAVE_GLSLANGVALIDATOR" = "xyes"])
 
 # GLFW for the test suite
 can_do_tests="no"
