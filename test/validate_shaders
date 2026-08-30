@@ -3,23 +3,21 @@
 use strict;
 use warnings;
 
+use Cwd qw/abs_path/;
+use File::Basename;
+
 use Test::More 'tests' => 6;
 
-is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.2.glsl~),
-   0,
-   'version 120 fragment shader is OK');
-is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.3.glsl~),
-   0,
-   'version 130 fragment shader is OK');
-is(system(qw~glslangValidator -S frag ../shaders/ui_fragment.4.glsl~),
-   0,
-   'version 330 fragment shader is OK');
-is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.2.glsl~),
-   0,
-   'version 120 vertex shader is OK');
-is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.3.glsl~),
-   0,
-   'version 130 vertex shader is OK');
-is(system(qw~glslangValidator -S vert ../shaders/ui_vertex.4.glsl~),
-   0,
-   'version 330 vertex shader is OK');
+my $dir = dirname(dirname(abs_path(__FILE__))) . '/shaders';
+while (my $file = glob("${dir}/*fragment*.glsl"))
+{
+    is(system(('glslangValidator', '-S', 'frag', $file)),
+       0,
+       'fragment shader ' . basename($file) . ' is OK');
+}
+while (my $file = glob("${dir}/*vertex*.glsl"))
+{
+    is(system(('glslangValidator', '-S', 'vert', $file)),
+       0,
+       'vertex shader ' . basename($file) . ' is OK');
+}
