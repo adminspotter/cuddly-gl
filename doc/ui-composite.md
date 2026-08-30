@@ -140,6 +140,12 @@ Inherited from [`ui::active`](ui-active.md):
   | **ui::size::height** | float     |
   | **ui::size::all**    | glm::vec3 |
 
+* **ui::element::state** - flags to enable or disable behaviours
+
+  | Subtype                      | Data type |
+  | ---------------------------- | --------- |
+  | **ui::state::tab_sensitive** | bool      |
+
 ## INHERITED RESOURCES ##
 
 * **ui::element::size** ([ui::rect](ui-rect.md))

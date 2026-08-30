@@ -141,7 +141,7 @@ Inherited from [`ui::active`](ui-active.md):
     any of the other values, the `absolute` subtype will yield only
     positive offsets from the top left of the parent.
 
-* **ui::element::state** - flags for the widget
+* **ui::element::state** - flags to enable or disable behaviours
 
   | Subtype                | Data type |
   | ---------------------- | --------- |
