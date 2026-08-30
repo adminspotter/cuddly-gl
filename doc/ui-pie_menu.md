@@ -171,9 +171,9 @@ Inherited from [ui::composite](ui-composite.md):
 
 * **ui::element::state**
 
-  | Subtype                  | Data type | Class                              |
-  | ------------------------ | --------- | ---------------------------------- |
-  | **ui::state::visible**   | bool      | ([ui::widget](ui-widget.md))       |
+  | Subtype                  | Data type | Class                            |
+  | ------------------------ | --------- | -------------------------------- |
+  | **ui::state::visible**   | bool      | [ui::widget](ui-widget.md)       |
 
 ## SUBCLASSING ##
 

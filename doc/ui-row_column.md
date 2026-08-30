@@ -169,9 +169,9 @@ successive rows (`ui::size::height`) and successive columns
 
 * **ui::element::state**
 
-  | Subtype                  | Data type | Class                              |
-  | ------------------------ | --------- | ---------------------------------- |
-  | **ui::state::visible**   | bool      | ([ui::widget](ui-widget.md))       |
+  | Subtype                  | Data type | Class                            |
+  | ------------------------ | --------- | -------------------------------- |
+  | **ui::state::visible**   | bool      | [ui::widget](ui-widget.md)       |
 
 ## SUBCLASSING ##
 

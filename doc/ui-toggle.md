@@ -122,11 +122,11 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::state**
 
-  | Subtype                | Data type | Class                          |
-  | ---------------------- | --------- | ------------------------------ |
-  | **ui::state::visible** | bool      | ([ui::widget](ui-widget.md))   |
-  | **ui::state::active**  | bool      | ([ui::armable](ui-armable.md)) |
-  | **ui::state::armed**   | bool      |                                |
+  | Subtype                | Data type | Class                        |
+  | ---------------------- | --------- | ---------------------------- |
+  | **ui::state::visible** | bool      | [ui::widget](ui-widget.md)   |
+  | **ui::state::active**  | bool      | [ui::armable](ui-armable.md) |
+  | **ui::state::armed**   | bool      |                              |
 
 * **ui::element::string** ([ui::label](ui-label.md))
 
