@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@ namespace ui
         child_list children, to_remove;
         child_list::iterator focused;
         ui::quadtree *tree;
-        bool dirty;
+        bool dirty, tab_sensitive;
 
         glm::ivec2 old_pos;
         ui::widget *old_child;
@@ -58,12 +58,16 @@ namespace ui
 
         int get_focused_child(ui::widget **) const;
         void set_focused_child(ui::widget *);
+        int get_tab_sensitivity(bool *) const;
+        void set_tab_sensitivity(bool);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_pixel_size(GLuint, float *) const;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
         virtual int get_child(GLuint, ui::widget **) const;
         virtual void set_child(GLuint, ui::widget *);
+        virtual int get_state(GLuint, bool *) const;
+        virtual void set_state(GLuint, bool);
 
         virtual void set_desired_size(void);
 
@@ -96,10 +100,12 @@ namespace ui
         virtual ~composite();
 
         using ui::rect::get;
+        virtual int get(GLuint, GLuint, bool *) const;
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
         virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
+        virtual void set(GLuint, GLuint, bool);
         virtual void set(GLuint, GLuint, ui::widget *);
 
         GET_VA;

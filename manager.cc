@@ -242,6 +242,14 @@ int ui::manager::get(GLuint e, GLuint t, glm::ivec2 *v) const
     return this->ui::widget::get(e, t, v);
 }
 
+int ui::manager::get(GLuint e, GLuint t, bool *v) const
+{
+    int ret = this->ui::composite::get(e, t, v);
+    if (ret == 1)
+        ret = this->ui::widget::get(e, t, v);
+    return ret;
+}
+
 void ui::manager::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
@@ -259,6 +267,12 @@ void ui::manager::set(GLuint e, GLuint t, const glm::ivec2& v)
 
 void ui::manager::set(GLuint e, GLuint t, int v)
 {
+    this->ui::widget::set(e, t, v);
+}
+
+void ui::manager::set(GLuint e, GLuint t, bool v)
+{
+    this->ui::composite::set(e, t, v);
     this->ui::widget::set(e, t, v);
 }
 

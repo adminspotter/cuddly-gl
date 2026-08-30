@@ -55,6 +55,38 @@ void ui::composite::set_focused_child(ui::widget *w)
         this->parent->set(ui::element::child, ui::child::focused, w);
 }
 
+int ui::composite::get_tab_sensitivity(bool *v) const
+{
+    *v = this->tab_sensitive;
+    return 0;
+}
+
+void ui::composite::set_tab_sensitivity(bool v)
+{
+    if (this->tab_sensitive == v)
+        return;
+    this->tab_sensitive = v;
+    if (this->tab_sensitive)
+        this->add_callback(ui::callback::focus,
+                           ui::composite::focus_callback,
+                           NULL);
+    else
+    {
+        this->remove_callback(ui::callback::focus,
+                              ui::composite::focus_callback,
+                              NULL);
+        this->focused = this->children.end();
+    }
+    for (ui::widget *i : this->children)
+    {
+        ui::composite *c = dynamic_cast<ui::composite *>(i);
+        if (c != NULL)
+            c->set(ui::element::state,
+                   ui::state::tab_sensitive,
+                   this->tab_sensitive);
+    }
+}
+
 void ui::composite::set_size(GLuint d, GLuint v)
 {
     ui::resize_call_data call_data;
@@ -113,6 +145,19 @@ void ui::composite::set_child(GLuint t, ui::widget *v)
 {
     if (t == ui::child::focused)
         this->set_focused_child(v);
+}
+
+int ui::composite::get_state(GLuint t, bool *v) const
+{
+    if (t == ui::state::tab_sensitive)
+        return this->get_tab_sensitivity(v);
+    return 1;
+}
+
+void ui::composite::set_state(GLuint t, bool v)
+{
+    if (t == ui::state::tab_sensitive)
+        this->set_tab_sensitivity(v);
 }
 
 void ui::composite::set_desired_size(void)
@@ -231,16 +276,18 @@ void ui::composite::focus_callback(ui::active *a, void *call, void *client)
 
 void ui::composite::init(ui::composite *c)
 {
+    bool tab_sensitive = true;
+
     this->parent = c;
     this->tree = NULL;
     this->focused = this->children.end();
     this->old_child = NULL;
     this->dirty = false;
-    this->regenerate_search_tree();
+    if (c != NULL)
+        c->get(ui::element::state, ui::state::tab_sensitive, &tab_sensitive);
+    this->set_tab_sensitivity(tab_sensitive);
 
-    this->add_callback(ui::callback::focus,
-                       ui::composite::focus_callback,
-                       NULL);
+    this->regenerate_search_tree();
 }
 
 ui::composite::composite(composite *c)
@@ -256,6 +303,13 @@ ui::composite::~composite()
     for (ui::widget *i : this->children)
         delete i;
     this->children.clear();
+}
+
+int ui::composite::get(GLuint e, GLuint t, bool *v) const
+{
+    if (e == ui::element::state)
+        return this->get_state(t, v);
+    return 1;
 }
 
 int ui::composite::get(GLuint e, GLuint t, float *v) const
@@ -277,6 +331,12 @@ int ui::composite::get(GLuint e, GLuint t, ui::widget **v) const
     if (e == ui::element::child)
         return this->get_child(t, v);
     return 1;
+}
+
+void ui::composite::set(GLuint e, GLuint t, bool v)
+{
+    if (e == ui::element::state)
+        this->set_state(t, v);
 }
 
 void ui::composite::set(GLuint e, GLuint t, ui::widget *v)

@@ -78,11 +78,13 @@ namespace ui
         using ui::composite::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, glm::ivec2 *) const override;
+        virtual int get(GLuint, GLuint, bool *) const override;
         using ui::widget::set;
         using ui::composite::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, const glm::ivec2&) override;
         virtual void set(GLuint, GLuint, int) override;
+        virtual void set(GLuint, GLuint, bool) override;
 
         GET_VA;
         SET_VA;
