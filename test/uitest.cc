@@ -29,6 +29,7 @@
 void error_callback(int, const char *);
 void create_image(int, int);
 void close_key_callback(ui::active *, void *, void *);
+void sensitivity_key_callback(ui::active *, void *, void *);
 void enter_callback(ui::active *, void *, void *);
 void leave_callback(ui::active *, void *, void *);
 void menu_callback(ui::active *, void *, void *);
@@ -114,6 +115,7 @@ int main(int argc, char **argv)
                           ui::element::size, ui::size::height, 600);
     ui_connect_glfw(ctx, w);
     ctx->add_callback(ui::callback::key_down, close_key_callback, w);
+    ctx->add_callback(ui::callback::key_down, sensitivity_key_callback, NULL);
 
     std::cout << "creating widget 1" << std::endl;
     w1 = new ui::widget(ctx,
@@ -309,6 +311,22 @@ void close_key_callback(ui::active *a, void *call, void *client)
 
     if (call_data->key == ui::key::esc && call_data->state == ui::key::down)
         glfwSetWindowShouldClose(w, GL_TRUE);
+}
+
+/* ARGSUSED */
+void sensitivity_key_callback(ui::active *a, void *call, void *client)
+{
+    ui::key_call_data *call_data = (ui::key_call_data *)call;
+
+    if (call_data->key == ui::key::s
+        && call_data->mods & ui::key_mod::shift
+        && call_data->state == ui::key::down)
+    {
+        bool sensitive;
+
+        ctx->get(ui::element::state, ui::state::tab_sensitive, &sensitive);
+        ctx->set(ui::element::state, ui::state::tab_sensitive, !sensitive);
+    }
 }
 
 /* ARGSUSED */

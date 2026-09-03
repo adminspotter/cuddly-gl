@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 79;
+use Test::More 'tests' => 82;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -65,10 +65,7 @@ sub interact_with_text_field
 {
     my $test = 'text field';
 
-    my ($x, $y) = GetWindowPos($uitest);
-    ok(defined $x, "$test: x pos is defined");
-    ok(defined $y, "$test: y pos is defined");
-    my $status = ClickWindow($uitest, $x + 265, $y + 140, M_BTN1);
+    my $status = ClickWindow($uitest, 265, 140, M_BTN1);
     ok($status, "$test: clicked in text field");
     $status = SendKeys('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
     ok($status, "$test: lots of text");
@@ -139,14 +136,33 @@ sub interact_with_pie_menu
     ok($status, "$test: popped down pie menu");
 }
 
+sub exercise_non_tab_sensitivity
+{
+    my $test = 'sensitive';
+
+    my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
+    my $status = ClickWindow($uitest, $borderWidth + 1, $borderWidth + 1);
+    ok($status, "$test: clicked mouse in upper left");
+
+    $status = SendKeys('S');
+    ok($status, "$test: S sent");
+
+    $status = MoveMouseAbs($x + 265, $y + 140);
+    ok($status, "$test: moved into text field");
+
+    $status = MoveMouseAbs($x + 265, $y + 130);
+    ok($status, "$test: moved into manager");
+
+    $status = MoveMouseAbs($x + 225, $y + 130);
+    ok($status, "$test: moved into main window");
+}
+
 sub close_window
 {
     my $test = 'close';
 
     my ($x, $y, $width, $height, $borderWidth) = GetWindowPos($uitest);
-    my $status = ClickWindow($uitest,
-                             $x + $borderWidth + 1,
-                             $y + $borderWidth + 1);
+    my $status = ClickWindow($uitest, $borderWidth + 1, $borderWidth + 1);
     ok($status, "$test: clicked mouse in upper left");
 
     $status = SendKeys('{ESC}');
@@ -166,4 +182,5 @@ interact_with_pie_menu();
 interact_with_button(140, 360);
 interact_with_button(140, 385);
 interact_with_button(140, 415);
+exercise_non_tab_sensitivity();
 close_window();
