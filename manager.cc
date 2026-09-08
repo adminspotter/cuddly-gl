@@ -96,37 +96,37 @@ void ui::manager::set_resize(GLuint t, GLuint v)
 
 int ui::manager::get_size(GLuint t, GLuint *v) const
 {
-    return this->composite::get_size(t, v);
+    return this->ui::composite::get_size(t, v);
 }
 
 int ui::manager::get_size(GLuint t, glm::ivec2 *v) const
 {
-    return this->composite::get_size(t, v);
+    return this->ui::composite::get_size(t, v);
 }
 
 void ui::manager::set_size(GLuint t, GLuint v)
 {
-    this->composite::set_size(t, v);
-    this->widget::set_size(t, v);
+    this->ui::composite::set_size(t, v);
+    this->ui::widget::set_size(t, v);
 }
 
 void ui::manager::set_size(GLuint t, const glm::ivec2& v)
 {
-    this->composite::set_size(t, v);
-    this->widget::set_size(t, v);
+    this->ui::composite::set_size(t, v);
+    this->ui::widget::set_size(t, v);
 }
 
 int ui::manager::get_pixel_size(GLuint t, float *v) const
 {
-    if (this->composite::parent != NULL)
-        return this->composite::parent->get(ui::element::pixel_size, t, v);
+    if (this->ui::composite::parent != NULL)
+        return this->ui::composite::parent->get(ui::element::pixel_size, t, v);
     return 1;
 }
 
 int ui::manager::get_pixel_size(GLuint t, glm::vec3 *v) const
 {
-    if (this->composite::parent != NULL)
-        return this->composite::parent->get(ui::element::pixel_size, t, v);
+    if (this->ui::composite::parent != NULL)
+        return this->ui::composite::parent->get(ui::element::pixel_size, t, v);
     return 1;
 }
 
@@ -152,7 +152,7 @@ void ui::manager::set_desired_size(void)
     glm::ivec2 old_sz(this->dim);
     glm::ivec2 max_pt(0, 0);
 
-    this->composite::set_desired_size();
+    this->ui::composite::set_desired_size();
 
     if (this->resize == ui::resize::none)
         return;
@@ -199,8 +199,8 @@ void ui::manager::set_desired_size(void)
  */
 void ui::manager::recalculate_transformation_matrix(void)
 {
-    this->widget::recalculate_transformation_matrix();
-    this->composite::regenerate_children();
+    this->ui::widget::recalculate_transformation_matrix();
+    this->ui::composite::regenerate_children();
 }
 
 void ui::manager::init(ui::composite *c)
@@ -225,12 +225,12 @@ int ui::manager::get(GLuint e, GLuint t, GLuint *v) const
     {
         /* Eventually, the context will be somebody's parent */
       case ui::element::attribute:
-        if (this->composite::parent != NULL)
-            return this->widget::parent->get(e, t, v);
+        if (this->ui::composite::parent != NULL)
+            return this->ui::widget::parent->get(e, t, v);
         return 1;
       case ui::element::child_spacing:  return this->get_child_spacing(t, v);
       case ui::element::resize:         return this->get_resize(t, v);
-      default:                          return this->widget::get(e, t, v);
+      default:                          return this->ui::widget::get(e, t, v);
     }
     return 1;
 }
@@ -239,27 +239,27 @@ int ui::manager::get(GLuint e, GLuint t, glm::ivec2 *v) const
 {
     if (e == ui::element::child_spacing)
         return this->get_child_spacing(t, v);
-    return this->widget::get(e, t, v);
+    return this->ui::widget::get(e, t, v);
 }
 
 void ui::manager::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
     {
-      case ui::element::child_spacing:  this->set_child_spacing(t, v);  break;
-      case ui::element::resize:         this->set_resize(t, v);         break;
-      default:                          this->widget::set(e, t, v);     break;
+      case ui::element::child_spacing:  this->set_child_spacing(t, v);   break;
+      case ui::element::resize:         this->set_resize(t, v);          break;
+      default:                          this->ui::widget::set(e, t, v);  break;
     }
 }
 
 void ui::manager::set(GLuint e, GLuint t, const glm::ivec2& v)
 {
-    this->widget::set(e, t, v);
+    this->ui::widget::set(e, t, v);
 }
 
 void ui::manager::set(GLuint e, GLuint t, int v)
 {
-    this->widget::set(e, t, v);
+    this->ui::widget::set(e, t, v);
 }
 
 void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
@@ -271,7 +271,7 @@ void ui::manager::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
     {
         glm::mat4 trans = this->pos_transform * parent_trans;
 
-        this->widget::draw(trans_uniform, parent_trans);
+        this->ui::widget::draw(trans_uniform, parent_trans);
         for (ui::widget *i : this->children)
             i->draw(trans_uniform, trans);
     }

@@ -36,7 +36,7 @@ int ui::row_column::get_size(GLuint t, GLuint *v) const
     {
       case ui::size::rows:     *v = this->grid_sz.x;  return 0;
       case ui::size::columns:  *v = this->grid_sz.y;  return 0;
-      default:                 return this->manager::get_size(t, v);
+      default:                 return this->ui::manager::get_size(t, v);
     }
 }
 
@@ -47,7 +47,7 @@ int ui::row_column::get_size(GLuint t, glm::ivec2 *v) const
         *v = this->grid_sz;
         return 0;
     }
-    return this->manager::get_size(t, v);
+    return this->ui::manager::get_size(t, v);
 }
 
 void ui::row_column::set_size(GLuint t, GLuint v)
@@ -56,7 +56,7 @@ void ui::row_column::set_size(GLuint t, GLuint v)
     {
       case ui::size::rows:     this->grid_sz.y = v;  break;
       case ui::size::columns:  this->grid_sz.x = v;  break;
-      default:                 this->manager::set_size(t, v);
+      default:                 this->ui::manager::set_size(t, v);
     }
 }
 
@@ -65,7 +65,7 @@ void ui::row_column::set_size(GLuint t, const glm::ivec2& v)
     if (t == ui::size::grid)
         this->grid_sz = v;
     else
-        this->manager::set_size(t, v);
+        this->ui::manager::set_size(t, v);
 }
 
 int ui::row_column::get_order(GLuint t, GLuint *v) const
@@ -145,7 +145,7 @@ void ui::row_column::set_desired_size(void)
         ui::resize_call_data call_data = { this->dim };
         this->call_callbacks(ui::callback::resize, &call_data);
     }
-    this->composite::parent->move_child(this);
+    this->ui::composite::parent->move_child(this);
     this->populate_buffers();
 
     if (this->pack_order == ui::order::row)
@@ -217,7 +217,7 @@ int ui::row_column::get(GLuint e, GLuint t, GLuint *v) const
 {
     if (e == ui::element::order)
         return this->get_order(t, v);
-    return this->manager::get(e, t, v);
+    return this->ui::manager::get(e, t, v);
 }
 
 void ui::row_column::set(GLuint e, GLuint t, GLuint v)
@@ -225,5 +225,5 @@ void ui::row_column::set(GLuint e, GLuint t, GLuint v)
     if (e == ui::element::order)
         this->set_order(t, v);
     else
-        this->manager::set(e, t, v);
+        this->ui::manager::set(e, t, v);
 }

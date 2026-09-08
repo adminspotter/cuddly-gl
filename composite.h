@@ -44,13 +44,13 @@ namespace ui
     {
       protected:
         composite *parent;
-        std::list<widget *> children, to_remove;
-        std::list<widget *>::iterator focused;
-        quadtree *tree;
+        std::list<ui::widget *> children, to_remove;
+        std::list<ui::widget *>::iterator focused;
+        ui::quadtree *tree;
         bool dirty;
 
         glm::ivec2 old_pos;
-        widget *old_child;
+        ui::widget *old_child;
 
         const static int tree_max_depth;
 
@@ -71,13 +71,13 @@ namespace ui
 
         void clear_removed_children(void);
 
-        void child_motion(widget *, GLuint, glm::ivec2&);
+        void child_motion(ui::widget *, GLuint, glm::ivec2&);
 
-        void focus_child(std::list<widget *>::iterator);
+        void focus_child(std::list<ui::widget *>::iterator);
         void focus_next_child(void);
         void focus_previous_child(void);
 
-        static void focus_callback(active *, void *, void *);
+        static void focus_callback(ui::active *, void *, void *);
 
         void init(composite *);
 
@@ -85,7 +85,8 @@ namespace ui
         explicit composite(composite *);
         template<typename... Args>
         composite(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), children(), to_remove(), old_pos(0, 0)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              children(), to_remove(), old_pos(0, 0)
             {
                 this->init(c);
                 this->set(args...);
@@ -102,9 +103,9 @@ namespace ui
         GET_VA;
         SET_VA;
 
-        virtual void add_child(widget *);
-        virtual void remove_child(widget *);
-        virtual void move_child(widget *);
+        virtual void add_child(ui::widget *);
+        virtual void remove_child(ui::widget *);
+        virtual void move_child(ui::widget *);
 
         void manage_children(void);
 

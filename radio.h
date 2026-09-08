@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2025  Trinity Annabelle Quirk
+ * Copyright (C) 2025-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ namespace ui
     class radio_box : public T
     {
       protected:
-        int get_radio_child(widget **v) const
+        int get_radio_child(ui::widget **v) const
             {
                 bool checked;
                 for (auto i : this->children)
@@ -56,7 +56,7 @@ namespace ui
                 *v = NULL;
                 return 1;
             };
-        void set_radio_child(widget *v)
+        void set_radio_child(ui::widget *v)
             {
                 auto found = std::find(this->children.begin(),
                                        this->children.end(),
@@ -104,12 +104,12 @@ namespace ui
             };
 
       public:
-        explicit radio_box(composite *c)
-            : rect(0, 0), active(0, 0), T(c)
+        explicit radio_box(ui::composite *c)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0), T(c)
             {};
         template<typename... Args>
-        radio_box(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), T(c)
+        radio_box(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0), T(c)
             {
                 this->set(args...);
             };

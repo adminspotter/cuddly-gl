@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,8 +43,8 @@ namespace ui
         void set_popup(GLuint, GLuint);
         virtual void set_resize(GLuint, GLuint) final;
 
-        static void show(active *, void *, void *);
-        static void hide(active *, void *, void *);
+        static void show(ui::active *, void *, void *);
+        static void hide(ui::active *, void *, void *);
 
         virtual void set_desired_size(void) override;
 
@@ -53,13 +53,14 @@ namespace ui
         int which_sector(glm::ivec2&);
         ui::widget *which_child(glm::ivec2&);
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit pie_menu(composite *);
+        explicit pie_menu(ui::composite *);
         template<typename... Args>
-        pie_menu(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), manager(c)
+        pie_menu(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::manager::manager(c)
             {
                 this->init(c);
                 this->set(args...);

@@ -79,7 +79,7 @@ int ui::context::get(GLuint e, GLuint t, GLuint *v) const
     switch (e)
     {
       case ui::element::attribute:  return this->get_attribute(t, v);
-      default:                      return this->composite::get(e, t, v);
+      default:                      return this->ui::composite::get(e, t, v);
     }
 }
 

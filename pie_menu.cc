@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,7 +76,7 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
         new_loc.y -= pm->dim.y / 2;
         pm->set(ui::element::position, ui::position::all, new_loc,
                 ui::element::state, ui::state::visible, true);
-        pm->composite::parent->move_child(pm);
+        pm->ui::composite::parent->move_child(pm);
     }
 }
 
@@ -95,7 +95,7 @@ void ui::pie_menu::hide(ui::active *a, void *call, void *client)
 
 void ui::pie_menu::set_desired_size(void)
 {
-    this->composite::set_desired_size();
+    this->ui::composite::set_desired_size();
 
     if (this->children.size() > 0)
     {
@@ -233,7 +233,7 @@ void ui::pie_menu::init(ui::composite *c)
     this->populate_buffers();
 }
 
-ui::pie_menu::pie_menu(composite *c)
+ui::pie_menu::pie_menu(ui::composite *c)
     : ui::manager::manager(c), ui::active::active(0, 0), ui::rect(0, 0)
 {
     this->init(c);
@@ -241,14 +241,14 @@ ui::pie_menu::pie_menu(composite *c)
 
 ui::pie_menu::~pie_menu()
 {
-    if (this->composite::parent != NULL)
+    if (this->ui::composite::parent != NULL)
     {
-        this->composite::parent->remove_callback(ui::callback::btn_down,
-                                                 ui::pie_menu::show,
-                                                 this);
-        this->composite::parent->remove_callback(ui::callback::btn_up,
-                                                 ui::pie_menu::hide,
-                                                 this);
+        this->ui::composite::parent->remove_callback(ui::callback::btn_down,
+                                                     ui::pie_menu::show,
+                                                     this);
+        this->ui::composite::parent->remove_callback(ui::callback::btn_up,
+                                                     ui::pie_menu::hide,
+                                                     this);
     }
 }
 
@@ -256,7 +256,7 @@ int ui::pie_menu::get(GLuint e, GLuint t, GLuint *v) const
 {
     if (e == ui::element::popup)
         return this->get_popup(t, v);
-    return this->manager::get(e, t, v);
+    return this->ui::manager::get(e, t, v);
 }
 
 void ui::pie_menu::set(GLuint e, GLuint t, GLuint v)
@@ -264,7 +264,7 @@ void ui::pie_menu::set(GLuint e, GLuint t, GLuint v)
     if (e == ui::element::popup)
         this->set_popup(t, v);
     else
-        this->manager::set(e, t, v);
+        this->ui::manager::set(e, t, v);
 }
 
 void ui::pie_menu::mouse_pos_callback(glm::ivec2& pos)
@@ -315,5 +315,5 @@ void ui::pie_menu::mouse_btn_callback(ui::btn_call_data& call_data)
 void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     if (this->visible)
-        this->manager::draw(trans_uniform, parent_trans);
+        this->ui::manager::draw(trans_uniform, parent_trans);
 }

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2018-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ int ui::armable::get_state(GLuint t, bool *v) const
     {
       case ui::state::active:  return this->get_active_state(v);
       case ui::state::armed:   return this->get_arm_state(v);
-      default:                 return this->widget::get_state(t, v);
+      default:                 return this->ui::widget::get_state(t, v);
     }
 }
 
@@ -46,9 +46,9 @@ void ui::armable::set_state(GLuint t, bool v)
 {
     switch (t)
     {
-      case ui::state::active:  this->set_active_state(v);     break;
-      case ui::state::armed:   this->set_arm_state(v);        break;
-      default:                 this->label::set_state(t, v);  break;
+      case ui::state::active:  this->set_active_state(v);         break;
+      case ui::state::armed:   this->set_arm_state(v);            break;
+      default:                 this->ui::label::set_state(t, v);  break;
     }
 }
 

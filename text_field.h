@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2021  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -60,10 +60,10 @@ namespace ui
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
 
-        static void focus_callback(active *, void *, void *);
-        static void key_down_callback(active *, void *, void *);
-        static void key_up_callback(active *, void *, void *);
-        static void key_timeout(active *, void *);
+        static void focus_callback(ui::active *, void *, void *);
+        static void key_down_callback(ui::active *, void *, void *);
+        static void key_up_callback(ui::active *, void *, void *);
+        static void key_timeout(ui::active *, void *);
 
         int get_cursor_pos(GLuint *) const;
         void set_cursor_pos(GLuint);
@@ -96,13 +96,14 @@ namespace ui
         void generate_cursor(void);
         virtual vertex_buffer *generate_points(void) override;
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit text_field(composite *);
+        explicit text_field(ui::composite *);
         template<typename... Args>
-        text_field(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), label(c), cursor_transform()
+        text_field(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::label::label(c), cursor_transform()
             {
                 this->init(c);
                 this->set(args...);

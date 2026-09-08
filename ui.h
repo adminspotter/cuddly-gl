@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +52,8 @@ namespace ui
         explicit context();
         template<typename... Args>
         context(Args... args)
-            : rect(0, 0), active(0, 0), composite(NULL)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::composite::composite(NULL)
             {
                 this->init();
                 this->set(args...);

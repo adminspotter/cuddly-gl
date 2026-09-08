@@ -70,22 +70,22 @@ ui::quadtree::quadtree(ui::quadtree *p,
     {
         glm::ivec2 tmp_pt;
 
-        this->quadrant[0] = new quadtree(this,
-                                         this->center, this->min,
-                                         max_depth, ++cur_depth);
+        this->quadrant[0] = new ui::quadtree(this,
+                                             this->center, this->min,
+                                             max_depth, ++cur_depth);
         tmp_pt.x = this->max.x;
         tmp_pt.y = this->min.y;
-        this->quadrant[1] = new quadtree(this,
-                                         this->center, tmp_pt,
-                                         max_depth, cur_depth);
+        this->quadrant[1] = new ui::quadtree(this,
+                                             this->center, tmp_pt,
+                                             max_depth, cur_depth);
         tmp_pt.x = this->min.x;
         tmp_pt.y = this->max.y;
-        this->quadrant[2] = new quadtree(this,
-                                         this->center, tmp_pt,
-                                         max_depth, cur_depth);
-        this->quadrant[3] = new quadtree(this,
-                                         this->center, this->max,
-                                         max_depth, cur_depth);
+        this->quadrant[2] = new ui::quadtree(this,
+                                             this->center, tmp_pt,
+                                             max_depth, cur_depth);
+        this->quadrant[3] = new ui::quadtree(this,
+                                             this->center, this->max,
+                                             max_depth, cur_depth);
     }
     else
     {

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -60,16 +60,17 @@ namespace ui
 
         virtual void generate_string_image(void);
         virtual void calculate_widget_size(void);
-        virtual vertex_buffer *generate_points(void) override;
+        virtual ui::vertex_buffer *generate_points(void) override;
         virtual void populate_buffers(void) override;
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit label(composite *);
+        explicit label(ui::composite *);
         template<typename... Args>
         label(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), widget(c), str(), img()
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::widget::widget(c), str(), img()
             {
                 this->init(c);
                 this->set(args...);

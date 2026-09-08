@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2018-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2018-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,18 +56,18 @@ namespace ui
         void arm(void);
         void disarm(void);
 
-        static void enter_callback(active *, void *, void *);
-        static void leave_callback(active *, void *, void *);
-        static void focus_callback(active *, void *, void *);
-        static void mouse_down_callback(active *, void *, void *);
-        static void mouse_up_callback(active *, void *, void *);
-        static void key_down_callback(active *, void *, void *);
-        static void key_up_callback(active *, void *, void *);
+        static void enter_callback(ui::active *, void *, void *);
+        static void leave_callback(ui::active *, void *, void *);
+        static void focus_callback(ui::active *, void *, void *);
+        static void mouse_down_callback(ui::active *, void *, void *);
+        static void mouse_up_callback(ui::active *, void *, void *);
+        static void key_down_callback(ui::active *, void *, void *);
+        static void key_up_callback(ui::active *, void *, void *);
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit armable(composite *);
+        explicit armable(ui::composite *);
         ~armable();
     };
 }

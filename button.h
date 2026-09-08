@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,13 +47,14 @@ namespace ui
         void grow_border(void);
         void shrink_border(void);
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit button(composite *);
+        explicit button(ui::composite *);
         template<typename... Args>
-        button(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), armable(c)
+        button(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::armable::armable(c)
             {
                 this->init(c);
                 this->set(args...);
