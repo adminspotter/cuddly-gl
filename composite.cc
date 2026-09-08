@@ -48,7 +48,7 @@ void ui::composite::set_focused_child(ui::widget *w)
         || (w == NULL && this->focused == this->children.end()))
         return;
 
-    std::list<ui::widget *>::iterator new_focus
+    ui::composite::child_list::iterator new_focus
         = std::find(this->children.begin(), this->children.end(), w);
     this->focus_child(new_focus);
     if (this->parent != NULL && w == NULL)
@@ -181,7 +181,7 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         w->call_callbacks(type, &call_data);
 }
 
-void ui::composite::focus_child(std::list<ui::widget *>::iterator new_focus)
+void ui::composite::focus_child(ui::composite::child_list::iterator new_focus)
 {
     if (new_focus != this->focused)
     {
@@ -203,7 +203,7 @@ void ui::composite::focus_child(std::list<ui::widget *>::iterator new_focus)
 
 void ui::composite::focus_next_child(void)
 {
-    std::list<ui::widget *>::iterator new_focus = this->focused;
+    ui::composite::child_list::iterator new_focus = this->focused;
 
     if (this->focused == this->children.end()
         || ++new_focus == this->children.end())
@@ -213,7 +213,7 @@ void ui::composite::focus_next_child(void)
 
 void ui::composite::focus_previous_child(void)
 {
-    std::list<ui::widget *>::iterator new_focus = this->focused;
+    ui::composite::child_list::iterator new_focus = this->focused;
 
     if (new_focus == this->children.begin())
         new_focus = this->children.end();

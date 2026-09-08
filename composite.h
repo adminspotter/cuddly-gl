@@ -43,9 +43,11 @@ namespace ui
     class composite : public virtual active
     {
       protected:
+        typedef std::list<ui::widget *> child_list;
+
         composite *parent;
-        std::list<ui::widget *> children, to_remove;
-        std::list<ui::widget *>::iterator focused;
+        child_list children, to_remove;
+        child_list::iterator focused;
         ui::quadtree *tree;
         bool dirty;
 
@@ -73,7 +75,7 @@ namespace ui
 
         void child_motion(ui::widget *, GLuint, glm::ivec2&);
 
-        void focus_child(std::list<ui::widget *>::iterator);
+        void focus_child(child_list::iterator);
         void focus_next_child(void);
         void focus_previous_child(void);
 
