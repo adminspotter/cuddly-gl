@@ -45,7 +45,8 @@ int ui::composite::get_focused_child(ui::widget **v) const
 void ui::composite::set_focused_child(ui::widget *w)
 {
     if (*this->focused == w
-        || (w == NULL && this->focused == this->children.end()))
+        || (w == NULL && this->focused == this->children.end())
+        || (!this->tab_sensitive && w == dynamic_cast<ui::widget *>(this)))
         return;
 
     ui::composite::child_list::iterator new_focus
@@ -226,6 +227,26 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
         w->call_callbacks(type, &call_data);
 }
 
+void ui::composite::child_motion_focus(ui::widget *w, bool focus)
+{
+    if (!this->tab_sensitive)
+    {
+        if (focus == true)
+            this->set_focused_child(w);
+        else
+        {
+            ui::focus_call_data fcd = {false};
+
+            this->focused = this->children.end();
+            if (this->parent != NULL)
+                this->parent->set(ui::element::child,
+                                  ui::child::focused,
+                                  dynamic_cast<ui::widget *>(this));
+            w->call_callbacks(ui::callback::focus, &fcd);
+        }
+    }
+}
+
 void ui::composite::focus_child(ui::composite::child_list::iterator new_focus)
 {
     if (new_focus != this->focused)
@@ -398,15 +419,22 @@ void ui::composite::mouse_pos_callback(glm::ivec2& pos)
         if (this->old_child != w)
         {
             if (this->old_child != NULL)
+            {
+                this->child_motion_focus(w, false);
                 this->child_motion(this->old_child, ui::callback::leave, pos);
+            }
             this->child_motion(w, ui::callback::enter, pos);
+            this->child_motion_focus(w, true);
         }
         this->child_motion(w, ui::callback::motion, pos);
     }
     else
     {
         if (this->old_child != NULL)
+        {
+            this->child_motion_focus(this->old_child, false);
             this->child_motion(this->old_child, ui::callback::leave, pos);
+        }
         this->call_callbacks(ui::callback::motion, &call_data);
     }
 

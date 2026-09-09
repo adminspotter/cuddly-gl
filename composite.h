@@ -78,6 +78,7 @@ namespace ui
         void clear_removed_children(void);
 
         void child_motion(ui::widget *, GLuint, glm::ivec2&);
+        void child_motion_focus(ui::widget *, bool);
 
         void focus_child(child_list::iterator);
         void focus_next_child(void);
