@@ -232,8 +232,25 @@ AS_IF([test "x$with_glfw" != "xno"],
               ]
         )
       ])
+
+# See if the programs to generate coverage statistics are available.
+# This doesn't make a lot of sense to do if we can't run the GUI test,
+# since most of the test coverage is found in the GUI test.
+AS_IF([test "x$can_do_tests" == "xyes" && test "x$enable_gui_tests" != "xno"],
+      [
+        AC_CHECK_PROG([have_lcov], [lcov], [yes])
+        AC_CHECK_PROG([have_genhtml], [genhtml], [yes])
+        AS_IF([test "x$have_lcov" == "xyes" && test "x$have_genhtml" == "xyes"],
+              [
+                AC_MSG_NOTICE([enabling coverage summary])
+                can_do_coverage="yes"
+              ]
+        )
+      ])
+
 AM_CONDITIONAL([HAVE_TEST_PREREQS], [test "x$can_do_tests" == "xyes"])
 AM_CONDITIONAL([WANT_GUI_TESTS], [test "x$enable_gui_tests" != "xno"])
+AM_CONDITIONAL([CAN_DO_COVERAGE], [test "x$can_do_coverage" == "xyes"])
 AS_IF([test "x$can_do_tests" == "xyes"],
       [AS_CASE([$host_os],
                [darwin*],

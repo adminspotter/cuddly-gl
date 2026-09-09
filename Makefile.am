@@ -62,5 +62,15 @@ libcuddly_gl_la_CXXFLAGS = $(CXXFLAGS) \
 libcuddly_gl_la_LDFLAGS = $(LDFLAGS)
 libcuddly_gl_la_LIBADD = $(LDLIBS)
 
+if CAN_DO_COVERAGE
+coverage:
+	lcov -c -q --directory . --output-file lcov.info --no-external --exclude '*/test/*'
+	genhtml lcov.info -o lcov
+	@echo "Coverage in file://${PWD}/lcov/index.html"
+endif
+
 clean-local:
 	rm -f *.gcno *.gcda *.gcov
+if CAN_DO_COVERAGE
+	rm -rf lcov.info lcov
+endif
