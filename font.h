@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,7 +79,10 @@ namespace ui
             cell *cells;
         };
 
-        void copy_to_image(image&, const glm::ivec2&, const glm::vec4&, bool);
+        void copy_to_image(ui::image&,
+                           const glm::ivec2&,
+                           const glm::vec4&,
+                           bool);
     };
 
     typedef std::vector<std::string> search_paths;
@@ -113,8 +116,8 @@ namespace ui
 
         static void get_max_glyph_box(FT_Face, int *, int *, int *);
 
-        image render(const std::vector<bidi::mirror_t>&,
-                     const glm::vec4&, const glm::vec4&);
+        ui::image render(const std::vector<bidi::mirror_t>&,
+                         const glm::vec4&, const glm::vec4&);
 
       public:
         explicit base_font(std::string&);
@@ -129,9 +132,9 @@ namespace ui
         void get_string_size(const std::u32string&, GLuint&, GLuint&, GLuint&);
         void get_string_size(const std::vector<bidi::mirror_t>&,
                              GLuint&, GLuint&, GLuint&);
-        image render_string(const std::u32string&,
-                            const glm::vec4&,
-                            const glm::vec4&);
+        ui::image render_string(const std::u32string&,
+                                const glm::vec4&,
+                                const glm::vec4&);
     };
 
     class font : public base_font

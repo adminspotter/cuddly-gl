@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ void ui::password::generate_string_image(void)
 
         visible.insert(0, this->str.size(), '*');
         this->str = visible;
-        this->text_field::generate_string_image();
+        this->ui::text_field::generate_string_image();
         this->str = save;
     }
 }

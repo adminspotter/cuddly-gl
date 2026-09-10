@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,13 +54,14 @@ namespace ui
         void insert_row_major(glm::ivec2&, glm::ivec2&);
         void insert_column_major(glm::ivec2&, glm::ivec2&);
 
-        void init(composite *c);
+        void init(ui::composite *c);
 
       public:
-        explicit row_column(composite *);
+        explicit row_column(ui::composite *);
         template<typename... Args>
-        row_column(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), manager(c), grid_sz(1, 0)
+        row_column(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::manager::manager(c), grid_sz(1, 0)
             {
                 this->init(c);
                 this->set(args...);

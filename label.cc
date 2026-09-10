@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -85,13 +85,13 @@ void ui::label::set_image(GLuint t, const ui::image& v)
 
 void ui::label::set_border(GLuint t, GLuint v)
 {
-    this->widget::set_border(t, v);
+    this->ui::widget::set_border(t, v);
     this->calculate_widget_size();
 }
 
 void ui::label::set_margin(GLuint t, GLuint v)
 {
-    this->widget::set_margin(t, v);
+    this->ui::widget::set_margin(t, v);
     this->calculate_widget_size();
 }
 
@@ -130,7 +130,7 @@ void ui::label::calculate_widget_size(void)
 
 ui::vertex_buffer *ui::label::generate_points(void)
 {
-    ui::vertex_buffer *vb = this->widget::generate_points();
+    ui::vertex_buffer *vb = this->ui::widget::generate_points();
     float pw, ph, m[4], b[4];
 
     if (this->img.data == NULL)
@@ -175,7 +175,7 @@ ui::vertex_buffer *ui::label::generate_points(void)
 
 void ui::label::populate_buffers(void)
 {
-    this->widget::populate_buffers();
+    this->ui::widget::populate_buffers();
     if (this->img.data != NULL)
     {
         glBindTexture(GL_TEXTURE_2D, this->tex);

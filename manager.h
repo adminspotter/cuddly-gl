@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,13 +59,14 @@ namespace ui
 
         virtual void recalculate_transformation_matrix(void) override;
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit manager(composite *);
+        explicit manager(ui::composite *);
         template<typename... Args>
-        manager(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), widget(c), composite(c),
+        manager(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::widget::widget(c), ui::composite::composite(c),
               child_spacing(0, 0)
             {
                 this->init(c);
@@ -77,11 +78,13 @@ namespace ui
         using ui::composite::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, glm::ivec2 *) const override;
+        virtual int get(GLuint, GLuint, bool *) const override;
         using ui::widget::set;
         using ui::composite::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, const glm::ivec2&) override;
         virtual void set(GLuint, GLuint, int) override;
+        virtual void set(GLuint, GLuint, bool) override;
 
         GET_VA;
         SET_VA;

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2021  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,7 +43,7 @@ int ui::text_field::get_size(GLuint t, GLuint *v) const
         *v = this->max_length;
         return 0;
     }
-    return this->label::get_size(t, v);
+    return this->ui::label::get_size(t, v);
 }
 
 void ui::text_field::set_size(GLuint t, GLuint v)
@@ -56,7 +56,7 @@ void ui::text_field::set_size(GLuint t, GLuint v)
         this->reset_cursor();
     }
     else
-        this->label::set_size(t, v);
+        this->ui::label::set_size(t, v);
 }
 
 int ui::text_field::get_cursor(GLuint t, GLuint *v) const
@@ -103,7 +103,7 @@ void ui::text_field::set_repeat(GLuint t, GLuint v)
 
 void ui::text_field::set_font(GLuint t, ui::base_font *v)
 {
-    this->label::set_font(t, v);
+    this->ui::label::set_font(t, v);
 
     this->calculate_widget_size();
     this->generate_cursor();
@@ -113,7 +113,7 @@ void ui::text_field::set_font(GLuint t, ui::base_font *v)
 
 void ui::text_field::set_string(GLuint t, const std::string& v)
 {
-    this->label::set_string(t, v);
+    this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
     this->generate_string_image();
     this->reset_cursor();

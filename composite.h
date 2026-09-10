@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,25 +43,31 @@ namespace ui
     class composite : public virtual active
     {
       protected:
+        typedef std::list<ui::widget *> child_list;
+
         composite *parent;
-        std::list<widget *> children, to_remove;
-        std::list<widget *>::iterator focused;
-        quadtree *tree;
-        bool dirty;
+        child_list children, to_remove;
+        child_list::iterator focused;
+        ui::quadtree *tree;
+        bool dirty, tab_sensitive;
 
         glm::ivec2 old_pos;
-        widget *old_child;
+        ui::widget *old_child;
 
         const static int tree_max_depth;
 
         int get_focused_child(ui::widget **) const;
         void set_focused_child(ui::widget *);
+        int get_tab_sensitivity(bool *) const;
+        void set_tab_sensitivity(bool);
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
         virtual int get_pixel_size(GLuint, float *) const;
         virtual int get_pixel_size(GLuint, glm::vec3 *) const;
         virtual int get_child(GLuint, ui::widget **) const;
         virtual void set_child(GLuint, ui::widget *);
+        virtual int get_state(GLuint, bool *) const;
+        virtual void set_state(GLuint, bool);
 
         virtual void set_desired_size(void);
 
@@ -71,13 +77,14 @@ namespace ui
 
         void clear_removed_children(void);
 
-        void child_motion(widget *, GLuint, glm::ivec2&);
+        void child_motion(ui::widget *, GLuint, glm::ivec2&);
+        void child_motion_focus(ui::widget *, bool);
 
-        void focus_child(std::list<widget *>::iterator);
+        void focus_child(child_list::iterator);
         void focus_next_child(void);
         void focus_previous_child(void);
 
-        static void focus_callback(active *, void *, void *);
+        static void focus_callback(ui::active *, void *, void *);
 
         void init(composite *);
 
@@ -85,7 +92,8 @@ namespace ui
         explicit composite(composite *);
         template<typename... Args>
         composite(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), children(), to_remove(), old_pos(0, 0)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              children(), to_remove(), old_pos(0, 0)
             {
                 this->init(c);
                 this->set(args...);
@@ -93,18 +101,20 @@ namespace ui
         virtual ~composite();
 
         using ui::rect::get;
+        virtual int get(GLuint, GLuint, bool *) const;
         virtual int get(GLuint, GLuint, float *) const;
         virtual int get(GLuint, GLuint, glm::vec3 *) const;
         virtual int get(GLuint, GLuint, ui::widget **) const;
         using ui::rect::set;
+        virtual void set(GLuint, GLuint, bool);
         virtual void set(GLuint, GLuint, ui::widget *);
 
         GET_VA;
         SET_VA;
 
-        virtual void add_child(widget *);
-        virtual void remove_child(widget *);
-        virtual void move_child(widget *);
+        virtual void add_child(ui::widget *);
+        virtual void remove_child(ui::widget *);
+        virtual void move_child(ui::widget *);
 
         void manage_children(void);
 

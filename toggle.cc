@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2019-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2019-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,15 +33,15 @@ int ui::toggle::get_state(GLuint t, bool *v) const
 {
     if (t == ui::state::checked)
         return this->get_checked_state(v);
-    return this->armable::get_state(t, v);
+    return this->ui::armable::get_state(t, v);
 }
 
 void ui::toggle::set_state(GLuint t, bool v)
 {
     switch (t)
     {
-      case ui::state::checked:  this->set_checked_state(v);      break;
-      default:                  this->armable::set_state(t, v);  break;
+      case ui::state::checked:  this->set_checked_state(v);          break;
+      default:                  this->ui::armable::set_state(t, v);  break;
     }
 }
 
@@ -120,7 +120,7 @@ void ui::toggle::calculate_widget_size(void)
 
 ui::vertex_buffer *ui::toggle::generate_points(void)
 {
-    ui::vertex_buffer *vb = this->label::generate_points();
+    ui::vertex_buffer *vb = this->ui::label::generate_points();
 
     if (this->img.data == NULL)
         return vb;

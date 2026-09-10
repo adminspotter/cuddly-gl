@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,7 +68,7 @@ namespace ui
     class widget : public virtual active
     {
       protected:
-        composite *parent;
+        ui::composite *parent;
         glm::ivec2 pos, relative_pos;
         glm::mat4 pos_transform;
         GLuint vao, vbo, ebo, element_count;
@@ -91,20 +91,21 @@ namespace ui
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
 
-        static void reposition(active *, void *, void *);
+        static void reposition(ui::active *, void *, void *);
 
         virtual void recalculate_absolute_pos(void);
         virtual void recalculate_transformation_matrix(void);
         virtual vertex_buffer *generate_points(void);
         virtual void populate_buffers(void);
 
-        void init(composite *);
+        void init(ui::composite *);
 
       public:
-        explicit widget(composite *);
+        explicit widget(ui::composite *);
         template<typename... Args>
-        widget(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), pos(0, 0), pos_transform(),
+        widget(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              pos(0, 0), pos_transform(),
               foreground(1.0f, 1.0f, 1.0f, 1.0f),
               background(0.5f, 0.5f, 0.5f, 1.0f)
             {

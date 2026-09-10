@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2020  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,7 +48,7 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
 }
 
 ui::active::active(GLuint w, GLuint h)
-    : ui::rect(w, h),
+    : ui::rect::rect(w, h),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
       key_down_cb(), key_up_cb(), resize_cb(), focus_cb()
 {
@@ -62,8 +62,8 @@ ui::active::~active()
 }
 
 void ui::active::add_callback(GLuint cb_list,
-                                    ui::cb_fptr funcptr,
-                                    void *client)
+                              ui::cb_fptr funcptr,
+                              void *client)
 {
     std::list<ui::cb_list_elem>& l = this->which_cb_list(cb_list);
     cb_list_elem new_elem = {funcptr, client};
@@ -72,8 +72,8 @@ void ui::active::add_callback(GLuint cb_list,
 }
 
 void ui::active::remove_callback(GLuint cb_list,
-                                       ui::cb_fptr funcptr,
-                                       void *client)
+                                 ui::cb_fptr funcptr,
+                                 void *client)
 {
     std::list<ui::cb_list_elem>& l = this->which_cb_list(cb_list);
     cb_list_elem old_elem = {funcptr, client};

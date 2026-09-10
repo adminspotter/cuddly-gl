@@ -236,6 +236,7 @@ namespace ui
     namespace state
     {
         const GLuint visible = 1, active = 2, armed = 3, checked = 4;
+        const GLuint tab_sensitive = 5;
     }
 
     namespace child

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2018  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,10 +45,11 @@ namespace ui
         virtual int get_raw_cursor_pos(void) override;
 
       public:
-        explicit password(composite *);
+        explicit password(ui::composite *);
         template<typename... Args>
-        password(composite *c, Args... args)
-            : rect(0, 0), active(0, 0), text_field(c)
+        password(ui::composite *c, Args... args)
+            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+              ui::text_field::text_field(c)
             {
                 this->set(args...);
             };
