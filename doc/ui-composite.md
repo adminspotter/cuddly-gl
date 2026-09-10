@@ -47,23 +47,32 @@ children.
 
 ## WIDGET FOCUS ##
 
-The *focus* of a composite widget refers to the dispatch of events to
-the appropriate child widgets.  When a given widget is said to *have
-focus*, it will be the recipient of any events which occur on the
-level of the enclosing composite widget.  Arbitrating focus is handled
-by two different mechanisms.
+The *focus* of a composite widget refers to the dispatch of keyboard
+events to the appropriate child widgets.  When a given widget is said
+to *have focus*, it will be the recipient of any keyboard events which
+occur on the level of the enclosing composite widget.  Any visible
+widget may receive focus.
 
-Dispatching events based on the location of the mouse cursor is the
-most direct method.  Motion events are always delivered to the widget
-underneath the mouse cursor.  Keyboard focus is acquired upon click of
-the widget in question.  Any visible widget may receive focus by click
-or by location.
+Arbitrating focus is governed by the boolean flag
+`ui::state::tab_sensitive`.  Tab sensitivity in a composite widget
+defaults to the tab sensitivity of its parent, or if there is no
+parent it is enabled by default.  The setting may be changed at any
+time.  Altering a composite's tab sensitivity will cascade to all
+composite-derived children.
 
-Alternatively, focus may also be handled with keyboard shortcuts:  tab
-and shift-tab will cycle focus through the composite's child widgets
-in order of addition.  Nested composites act as a bit of a focus sink,
-in that once focus drops from one composite into a child composite, it
-will never come back to the parent by keyboard shortcuts alone.
+From the two states of tab-sensitivity, there are two mechanisms by
+which focus events are delivered.  A non-tab-sensitive composite
+widget will deliver cursor enter/leave events to children additionally
+as focus events.  A tab-sensitive composite widget will give focus to
+a child upon click of that child, and the child will retain focus
+regardless of cursor position.
+
+Tab-sensitive composites may also redirect focus with keyboard
+shortcuts:  tab and shift-tab will cycle focus through the composite's
+child widgets in order of addition.  Nested composites act as a bit of
+a focus sink, in that once focus drops from one composite into a child
+composite, it will never come back to the parent by keyboard shortcuts
+alone.
 
 ## METHODS ##
 
