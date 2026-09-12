@@ -89,15 +89,12 @@ void ui::vertex_buffer::generate_box(glm::vec2 ul, glm::vec2 lr,
 
 /* We'll use a parametric function to draw our ellipse.
  *
- * <radius.x * cos(theta), radius.y * sin(theta)>
+ * <radius.x * cos(Θ), radius.y * sin(Θ)>
  *
  * The inner_pct is a percentage of the entire radius, rather than a
  * raw screen coord value of any kind.  For example, if the radius is
  * (100, 100), and the inner_pct is 0.15, the inner radius is (15,
  * 15).
- *
- * TODO:  There may be some degenerate stuff that occurs with
- * inner_pct of 0.0, so we should test this.
  */
 void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
                                          float inner_pct, int segments,
@@ -106,7 +103,6 @@ void ui::vertex_buffer::generate_ellipse(glm::vec2 center, glm::vec2 radius,
     int vert_idx = this->vertex.size(), elt_idx = this->element.size();
     int vert_count = vert_idx / 8, vertex_start_count = vert_count;
 
-    /* Clamp inner_pct and segments to reasonable ranges */
     if (inner_pct < 0.0)  inner_pct = 0.0;
     if (inner_pct >= 1.0) inner_pct = 0.99;
 
