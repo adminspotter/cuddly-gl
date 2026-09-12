@@ -92,6 +92,12 @@ Inherited from [ui::composite](ui-composite.md):
   | --------------------- | --------- |
   | **ui::popup::button** | GLuint    |
 
+* **ui::element::size** - new subtype for inner percentage
+
+  | Subtype             | Data type |
+  | ------------------- | --------- |
+  | **ui::side::inner** | float     |
+
 ## INHERITED RESOURCES ##
 
 * **ui::element::border** ([ui::widget](ui-widget.md))
@@ -183,11 +189,6 @@ of the `ui::active` superclass, and from the `ui::active` by way of
 the `ui::widget` superclass, so the constructor of each subclass of
 the `ui::pie_menu` must also explicitly initialize the `ui::rect` and
 `ui::active`.
-
-## BUGS ##
-
-The inner radius is a compile-time definition, and not a settable
-parameter.
 
 ## RELATED ##
 

@@ -38,7 +38,7 @@
 
 #define TWO_PI  M_PI * 2.0f
 
-#define INNER_PCT  0.1f
+#define DEFAULT_INNER_PCT  0.1f
 
 int ui::pie_menu::get_popup(GLuint t, GLuint *v) const
 {
@@ -53,6 +53,25 @@ void ui::pie_menu::set_popup(GLuint t, GLuint v)
 {
     if (t == ui::popup::button)
         this->popup_button = v;
+}
+
+int ui::pie_menu::get_size(GLuint t, float *v) const
+{
+    if (t == ui::side::inner)
+    {
+        *v = this->inner_pct;
+        return 0;
+    }
+    return 1;
+}
+
+void ui::pie_menu::set_size(GLuint t, float v)
+{
+    if (t == ui::side::inner)
+    {
+        this->inner_pct = v;
+        this->populate_buffers();
+    }
 }
 
 /* This is the callback that we add to our parents, in order that they
@@ -97,8 +116,12 @@ void ui::pie_menu::set_desired_size(void)
         float increment = TWO_PI / this->children.size();
         auto child = this->children.begin();
         glm::ivec2 child_pos, child_size;
-        glm::ivec2 middle = this->dim / 4;
         glm::ivec2 center = this->dim / 2;
+        glm::ivec2 inner = {
+            (int)truncf(center.x * this->inner_pct),
+            (int)truncf(center.y * this->inner_pct)
+        };
+        glm::ivec2 middle = (center - inner) / 2 + inner;
 
         for (int i = 0; i < this->children.size(); ++i, ++child)
         {
@@ -124,7 +147,7 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
     glm::vec3 pixel_sz;
     glm::vec2 center(-1.0f, 1.0f), m0, m3;
     glm::vec2 radius(this->dim.x / 2.0f, this->dim.y / 2.0f);
-    float inner_pct = INNER_PCT, pct;
+    float pct;
     int count = std::max(this->dim.x / 3, 15);
     ui::vertex_buffer *vb = new ui::vertex_buffer();
 
@@ -138,11 +161,13 @@ ui::vertex_buffer *ui::pie_menu::generate_points(void)
 
     m0 = radius - glm::vec2(this->margin[0] * pixel_sz.x,
                             this->margin[0] * pixel_sz.y);
-    m3 = (radius * inner_pct)
+    m3 = (radius * this->inner_pct)
         + glm::vec2((this->margin[3] + this->border[3]) * pixel_sz.x,
                     (this->margin[3] + this->border[3]) * pixel_sz.y);
 
-    vb->generate_ellipse(center, radius, inner_pct, count, this->background);
+    vb->generate_ellipse(center, radius, this->inner_pct,
+                         count,
+                         this->background);
 
     /* Outer border */
     if (this->border[0] != 0)
@@ -186,7 +211,7 @@ int ui::pie_menu::which_sector(glm::ivec2& loc)
                      this->dim.y / 2.0f * sinf(angle) / y_factor);
     float outer_length = glm::length(radius);
 
-    if (length < outer_length * INNER_PCT || length > outer_length)
+    if (length < outer_length * this->inner_pct || length > outer_length)
         return -1;
 
     if (angle < 0.0f)
@@ -215,6 +240,7 @@ ui::widget *ui::pie_menu::which_child(glm::ivec2& loc)
 void ui::pie_menu::init(ui::composite *c)
 {
     this->popup_button = ui::mouse::button2;
+    this->inner_pct = DEFAULT_INNER_PCT;
     this->resize = ui::resize::none;
     this->visible = false;
 
@@ -254,12 +280,25 @@ int ui::pie_menu::get(GLuint e, GLuint t, GLuint *v) const
     return this->ui::manager::get(e, t, v);
 }
 
+int ui::pie_menu::get(GLuint e, GLuint t, float *v) const
+{
+    if (e == ui::element::size)
+        return this->get_size(t, v);
+    return this->ui::manager::get(e, t, v);
+}
+
 void ui::pie_menu::set(GLuint e, GLuint t, GLuint v)
 {
     if (e == ui::element::popup)
         this->set_popup(t, v);
     else
         this->ui::manager::set(e, t, v);
+}
+
+void ui::pie_menu::set(GLuint e, GLuint t, float v)
+{
+    if (e == ui::element::size)
+        this->set_size(t, v);
 }
 
 void ui::pie_menu::mouse_pos_callback(glm::ivec2& pos)
