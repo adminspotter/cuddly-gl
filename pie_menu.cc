@@ -55,11 +55,6 @@ void ui::pie_menu::set_popup(GLuint t, GLuint v)
         this->popup_button = v;
 }
 
-void ui::pie_menu::set_resize(GLuint t, GLuint v)
-{
-    /* No-op, since we don't want this to change */
-}
-
 /* This is the callback that we add to our parents, in order that they
  * pop us up under the right conditions.  The client data pointer
  * should point to us.

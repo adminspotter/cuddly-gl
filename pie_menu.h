@@ -41,7 +41,6 @@ namespace ui
 
         int get_popup(GLuint, GLuint *) const;
         void set_popup(GLuint, GLuint);
-        virtual void set_resize(GLuint, GLuint) final;
 
         static void show(ui::active *, void *, void *);
         static void hide(ui::active *, void *, void *);

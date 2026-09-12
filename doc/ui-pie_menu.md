@@ -154,12 +154,12 @@ Inherited from [ui::composite](ui-composite.md):
 
 * **ui::element::resize** ([ui::manager](ui-manager.md))
 
-  | Value                  |
-  | ---------------------- |
-  | **ui::resize::none**   |
-  | **ui::resize::shrink** |
-  | **ui::resize::grow**   |
-  | **ui::resize::all**    |
+  | Value                  | Notes   |
+  | ---------------------- | ------- |
+  | **ui::resize::none**   | Ignored |
+  | **ui::resize::shrink** |         |
+  | **ui::resize::grow**   |         |
+  | **ui::resize::all**    |         |
 
 * **ui::element::size** ([ui::rect](ui-rect.md))
 
