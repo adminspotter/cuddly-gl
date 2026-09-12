@@ -76,14 +76,14 @@ Inherited from [ui::composite](ui-composite.md):
   | Subtype             | Data type |
   | ------------------- | --------- |
   | **ui::side::inner** | GLuint    |
-  | **ui::size::outer** | GLuint    |
+  | **ui::side::outer** | GLuint    |
 
 * **ui::element::margin** - new subtypes for inner and outer margins
 
   | Subtype             | Data type |
   | ------------------- | --------- |
   | **ui::side::inner** | GLuint    |
-  | **ui::size::outer** | GLuint    |
+  | **ui::side::outer** | GLuint    |
 
 * **ui::element::popup** - the mouse button which should pop up the
   menu; valid values are one of `ui::mouse::button*`.
