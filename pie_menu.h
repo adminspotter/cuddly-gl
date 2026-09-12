@@ -38,10 +38,12 @@ namespace ui
     {
       protected:
         int popup_button;
+        float inner_pct;
 
         int get_popup(GLuint, GLuint *) const;
         void set_popup(GLuint, GLuint);
-        virtual void set_resize(GLuint, GLuint) final;
+        virtual int get_size(GLuint, float *) const;
+        virtual void set_size(GLuint, float);
 
         static void show(ui::active *, void *, void *);
         static void hide(ui::active *, void *, void *);
@@ -69,8 +71,10 @@ namespace ui
 
         using ui::manager::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
+        virtual int get(GLuint, GLuint, float *) const;
         using ui::manager::set;
         virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, float);
 
         GET_VA;
         SET_VA;

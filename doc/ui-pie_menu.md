@@ -76,14 +76,14 @@ Inherited from [ui::composite](ui-composite.md):
   | Subtype             | Data type |
   | ------------------- | --------- |
   | **ui::side::inner** | GLuint    |
-  | **ui::size::outer** | GLuint    |
+  | **ui::side::outer** | GLuint    |
 
 * **ui::element::margin** - new subtypes for inner and outer margins
 
   | Subtype             | Data type |
   | ------------------- | --------- |
   | **ui::side::inner** | GLuint    |
-  | **ui::size::outer** | GLuint    |
+  | **ui::side::outer** | GLuint    |
 
 * **ui::element::popup** - the mouse button which should pop up the
   menu; valid values are one of `ui::mouse::button*`.
@@ -91,6 +91,12 @@ Inherited from [ui::composite](ui-composite.md):
   | Subtype               | Data type |
   | --------------------- | --------- |
   | **ui::popup::button** | GLuint    |
+
+* **ui::element::size** - new subtype for inner percentage
+
+  | Subtype             | Data type |
+  | ------------------- | --------- |
+  | **ui::side::inner** | float     |
 
 ## INHERITED RESOURCES ##
 
@@ -154,12 +160,12 @@ Inherited from [ui::composite](ui-composite.md):
 
 * **ui::element::resize** ([ui::manager](ui-manager.md))
 
-  | Value                  |
-  | ---------------------- |
-  | **ui::resize::none**   |
-  | **ui::resize::shrink** |
-  | **ui::resize::grow**   |
-  | **ui::resize::all**    |
+  | Value                  | Notes   |
+  | ---------------------- | ------- |
+  | **ui::resize::none**   | Ignored |
+  | **ui::resize::shrink** |         |
+  | **ui::resize::grow**   |         |
+  | **ui::resize::all**    |         |
 
 * **ui::element::size** ([ui::rect](ui-rect.md))
 
@@ -183,11 +189,6 @@ of the `ui::active` superclass, and from the `ui::active` by way of
 the `ui::widget` superclass, so the constructor of each subclass of
 the `ui::pie_menu` must also explicitly initialize the `ui::rect` and
 `ui::active`.
-
-## BUGS ##
-
-The inner radius is a compile-time definition, and not a settable
-parameter.
 
 ## RELATED ##
 
