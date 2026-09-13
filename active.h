@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,10 +36,8 @@
 
 namespace ui
 {
-    /* A forward declaration, to solve multi-include problems */
     class active;
 
-    /* Callback function pointer */
     typedef void (*cb_fptr)(active *, void *, void *);
     typedef void (*to_fptr)(active *, void *);
 
