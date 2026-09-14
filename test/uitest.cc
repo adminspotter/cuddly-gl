@@ -38,6 +38,7 @@ void print_widget_resources(ui::active *, void *, void *);
 void print_button_resources(ui::active *, void *, void *);
 void print_row_column_resources(ui::active *, void *, void *);
 void print_radio(ui::active *, void *, void *);
+void print_popup_resources(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -250,11 +251,13 @@ int main(int argc, char **argv)
     pu1 = new ui::pie_menu(ctx,
                            ui::element::size, ui::size::width, 200,
                            ui::element::size, ui::size::height, 125,
+                           ui::element::size, ui::side::inner, 0.15f,
                            ui::element::border, ui::side::outer, 1,
                            ui::element::margin, ui::side::outer, 1,
                            ui::element::border, ui::side::inner, 1,
                            ui::element::popup, ui::popup::button,
                            ui::mouse::button0);
+    pu1->add_callback(ui::callback::visible, print_popup_resources, NULL);
     for (intptr_t q = 0; q < 7; ++q)
     {
         std::cout << "  creating child " << q << std::endl;
@@ -487,4 +490,29 @@ void print_radio(ui::active *a, void *call, void *client)
     }
     else
         std::cout << "is not a radio box" << std::endl;
+}
+
+void print_popup_resources(ui::active *a, void *call, void *client)
+{
+    GLuint w, h, pop_button;
+    float inner_pct;
+    int x, y;
+    bool visible;
+    ui::pie_menu *p = dynamic_cast<ui::pie_menu *>(a);
+
+    if (p == NULL)
+        return;
+
+    p->get(ui::element::position, ui::position::x, &x,
+           ui::element::position, ui::position::y, &y,
+           ui::element::size, ui::size::width, &w,
+           ui::element::size, ui::size::height, &h,
+           ui::element::size, ui::side::inner, &inner_pct,
+           ui::element::popup, ui::popup::button, &pop_button,
+           ui::element::state, ui::state::visible, &visible);
+    std::cout << "pos <" << x << ", " << y << ">" << std::endl;
+    std::cout << "size <" << w << ", " << h << "> " << inner_pct << "%"
+              << std::endl;
+    std::cout << "button " << pop_button << std::endl;
+    std::cout << "visible " << visible << std::endl;
 }
