@@ -70,7 +70,7 @@ namespace ui
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
         std::list<cb_list_elem> btn_down_cb, btn_up_cb;
         std::list<cb_list_elem> key_down_cb, key_up_cb;
-        std::list<cb_list_elem> resize_cb, focus_cb;
+        std::list<cb_list_elem> resize_cb, focus_cb, visible_cb;
         to_point timeout;
         to_fptr timeout_func;
         void *timeout_arg;

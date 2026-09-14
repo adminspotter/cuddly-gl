@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2025  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,6 +77,13 @@ namespace ui
     }
     focus_call_data;
 
+    /* Visibility callback routines */
+    typedef struct visible_callback_call
+    {
+        bool visible;
+    }
+    visible_call_data;
+
 #define GET_VA template<typename A, typename... Args>                \
                int get(GLuint e, GLuint t, A *v, Args... args) const  \
                {                                                     \
@@ -145,7 +152,7 @@ namespace ui
     {
         const GLuint enter = 1, leave = 2, btn_down = 3, btn_up = 4;
         const GLuint motion = 5, key_down = 6, key_up = 7, resize = 8;
-        const GLuint focus = 9;
+        const GLuint focus = 9, visible = 10;
     }
 
     namespace mouse
