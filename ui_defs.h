@@ -237,7 +237,7 @@ namespace ui
 
     namespace popup
     {
-        const GLuint visible = 1, button = 2, menu = 3;
+        const GLuint button = 1;
     }
 
     namespace state
