@@ -45,7 +45,7 @@ of inheritance points for widgets.
 A *callback list* is a set of functions which are called in response
 to some event.  Events which the `ui::active` recognizes are *enter*,
 *leave*, *motion*, *btn_down*, *btn_up*, *key_down*, *key_up*,
-*resize*, and *focus*.
+*resize*, *focus*, and *visible*.
 
 Callback functions receive a *call_data* argument, which contains data
 relevant to the individual event.  For example, a *motion* event will
@@ -92,6 +92,7 @@ invocations of the same function, with varying, or even the same,
   | ui::callback::key_up   |
   | ui::callback::resize   |
   | ui::callback::focus    |
+  | ui::callback::visible  |
 
 * `ui::mouse_call_data`
 
@@ -173,6 +174,20 @@ invocations of the same function, with varying, or even the same,
 
   The *focus* callbacks are informed only of whether focus is in or
   out of the widget.
+
+* `ui::visible_call_data`
+
+  The call-data structure which is passed to *visible* callback
+  functions.
+
+  ```cpp
+  struct {
+      bool visible;
+  }
+  ```
+
+  The *visible* callbacks are informed only of whether the widget is
+  visible or not.
 
 ## TIMEOUTS ##
 

@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,10 +36,8 @@
 
 namespace ui
 {
-    /* A forward declaration, to solve multi-include problems */
     class active;
 
-    /* Callback function pointer */
     typedef void (*cb_fptr)(active *, void *, void *);
     typedef void (*to_fptr)(active *, void *);
 
@@ -72,7 +70,7 @@ namespace ui
         std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
         std::list<cb_list_elem> btn_down_cb, btn_up_cb;
         std::list<cb_list_elem> key_down_cb, key_up_cb;
-        std::list<cb_list_elem> resize_cb, focus_cb;
+        std::list<cb_list_elem> resize_cb, focus_cb, visible_cb;
         to_point timeout;
         to_fptr timeout_func;
         void *timeout_arg;

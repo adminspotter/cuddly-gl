@@ -291,8 +291,11 @@ void ui::widget::set_state(GLuint t, bool v)
 {
     if (t == ui::state::visible)
     {
+        ui::visible_call_data vcd = {v};
+
         this->visible = v;
         this->parent->move_child(this);
+        this->call_callbacks(ui::callback::visible, &vcd);
     }
 }
 

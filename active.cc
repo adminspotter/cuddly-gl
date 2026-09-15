@@ -44,6 +44,7 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
       case ui::callback::key_up:    return this->key_up_cb;
       case ui::callback::resize:    return this->resize_cb;
       case ui::callback::focus:     return this->focus_cb;
+      case ui::callback::visible:   return this->visible_cb;
     }
 }
 
