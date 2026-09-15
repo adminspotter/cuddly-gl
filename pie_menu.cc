@@ -256,7 +256,7 @@ void ui::pie_menu::init(ui::composite *c)
 }
 
 ui::pie_menu::pie_menu(ui::composite *c)
-    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect(0, 0)
+    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
 {
     this->init(c);
 }
