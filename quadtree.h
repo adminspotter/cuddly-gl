@@ -37,7 +37,6 @@
 
 namespace ui
 {
-    /* Forward declaration for multi-include problems */
     class widget;
 
     class quadtree
