@@ -2,7 +2,7 @@
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
- * Copyright (C) 2016-2019  Trinity Annabelle Quirk
+ * Copyright (C) 2016-2026  Trinity Annabelle Quirk
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -123,10 +123,7 @@ std::string ui::base_font::search_path(std::string& font_name,
         std::string path = *i;
         std::string::size_type pos;
 
-        /* Make sure the path doesn't have a ~, which stat won't
-         * understand
-         */
-        if ((pos = path.find('~')) != std::string::npos)
+        if (path[0] == '~')
         {
             char *home;
             std::string home_str;
@@ -134,7 +131,7 @@ std::string ui::base_font::search_path(std::string& font_name,
             if ((home = getenv("HOME")) == NULL)
                 throw std::runtime_error("Could not find home directory");
             home_str = home;
-            path.replace(pos, 1, home_str);
+            path.replace(0, 1, home_str);
         }
         path += '/' + font_name;
         if (stat(path.c_str(), &st) != -1)
