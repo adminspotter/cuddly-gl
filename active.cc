@@ -51,7 +51,7 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
 ui::active::active(GLuint w, GLuint h)
     : ui::rect::rect(w, h),
       enter_cb(), leave_cb(), motion_cb(), btn_down_cb(), btn_up_cb(),
-      key_down_cb(), key_up_cb(), resize_cb(), focus_cb()
+      key_down_cb(), key_up_cb(), resize_cb(), focus_cb(), visible_cb()
 {
     this->timeout = ui::zero_time;
     this->timeout_func = NULL;
