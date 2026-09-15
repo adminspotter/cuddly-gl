@@ -53,8 +53,8 @@ namespace ui
         explicit button(ui::composite *);
         template<typename... Args>
         button(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::armable::armable(c)
+            : ui::armable::armable(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0)
             {
                 this->init(c);
                 this->set(args...);

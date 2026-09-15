@@ -60,8 +60,8 @@ namespace ui
         explicit row_column(ui::composite *);
         template<typename... Args>
         row_column(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::manager::manager(c), grid_sz(1, 0)
+            : ui::manager::manager(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0), grid_sz(1, 0)
             {
                 this->init(c);
                 this->set(args...);

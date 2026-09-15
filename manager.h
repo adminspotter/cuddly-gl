@@ -65,8 +65,8 @@ namespace ui
         explicit manager(ui::composite *);
         template<typename... Args>
         manager(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::widget::widget(c), ui::composite::composite(c),
+            : ui::composite::composite(c), ui::widget::widget(c),
+              ui::active::active(0, 0), ui::rect::rect(0, 0),
               child_spacing(0, 0)
             {
                 this->init(c);

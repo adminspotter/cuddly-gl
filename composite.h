@@ -92,7 +92,7 @@ namespace ui
         explicit composite(composite *);
         template<typename... Args>
         composite(composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+            : ui::active::active(0, 0), ui::rect::rect(0, 0),
               children(), to_remove(), old_pos(0, 0)
             {
                 this->init(c);

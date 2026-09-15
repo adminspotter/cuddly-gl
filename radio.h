@@ -105,11 +105,11 @@ namespace ui
 
       public:
         explicit radio_box(ui::composite *c)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0), T(c)
+            : T(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
             {};
         template<typename... Args>
         radio_box(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0), T(c)
+            : T(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
             {
                 this->set(args...);
             };

@@ -61,8 +61,8 @@ namespace ui
         explicit pie_menu(ui::composite *);
         template<typename... Args>
         pie_menu(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::manager::manager(c)
+            : ui::manager::manager(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0)
             {
                 this->init(c);
                 this->set(args...);

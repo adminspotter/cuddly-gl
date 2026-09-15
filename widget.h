@@ -104,7 +104,7 @@ namespace ui
         explicit widget(ui::composite *);
         template<typename... Args>
         widget(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
+            : ui::active::active(0, 0), ui::rect::rect(0, 0),
               pos(0, 0), pos_transform(),
               foreground(1.0f, 1.0f, 1.0f, 1.0f),
               background(0.5f, 0.5f, 0.5f, 1.0f)
