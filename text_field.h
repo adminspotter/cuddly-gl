@@ -102,8 +102,8 @@ namespace ui
         explicit text_field(ui::composite *);
         template<typename... Args>
         text_field(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::label::label(c), cursor_transform()
+            : ui::label::label(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0), cursor_transform()
             {
                 this->init(c);
                 this->set(args...);

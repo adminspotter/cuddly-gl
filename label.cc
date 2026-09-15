@@ -43,7 +43,6 @@ int ui::label::get_font(GLuint t, ui::base_font **v) const
     return 0;
 }
 
-/* ARGSUSED */
 void ui::label::set_font(GLuint t, ui::base_font *v)
 {
     if (t == ui::ownership::shared)

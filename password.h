@@ -48,8 +48,8 @@ namespace ui
         explicit password(ui::composite *);
         template<typename... Args>
         password(ui::composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::text_field::text_field(c)
+            : ui::text_field::text_field(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0)
             {
                 this->set(args...);
             };

@@ -29,6 +29,7 @@
 #include <math.h>
 
 #include <algorithm>
+#include <stdexcept>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/geometric.hpp>
@@ -244,18 +245,18 @@ void ui::pie_menu::init(ui::composite *c)
     this->resize = ui::resize::none;
     this->visible = false;
 
-    if (c != NULL)
-    {
-        c->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
-        c->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
-    }
+    if (c == NULL)
+        throw std::runtime_error("Pie menu can not pop up without a parent");
+
+    c->add_callback(ui::callback::btn_down, ui::pie_menu::show, this);
+    c->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
     this->add_callback(ui::callback::btn_up, ui::pie_menu::hide, this);
 
     this->populate_buffers();
 }
 
 ui::pie_menu::pie_menu(ui::composite *c)
-    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect(0, 0)
+    : ui::manager::manager(c), ui::active::active(0, 0), ui::rect::rect(0, 0)
 {
     this->init(c);
 }

@@ -69,8 +69,8 @@ namespace ui
         explicit label(ui::composite *);
         template<typename... Args>
         label(composite *c, Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::widget::widget(c), str(), img()
+            : ui::widget::widget(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0), str(), img()
             {
                 this->init(c);
                 this->set(args...);

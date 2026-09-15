@@ -52,8 +52,8 @@ namespace ui
         explicit context();
         template<typename... Args>
         context(Args... args)
-            : ui::rect::rect(0, 0), ui::active::active(0, 0),
-              ui::composite::composite(NULL)
+            : ui::composite::composite(NULL), ui::active::active(0, 0),
+              ui::rect::rect(0, 0)
             {
                 this->init();
                 this->set(args...);
