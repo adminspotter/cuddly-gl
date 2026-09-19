@@ -148,32 +148,31 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
 void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *c = (ui::key_call_data *)call;
+    ui::key_call_data *kcd = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
-        t->apply_key(c);
-        ui::key_call_data *k = new ui::key_call_data;
-        memcpy(k, call, sizeof(ui::key_call_data));
+        t->apply_key(kcd);
+        ui::key_call_data *nkcd = new ui::key_call_data;
+        memcpy(nkcd, call, sizeof(ui::key_call_data));
         t->add_timeout(std::chrono::milliseconds(t->repeat_initial),
                        ui::text_field::key_timeout,
-                       k);
+                       nkcd);
     }
 }
 
 void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *c = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
         std::lock_guard<std::mutex> lock(t->repeat_mutex);
         if (t->timeout_arg != NULL)
         {
-            ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
+            ui::key_call_data *kcd = (ui::key_call_data *)t->timeout_arg;
             t->remove_timeout();
-            delete k;
+            delete kcd;
         }
     }
 }
@@ -187,11 +186,11 @@ void ui::text_field::key_timeout(ui::active *a, void *client)
         if (!t->repeat_mutex.try_lock())
             return;
 
-        ui::key_call_data *c = (ui::key_call_data *)client;
-        t->apply_key(c);
+        ui::key_call_data *kcd = (ui::key_call_data *)client;
+        t->apply_key(kcd);
         t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
                        ui::text_field::key_timeout,
-                       c);
+                       kcd);
         t->repeat_mutex.unlock();
     }
 }
