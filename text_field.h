@@ -63,6 +63,7 @@ namespace ui
         virtual void set_image(GLuint, const ui::image&) final;
 
         static void focus_callback(ui::active *, void *, void *);
+        static void btn_callback(ui::active *, void *, void *);
         static void key_down_callback(ui::active *, void *, void *);
         static void key_up_callback(ui::active *, void *, void *);
         static void key_timeout(ui::active *, void *);

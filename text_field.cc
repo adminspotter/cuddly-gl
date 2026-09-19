@@ -147,6 +147,36 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     }
 }
 
+void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+
+    if (t != NULL && bcd->button == ui::mouse::button0)
+    {
+        int i;
+
+        bcd->location.x += t->img_offset;
+        for (i = 0; i <= t->str.size(); ++i)
+            if (t->positions[i] > bcd->location.x)
+                break;
+
+        if (i > t->str.size())
+            t->last_char();
+        else
+        {
+            if (bcd->location.x - t->positions[i - 1]
+                <= t->positions[i] - bcd->location.x)
+                t->cursor_pos = i - 1;
+            else
+                t->cursor_pos = i;
+            t->set_cursor_transform(t->positions[t->cursor_pos]
+                                    - t->img_offset);
+            t->populate_buffers();
+        }
+    }
+}
+
 void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
@@ -563,6 +593,9 @@ void ui::text_field::init(ui::composite *c)
                        NULL);
     this->add_callback(ui::callback::key_up,
                        ui::text_field::key_up_callback,
+                       NULL);
+    this->add_callback(ui::callback::btn_down,
+                       ui::text_field::btn_callback,
                        NULL);
 
     this->populate_buffers();
