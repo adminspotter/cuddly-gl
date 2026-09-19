@@ -107,6 +107,7 @@ void ui::text_field::set_font(GLuint t, ui::base_font *v)
 
     this->calculate_widget_size();
     this->generate_cursor();
+    this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
 }
@@ -115,6 +116,7 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
 {
     this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
 }
@@ -315,6 +317,7 @@ void ui::text_field::last_char(void)
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->calculate_positions();
     this->generate_string_image();
     this->populate_buffers();
 }
@@ -324,6 +327,7 @@ void ui::text_field::remove_previous_char(void)
     if (this->cursor_pos > 0)
     {
         this->str.erase(--this->cursor_pos, 1);
+        this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
     }
@@ -334,6 +338,7 @@ void ui::text_field::remove_next_char(void)
     if (this->cursor_pos < this->str.size())
     {
         this->str.erase(this->cursor_pos, 1);
+        this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
     }
@@ -350,13 +355,8 @@ int ui::text_field::get_raw_cursor_pos(void)
 {
     int ret = 0;
 
-    if (this->font != NULL)
-    {
-        GLuint w, a, d;
-
-        this->get_string_size(this->str.substr(0, this->cursor_pos), w, a, d);
-        ret = w;
-    }
+    if (this->positions.size() > this->cursor_pos)
+        ret = this->positions[this->cursor_pos];
     return ret;
 }
 
@@ -378,6 +378,18 @@ int ui::text_field::calculate_field_length(void)
      */
     return this->dim.x - this->margin[1] - this->margin[2]
         - this->border[1] - this->border[2] - 2;
+}
+
+void ui::text_field::calculate_positions(void)
+{
+    GLuint w, a, d;
+
+    this->positions.clear();
+    for (int i = 0; i <= this->str.size(); ++i)
+    {
+        this->get_string_size(this->str.substr(0, i), w, a, d);
+        this->positions.push_back(w);
+    }
 }
 
 void ui::text_field::generate_string_image(void)
@@ -556,7 +568,7 @@ void ui::text_field::init(ui::composite *c)
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      cursor_transform(), repeat_mutex()
+      positions(), cursor_transform(), repeat_mutex()
 {
     this->init(c);
 }

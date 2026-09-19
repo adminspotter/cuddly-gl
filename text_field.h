@@ -43,6 +43,7 @@ namespace ui
         GLuint cursor_pos, blink, max_length;
         GLuint repeat_initial, repeat_delay;
         GLuint cursor_vao, cursor_vbo, cursor_ebo, cursor_element_count;
+        std::vector<GLuint> positions;
         glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
@@ -90,6 +91,7 @@ namespace ui
         virtual int get_raw_cursor_pos(void);
         void set_cursor_transform(int);
         int calculate_field_length(void);
+        void calculate_positions(void);
 
         virtual void generate_string_image(void) override;
         virtual void calculate_widget_size(void) override;
@@ -103,7 +105,8 @@ namespace ui
         template<typename... Args>
         text_field(ui::composite *c, Args... args)
             : ui::label::label(c), ui::active::active(0, 0),
-              ui::rect::rect(0, 0), cursor_transform()
+              ui::rect::rect(0, 0),
+              positions(), cursor_transform(), repeat_mutex()
             {
                 this->init(c);
                 this->set(args...);
