@@ -409,10 +409,11 @@ void ui::text_field::generate_string_image(void)
         ui::image tmp_img;
         int chunk = field_len / 2;
         int which = std::max((pixel_pos / chunk) - 1, 0);
-        int start = chunk * which;
+        this->img_offset = chunk * which;
 
         /* Take the appropriate portion of the string image */
-        tmp_img.width = std::min(field_len, (int)this->img.width - start);
+        tmp_img.width = std::min(field_len,
+                                 (int)this->img.width - this->img_offset);
         tmp_img.height = this->img.height;
         tmp_img.per_pixel = this->img.per_pixel;
         tmp_img.data = new unsigned char[tmp_img.width
@@ -421,12 +422,12 @@ void ui::text_field::generate_string_image(void)
         for (int r = 0; r < tmp_img.height; ++r)
             memcpy(&tmp_img.data[r * tmp_img.width * tmp_img.per_pixel],
                    &this->img.data[r * this->img.width * tmp_img.per_pixel
-                                   + start],
+                                   + this->img_offset],
                    tmp_img.width * tmp_img.per_pixel);
         this->img = tmp_img;
 
         /* Fix the cursor's position */
-        pixel_pos -= start;
+        pixel_pos -= this->img_offset;
     }
 
     this->set_cursor_transform(pixel_pos);
@@ -520,6 +521,7 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_pos = 0;
     this->blink = 250;
     this->max_length = 20;
+    this->img_offset = 0;
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
     this->cursor_active = false;

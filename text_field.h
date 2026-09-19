@@ -44,6 +44,7 @@ namespace ui
         GLuint repeat_initial, repeat_delay;
         GLuint cursor_vao, cursor_vbo, cursor_ebo, cursor_element_count;
         std::vector<GLuint> positions;
+        int img_offset;
         glm::mat4 cursor_transform;
         std::chrono::high_resolution_clock::time_point cursor_clock;
         bool cursor_visible, cursor_active;
