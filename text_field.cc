@@ -384,12 +384,10 @@ void ui::text_field::generate_string_image(void)
 {
     this->label::generate_string_image();
 
-    GLuint w, a, d;
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
 
-    this->get_string_size(this->str, w, a, d);
-    if (w > field_len)
+    if (this->img.width > field_len)
     {
         /* The full string is too big to be displayed in its entirety.
          * We'll chunk the image into half-widget-size pieces, and try
@@ -402,7 +400,7 @@ void ui::text_field::generate_string_image(void)
         int start = chunk * which;
 
         /* Take the appropriate portion of the string image */
-        tmp_img.width = std::min(field_len, (int)w - start);
+        tmp_img.width = std::min(field_len, (int)this->img.width - start);
         tmp_img.height = this->img.height;
         tmp_img.per_pixel = this->img.per_pixel;
         tmp_img.data = new unsigned char[tmp_img.width
