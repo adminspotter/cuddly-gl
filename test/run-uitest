@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 82;
+use Test::More 'tests' => 84;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -83,6 +83,11 @@ sub interact_with_text_field
     ok($status, "$test: beginning of string");
     $status = SendKeys('some more text');
     ok($status, "$test: inserted text at beginning");
+    $status = PressKey('x');
+    ok($status, "$test: pressed a key for repeat");
+    sleep 1;
+    $status = ReleaseKey('x');
+    ok($status, "$test: released repeated key");
     # Try out moving focus via keyboard
     $status = SendKeys("\t\t\t");
     ok($status, "$test: sent some tabs");
