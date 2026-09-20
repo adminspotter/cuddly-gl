@@ -107,6 +107,7 @@ void ui::text_field::set_font(GLuint t, ui::base_font *v)
 
     this->calculate_widget_size();
     this->generate_cursor();
+    this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
 }
@@ -115,6 +116,7 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
 {
     this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
 }
@@ -145,35 +147,64 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     }
 }
 
+void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+
+    if (t != NULL && bcd->button == ui::mouse::button0)
+    {
+        int i;
+
+        bcd->location.x += t->img_offset;
+        for (i = 0; i <= t->str.size(); ++i)
+            if (t->positions[i] > bcd->location.x)
+                break;
+
+        if (i > t->str.size())
+            t->last_char();
+        else
+        {
+            if (bcd->location.x - t->positions[i - 1]
+                <= t->positions[i] - bcd->location.x)
+                t->cursor_pos = i - 1;
+            else
+                t->cursor_pos = i;
+            t->set_cursor_transform(t->positions[t->cursor_pos]
+                                    - t->img_offset);
+            t->populate_buffers();
+        }
+    }
+}
+
 void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *c = (ui::key_call_data *)call;
+    ui::key_call_data *kcd = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
-        t->apply_key(c);
-        ui::key_call_data *k = new ui::key_call_data;
-        memcpy(k, call, sizeof(ui::key_call_data));
+        t->apply_key(kcd);
+        ui::key_call_data *nkcd = new ui::key_call_data;
+        memcpy(nkcd, call, sizeof(ui::key_call_data));
         t->add_timeout(std::chrono::milliseconds(t->repeat_initial),
                        ui::text_field::key_timeout,
-                       k);
+                       nkcd);
     }
 }
 
 void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *c = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
         std::lock_guard<std::mutex> lock(t->repeat_mutex);
         if (t->timeout_arg != NULL)
         {
-            ui::key_call_data *k = (ui::key_call_data *)t->timeout_arg;
+            ui::key_call_data *kcd = (ui::key_call_data *)t->timeout_arg;
             t->remove_timeout();
-            delete k;
+            delete kcd;
         }
     }
 }
@@ -187,11 +218,11 @@ void ui::text_field::key_timeout(ui::active *a, void *client)
         if (!t->repeat_mutex.try_lock())
             return;
 
-        ui::key_call_data *c = (ui::key_call_data *)client;
-        t->apply_key(c);
+        ui::key_call_data *kcd = (ui::key_call_data *)client;
+        t->apply_key(kcd);
         t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
                        ui::text_field::key_timeout,
-                       c);
+                       kcd);
         t->repeat_mutex.unlock();
     }
 }
@@ -316,6 +347,7 @@ void ui::text_field::last_char(void)
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->calculate_positions();
     this->generate_string_image();
     this->populate_buffers();
 }
@@ -325,6 +357,7 @@ void ui::text_field::remove_previous_char(void)
     if (this->cursor_pos > 0)
     {
         this->str.erase(--this->cursor_pos, 1);
+        this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
     }
@@ -335,6 +368,7 @@ void ui::text_field::remove_next_char(void)
     if (this->cursor_pos < this->str.size())
     {
         this->str.erase(this->cursor_pos, 1);
+        this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
     }
@@ -351,13 +385,8 @@ int ui::text_field::get_raw_cursor_pos(void)
 {
     int ret = 0;
 
-    if (this->font != NULL)
-    {
-        GLuint w, a, d;
-
-        this->get_string_size(this->str.substr(0, this->cursor_pos), w, a, d);
-        ret = w;
-    }
+    if (this->positions.size() > this->cursor_pos)
+        ret = this->positions[this->cursor_pos];
     return ret;
 }
 
@@ -381,16 +410,26 @@ int ui::text_field::calculate_field_length(void)
         - this->border[1] - this->border[2] - 2;
 }
 
+void ui::text_field::calculate_positions(void)
+{
+    GLuint w, a, d;
+
+    this->positions.clear();
+    for (int i = 0; i <= this->str.size(); ++i)
+    {
+        this->get_string_size(this->str.substr(0, i), w, a, d);
+        this->positions.push_back(w);
+    }
+}
+
 void ui::text_field::generate_string_image(void)
 {
     this->label::generate_string_image();
 
-    GLuint w, a, d;
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
 
-    this->get_string_size(this->str, w, a, d);
-    if (w > field_len)
+    if (this->img.width > field_len)
     {
         /* The full string is too big to be displayed in its entirety.
          * We'll chunk the image into half-widget-size pieces, and try
@@ -400,24 +439,14 @@ void ui::text_field::generate_string_image(void)
         ui::image tmp_img;
         int chunk = field_len / 2;
         int which = std::max((pixel_pos / chunk) - 1, 0);
-        int start = chunk * which;
+        this->img_offset = chunk * which;
+        GLuint width = std::min(field_len,
+                                (int)this->img.width - this->img_offset);
 
-        /* Take the appropriate portion of the string image */
-        tmp_img.width = std::min(field_len, (int)w - start);
-        tmp_img.height = this->img.height;
-        tmp_img.per_pixel = this->img.per_pixel;
-        tmp_img.data = new unsigned char[tmp_img.width
-                                         * tmp_img.height
-                                         * tmp_img.per_pixel];
-        for (int r = 0; r < tmp_img.height; ++r)
-            memcpy(&tmp_img.data[r * tmp_img.width * tmp_img.per_pixel],
-                   &this->img.data[r * this->img.width * tmp_img.per_pixel
-                                   + start],
-                   tmp_img.width * tmp_img.per_pixel);
-        this->img = tmp_img;
+        this->img = ui::image(this->img, width, this->img_offset);
 
         /* Fix the cursor's position */
-        pixel_pos -= start;
+        pixel_pos -= this->img_offset;
     }
 
     this->set_cursor_transform(pixel_pos);
@@ -511,6 +540,7 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_pos = 0;
     this->blink = 250;
     this->max_length = 20;
+    this->img_offset = 0;
     this->cursor_clock = std::chrono::high_resolution_clock::now();
     this->cursor_visible = true;
     this->cursor_active = false;
@@ -553,13 +583,16 @@ void ui::text_field::init(ui::composite *c)
     this->add_callback(ui::callback::key_up,
                        ui::text_field::key_up_callback,
                        NULL);
+    this->add_callback(ui::callback::btn_down,
+                       ui::text_field::btn_callback,
+                       NULL);
 
     this->populate_buffers();
 }
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      cursor_transform(), repeat_mutex()
+      positions(), cursor_transform(), repeat_mutex()
 {
     this->init(c);
 }
