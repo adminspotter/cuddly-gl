@@ -440,21 +440,10 @@ void ui::text_field::generate_string_image(void)
         int chunk = field_len / 2;
         int which = std::max((pixel_pos / chunk) - 1, 0);
         this->img_offset = chunk * which;
+        GLuint width = std::min(field_len,
+                                (int)this->img.width - this->img_offset);
 
-        /* Take the appropriate portion of the string image */
-        tmp_img.width = std::min(field_len,
-                                 (int)this->img.width - this->img_offset);
-        tmp_img.height = this->img.height;
-        tmp_img.per_pixel = this->img.per_pixel;
-        tmp_img.data = new unsigned char[tmp_img.width
-                                         * tmp_img.height
-                                         * tmp_img.per_pixel];
-        for (int r = 0; r < tmp_img.height; ++r)
-            memcpy(&tmp_img.data[r * tmp_img.width * tmp_img.per_pixel],
-                   &this->img.data[r * this->img.width * tmp_img.per_pixel
-                                   + this->img_offset],
-                   tmp_img.width * tmp_img.per_pixel);
-        this->img = tmp_img;
+        this->img = ui::image(this->img, width, this->img_offset);
 
         /* Fix the cursor's position */
         pixel_pos -= this->img_offset;

@@ -94,6 +94,20 @@ namespace ui
                 this->data = NULL;
                 *this = i;
             };
+        image(const image& i, GLuint width, GLuint offset)
+            {
+                this->width = width;
+                this->height = i.height;
+                this->per_pixel = i.per_pixel;
+                this->data = new unsigned char[this->width
+                                               * this->height
+                                               * this->per_pixel];
+                for (int row = 0; row < this->height; ++row)
+                    memcpy(&this->data[row * this->width * this->per_pixel],
+                           &i.data[(row * i.width * i.per_pixel)
+                                   + (offset * i.per_pixel)],
+                           this->width * this->per_pixel);
+            };
         ~image()
             {
                 if (this->data != NULL)
