@@ -154,26 +154,7 @@ void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
 
     if (t != NULL && bcd->button == ui::mouse::button0)
     {
-        int i;
-
-        bcd->location.x += t->img_offset;
-        for (i = 0; i <= t->str.size(); ++i)
-            if (t->positions[i] > bcd->location.x)
-                break;
-
-        if (i > t->str.size())
-            t->last_char();
-        else
-        {
-            if (bcd->location.x - t->positions[i - 1]
-                <= t->positions[i] - bcd->location.x)
-                t->cursor_pos = i - 1;
-            else
-                t->cursor_pos = i;
-            t->set_cursor_transform(t->positions[t->cursor_pos]
-                                    - t->img_offset);
-            t->populate_buffers();
-        }
+        t->cursor_mouse_position(bcd->location);
     }
 }
 
@@ -388,6 +369,29 @@ int ui::text_field::get_raw_cursor_pos(void)
     if (this->positions.size() > this->cursor_pos)
         ret = this->positions[this->cursor_pos];
     return ret;
+}
+
+void ui::text_field::cursor_mouse_position(glm::ivec2& loc)
+{
+    int i;
+
+    loc.x += this->img_offset;
+    for (i = 0; i <= this->str.size(); ++i)
+        if (this->positions[i] > loc.x)
+            break;
+
+    if (i > this->str.size())
+        this->last_char();
+    else
+    {
+        if (loc.x - this->positions[i - 1] <= this->positions[i] - loc.x)
+            this->cursor_pos = i - 1;
+        else
+            this->cursor_pos = i;
+        this->set_cursor_transform(this->positions[this->cursor_pos]
+                                   - this->img_offset);
+        this->populate_buffers();
+    }
 }
 
 void ui::text_field::set_cursor_transform(int pixel_pos)

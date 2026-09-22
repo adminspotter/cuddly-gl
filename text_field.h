@@ -91,6 +91,7 @@ namespace ui
         virtual void get_string_size(const std::u32string&,
                                      GLuint&, GLuint&, GLuint&);
         virtual int get_raw_cursor_pos(void);
+        void cursor_mouse_position(glm::ivec2&);
         void set_cursor_transform(int);
         int calculate_field_length(void);
         void calculate_positions(void);
