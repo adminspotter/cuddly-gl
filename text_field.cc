@@ -116,6 +116,8 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
 {
     this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->selection = std::u32string();
+    this->selecting = false;
     this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
@@ -147,7 +149,7 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     }
 }
 
-void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
+void ui::text_field::btn_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
@@ -155,6 +157,31 @@ void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
     if (t != NULL && bcd->button == ui::mouse::button0)
     {
         t->cursor_mouse_position(bcd->location);
+
+        t->selecting = bcd->state == ui::mouse::down;
+        t->select_start = t->cursor_pos;
+        t->selection = std::u32string();
+    }
+}
+
+void ui::text_field::btn_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+
+    if (t != NULL && bcd->button == ui::mouse::button0)
+        t->selecting = bcd->state == ui::mouse::down;
+}
+
+void ui::text_field::motion_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
+
+    if (t != NULL && t->selecting)
+    {
+        t->cursor_mouse_position(mcd->location);
+        t->set_selection_string();
     }
 }
 
@@ -256,6 +283,14 @@ int ui::text_field::get_secondary_repeat(GLuint *v) const
 void ui::text_field::set_secondary_repeat(GLuint v)
 {
     this->repeat_delay = v;
+}
+
+void ui::text_field::set_selection_string(void)
+{
+    this->selection = this->str.substr(std::min(this->cursor_pos,
+                                                this->select_start),
+                                       std::abs((int)this->select_start
+                                                - (int)this->cursor_pos));
 }
 
 void ui::text_field::apply_key(const ui::key_call_data *c)
@@ -551,6 +586,7 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_element_count = 0;
     this->repeat_initial = 350;
     this->repeat_delay = 150;
+    this->selecting = false;
 
     this->parent->get(ui::element::attribute,
                       ui::attribute::position,
@@ -588,7 +624,13 @@ void ui::text_field::init(ui::composite *c)
                        ui::text_field::key_up_callback,
                        NULL);
     this->add_callback(ui::callback::btn_down,
-                       ui::text_field::btn_callback,
+                       ui::text_field::btn_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::btn_up,
+                       ui::text_field::btn_up_callback,
+                       NULL);
+    this->add_callback(ui::callback::motion,
+                       ui::text_field::motion_callback,
                        NULL);
 
     this->populate_buffers();
@@ -596,7 +638,7 @@ void ui::text_field::init(ui::composite *c)
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      positions(), cursor_transform(), repeat_mutex()
+      positions(), cursor_transform(), repeat_mutex(), selection()
 {
     this->init(c);
 }
