@@ -253,7 +253,7 @@ namespace ui
 
     namespace string
     {
-        const GLuint contents = 1;
+        const GLuint contents = 1, selection = 2;
     }
 }
 

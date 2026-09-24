@@ -51,7 +51,7 @@ namespace ui
 
         int get_font(GLuint, ui::base_font **) const;
         virtual void set_font(GLuint, ui::base_font *);
-        int get_string(GLuint, std::string *) const;
+        virtual int get_string(GLuint, std::string *) const;
         virtual void set_string(GLuint, const std::string&);
         int get_image(GLuint, ui::image *) const;
         virtual void set_image(GLuint, const ui::image&);

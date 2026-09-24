@@ -63,6 +63,7 @@ namespace ui
         virtual int get_repeat(GLuint, GLuint *) const;
         virtual void set_repeat(GLuint, GLuint);
         virtual void set_font(GLuint, ui::base_font *) override;
+        virtual int get_string(GLuint, std::string *) const override;
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
 

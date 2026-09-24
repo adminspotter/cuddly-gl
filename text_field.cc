@@ -33,6 +33,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "text_field.h"
+#include "util.h"
 
 void (*ui::text_field::focus_hook)(bool) = NULL;
 
@@ -112,8 +113,21 @@ void ui::text_field::set_font(GLuint t, ui::base_font *v)
     this->reset_cursor();
 }
 
+int ui::text_field::get_string(GLuint t, std::string *v) const
+{
+    if (t == ui::string::selection)
+    {
+        *v = ui::u32strtoutf8(this->selection);
+        return 0;
+    }
+    return this->ui::label::get_string(t, v);
+}
+
 void ui::text_field::set_string(GLuint t, const std::string& v)
 {
+    if (t == ui::string::selection)
+        return;
+
     this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
     this->selection = std::u32string();
