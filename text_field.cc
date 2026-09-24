@@ -142,6 +142,16 @@ void ui::text_field::set_image(GLuint t, const ui::image& v)
     /* Don't do anything; this doesn't make sense in this widget. */
 }
 
+void ui::text_field::set_selection(GLuint t, const glm::uvec2& v)
+{
+    this->select_start = std::min((GLuint)this->str.size(), v.x);
+    this->cursor_pos = std::min((GLuint)this->str.size(), v.y);
+    this->set_selection_string();
+    this->set_cursor_transform(this->positions[this->cursor_pos]
+                               - this->img_offset);
+    this->populate_buffers();
+}
+
 void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
@@ -682,6 +692,12 @@ void ui::text_field::set(GLuint e, GLuint t, GLuint v)
       case ui::element::repeat:  this->set_repeat(t, v);     break;
       default:                   this->label::set(e, t, v);  break;
     }
+}
+
+void ui::text_field::set(GLuint e, GLuint t, const glm::uvec2& v)
+{
+    if (e == ui::element::string)
+        this->set_selection(t, v);
 }
 
 void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)

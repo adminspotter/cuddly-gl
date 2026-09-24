@@ -66,6 +66,7 @@ namespace ui
         virtual int get_string(GLuint, std::string *) const override;
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
+        virtual void set_selection(GLuint, const glm::uvec2&);
 
         static void focus_callback(ui::active *, void *, void *);
         static void btn_down_callback(ui::active *, void *, void *);
@@ -128,6 +129,7 @@ namespace ui
         virtual int get(GLuint, GLuint, GLuint *) const override;
         using ui::label::set;
         virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, const glm::uvec2&);
 
         GET_VA;
         SET_VA;
