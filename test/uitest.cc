@@ -131,7 +131,7 @@ int main(int argc, char **argv)
     std::cout << "creating label 1" << std::endl;
     l1 = new ui::label(ctx,
                        ui::element::font, ui::ownership::shared, std_font,
-                       ui::element::string, 0, greeting,
+                       ui::element::string, ui::string::contents, greeting,
                        ui::element::color, ui::color::foreground, fg1,
                        ui::element::border, ui::side::all, 1,
                        ui::element::margin, ui::side::all, 1,
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
     std::cout << "creating toggle 1" << std::endl;
     tgl1 = new ui::toggle(ctx,
                           ui::element::font, ui::ownership::shared, std_font,
-                          ui::element::string, 0, greeting,
+                          ui::element::string, ui::string::contents, greeting,
                           ui::element::border, ui::side::all, 1,
                           ui::element::color, ui::color::foreground, fg1,
                           ui::element::color, ui::color::background, bg3,
@@ -180,7 +180,7 @@ int main(int argc, char **argv)
     b2 = new ui::button(m1,
                         ui::element::font, ui::ownership::shared, std_font,
                         ui::element::color, ui::color::foreground, fg2,
-                        ui::element::string, 0, greeting,
+                        ui::element::string, ui::string::contents, greeting,
                         ui::element::margin, ui::side::all, 5,
                         ui::element::border, ui::side::all, 5,
                         ui::element::position, ui::position::x, 10,
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
     std::cout << "creating text field 1" << std::endl;
     t1 = new ui::text_field(m1,
                             ui::element::font, ui::ownership::shared, std_font,
-                            ui::element::string, 0, greeting,
+                            ui::element::string, ui::string::contents, greeting,
                             ui::element::size, ui::size::max_width, 10,
                             ui::element::border, ui::side::all, 1,
                             ui::element::color, ui::color::foreground, fg1,
@@ -216,7 +216,7 @@ int main(int argc, char **argv)
 
         s << "Label " << q << "\n" << greeting;
         l->set(ui::element::font, ui::ownership::shared, std_font,
-               ui::element::string, 0, s.str(),
+               ui::element::string, ui::string::contents, s.str(),
                ui::element::border, ui::side::all, 1,
                ui::element::size, ui::size::width, 100);
         l->add_callback(ui::callback::btn_down, print_widget_resources, NULL);
@@ -241,7 +241,7 @@ int main(int argc, char **argv)
         ui::toggle *rbt = new ui::toggle(
             rb1,
             ui::element::font, ui::ownership::shared, std_font,
-            ui::element::string, 0, s.str(),
+            ui::element::string, ui::string::contents, s.str(),
             ui::element::color, ui::color::foreground, fg1,
             ui::element::color, ui::color::background, bg1
         );
@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 
         s << (char)('a' + q);
         pul->set(ui::element::font, ui::ownership::shared, tiny_font,
-                 ui::element::string, 0, s.str());
+                 ui::element::string, ui::string::contents, s.str());
         pul->add_callback(ui::callback::btn_up, menu_callback, (void *)q);
         pul->add_callback(ui::callback::enter, enter_callback, (void *)q);
         pul->add_callback(ui::callback::leave, leave_callback, (void *)q);
@@ -427,7 +427,7 @@ void print_button_resources(ui::active *a, void *call, void *client)
            ui::element::position, ui::position::y, &y,
            ui::element::size, ui::size::width, &w,
            ui::element::size, ui::size::height, &h,
-           ui::element::string, 0, &str,
+           ui::element::string, ui::string::contents, &str,
            ui::element::font, 0, &font,
            ui::element::image, 0, &img,
            ui::element::state, ui::state::visible, &visible,

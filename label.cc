@@ -56,15 +56,22 @@ void ui::label::set_font(GLuint t, ui::base_font *v)
 /* ARGSUSED */
 int ui::label::get_string(GLuint t, std::string *v) const
 {
-    *v = ui::u32strtoutf8(this->str);
-    return 0;
+    if (t == ui::string::contents)
+    {
+        *v = ui::u32strtoutf8(this->str);
+        return 0;
+    }
+    return 1;
 }
 
 /* ARGSUSED */
 void ui::label::set_string(GLuint t, const std::string& v)
 {
-    this->str = ui::utf8tou32str(v);
-    this->generate_string_image();
+    if (t == ui::string::contents)
+    {
+        this->str = ui::utf8tou32str(v);
+        this->generate_string_image();
+    }
 }
 
 /* ARGSUSED */
