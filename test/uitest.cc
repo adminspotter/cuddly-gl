@@ -39,6 +39,7 @@ void print_button_resources(ui::active *, void *, void *);
 void print_row_column_resources(ui::active *, void *, void *);
 void print_radio(ui::active *, void *, void *);
 void print_popup_resources(ui::active *, void *, void *);
+void print_selection(ui::active *, void *, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -195,6 +196,7 @@ int main(int argc, char **argv)
                             ui::element::color, ui::color::background, bg1,
                             ui::element::position, ui::position::x, 10,
                             ui::element::position, ui::position::y, 100);
+    t1->add_callback(ui::callback::btn_up, print_selection, NULL);
     std::cout << "creating row-column 1" << std::endl;
     r1 = new ui::row_column(ctx,
                             ui::element::border, ui::side::all, 1,
@@ -515,4 +517,18 @@ void print_popup_resources(ui::active *a, void *call, void *client)
               << std::endl;
     std::cout << "button " << pop_button << std::endl;
     std::cout << "visible " << visible << std::endl;
+}
+
+void print_selection(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    std::string full_str, selection;
+
+    if (t == NULL)
+        return;
+
+    t->get(ui::element::string, ui::string::contents, &full_str,
+           ui::element::string, ui::string::selection, &selection);
+    std::cout << "str [" << full_str << "]" << std::endl;
+    std::cout << "selection [" << selection << "]" << std::endl;
 }
