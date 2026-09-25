@@ -286,6 +286,9 @@ int main(int argc, char **argv)
     }
     ui_disconnect_glfw(ctx, w);
     delete ctx;
+    img.reset();
+    delete tiny_font;
+    delete std_font;
     glfwTerminate();
     return 0;
 }
