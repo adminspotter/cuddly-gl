@@ -53,10 +53,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <pwd.h>
 
 #include <set>
 #include <stdexcept>
 #include <algorithm>
+#include <sstream>
 
 #include "util.h"
 #include "font.h"
@@ -112,6 +114,37 @@ void ui::glyph::copy_to_image(ui::image& img,
     }
 }
 
+std::string ui::base_font::get_homedir(void)
+{
+    int ret;
+    uid_t user_id = getuid();
+    struct passwd pw_entry, *pw_ptr;
+    size_t len = std::max(sysconf(_SC_GETPW_R_SIZE_MAX), 1024L);
+    char *buf = NULL;
+
+    do
+    {
+        if (buf != NULL)
+            len *= 2;
+        if ((buf = (char *)realloc(buf, len)) == NULL)
+            throw std::runtime_error("Could not allocate memory to expand ~");
+    }
+    while ((ret = getpwuid_r(user_id, &pw_entry, buf, len, &pw_ptr)) == ERANGE);
+    if (ret != 0)
+    {
+        std::ostringstream s;
+        char err[128];
+
+        strerror_r(ret, err, sizeof(err));
+        s << "Could not expand ~: " << err << " (" << ret << ")";
+        throw std::runtime_error(s.str());
+    }
+
+    std::string result = pw_ptr->pw_dir;
+    free(buf);
+    return result;
+}
+
 std::string ui::base_font::search_path(std::string& font_name,
                                        ui::search_paths& paths)
 {
@@ -121,19 +154,12 @@ std::string ui::base_font::search_path(std::string& font_name,
     for (i = paths.begin(); i != paths.end(); ++i)
     {
         std::string path = *i;
-        std::string::size_type pos;
 
         if (path[0] == '~')
-        {
-            char *home;
-            std::string home_str;
-
-            if ((home = getenv("HOME")) == NULL)
-                throw std::runtime_error("Could not find home directory");
-            home_str = home;
-            path.replace(0, 1, home_str);
-        }
-        path += '/' + font_name;
+            path.replace(0, 1, ui::base_font::get_homedir());
+        if (path[path.size() - 1] != '/')
+            path += '/';
+        path += font_name;
         if (stat(path.c_str(), &st) != -1)
             return path;
     }
