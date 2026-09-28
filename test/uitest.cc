@@ -55,6 +55,7 @@ ui::pie_menu *pu1;
 std::string font_name("techover.ttf"), greeting("Howdy!");
 std::vector<std::string> paths =
 {
+    "~/no-such_dir",
     ".",
     "./test",
     "~/Library/Fonts",

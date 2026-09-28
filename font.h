@@ -101,6 +101,7 @@ namespace ui
         BasicCache<struct glyph, glyph_cleanup, FT_ULong> glyphs;
         int bbox_w, bbox_a, bbox_d;
 
+        static std::string get_homedir(void);
         static std::string search_path(std::string&, search_paths&);
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
