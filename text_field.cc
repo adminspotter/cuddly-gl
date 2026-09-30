@@ -387,6 +387,8 @@ void ui::text_field::last_char(void)
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->selecting = false;
+    this->select_start = this->cursor_pos;
     this->calculate_positions();
     this->generate_string_image();
     this->populate_buffers();
@@ -397,6 +399,8 @@ void ui::text_field::remove_previous_char(void)
     if (this->cursor_pos > 0)
     {
         this->str.erase(--this->cursor_pos, 1);
+        this->selecting = false;
+        this->select_start = this->cursor_pos;
         this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
@@ -408,6 +412,8 @@ void ui::text_field::remove_next_char(void)
     if (this->cursor_pos < this->str.size())
     {
         this->str.erase(this->cursor_pos, 1);
+        this->selecting = false;
+        this->select_start = this->cursor_pos;
         this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
