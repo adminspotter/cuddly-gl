@@ -21,9 +21,10 @@ jobs:
         run: |
           lcov -c -q --directory . --output-file lcov.info --no-external --exclude '*/test/*'
       - name: Report code coverage
-        uses: zgosalvez/github-actions-report-lcov@v4.1.2
+        uses: zgosalvez/github-actions-report-lcov@v7.2.1
         with:
           coverage-files: lcov.info
           update-comment: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           minimum-coverage: 50
+          artifact-name: cuddly-gl-coverage-report
