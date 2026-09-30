@@ -164,9 +164,9 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::string** ([ui::label](ui-label.md))
 
-  | Subtype | Data type   |
-  | ------- | ----------- |
-  | none    | std::string |
+  | Subtype                  | Data type   |
+  | ------------------------ | ----------- |
+  | **ui::string::contents** | std::string |
 
 ## SUBCLASSING ##
 

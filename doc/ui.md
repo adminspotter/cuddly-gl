@@ -354,7 +354,7 @@ Images use the [`ui::image`](#image) support type.
   * `ui::ownership::shared` ([`ui::font *`](#font))
   * `ui::ownership::owned` ([`ui::font *`](#font))
 * `ui::element::string`
-  * No subtypes (`std::string`)
+  * `ui::string::contents` (`std::string`)
 * `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 

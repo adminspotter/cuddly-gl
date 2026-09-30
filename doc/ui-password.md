@@ -127,9 +127,9 @@ The `ui::password` adds no new resources.
 
 * **ui::element::string** ([ui::label](ui-label.md))
 
-  | Subtype | Data type   |
-  | ------- | ----------- |
-  | none    | std::string |
+  | Subtype                  | Data type   |
+  | ------------------------ | ----------- |
+  | **ui::string::contents** | std::string |
 
 ## SUBCLASSING ##
 
