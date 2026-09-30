@@ -108,8 +108,9 @@ Events are propagated through the widget set by callbacks.  Each type
 of callback has a list of zero or more functions that it will call for
 that event.  Currently the events that our toolkit handles are mouse
 motion, enter, leave, mouse button down, mouse button up, key down,
-and key up.  They, as with the get and set, have a consistent
-interfaces.  A callback routine has a standard signature:
+key up, resize, focus, and visibility.  They, as with the get and set,
+have a consistent interface.  A callback routine has a standard
+signature:
 
 * widget (`ui::active *`)  
   This is the widget which is processing the event.
