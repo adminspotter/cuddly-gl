@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'tests' => 84;
+use Test::More 'tests' => 89;
 
 use X11::GUITest qw(:ALL :CONST);
 
@@ -88,6 +88,18 @@ sub interact_with_text_field
     sleep 1;
     $status = ReleaseKey('x');
     ok($status, "$test: released repeated key");
+
+    # Selection
+    $status = PressMouseButton(M_BTN1);
+    ok($status, "$test: pressed mouse");
+    my ($x, $y) = GetWindowPos($uitest);
+    ok(defined $x, "$test: x pos is defined");
+    ok(defined $y, "$test: y pos is defined");
+    $status = MoveMouseAbs($x + 325, $y + 140);
+    ok($status, "$test: moved mouse");
+    $status = ReleaseMouseButton(M_BTN1);
+    ok($status, "$test: released mouse");
+
     # Try out moving focus via keyboard
     $status = SendKeys("\t\t\t");
     ok($status, "$test: sent some tabs");

@@ -50,6 +50,10 @@ namespace ui
         bool cursor_visible, cursor_active;
         std::mutex repeat_mutex;
 
+        bool selecting;
+        GLuint select_start;
+        std::u32string selection;
+
         using ui::label::get_size;
         virtual int get_size(GLuint, GLuint *) const override;
         using ui::label::set_size;
@@ -59,11 +63,15 @@ namespace ui
         virtual int get_repeat(GLuint, GLuint *) const;
         virtual void set_repeat(GLuint, GLuint);
         virtual void set_font(GLuint, ui::base_font *) override;
+        virtual int get_string(GLuint, std::string *) const override;
         virtual void set_string(GLuint, const std::string&) override;
         virtual void set_image(GLuint, const ui::image&) final;
+        virtual void set_selection(GLuint, const glm::uvec2&);
 
         static void focus_callback(ui::active *, void *, void *);
-        static void btn_callback(ui::active *, void *, void *);
+        static void btn_down_callback(ui::active *, void *, void *);
+        static void btn_up_callback(ui::active *, void *, void *);
+        static void motion_callback(ui::active *, void *, void *);
         static void key_down_callback(ui::active *, void *, void *);
         static void key_up_callback(ui::active *, void *, void *);
         static void key_timeout(ui::active *, void *);
@@ -76,14 +84,15 @@ namespace ui
         void set_initial_repeat(GLuint);
         int get_secondary_repeat(GLuint *) const;
         void set_secondary_repeat(GLuint);
+        void set_selection_string(void);
         void apply_key(const ui::key_call_data *);
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);
-        void first_char(void);
-        void previous_char(void);
-        void next_char(void);
-        void last_char(void);
+        void first_char(bool);
+        void previous_char(bool);
+        void next_char(bool);
+        void last_char(bool);
         void insert_char(uint32_t);
         void remove_previous_char(void);
         void remove_next_char(void);
@@ -91,6 +100,7 @@ namespace ui
         virtual void get_string_size(const std::u32string&,
                                      GLuint&, GLuint&, GLuint&);
         virtual int get_raw_cursor_pos(void);
+        void cursor_mouse_position(glm::ivec2&);
         void set_cursor_transform(int);
         int calculate_field_length(void);
         void calculate_positions(void);
@@ -108,7 +118,7 @@ namespace ui
         text_field(ui::composite *c, Args... args)
             : ui::label::label(c), ui::active::active(0, 0),
               ui::rect::rect(0, 0),
-              positions(), cursor_transform(), repeat_mutex()
+              positions(), cursor_transform(), repeat_mutex(), selection()
             {
                 this->init(c);
                 this->set(args...);
@@ -119,6 +129,7 @@ namespace ui
         virtual int get(GLuint, GLuint, GLuint *) const override;
         using ui::label::set;
         virtual void set(GLuint, GLuint, GLuint) override;
+        virtual void set(GLuint, GLuint, const glm::uvec2&);
 
         GET_VA;
         SET_VA;

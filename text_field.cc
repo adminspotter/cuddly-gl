@@ -33,6 +33,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "text_field.h"
+#include "util.h"
 
 void (*ui::text_field::focus_hook)(bool) = NULL;
 
@@ -112,10 +113,25 @@ void ui::text_field::set_font(GLuint t, ui::base_font *v)
     this->reset_cursor();
 }
 
+int ui::text_field::get_string(GLuint t, std::string *v) const
+{
+    if (t == ui::string::selection)
+    {
+        *v = ui::u32strtoutf8(this->selection);
+        return 0;
+    }
+    return this->ui::label::get_string(t, v);
+}
+
 void ui::text_field::set_string(GLuint t, const std::string& v)
 {
+    if (t == ui::string::selection)
+        return;
+
     this->ui::label::set_string(t, v);
     this->cursor_pos = this->str.size();
+    this->selection = std::u32string();
+    this->selecting = false;
     this->calculate_positions();
     this->generate_string_image();
     this->reset_cursor();
@@ -124,6 +140,16 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
 void ui::text_field::set_image(GLuint t, const ui::image& v)
 {
     /* Don't do anything; this doesn't make sense in this widget. */
+}
+
+void ui::text_field::set_selection(GLuint t, const glm::uvec2& v)
+{
+    this->select_start = std::min((GLuint)this->str.size(), v.x);
+    this->cursor_pos = std::min((GLuint)this->str.size(), v.y);
+    this->set_selection_string();
+    this->set_cursor_transform(this->positions[this->cursor_pos]
+                               - this->img_offset);
+    this->populate_buffers();
 }
 
 void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
@@ -147,33 +173,39 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     }
 }
 
-void ui::text_field::btn_callback(ui::active *a, void *call, void *client)
+void ui::text_field::btn_down_callback(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
     if (t != NULL && bcd->button == ui::mouse::button0)
     {
-        int i;
+        t->cursor_mouse_position(bcd->location);
 
-        bcd->location.x += t->img_offset;
-        for (i = 0; i <= t->str.size(); ++i)
-            if (t->positions[i] > bcd->location.x)
-                break;
+        t->selecting = bcd->state == ui::mouse::down;
+        t->select_start = t->cursor_pos;
+        t->selection = std::u32string();
+    }
+}
 
-        if (i > t->str.size())
-            t->last_char();
-        else
-        {
-            if (bcd->location.x - t->positions[i - 1]
-                <= t->positions[i] - bcd->location.x)
-                t->cursor_pos = i - 1;
-            else
-                t->cursor_pos = i;
-            t->set_cursor_transform(t->positions[t->cursor_pos]
-                                    - t->img_offset);
-            t->populate_buffers();
-        }
+void ui::text_field::btn_up_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
+
+    if (t != NULL && bcd->button == ui::mouse::button0)
+        t->selecting = bcd->state == ui::mouse::down;
+}
+
+void ui::text_field::motion_callback(ui::active *a, void *call, void *client)
+{
+    ui::text_field *t = dynamic_cast<ui::text_field *>(a);
+    ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
+
+    if (t != NULL && t->selecting)
+    {
+        t->cursor_mouse_position(mcd->location);
+        t->set_selection_string();
     }
 }
 
@@ -277,20 +309,32 @@ void ui::text_field::set_secondary_repeat(GLuint v)
     this->repeat_delay = v;
 }
 
+void ui::text_field::set_selection_string(void)
+{
+    this->selection = this->str.substr(std::min(this->cursor_pos,
+                                                this->select_start),
+                                       std::abs((int)this->select_start
+                                                - (int)this->cursor_pos));
+}
+
 void ui::text_field::apply_key(const ui::key_call_data *c)
 {
     if (c->character != 0)
         this->insert_char(c->character);
     else
+    {
+        bool select = c->mods & ui::key_mod::shift;
+
         switch (c->key)
         {
-          case ui::key::l_arrow:  this->previous_char();         break;
-          case ui::key::r_arrow:  this->next_char();             break;
-          case ui::key::home:     this->first_char();            break;
-          case ui::key::end:      this->last_char();             break;
+          case ui::key::l_arrow:  this->previous_char(select);   break;
+          case ui::key::r_arrow:  this->next_char(select);       break;
+          case ui::key::home:     this->first_char(select);      break;
+          case ui::key::end:      this->last_char(select);       break;
           case ui::key::bkspc:    this->remove_previous_char();  break;
           case ui::key::del:      this->remove_next_char();      break;
         }
+    }
 }
 
 void ui::text_field::reset_cursor(void)
@@ -310,36 +354,44 @@ void ui::text_field::deactivate_cursor(void)
     this->cursor_active = false;
 }
 
-void ui::text_field::first_char(void)
+void ui::text_field::first_char(bool select)
 {
     this->cursor_pos = 0;
+    if (!select)
+        this->select_start = this->cursor_pos;
     this->generate_string_image();
     this->populate_buffers();
 }
 
-void ui::text_field::previous_char(void)
+void ui::text_field::previous_char(bool select)
 {
     if (this->cursor_pos > 0)
     {
         --this->cursor_pos;
+        if (!select)
+            this->select_start = this->cursor_pos;
         this->generate_string_image();
         this->populate_buffers();
     }
 }
 
-void ui::text_field::next_char(void)
+void ui::text_field::next_char(bool select)
 {
     if (this->cursor_pos < this->str.size())
     {
         ++this->cursor_pos;
+        if (!select)
+            this->select_start = this->cursor_pos;
         this->generate_string_image();
         this->populate_buffers();
     }
 }
 
-void ui::text_field::last_char(void)
+void ui::text_field::last_char(bool select)
 {
     this->cursor_pos = this->str.size();
+    if (!select)
+        this->select_start = this->cursor_pos;
     this->generate_string_image();
     this->populate_buffers();
 }
@@ -347,6 +399,8 @@ void ui::text_field::last_char(void)
 void ui::text_field::insert_char(uint32_t c)
 {
     this->str.insert(this->cursor_pos++, 1, c);
+    this->selecting = false;
+    this->select_start = this->cursor_pos;
     this->calculate_positions();
     this->generate_string_image();
     this->populate_buffers();
@@ -357,6 +411,8 @@ void ui::text_field::remove_previous_char(void)
     if (this->cursor_pos > 0)
     {
         this->str.erase(--this->cursor_pos, 1);
+        this->selecting = false;
+        this->select_start = this->cursor_pos;
         this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
@@ -368,6 +424,8 @@ void ui::text_field::remove_next_char(void)
     if (this->cursor_pos < this->str.size())
     {
         this->str.erase(this->cursor_pos, 1);
+        this->selecting = false;
+        this->select_start = this->cursor_pos;
         this->calculate_positions();
         this->generate_string_image();
         this->populate_buffers();
@@ -388,6 +446,29 @@ int ui::text_field::get_raw_cursor_pos(void)
     if (this->positions.size() > this->cursor_pos)
         ret = this->positions[this->cursor_pos];
     return ret;
+}
+
+void ui::text_field::cursor_mouse_position(glm::ivec2& loc)
+{
+    int i;
+
+    loc.x += this->img_offset;
+    for (i = 0; i <= this->str.size(); ++i)
+        if (this->positions[i] > loc.x)
+            break;
+
+    if (i > this->str.size())
+        this->last_char(this->selecting);
+    else
+    {
+        if (loc.x - this->positions[i - 1] <= this->positions[i] - loc.x)
+            this->cursor_pos = i - 1;
+        else
+            this->cursor_pos = i;
+        this->set_cursor_transform(this->positions[this->cursor_pos]
+                                   - this->img_offset);
+        this->populate_buffers();
+    }
 }
 
 void ui::text_field::set_cursor_transform(int pixel_pos)
@@ -547,6 +628,7 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_element_count = 0;
     this->repeat_initial = 350;
     this->repeat_delay = 150;
+    this->selecting = false;
 
     this->parent->get(ui::element::attribute,
                       ui::attribute::position,
@@ -584,7 +666,13 @@ void ui::text_field::init(ui::composite *c)
                        ui::text_field::key_up_callback,
                        NULL);
     this->add_callback(ui::callback::btn_down,
-                       ui::text_field::btn_callback,
+                       ui::text_field::btn_down_callback,
+                       NULL);
+    this->add_callback(ui::callback::btn_up,
+                       ui::text_field::btn_up_callback,
+                       NULL);
+    this->add_callback(ui::callback::motion,
+                       ui::text_field::motion_callback,
                        NULL);
 
     this->populate_buffers();
@@ -592,7 +680,7 @@ void ui::text_field::init(ui::composite *c)
 
 ui::text_field::text_field(ui::composite *c)
     : ui::label::label(c), ui::active::active(0, 0), ui::rect::rect(0, 0),
-      positions(), cursor_transform(), repeat_mutex()
+      positions(), cursor_transform(), repeat_mutex(), selection()
 {
     this->init(c);
 }
@@ -622,6 +710,12 @@ void ui::text_field::set(GLuint e, GLuint t, GLuint v)
       case ui::element::repeat:  this->set_repeat(t, v);     break;
       default:                   this->label::set(e, t, v);  break;
     }
+}
+
+void ui::text_field::set(GLuint e, GLuint t, const glm::uvec2& v)
+{
+    if (e == ui::element::string)
+        this->set_selection(t, v);
 }
 
 void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)

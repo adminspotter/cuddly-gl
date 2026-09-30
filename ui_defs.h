@@ -250,6 +250,11 @@ namespace ui
     {
         const GLuint radio = 1, focused = 2;
     }
+
+    namespace string
+    {
+        const GLuint contents = 1, selection = 2;
+    }
 }
 
 #endif /* __INC_CUDDLY_UI_DEFS_H__ */
