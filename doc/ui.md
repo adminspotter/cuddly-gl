@@ -403,7 +403,7 @@ pressed, the button becomes armed.
 The `ui::text_field` class ([text_field.h](../client/ui/text_field.h)
 and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
 the [`ui::label`](#label) widget class.  It adds the ability to edit
-the string.
+the string and select some part of the existing string.
 
 The text field adds a size subtype of `max_width`, which indicates the
 desired width of the field.  The standard height is 1 character.  The
@@ -423,6 +423,8 @@ be set but will be ignored.
 * `ui::element::repeat`
   * `ui::repeat::initial` (`GLuint`)
   * `ui::repeat::secondary` (`GLuint`)
+* `ui::element::string`
+  * `ui::string::selection` (`std::string`)
 
 ###### Text field inherited resources ######
 
@@ -454,8 +456,8 @@ The password field does not add any new resources.
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
-* `ui::element::string` (`ui::label`)
-* `ui::element::cursor` ([`ui::text_field`](#text_field))
+* `ui::element::string` (`ui::label`/[`ui::text_field`](#text_field))
+* `ui::element::cursor` (`ui::text_field`)
 * `ui::element::size` (`ui::text_field`)
 * `ui::element::repeat` (`ui::text_field`)
 
