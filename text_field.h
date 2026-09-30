@@ -89,10 +89,10 @@ namespace ui
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);
-        void first_char(void);
-        void previous_char(void);
-        void next_char(void);
-        void last_char(void);
+        void first_char(bool);
+        void previous_char(bool);
+        void next_char(bool);
+        void last_char(bool);
         void insert_char(uint32_t);
         void remove_previous_char(void);
         void remove_next_char(void);

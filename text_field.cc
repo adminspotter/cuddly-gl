@@ -322,15 +322,19 @@ void ui::text_field::apply_key(const ui::key_call_data *c)
     if (c->character != 0)
         this->insert_char(c->character);
     else
+    {
+        bool select = c->mods & ui::key_mod::shift;
+
         switch (c->key)
         {
-          case ui::key::l_arrow:  this->previous_char();         break;
-          case ui::key::r_arrow:  this->next_char();             break;
-          case ui::key::home:     this->first_char();            break;
-          case ui::key::end:      this->last_char();             break;
+          case ui::key::l_arrow:  this->previous_char(select);   break;
+          case ui::key::r_arrow:  this->next_char(select);       break;
+          case ui::key::home:     this->first_char(select);      break;
+          case ui::key::end:      this->last_char(select);       break;
           case ui::key::bkspc:    this->remove_previous_char();  break;
           case ui::key::del:      this->remove_next_char();      break;
         }
+    }
 }
 
 void ui::text_field::reset_cursor(void)
@@ -350,36 +354,44 @@ void ui::text_field::deactivate_cursor(void)
     this->cursor_active = false;
 }
 
-void ui::text_field::first_char(void)
+void ui::text_field::first_char(bool select)
 {
     this->cursor_pos = 0;
+    if (!select)
+        this->select_start = this->cursor_pos;
     this->generate_string_image();
     this->populate_buffers();
 }
 
-void ui::text_field::previous_char(void)
+void ui::text_field::previous_char(bool select)
 {
     if (this->cursor_pos > 0)
     {
         --this->cursor_pos;
+        if (!select)
+            this->select_start = this->cursor_pos;
         this->generate_string_image();
         this->populate_buffers();
     }
 }
 
-void ui::text_field::next_char(void)
+void ui::text_field::next_char(bool select)
 {
     if (this->cursor_pos < this->str.size())
     {
         ++this->cursor_pos;
+        if (!select)
+            this->select_start = this->cursor_pos;
         this->generate_string_image();
         this->populate_buffers();
     }
 }
 
-void ui::text_field::last_char(void)
+void ui::text_field::last_char(bool select)
 {
     this->cursor_pos = this->str.size();
+    if (!select)
+        this->select_start = this->cursor_pos;
     this->generate_string_image();
     this->populate_buffers();
 }
@@ -446,7 +458,7 @@ void ui::text_field::cursor_mouse_position(glm::ivec2& loc)
             break;
 
     if (i > this->str.size())
-        this->last_char();
+        this->last_char(this->selecting);
     else
     {
         if (loc.x - this->positions[i - 1] <= this->positions[i] - loc.x)
