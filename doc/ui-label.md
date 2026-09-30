@@ -91,9 +91,9 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::string** - string displayed in the object
 
-  | Subtype | Data type   | Notes           |
-  | ------- | ----------- | --------------- |
-  | none    | std::string | In UTF-8 format |
+  | Subtype                  | Data type   | Notes           |
+  | ------------------------ | ----------- | --------------- |
+  | **ui::string::contents** | std::string | In UTF-8 format |
 
 ## INHERITED RESOURCES ##
 

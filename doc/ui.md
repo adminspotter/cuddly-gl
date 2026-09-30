@@ -108,8 +108,9 @@ Events are propagated through the widget set by callbacks.  Each type
 of callback has a list of zero or more functions that it will call for
 that event.  Currently the events that our toolkit handles are mouse
 motion, enter, leave, mouse button down, mouse button up, key down,
-and key up.  They, as with the get and set, have a consistent
-interfaces.  A callback routine has a standard signature:
+key up, resize, focus, and visibility.  They, as with the get and set,
+have a consistent interface.  A callback routine has a standard
+signature:
 
 * widget (`ui::active *`)  
   This is the widget which is processing the event.
@@ -353,7 +354,7 @@ Images use the [`ui::image`](#image) support type.
   * `ui::ownership::shared` ([`ui::font *`](#font))
   * `ui::ownership::owned` ([`ui::font *`](#font))
 * `ui::element::string`
-  * No subtypes (`std::string`)
+  * `ui::string::contents` (`std::string`)
 * `ui::element::image`
   * No subtypes ([`ui::image`](#image))
 
@@ -402,7 +403,7 @@ pressed, the button becomes armed.
 The `ui::text_field` class ([text_field.h](../client/ui/text_field.h)
 and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
 the [`ui::label`](#label) widget class.  It adds the ability to edit
-the string.
+the string and select some part of the existing string.
 
 The text field adds a size subtype of `max_width`, which indicates the
 desired width of the field.  The standard height is 1 character.  The
@@ -422,6 +423,8 @@ be set but will be ignored.
 * `ui::element::repeat`
   * `ui::repeat::initial` (`GLuint`)
   * `ui::repeat::secondary` (`GLuint`)
+* `ui::element::string`
+  * `ui::string::selection` (`std::string`)
 
 ###### Text field inherited resources ######
 
@@ -453,8 +456,8 @@ The password field does not add any new resources.
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
 * `ui::element::font` ([`ui::label`](#label))
-* `ui::element::string` (`ui::label`)
-* `ui::element::cursor` ([`ui::text_field`](#text_field))
+* `ui::element::string` (`ui::label`/[`ui::text_field`](#text_field))
+* `ui::element::cursor` (`ui::text_field`)
 * `ui::element::size` (`ui::text_field`)
 * `ui::element::repeat` (`ui::text_field`)
 

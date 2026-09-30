@@ -97,6 +97,15 @@ Inherited from [ui::widget](ui-widget.md):
   | ----------------------- | --------- |
   | **ui::size::max_width** | GLuint    |
 
+* **ui::element::string** - additional subtype for text selection.
+    The data types for getting and setting are different - get will
+    retrieve the string, and set takes the start and end positions.
+
+  | Subtype                   | Data type   | Notes      |
+  | ------------------------- | ----------- | ---------- |
+  | **ui::string::selection** | std::string | `get`-only |
+  | **ui::string::selection** | glm::uvec2  | `set`-only |
+
 ## INHERITED RESOURCES ##
 
 * **ui::element::border** ([ui::widget](ui-widget.md))
@@ -164,9 +173,9 @@ Inherited from [ui::widget](ui-widget.md):
 
 * **ui::element::string** ([ui::label](ui-label.md))
 
-  | Subtype | Data type   |
-  | ------- | ----------- |
-  | none    | std::string |
+  | Subtype                  | Data type   |
+  | ------------------------ | ----------- |
+  | **ui::string::contents** | std::string |
 
 ## SUBCLASSING ##
 
