@@ -17,7 +17,8 @@ ui::text_field *t = new ui::text_field(parent, ...);
 
 The `ui::text_field` is the basic text input widget.  It derives from
 the [`ui::label`](ui-label.md)(3), and adds a movable, blinking
-cursor, and the ability to alter the text contents of the widget.
+cursor, and the ability to alter and select the text contents of the
+widget.
 
 The cursor is moved one character left or right by the corresponding
 arrow keys.  The `home` key moves the cursor to the beginning of the
@@ -26,6 +27,12 @@ insert their appropriate character at the current cursor position.
 Printable characters should follow the directionality of the script in
 question.  The `backspace` key removes the character before the cursor
 position, and the `delete` key removes the character after the cursor.
+
+A mouse click within the border will move the cursor to that point.  A
+mouse drag will select the text within the dragged region.  Holding
+`shift` while using cursor-motion keys will update the selected
+region.  Inserting new characters or removing characters resets and
+empties the selection.
 
 ## FOCUS HOOK ##
 
