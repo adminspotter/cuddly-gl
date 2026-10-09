@@ -105,13 +105,14 @@ Inherited from [ui::widget](ui-widget.md):
   | **ui::size::max_width** | GLuint    |
 
 * **ui::element::string** - additional subtype for text selection.
-    The data types for getting and setting are different - get will
-    retrieve the string, and set takes the start and end positions.
+  The `std::string` form will get the selected text.  The `glm::uvec2`
+  forms operate on the start and end positions:  the `x` field is the
+  selection start and the `y` field is the cursor position.
 
   | Subtype                   | Data type   | Notes      |
   | ------------------------- | ----------- | ---------- |
   | **ui::string::selection** | std::string | `get`-only |
-  | **ui::string::selection** | glm::uvec2  | `set`-only |
+  | **ui::string::selection** | glm::uvec2  |            |
 
 ## INHERITED RESOURCES ##
 
