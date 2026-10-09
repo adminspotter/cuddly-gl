@@ -98,12 +98,6 @@ Inherited from [`ui::active`](ui-active.md):
   | **ui::size::height** | GLuint     |
   | **ui::size::all**    | glm::ivec2 |
 
-* **ui::element::state** ([ui::composite](ui-composite.md))
-
-  | Subtype                  | Data type |
-  | ------------------------ | --------- |
-  | **ui::state::radio_box** | bool      |
-
 ## SUBCLASSING ##
 
 This widget is not meant to be subclassed.

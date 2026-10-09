@@ -527,12 +527,16 @@ void print_selection(ui::active *a, void *call, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     std::string full_str, selection;
+    glm::uvec2 sel_pos;
 
     if (t == NULL)
         return;
 
     t->get(ui::element::string, ui::string::contents, &full_str,
-           ui::element::string, ui::string::selection, &selection);
+           ui::element::string, ui::string::selection, &selection,
+           ui::element::string, ui::string::selection, &sel_pos);
     std::cout << "str [" << full_str << "]" << std::endl;
-    std::cout << "selection [" << selection << "]" << std::endl;
+    std::cout << "selection [" << selection << "] <"
+              << sel_pos.x << ", " << sel_pos.y << ">"
+              << std::endl;
 }
