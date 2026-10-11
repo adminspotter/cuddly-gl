@@ -37,7 +37,7 @@ noinst_DATA = $(MANPAGES)
 		--section=3 \
 		--manual="$(PACKAGE_NAME) Programmer's Manual" \
 		--organization="$(PACKAGE_STRING)" \
-		--date='2019-08-10' \
+		--date=$(MAN_DATE) \
 		< $< > $@
 	if [ "$$(grep -c '^\.SH "NAME"$$' $@)" != "1" ] ;\
 	then \

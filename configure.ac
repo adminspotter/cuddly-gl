@@ -283,6 +283,7 @@ AC_CHECK_FUNCS([memcpy memmove memset strerror_r])
 
 AS_IF([test "x$with_manpages" != "xno"],
       [
+        AC_MSG_NOTICE([Enabling manpage generation])
         AC_MSG_CHECKING([for a new enough version of ronn])
         AS_IF([test "x$with_ronn" != "x"],
               [ronn_path=$with_ronn],
@@ -292,6 +293,8 @@ AS_IF([test "x$with_manpages" != "xno"],
                            [
                              AC_MSG_RESULT([yes, $ronn_path])
                              AC_SUBST([RONN], [$ronn_path])
+                             AC_SUBST([MAN_DATE], $(git log -1 --date-order --pretty=format:%as doc/*.md))
+                             AC_MSG_NOTICE([Manpage sources last updated $MAN_DATE])
                            ],
                            [
                              AC_MSG_RESULT([no, disabling manpage generation])
