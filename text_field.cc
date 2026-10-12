@@ -478,6 +478,7 @@ void ui::text_field::cursor_mouse_position(glm::ivec2& loc)
             this->cursor_pos = i;
         this->set_cursor_transform(this->positions[this->cursor_pos]
                                    - this->img_offset);
+        this->generate_string_image();
         this->populate_buffers();
     }
 }
