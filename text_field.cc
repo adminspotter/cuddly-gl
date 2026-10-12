@@ -129,7 +129,7 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
         return;
 
     this->ui::label::set_string(t, v);
-    this->cursor_pos = this->str.size();
+    this->cursor_pos = this->select_start = this->str.size();
     this->selection = std::u32string();
     this->selecting = false;
     this->calculate_positions();
