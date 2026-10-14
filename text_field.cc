@@ -519,7 +519,15 @@ void ui::text_field::calculate_positions(void)
 
 void ui::text_field::generate_string_image(void)
 {
-    this->label::generate_string_image();
+    if (this->font != NULL && this->str.size() > 0)
+        this->img = this->font->render_string(
+            this->str,
+            this->foreground,
+            this->background,
+            {this->select_start, this->cursor_pos}
+        );
+    else
+        this->img.reset();
 
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();
