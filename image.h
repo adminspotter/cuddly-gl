@@ -50,6 +50,21 @@ namespace ui
                 this->a = truncf(glm::clamp(v.a, 0.0f, 1.0f) * 255);
             }
 
+        struct cell_tag& operator=(const struct cell_tag& c)
+            {
+                this->r = c.r;
+                this->g = c.g;
+                this->b = c.b;
+                this->a = c.a;
+                return *this;
+            }
+
+        struct cell_tag& operator=(const glm::vec4& v)
+            {
+                struct cell_tag t(v);
+                return *this = t;
+            }
+
         struct cell_tag& operator|=(const struct cell_tag& c)
             {
                 this->r |= c.r;
@@ -63,6 +78,19 @@ namespace ui
             {
                 struct cell_tag t(v);
                 return *this |= t;
+            }
+
+        bool operator==(const glm::vec4& v)
+            {
+                return this->r == v.r
+                    && this->g == v.g
+                    && this->b == v.b
+                    && this->a == v.a;
+            }
+
+        bool operator!=(const glm::vec4& v)
+            {
+                return !(*this == v);
             }
     } __attribute__ ((__packed__))
     cell;

@@ -82,6 +82,7 @@ namespace ui
         void copy_to_image(ui::image&,
                            const glm::ivec2&,
                            const glm::vec4&,
+                           bool,
                            bool);
     };
 
@@ -118,7 +119,8 @@ namespace ui
         static void get_max_glyph_box(FT_Face, int *, int *, int *);
 
         ui::image render(const std::vector<bidi::mirror_t>&,
-                         const glm::vec4&, const glm::vec4&);
+                         const glm::vec4&, const glm::vec4&,
+                         const glm::uvec2& = {0, 0});
 
       public:
         explicit base_font(std::string&);
@@ -135,7 +137,8 @@ namespace ui
                              GLuint&, GLuint&, GLuint&);
         ui::image render_string(const std::u32string&,
                                 const glm::vec4&,
-                                const glm::vec4&);
+                                const glm::vec4&,
+                                const glm::uvec2& = {0, 0});
     };
 
     class font : public base_font

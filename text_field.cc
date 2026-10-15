@@ -129,7 +129,7 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
         return;
 
     this->ui::label::set_string(t, v);
-    this->cursor_pos = this->str.size();
+    this->cursor_pos = this->select_start = this->str.size();
     this->selection = std::u32string();
     this->selecting = false;
     this->calculate_positions();
@@ -196,6 +196,8 @@ void ui::text_field::btn_down_callback(ui::active *a, void *call, void *client)
         t->selecting = bcd->state == ui::mouse::down;
         t->select_start = t->cursor_pos;
         t->selection = std::u32string();
+        t->generate_string_image();
+        t->populate_buffers();
     }
 }
 
@@ -217,6 +219,8 @@ void ui::text_field::motion_callback(ui::active *a, void *call, void *client)
     {
         t->cursor_mouse_position(mcd->location);
         t->set_selection_string();
+        t->generate_string_image();
+        t->populate_buffers();
     }
 }
 
@@ -478,7 +482,6 @@ void ui::text_field::cursor_mouse_position(glm::ivec2& loc)
             this->cursor_pos = i;
         this->set_cursor_transform(this->positions[this->cursor_pos]
                                    - this->img_offset);
-        this->populate_buffers();
     }
 }
 
@@ -516,7 +519,15 @@ void ui::text_field::calculate_positions(void)
 
 void ui::text_field::generate_string_image(void)
 {
-    this->label::generate_string_image();
+    if (this->font != NULL && this->str.size() > 0)
+        this->img = this->font->render_string(
+            this->str,
+            this->foreground,
+            this->background,
+            {this->select_start, this->cursor_pos}
+        );
+    else
+        this->img.reset();
 
     int pixel_pos = this->get_raw_cursor_pos();
     int field_len = this->calculate_field_length();

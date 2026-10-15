@@ -89,10 +89,13 @@ static void cleanup_freetype(void)
         FT_Done_FreeType(ft_lib);
 }
 
+static glm::vec4 no_pixel = {0.0, 0.0, 0.0, 0.0};
+
 void ui::glyph::copy_to_image(ui::image& img,
                               const glm::ivec2& pos,
                               const glm::vec4& foreground,
-                              bool mirror)
+                              bool mirror,
+                              bool invert)
 {
     int i, j;
 
@@ -106,9 +109,15 @@ void ui::glyph::copy_to_image(ui::image& img,
                 + (mirror == true ? this->width - j - 1 : j);
 
             if (this->per_pixel == 1)
-                img.cells[row_offset + j]
-                    |= foreground * (this->bitmap[glyph_off] / 255.0f);
-            else
+            {
+                float pixel = this->bitmap[glyph_off] / 255.0f;
+
+                if (invert)
+                    pixel = 1.0f - pixel;
+
+                img.cells[row_offset + j] = foreground * pixel;
+            }
+            else if (!invert || this->cells[glyph_off] != no_pixel)
                 img.cells[row_offset + j] |= this->cells[glyph_off];
         }
     }
@@ -274,14 +283,21 @@ void ui::base_font::get_max_glyph_box(FT_Face face,
 
 ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
                                 const glm::vec4& foreground,
-                                const glm::vec4& background)
+                                const glm::vec4& background,
+                                const glm::uvec2& selection)
 {
     GLuint w, asc, desc;
     auto i = str.begin();
+    int position = 0;
+    int start = std::min(selection.x, selection.y);
+    int end = std::max(selection.x, selection.y);
     glm::ivec2 pos = {0, 0};
 
     this->get_string_size(str, w, asc, desc);
     ui::image img(w, asc + desc, 4);
+
+    if (start == end)
+        start = end = -1;
 
     /* GL does positive y as up, so it makes more sense to just draw
      * the buffer upside-down.  All the glyphs are already
@@ -291,19 +307,30 @@ ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
     {
         ui::glyph& g = (*this)[i->c];
         FT_Vector kerning = {0, 0};
+        bool selected = position >= start && position < end;
 
         if (i != str.begin())
         {
             pos.x += g.left;
             this->kern((i - 1)->c, i->c, &kerning);
         }
+        if (selected)
+        {
+            int max_w = std::min((int)img.width, pos.x + g.x_advance);
+
+            for (int h = 0; h < img.height; ++h)
+                for (int w = pos.x; w < max_w; ++w)
+                    img.cells[(h * img.width) + w] = foreground;
+        }
+
         pos.x += kerning.x;
         pos.y = desc + g.top - g.height + kerning.y;
 
-        g.copy_to_image(img, pos, foreground, i->mirror);
+        g.copy_to_image(img, pos, foreground, i->mirror, selected);
 
         pos.x += g.x_advance;
         ++i;
+        ++position;
     }
     return img;
 }
@@ -409,7 +436,8 @@ void ui::base_font::get_string_size(const std::vector<bidi::mirror_t>& str,
 
 ui::image ui::base_font::render_string(const std::u32string& str,
                                        const glm::vec4& foreground,
-                                       const glm::vec4& background)
+                                       const glm::vec4& background,
+                                       const glm::uvec2& selection)
 {
     bidi b;
 
@@ -421,7 +449,7 @@ ui::image ui::base_font::render_string(const std::u32string& str,
 
     for (auto& str : strs)
     {
-        imgs.push_back(this->render(str, foreground, background));
+        imgs.push_back(this->render(str, foreground, background, selection));
         img_w = std::max(img_w, imgs.back().width);
     }
 
