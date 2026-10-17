@@ -329,35 +329,53 @@ all need to be the same.  Each is independent of the others.
 
 * `ui::element::size` (`ui::rect`)
 
-#### Label ####
+#### Text Label ####
 
-The `ui::label` class ([label.h](../label.h) and
-[label.cc](../label.cc)) is a descendent of the
-[`ui::widget`](#widget) widget class, and adds either a string or an
-image.  The string and image are mutually exclusive; setting an image
-removes any configured string, and setting a string removes any
-configured image.
+The `ui::text_label` class ([text_label.h](../text_label.h) and
+[text_label.cc](../text_label.cc)) is a descendent of the
+[`ui::widget`](#widget) widget class, and adds a string.
 
 Input strings are `std::string`, and should be encoded UTF-8.  Output
 strings will always be UTF-8 `std::string`.  Internally, the string is
 converted into `std::u32string`.  Font handling is done via the
 [`ui::font`](#font) support family.
 
-Images use the [`ui::image`](#image) support type.
-
-##### Label resources #####
+##### Text Label resources #####
 
 * `ui::element::font`
   * `ui::ownership::shared` ([`ui::font *`](#font))
   * `ui::ownership::owned` ([`ui::font *`](#font))
 * `ui::element::string`
   * `ui::string::contents` (`std::string`)
-* `ui::element::image`
-  * No subtypes ([`ui::image`](#image))
 
 The font element's subtypes change only the behaviour at widget close.
 A font noted as `owned` will be deleted at widget close; a `shared`
 font will not.
+
+###### Text Label inherited resources ######
+
+* `ui::element::size` ([`ui::rect`](#rect))
+* `ui::element::position` ([`ui::widget`](#widget))
+* `ui::element::border` (`ui::widget`)
+* `ui::element::margin` (`ui::widget`)
+* `ui::element::color` (`ui::widget`)
+* `ui::element::state` (`ui::widget`)
+
+#### Label ####
+
+The `ui::label` class ([label.h](../label.h) and
+[label.cc](../label.cc)) is a descendent of the
+[`ui::text_label`](#text_label) widget class, and adds the ability to
+display either a string or an image.  The string and image are
+mutually exclusive; setting an image removes any configured string,
+and setting a string removes any configured image.
+
+Images use the [`ui::image`](#image) support type.
+
+##### Label resources #####
+
+* `ui::element::image`
+  * No subtypes ([`ui::image`](#image))
 
 ###### Label inherited resources ######
 
@@ -367,6 +385,8 @@ font will not.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
+* `ui::element::font` ([`ui::text_label`](#text_label))
+* `ui::element::string` (`ui::text_label`)
 
 #### Button ####
 
@@ -399,7 +419,7 @@ pressed, the button becomes armed.
 
 The `ui::text_field` class ([text_field.h](../text_field.h) and
 [text_field.cc](../text_field.cc)) is a descendent of the
-[`ui::label`](#label) widget class.  It adds the ability to
+[`ui::text_label`](#text_label) widget class.  It adds the ability to
 edit the string and select some part of the existing string.
 
 The text field adds a size subtype of `max_width`, which indicates the
@@ -452,8 +472,8 @@ The password field does not add any new resources.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
-* `ui::element::font` ([`ui::label`](#label))
-* `ui::element::string` (`ui::label`/[`ui::text_field`](#text_field))
+* `ui::element::font` ([`ui::text_label`](#text_label))
+* `ui::element::string` (`ui::text_label`/[`ui::text_field`](#text_field))
 * `ui::element::cursor` (`ui::text_field`)
 * `ui::element::size` (`ui::text_field`)
 * `ui::element::repeat` (`ui::text_field`)
