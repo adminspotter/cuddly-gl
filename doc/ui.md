@@ -120,9 +120,8 @@ signature:
   This is any sort of data that the client may wish to pass into
   the callback, and is completely implementation-defined.
 
-The `cb_fptr` type, defined in
-[active.h](../client/ui/active.h), defines the required
-signature for a callback routine.
+The `cb_fptr` type, defined in [active.h](../active.h), defines the
+required signature for a callback routine.
 
 Adding to and removing from a callback list also has a consistent
 interface:
@@ -168,7 +167,7 @@ lists has a consistent interface:
   As above, a constant from the `ui::callback` namespace.
 * call data (`void *`)  
   A call defined structure; internal calls will contain the relevant
-  struct defined in [ui_defs.h](../client/ui/ui_defs.h).
+  struct defined in [ui_defs.h](../ui_defs.h).
 
 ```c++
 /* Continuing from the add/remove example above */
@@ -212,8 +211,7 @@ list, differing only in the client data we pass.
 
 The `ui::active` class, which is used by all types of widgets, adds
 callback lists and handling.  The full implementation is found in
-[active.h](../client/ui/active.h) and
-[active.cc](../client/ui/active.cc).
+[active.h](../active.h) and [active.cc](../active.cc).
 
 ### Closing ###
 
@@ -243,10 +241,9 @@ instantiated, but serve to add basic functionality in a layered way.
 
 #### Rect ####
 
-The `ui::rect` class ([rect.h](../client/ui/rect.h) and
-[rect.cc](../client/ui/rect.cc)) provides a rectangle of a given size.
-All the widget classes in the CuddlyGL UI toolkit derive from the
-`ui::rect`.
+The `ui::rect` class ([rect.h](../rect.h) and [rect.cc](../rect.cc))
+provides a rectangle of a given size.  All the widget classes in the
+CuddlyGL UI toolkit derive from the `ui::rect`.
 
 ##### Rect Resources #####
 
@@ -257,11 +254,11 @@ All the widget classes in the CuddlyGL UI toolkit derive from the
 
 #### Active ####
 
-The `ui::active` class ([active.h](../client/ui/active.h) and
-[active.cc](../client/ui/active.cc)) is a descendent of the
-[`ui::rect`](#rect) class, and adds callback lists and methods to
-manage them.  See the [Callbacks](#callbacks) section above for a
-complete description of the callback lists and methods.
+The `ui::active` class ([active.h](../active.h) and
+[active.cc](../active.cc)) is a descendent of the [`ui::rect`](#rect)
+class, and adds callback lists and methods to manage them.  See the
+[Callbacks](#callbacks) section above for a complete description of
+the callback lists and methods.
 
 ##### Active resources #####
 
@@ -276,13 +273,13 @@ the typical `get` and `set` methods.
 
 #### Widget ####
 
-The `ui::widget` class ([widget.h](../client/ui/widget.h) and
-[widget.cc](../client/ui/widget.cc)) is derived from the
-[`ui::active`](#active) widget, and though it is the simplest object
-which should be instantiated, it isn't really a functional widget on
-its own.  It provides a basic set of pieces for other widgets:
-`border`, `margin`, `position`, `color`.  It also handles general
-setup and cleanup of the OpenGL VAO, VBO, and EBO for each widget.
+The `ui::widget` class ([widget.h](../widget.h) and
+[widget.cc](../widget.cc)) is derived from the [`ui::active`](#active)
+widget, and though it is the simplest object which should be
+instantiated, it isn't really a functional widget on its own.  It
+provides a basic set of pieces for other widgets:  `border`, `margin`,
+`position`, `color`.  It also handles general setup and cleanup of the
+OpenGL VAO, VBO, and EBO for each widget.
 
 Since the `ui::widget` is derived from `ui::active`, the standard
 callback handling is available.
@@ -334,8 +331,8 @@ all need to be the same.  Each is independent of the others.
 
 #### Label ####
 
-The `ui::label` class ([label.h](../client/ui/label.h) and
-[label.cc](../client/ui/label.cc)) is a descendent of the
+The `ui::label` class ([label.h](../label.h) and
+[label.cc](../label.cc)) is a descendent of the
 [`ui::widget`](#widget) widget class, and adds either a string or an
 image.  The string and image are mutually exclusive; setting an image
 removes any configured string, and setting a string removes any
@@ -373,8 +370,8 @@ font will not.
 
 #### Button ####
 
-The `ui::button` class ([button.h](../client/ui/button.h) and
-[button.cc](../client/ui/button.cc)) is a descendent of the
+The `ui::button` class ([button.h](../button.h) and
+[button.cc](../button.cc)) is a descendent of the
 [`ui::label`](#label) widget class.  It adds some state resources,
 `active` and `armed`, and some default callbacks.  When the cursor
 enters the button, it becomes active, and when the mouse button is
@@ -400,10 +397,10 @@ pressed, the button becomes armed.
 
 #### Text Field ####
 
-The `ui::text_field` class ([text_field.h](../client/ui/text_field.h)
-and [text_field.cc](../client/ui/text_field.cc)) is a descendent of
-the [`ui::label`](#label) widget class.  It adds the ability to edit
-the string and select some part of the existing string.
+The `ui::text_field` class ([text_field.h](../text_field.h) and
+[text_field.cc](../text_field.cc)) is a descendent of the
+[`ui::label`](#label) widget class.  It adds the ability to
+edit the string and select some part of the existing string.
 
 The text field adds a size subtype of `max_width`, which indicates the
 desired width of the field.  The standard height is 1 character.  The
@@ -438,8 +435,8 @@ be set but will be ignored.
 
 #### Password ####
 
-The `ui::password` class ([password.h](../client/ui/password.h) and
-[password.cc](../client/ui/password.cc)) is a descendent of the
+The `ui::password` class ([password.h](../password.h) and
+[password.cc](../password.cc)) is a descendent of the
 [`ui::text_field`](#text_field) widget class.  It has almost the exact
 same behaviour, but displays a series of '*' characters, rather than
 the actual string.
@@ -465,8 +462,8 @@ The password field does not add any new resources.
 
 #### Composite ####
 
-The `ui::composite` class ([composite.h](../client/ui/composite.h) and
-[composite.cc](../client/ui/composite.cc)) is a descendent of the
+The `ui::composite` class ([composite.h](../composite.h) and
+[composite.cc](../composite.cc)) is a descendent of the
 [`ui::active`](#active) class, and adds the ability to act as a parent
 to other widgets.  It also handles the event propagation through the
 toolkit.  It lacks any OpenGL handling, so it would not be
@@ -488,10 +485,10 @@ elements are read-only.
 
 #### Context ####
 
-The `ui::context` ([ui.h](../client/ui/ui.h) and
-[ui.cc](../client/ui/ui.cc)) is a bit of an outlier when compared with
-most of the other classes.  It functions as the top-level "window",
-and manages the OpenGL shaders which we use to draw our widgets.
+The `ui::context` ([ui.h](../ui.h) and [ui.cc](../ui.cc)) is a bit of
+an outlier when compared with most of the other classes.  It functions
+as the top-level "window", and manages the OpenGL shaders which we use
+to draw our widgets.
 
 The context's constructor also has a different signature, with no
 required arguments.  It has no parent because it is the ultimate
@@ -507,8 +504,8 @@ ui::context *ctx = new ui::context(ui::element::size, ui::size::width, 800,
 
 All of the new resources which the context adds are read-only, and are
 controlled via the OpenGL rendering program contained in
-[ui_vertex.glsl](../client/shaders/ui_vertex.glsl) and
-[ui_fragment.glsl](../client/shaders/ui_fragment.glsl).
+[ui_vertex.glsl](../shaders/ui_vertex.glsl) and
+[ui_fragment.glsl](../shaders/ui_fragment.glsl).
 
 * `ui::element::attribute`
   * `ui::attribute::position` (`GLuint`)
@@ -525,8 +522,8 @@ controlled via the OpenGL rendering program contained in
 
 #### Manager ####
 
-The `ui::manager` class ([manager.h](../client/ui/manager.h) and
-[manager.cc](../client/ui/manager.cc)) inherits from both the
+The `ui::manager` class ([manager.h](../manager.h) and
+[manager.cc](../manager.cc)) inherits from both the
 [`ui::composite`](#composite) and the [`ui::widget`](#widget), and
 functions as a very basic "bulletin board" widget.  Its children are
 positioned independently within the confines of the manager, which can
@@ -569,8 +566,8 @@ size change should be allowed.
 
 #### Pie Menu ####
 
-The `ui::pie_menu` class ([pie_menu.h](../client/ui/pie_menu.h) and
-[pie_menu.cc](../client/ui/pie_menu.cc)) inherits from the
+The `ui::pie_menu` class ([pie_menu.h](../pie_menu.h) and
+[pie_menu.cc](../pie_menu.cc)) inherits from the
 [`ui::manager`](#manager), and implements a popup pie menu.
 
 The `border` and `margin` function the same as the resources from the
@@ -605,8 +602,8 @@ satisfactory for this resource.
 
 #### Row Column ####
 
-The `ui::row_column` class ([row_column.h](../client/ui/row_column.h)
-and [row_column.cc](../client/ui/row_column.cc)) inherits from the
+The `ui::row_column` class ([row_column.h](../row_column.h)
+and [row_column.cc](../row_column.cc)) inherits from the
 [`ui::manager`](#manager), and arranges its children into a gridded
 layout.
 
@@ -649,12 +646,11 @@ widget to include the spacing between its grid elements.
 
 #### Font ####
 
-The `ui::font` ([font.h](../client/ui/font.h) and
-[font.cc](../client/ui/font.cc)) is a family of objects which are used
-by the `ui::label` and its descendents.  They are a wrapper around
-libfreetype2, which provides the specific functionality that we
-require:  sizing of glyphs and strings, and rendering of strings into
-bitmaps.
+The `ui::font` ([font.h](../font.h) and [font.cc](../font.cc)) is a
+family of objects which are used by the `ui::label` and its
+descendents.  They are a wrapper around libfreetype2, which provides
+the specific functionality that we require:  sizing of glyphs and
+strings, and rendering of strings into bitmaps.
 
 There are two objects in the family:  the `ui::font`, which manages a
 single font, and the `ui::font_set` which manages multiple fonts, and
@@ -716,20 +712,20 @@ function otherwise like a `ui::font`.
 
 #### Image ####
 
-The `ui::image` ([image.h](../client/ui/image.h)) is a simple
-structure which holds image data and some metadata about the image
-(size and bytes per pixel).
+The `ui::image` ([image.h](../image.h)) is a simple structure which
+holds image data and some metadata about the image (size and bytes per
+pixel).
 
 It has very little interface at all; a blank constructor, a copy
 constructor, and an assignment operator.
 
 #### Quadtree ####
 
-The `ui::quadtree` ([quadtree.h](../client/ui/quadtree.h) and
-[quadtree.cc](../client/ui/quadtree.cc)) is the search structure that
-the `ui::composite` and its descendents use to quickly search their
-area for children.  Almost all of the event handling routines use this
-tree to locate the child which should be sent the event in question.
+The `ui::quadtree` ([quadtree.h](../quadtree.h) and
+[quadtree.cc](../quadtree.cc)) is the search structure that the
+`ui::composite` and its descendents use to quickly search their area
+for children.  Almost all of the event handling routines use this tree
+to locate the child which should be sent the event in question.
 
 The interface is very simple; `insert`, `search`, `remove`, and
 `clear`.  It deals only with `ui::widget` objects and descendents.
