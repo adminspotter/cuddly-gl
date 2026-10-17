@@ -24,7 +24,7 @@ pkginclude_HEADERS = active.h \
 	rect.h \
 	row_column.h \
 	text_field.h \
-	text_widget.h \
+	text_label.h \
 	toggle.h \
 	ui.h \
 	ui_defs.h \
@@ -52,8 +52,8 @@ libcuddly_gl_la_SOURCES = active.cc \
 	rect.cc \
 	row_column.cc \
 	shader.cc \
-	text_widget.cc \
 	text_field.cc \
+	text_label.cc \
 	toggle.cc \
 	ui.cc \
 	util.cc \

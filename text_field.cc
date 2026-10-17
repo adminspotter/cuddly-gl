@@ -44,7 +44,7 @@ int ui::text_field::get_size(GLuint t, GLuint *v) const
         *v = this->max_length;
         return 0;
     }
-    return this->ui::text_widget::get_size(t, v);
+    return this->ui::text_label::get_size(t, v);
 }
 
 void ui::text_field::set_size(GLuint t, GLuint v)
@@ -57,7 +57,7 @@ void ui::text_field::set_size(GLuint t, GLuint v)
         this->reset_cursor();
     }
     else
-        this->ui::text_widget::set_size(t, v);
+        this->ui::text_label::set_size(t, v);
 }
 
 int ui::text_field::get_cursor(GLuint t, GLuint *v) const
@@ -104,7 +104,7 @@ void ui::text_field::set_repeat(GLuint t, GLuint v)
 
 void ui::text_field::set_font(GLuint t, ui::base_font *v)
 {
-    this->ui::text_widget::set_font(t, v);
+    this->ui::text_label::set_font(t, v);
 
     this->calculate_widget_size();
     this->generate_cursor();
@@ -120,7 +120,7 @@ int ui::text_field::get_string(GLuint t, std::string *v) const
         *v = ui::u32strtoutf8(this->selection);
         return 0;
     }
-    return this->ui::text_widget::get_string(t, v);
+    return this->ui::text_label::get_string(t, v);
 }
 
 void ui::text_field::set_string(GLuint t, const std::string& v)
@@ -128,7 +128,7 @@ void ui::text_field::set_string(GLuint t, const std::string& v)
     if (t == ui::string::selection)
         return;
 
-    this->ui::text_widget::set_string(t, v);
+    this->ui::text_label::set_string(t, v);
     this->cursor_pos = this->select_start = this->str.size();
     this->selection = std::u32string();
     this->selecting = false;
@@ -494,7 +494,7 @@ void ui::text_field::set_cursor_transform(int pixel_pos)
 int ui::text_field::calculate_field_length(void)
 {
     /* We have an extra pixel on each side of the field, per
-     * ui::text_widget::calculate_widget_size, thus the literal 2.
+     * ui::text_label::calculate_widget_size, thus the literal 2.
      */
     return this->dim.x - this->margin[1] - this->margin[2]
         - this->border[1] - this->border[2] - 2;
@@ -599,7 +599,7 @@ void ui::text_field::generate_cursor(void)
     }
 }
 
-/* ui::text_widget::generate_points assumes that we want to wrap our
+/* ui::text_label::generate_points assumes that we want to wrap our
  * images as tightly as possible.  In this widget we use the cell
  * size, which is constant for any font, as the sizing for our widget,
  * and we want the baselines for our strings to always be in the same
@@ -608,7 +608,7 @@ void ui::text_field::generate_cursor(void)
  */
 ui::vertex_buffer *ui::text_field::generate_points(void)
 {
-    ui::vertex_buffer *vb = this->text_widget::generate_points();
+    ui::vertex_buffer *vb = this->text_label::generate_points();
     int max_width, max_asc, max_desc;
     GLuint w, a, d;
     float ph;
@@ -696,7 +696,7 @@ void ui::text_field::init(ui::composite *c)
 }
 
 ui::text_field::text_field(ui::composite *c)
-    : ui::text_widget::text_widget(c), ui::active::active(0, 0),
+    : ui::text_label::text_label(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0),
       positions(), cursor_transform(), repeat_mutex(), selection()
 {
@@ -716,7 +716,7 @@ int ui::text_field::get(GLuint e, GLuint t, GLuint *v) const
     {
       case ui::element::cursor:  return this->get_cursor(t, v);
       case ui::element::repeat:  return this->get_repeat(t, v);
-      default:                   return this->text_widget::get(e, t, v);
+      default:                   return this->text_label::get(e, t, v);
     }
 }
 
@@ -731,9 +731,9 @@ void ui::text_field::set(GLuint e, GLuint t, GLuint v)
 {
     switch (e)
     {
-      case ui::element::cursor:  this->set_cursor(t, v);           break;
-      case ui::element::repeat:  this->set_repeat(t, v);           break;
-      default:                   this->text_widget::set(e, t, v);  break;
+      case ui::element::cursor:  this->set_cursor(t, v);          break;
+      case ui::element::repeat:  this->set_repeat(t, v);          break;
+      default:                   this->text_label::set(e, t, v);  break;
     }
 }
 
@@ -745,7 +745,7 @@ void ui::text_field::set(GLuint e, GLuint t, const glm::uvec2& v)
 
 void ui::text_field::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
-    this->text_widget::draw(trans_uniform, parent_trans);
+    this->text_label::draw(trans_uniform, parent_trans);
     if (this->cursor_active)
     {
         if (this->blink > 0)

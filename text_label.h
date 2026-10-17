@@ -1,4 +1,4 @@
-/* text_widget.h                                           -*- C++ -*-
+/* text_label.h                                            -*- C++ -*-
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic text_widget object declaration.  We
+ * This file contains the basic text_label object declaration.  We
  * derive from the widget, which will take care of the box part.  In
  * this class, we'll add font handling via freetype, and we'll get our
  * text on the screen via a 2D GL texture.
@@ -28,8 +28,8 @@
  *
  */
 
-#ifndef __INC_CUDDLY_TEXT_WIDGET_H__
-#define __INC_CUDDLY_TEXT_WIDGET_H__
+#ifndef __INC_CUDDLY_TEXT_LABEL_H__
+#define __INC_CUDDLY_TEXT_LABEL_H__
 
 #include <string.h>
 
@@ -40,7 +40,7 @@
 
 namespace ui
 {
-    class text_widget : public widget
+    class text_label : public widget
     {
       protected:
         bool shared_font;
@@ -64,16 +64,16 @@ namespace ui
         void init(ui::composite *);
 
       public:
-        explicit text_widget(ui::composite *);
+        explicit text_label(ui::composite *);
         template<typename... Args>
-        text_widget(composite *c, Args... args)
+        text_label(composite *c, Args... args)
             : ui::widget::widget(c), ui::active::active(0, 0),
               ui::rect::rect(0, 0), str(), img()
             {
                 this->init(c);
                 this->set(args...);
             };
-        virtual ~text_widget();
+        virtual ~text_label();
 
         using ui::widget::get;
         int get(GLuint, GLuint, ui::base_font **) const;
@@ -93,4 +93,4 @@ namespace ui
     };
 }
 
-#endif /* __INC_CUDDLY_TEXT_WIDGET_H__ */
+#endif /* __INC_CUDDLY_TEXT_LABEL_H__ */

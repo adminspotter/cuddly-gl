@@ -20,7 +20,7 @@
  *
  *
  * This file contains the basic label object definitions.  We derive
- * from the text_widget, which will take care of the text handling.
+ * from the text_label, which will take care of the text handling.
  * In this class, we'll add image handling.  We will handle either
  * text rendering, or image rendering.
  *
@@ -46,7 +46,7 @@ void ui::label::set_image(GLuint t, const ui::image& v)
 }
 
 ui::label::label(ui::composite *c)
-    : ui::text_widget::text_widget(c), ui::active::active(0, 0),
+    : ui::text_label::text_label(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0)
 {
 }

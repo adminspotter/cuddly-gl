@@ -33,11 +33,11 @@
 #include <chrono>
 #include <mutex>
 
-#include "text_widget.h"
+#include "text_label.h"
 
 namespace ui
 {
-    class text_field : public text_widget
+    class text_field : public text_label
     {
       protected:
         GLuint cursor_pos, blink, max_length;
@@ -54,9 +54,9 @@ namespace ui
         GLuint select_start;
         std::u32string selection;
 
-        using ui::text_widget::get_size;
+        using ui::text_label::get_size;
         virtual int get_size(GLuint, GLuint *) const override;
-        using ui::text_widget::set_size;
+        using ui::text_label::set_size;
         virtual void set_size(GLuint, GLuint) override;
         virtual int get_cursor(GLuint, GLuint *) const;
         virtual void set_cursor(GLuint, GLuint);
@@ -116,7 +116,7 @@ namespace ui
         explicit text_field(ui::composite *);
         template<typename... Args>
         text_field(ui::composite *c, Args... args)
-            : ui::text_widget::text_widget(c), ui::active::active(0, 0),
+            : ui::text_label::text_label(c), ui::active::active(0, 0),
               ui::rect::rect(0, 0),
               positions(), cursor_transform(), repeat_mutex(), selection()
             {
@@ -125,10 +125,10 @@ namespace ui
             };
         virtual ~text_field();
 
-        using ui::text_widget::get;
+        using ui::text_label::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, glm::uvec2 *) const;
-        using ui::text_widget::set;
+        using ui::text_label::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, const glm::uvec2&);
 
