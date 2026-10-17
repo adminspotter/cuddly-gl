@@ -33,11 +33,11 @@
 #include <chrono>
 #include <mutex>
 
-#include "label.h"
+#include "text_widget.h"
 
 namespace ui
 {
-    class text_field : public label
+    class text_field : public text_widget
     {
       protected:
         GLuint cursor_pos, blink, max_length;
@@ -54,9 +54,9 @@ namespace ui
         GLuint select_start;
         std::u32string selection;
 
-        using ui::label::get_size;
+        using ui::text_widget::get_size;
         virtual int get_size(GLuint, GLuint *) const override;
-        using ui::label::set_size;
+        using ui::text_widget::set_size;
         virtual void set_size(GLuint, GLuint) override;
         virtual int get_cursor(GLuint, GLuint *) const;
         virtual void set_cursor(GLuint, GLuint);
@@ -65,7 +65,6 @@ namespace ui
         virtual void set_font(GLuint, ui::base_font *) override;
         virtual int get_string(GLuint, std::string *) const override;
         virtual void set_string(GLuint, const std::string&) override;
-        virtual void set_image(GLuint, const ui::image&) final;
         virtual int get_selection(GLuint, glm::uvec2 *) const;
         virtual void set_selection(GLuint, const glm::uvec2&);
 
@@ -117,7 +116,7 @@ namespace ui
         explicit text_field(ui::composite *);
         template<typename... Args>
         text_field(ui::composite *c, Args... args)
-            : ui::label::label(c), ui::active::active(0, 0),
+            : ui::text_widget::text_widget(c), ui::active::active(0, 0),
               ui::rect::rect(0, 0),
               positions(), cursor_transform(), repeat_mutex(), selection()
             {
@@ -126,10 +125,10 @@ namespace ui
             };
         virtual ~text_field();
 
-        using ui::label::get;
+        using ui::text_widget::get;
         virtual int get(GLuint, GLuint, GLuint *) const override;
         virtual int get(GLuint, GLuint, glm::uvec2 *) const;
-        using ui::label::set;
+        using ui::text_widget::set;
         virtual void set(GLuint, GLuint, GLuint) override;
         virtual void set(GLuint, GLuint, const glm::uvec2&);
 

@@ -20,9 +20,9 @@
  *
  *
  * This file contains the basic label object declaration.  We derive
- * from the panel, which will take care of the box part.  In this
- * class, we'll add font handling via freetype, and we'll get our text
- * on the screen via a 2D GL texture.
+ * from the text_widget, which will take care of the text handling.
+ * In this class, we'll add the ability to set an image, as well as
+ * use text.
  *
  * Things to do
  *
@@ -31,69 +31,34 @@
 #ifndef __INC_CUDDLY_LABEL_H__
 #define __INC_CUDDLY_LABEL_H__
 
-#include <string.h>
-
-#include <string>
-
-#include "widget.h"
-#include "font.h"
+#include "text_widget.h"
 
 namespace ui
 {
-    class label : public widget
+    class label : public text_widget
     {
       protected:
-        bool shared_font;
-        std::u32string str;
-        ui::image img;
-        ui::base_font *font;
-        GLuint tex;
-
-        int get_font(GLuint, ui::base_font **) const;
-        virtual void set_font(GLuint, ui::base_font *);
-        virtual int get_string(GLuint, std::string *) const;
-        virtual void set_string(GLuint, const std::string&);
         int get_image(GLuint, ui::image *) const;
         virtual void set_image(GLuint, const ui::image&);
-        virtual void set_border(GLuint, GLuint) override;
-        virtual void set_margin(GLuint, GLuint) override;
-
-        virtual void generate_string_image(void);
-        virtual void calculate_widget_size(void);
-        virtual ui::vertex_buffer *generate_points(void) override;
-        virtual void populate_buffers(void) override;
-
-        void init(ui::composite *);
 
       public:
         explicit label(ui::composite *);
         template<typename... Args>
         label(composite *c, Args... args)
-            : ui::widget::widget(c), ui::active::active(0, 0),
-              ui::rect::rect(0, 0), str(), img()
+            : ui::text_widget::text_widget(c), ui::active::active(0, 0),
+              ui::rect::rect(0, 0)
             {
-                this->init(c);
                 this->set(args...);
             };
         virtual ~label();
 
-        using ui::widget::get;
-        int get(GLuint, GLuint, ui::base_font **) const;
-        int get(GLuint, GLuint, std::string *) const;
+        using ui::text_widget::get;
         int get(GLuint, GLuint, ui::image *) const;
-        using ui::widget::set;
-        virtual void set(GLuint, GLuint, ui::base_font *);
-        virtual void set(GLuint a, GLuint b, ui::font *c)
-            { this->set(a, b, (ui::base_font *)c); }
-        virtual void set(GLuint a, GLuint b, ui::font_set *c)
-            { this->set(a, b, (ui::base_font *)c); }
-        virtual void set(GLuint, GLuint, const std::string&);
+        using ui::text_widget::set;
         virtual void set(GLuint, GLuint, const ui::image&);
 
         GET_VA;
         SET_VA;
-
-        virtual void draw(GLuint, const glm::mat4&) override;
     };
 }
 
