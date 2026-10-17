@@ -12,6 +12,7 @@ MANPAGE_DOCS = ui-active.md \
 	ui-rect.md \
 	ui-row_column.md \
 	ui-text_field.md \
+	ui-text_label.md \
 	ui-toggle.md \
 	ui-utf8tou32str.md \
 	ui-vertex_buffer.md \
