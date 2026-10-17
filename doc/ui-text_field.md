@@ -16,9 +16,9 @@ ui::text_field *t = new ui::text_field(parent, ...);
 ## DESCRIPTION ##
 
 The `ui::text_field` is the basic text input widget.  It derives from
-the [`ui::label`](ui-label.md)(3), and adds a movable, blinking
-cursor, and the ability to alter and select the text contents of the
-widget.
+the [`ui::text_label`](ui-text_label.md)(3), and adds a movable,
+blinking cursor, and the ability to alter and select the text contents
+of the widget.
 
 The cursor is moved one character left or right by the corresponding
 arrow keys.  The `home` key moves the cursor to the beginning of the
@@ -133,18 +133,12 @@ Inherited from [ui::widget](ui-widget.md):
   | **ui::color::foreground** | glm::vec4 |
   | **ui::color::background** | glm::vec4 |
 
-* **ui::element::font** ([ui::label](ui-label.md))
+* **ui::element::font** ([ui::text_label](ui-text_label.md))
 
   | Subtype                   | Data type     |
   | ------------------------- | ------------- |
   | **ui::ownership::owned**  | ui::base_font |
   | **ui::ownership::shared** | ui::base_font |
-
-* **ui::element::image** ([ui::label](ui-label.md))
-
-  | Subtype | Data type |
-  | ------- | --------- |
-  | none    | ui::image |
 
 * **ui::element::margin** ([ui::widget](ui-widget.md))
 
@@ -179,7 +173,7 @@ Inherited from [ui::widget](ui-widget.md):
   | ---------------------- | --------- |
   | **ui::state::visible** | bool      |
 
-* **ui::element::string** ([ui::label](ui-label.md))
+* **ui::element::string** ([ui::text_label](ui-text_label.md))
 
   | Subtype                  | Data type   |
   | ------------------------ | ----------- |
@@ -195,11 +189,6 @@ and `ui::active`.
 
 ## BUGS ##
 
-The cursor can not be moved via mouse click, only by arrow and
-home/end keys.
-
-There is no facility for making a selection within the text field.
-
 The `focus_hook` is a terribly hacky mechanism.  Better would be a
 more general method to add class-wide creation hooks.
 
@@ -207,5 +196,5 @@ more general method to add class-wide creation hooks.
 
 ## RELATED ##
 
-[ui::label](ui-label.md)(3), [ui::font](ui-font.md)(3),
+[ui::text_label](ui-text_label.md)(3), [ui::font](ui-font.md)(3),
 [ui::password](ui-password.md)(3)
