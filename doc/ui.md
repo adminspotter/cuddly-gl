@@ -365,7 +365,7 @@ font will not.
 
 The `ui::label` class ([label.h](../label.h) and
 [label.cc](../label.cc)) is a descendent of the
-[`ui::text_label`](#text_label) widget class, and adds the ability to
+[`ui::text_label`](#text-label) widget class, and adds the ability to
 display either a string or an image.  The string and image are
 mutually exclusive; setting an image removes any configured string,
 and setting a string removes any configured image.
@@ -385,7 +385,7 @@ Images use the [`ui::image`](#image) support type.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
-* `ui::element::font` ([`ui::text_label`](#text_label))
+* `ui::element::font` ([`ui::text_label`](#text-label))
 * `ui::element::string` (`ui::text_label`)
 
 #### Button ####
@@ -411,15 +411,15 @@ pressed, the button becomes armed.
 * `ui::element::border` (`ui::widget`)
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
-* `ui::element::font` ([`ui::label`](#label))
-* `ui::element::string` (`ui::label`)
-* `ui::element::image` (`ui::label`)
+* `ui::element::font` ([`ui::text_label`](#text-label))
+* `ui::element::string` (`ui::text_label`)
+* `ui::element::image` ([`ui::label`](#label))
 
 #### Text Field ####
 
 The `ui::text_field` class ([text_field.h](../text_field.h) and
 [text_field.cc](../text_field.cc)) is a descendent of the
-[`ui::text_label`](#text_label) widget class.  It adds the ability to
+[`ui::text_label`](#text-label) widget class.  It adds the ability to
 edit the string and select some part of the existing string.
 
 The text field adds a size subtype of `max_width`, which indicates the
@@ -450,14 +450,14 @@ be set but will be ignored.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
-* `ui::element::font` ([`ui::label`](#label))
-* `ui::element::string` (`ui::label`)
+* `ui::element::font` ([`ui::text_label`](#text-label))
+* `ui::element::string` (`ui::text_label`)
 
 #### Password ####
 
 The `ui::password` class ([password.h](../password.h) and
 [password.cc](../password.cc)) is a descendent of the
-[`ui::text_field`](#text_field) widget class.  It has almost the exact
+[`ui::text_field`](#text-field) widget class.  It has almost the exact
 same behaviour, but displays a series of '*' characters, rather than
 the actual string.
 
@@ -472,8 +472,8 @@ The password field does not add any new resources.
 * `ui::element::margin` (`ui::widget`)
 * `ui::element::color` (`ui::widget`)
 * `ui::element::state` (`ui::widget`)
-* `ui::element::font` ([`ui::text_label`](#text_label))
-* `ui::element::string` (`ui::text_label`/[`ui::text_field`](#text_field))
+* `ui::element::font` ([`ui::text_label`](#text-label))
+* `ui::element::string` (`ui::text_label`/[`ui::text_field`](#text-field))
 * `ui::element::cursor` (`ui::text_field`)
 * `ui::element::size` (`ui::text_field`)
 * `ui::element::repeat` (`ui::text_field`)
