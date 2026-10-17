@@ -76,24 +76,11 @@ Inherited from [ui::widget](ui-widget.md):
 
 ## NEW RESOURCES ##
 
-* **ui::element::font** - font used in rendering the string
-
-  | Subtype                   | Data type     | Notes                                              |
-  | ------------------------- | ------------- | -------------------------------------------------- |
-  | **ui::ownership::owned**  | ui::base_font | Font will be deleted when the label is deleted     |
-  | **ui::ownership::shared** | ui::base_font | Font will not be deleted when the label is deleted |
-
 * **ui::element::image** - image displayed in the object
 
   | Subtype | Data type |
   | ------- | --------- |
   | none    | ui::image |
-
-* **ui::element::string** - string displayed in the object
-
-  | Subtype                  | Data type   | Notes           |
-  | ------------------------ | ----------- | --------------- |
-  | **ui::string::contents** | std::string | In UTF-8 format |
 
 ## INHERITED RESOURCES ##
 
@@ -113,6 +100,13 @@ Inherited from [ui::widget](ui-widget.md):
   | ------------------------- | --------- |
   | **ui::color::foreground** | glm::vec4 |
   | **ui::color::background** | glm::vec4 |
+
+* **ui::element::font** ([ui::text_label](ui-text_label.md))
+
+  | Subtype                   | Data type     |
+  | ------------------------- | ------------- |
+  | **ui::ownership::owned**  | ui::base_font |
+  | **ui::ownership::shared** | ui::base_font |
 
 * **ui::element::margin** ([ui::widget](ui-widget.md))
 
@@ -147,6 +141,12 @@ Inherited from [ui::widget](ui-widget.md):
   | ---------------------- | --------- |
   | **ui::state::visible** | bool      |
 
+* **ui::element::string** ([ui::text_label](ui-text_label.md))
+
+  | Subtype                  | Data type   |
+  | ------------------------ | ----------- |
+  | **ui::string::contents** | std::string |
+
 ## SUBCLASSING ##
 
 The `ui::label` has virtual inheritances from the `ui::rect` by way of
@@ -157,6 +157,6 @@ the `ui::active` superclass, and from the `ui::active` by way of the
 
 ## RELATED ##
 
-[ui::widget](ui-widget.md)(3), [ui::button](ui-button.md)(3),
+[ui::text_label](ui-text_label.md)(3), [ui::button](ui-button.md)(3),
 [ui::text_field](ui-text_field.md)(3), [ui::base_font](ui-base_font.md)(3),
 [ui::image](ui-image.md)(3)
