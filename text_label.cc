@@ -1,4 +1,4 @@
-/* text_widget.cc
+/* text_label.cc
  *   by Trinity Quirk <tquirk@ymb.net>
  *
  * CuddlyGL OpenGL widget toolkit
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * This file contains the basic text_widget object definitions.  We derive
+ * This file contains the basic text_label object definitions.  We derive
  * from the widget, which will take care of the box part.  In this
  * class, we'll add font handling via freetype, and we'll get our text
  * on the screen via a 2D GL texture.
@@ -32,17 +32,17 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "text_widget.h"
+#include "text_label.h"
 #include "util.h"
 
 /* ARGSUSED */
-int ui::text_widget::get_font(GLuint t, ui::base_font **v) const
+int ui::text_label::get_font(GLuint t, ui::base_font **v) const
 {
     *v = this->font;
     return 0;
 }
 
-void ui::text_widget::set_font(GLuint t, ui::base_font *v)
+void ui::text_label::set_font(GLuint t, ui::base_font *v)
 {
     if (t == ui::ownership::shared)
         this->shared_font = true;
@@ -53,7 +53,7 @@ void ui::text_widget::set_font(GLuint t, ui::base_font *v)
 }
 
 /* ARGSUSED */
-int ui::text_widget::get_string(GLuint t, std::string *v) const
+int ui::text_label::get_string(GLuint t, std::string *v) const
 {
     if (t == ui::string::contents)
     {
@@ -64,7 +64,7 @@ int ui::text_widget::get_string(GLuint t, std::string *v) const
 }
 
 /* ARGSUSED */
-void ui::text_widget::set_string(GLuint t, const std::string& v)
+void ui::text_label::set_string(GLuint t, const std::string& v)
 {
     if (t == ui::string::contents)
     {
@@ -73,19 +73,19 @@ void ui::text_widget::set_string(GLuint t, const std::string& v)
     }
 }
 
-void ui::text_widget::set_border(GLuint t, GLuint v)
+void ui::text_label::set_border(GLuint t, GLuint v)
 {
     this->ui::widget::set_border(t, v);
     this->calculate_widget_size();
 }
 
-void ui::text_widget::set_margin(GLuint t, GLuint v)
+void ui::text_label::set_margin(GLuint t, GLuint v)
 {
     this->ui::widget::set_margin(t, v);
     this->calculate_widget_size();
 }
 
-void ui::text_widget::generate_string_image(void)
+void ui::text_label::generate_string_image(void)
 {
     if (this->font != NULL && this->str.size() > 0)
     {
@@ -98,7 +98,7 @@ void ui::text_widget::generate_string_image(void)
         this->img.reset();
 }
 
-void ui::text_widget::calculate_widget_size(void)
+void ui::text_label::calculate_widget_size(void)
 {
     glm::ivec2 size;
 
@@ -118,7 +118,7 @@ void ui::text_widget::calculate_widget_size(void)
     }
 }
 
-ui::vertex_buffer *ui::text_widget::generate_points(void)
+ui::vertex_buffer *ui::text_label::generate_points(void)
 {
     ui::vertex_buffer *vb = this->ui::widget::generate_points();
     float pw, ph, m[4], b[4];
@@ -163,7 +163,7 @@ ui::vertex_buffer *ui::text_widget::generate_points(void)
     return vb;
 }
 
-void ui::text_widget::populate_buffers(void)
+void ui::text_label::populate_buffers(void)
 {
     this->ui::widget::populate_buffers();
     if (this->img.data != NULL)
@@ -177,7 +177,7 @@ void ui::text_widget::populate_buffers(void)
     }
 }
 
-void ui::text_widget::init(ui::composite *c)
+void ui::text_label::init(ui::composite *c)
 {
     float black[4] = {0.0, 0.0, 0.0, 0.0};
 
@@ -192,47 +192,47 @@ void ui::text_widget::init(ui::composite *c)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-ui::text_widget::text_widget(ui::composite *c)
+ui::text_label::text_label(ui::composite *c)
     : ui::widget::widget(c), ui::active::active(0, 0),
       ui::rect::rect(0, 0), str(), img()
 {
     this->init(c);
 }
 
-ui::text_widget::~text_widget()
+ui::text_label::~text_label()
 {
     glDeleteTextures(1, &this->tex);
     if (this->font != NULL && this->shared_font == false)
         delete this->font;
 }
 
-int ui::text_widget::get(GLuint e, GLuint t, ui::base_font **v) const
+int ui::text_label::get(GLuint e, GLuint t, ui::base_font **v) const
 {
     if (e == ui::element::font)
         return this->get_font(t, v);
     return 1;
 }
 
-int ui::text_widget::get(GLuint e, GLuint t, std::string *v) const
+int ui::text_label::get(GLuint e, GLuint t, std::string *v) const
 {
     if (e == ui::element::string)
         return this->get_string(t, v);
     return 1;
 }
 
-void ui::text_widget::set(GLuint e, GLuint t, ui::base_font *v)
+void ui::text_label::set(GLuint e, GLuint t, ui::base_font *v)
 {
     if (e == ui::element::font)
         this->set_font(t, v);
 }
 
-void ui::text_widget::set(GLuint e, GLuint t, const std::string& v)
+void ui::text_label::set(GLuint e, GLuint t, const std::string& v)
 {
     if (e == ui::element::string)
         this->set_string(t, v);
 }
 
-void ui::text_widget::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
+void ui::text_label::draw(GLuint trans_uniform, const glm::mat4& parent_trans)
 {
     GLuint bgnd;
 

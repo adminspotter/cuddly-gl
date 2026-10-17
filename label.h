@@ -20,7 +20,7 @@
  *
  *
  * This file contains the basic label object declaration.  We derive
- * from the text_widget, which will take care of the text handling.
+ * from the text_label, which will take care of the text handling.
  * In this class, we'll add the ability to set an image, as well as
  * use text.
  *
@@ -31,11 +31,11 @@
 #ifndef __INC_CUDDLY_LABEL_H__
 #define __INC_CUDDLY_LABEL_H__
 
-#include "text_widget.h"
+#include "text_label.h"
 
 namespace ui
 {
-    class label : public text_widget
+    class label : public text_label
     {
       protected:
         int get_image(GLuint, ui::image *) const;
@@ -45,16 +45,16 @@ namespace ui
         explicit label(ui::composite *);
         template<typename... Args>
         label(composite *c, Args... args)
-            : ui::text_widget::text_widget(c), ui::active::active(0, 0),
+            : ui::text_label::text_label(c), ui::active::active(0, 0),
               ui::rect::rect(0, 0)
             {
                 this->set(args...);
             };
         virtual ~label();
 
-        using ui::text_widget::get;
+        using ui::text_label::get;
         int get(GLuint, GLuint, ui::image *) const;
-        using ui::text_widget::set;
+        using ui::text_label::set;
         virtual void set(GLuint, GLuint, const ui::image&);
 
         GET_VA;
