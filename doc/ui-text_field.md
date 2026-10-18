@@ -90,7 +90,7 @@ Inherited from [ui::widget](ui-widget.md):
   | **ui::cursor::blink**    | GLuint    | Milliseconds per half-cycle, 0 disables |
 
 * **ui::element::repeat** - how quickly character repeat starts, and
-  how often it repeats.  Rates are in milliseconds.
+  how often it repeats.  Values are in milliseconds.
 
   | Subtype               | Data type | Notes                           |
   | --------------------- | --------- | ------------------------------- |
