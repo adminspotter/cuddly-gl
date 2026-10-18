@@ -103,12 +103,12 @@ The `ui::password` adds no new resources.
   | **ui::position::all**      | glm::ivec2 |
   | **ui::position::absolute** | *special*  |
 
-* **ui::element::cursor** ([ui::text_field](ui-text_field.md))
+* **ui::element::repeat** ([ui::text_field](ui-text_field.md))
 
-  | Subtype                  | Data type |
-  | ------------------------ | --------- |
-  | **ui::cursor::position** | GLuint    |
-  | **ui::cursor::blink**    | GLuint    |
+  | Subtype               | Data type |
+  | --------------------- | --------- |
+  | **ui::repeat::delay** | GLuint    |
+  | **ui::repeat::rate**  | GLuint    |
 
 * **ui::element::size** ([ui::rect](ui-rect.md))
 
