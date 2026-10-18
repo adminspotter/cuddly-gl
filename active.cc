@@ -26,6 +26,8 @@
  *
  */
 
+#include <stdexcept>
+
 #include "active.h"
 
 const ui::to_point zero_time(std::chrono::seconds(0));
@@ -36,7 +38,6 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
     {
       case ui::callback::enter:     return this->enter_cb;
       case ui::callback::leave:     return this->leave_cb;
-      default:
       case ui::callback::btn_down:  return this->btn_down_cb;
       case ui::callback::btn_up:    return this->btn_up_cb;
       case ui::callback::motion:    return this->motion_cb;
@@ -46,6 +47,7 @@ std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
       case ui::callback::focus:     return this->focus_cb;
       case ui::callback::visible:   return this->visible_cb;
     }
+    throw std::invalid_argument("invalid callback list");
 }
 
 ui::active::active(GLuint w, GLuint h)

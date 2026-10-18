@@ -158,8 +158,15 @@ void test_which_callback(void)
     a->add_callback(ui::callback::focus, fake_callback, NULL);
     is(a->focus_cb.size(), 1, test + "picked focus");
 
-    a->add_callback(99999, fake_callback, NULL);
-    is(a->btn_down_cb.size(), 2, test + "default picked btn_down");
+    try
+    {
+        a->add_callback(99999, fake_callback, NULL);
+        fail(test + "used a default callback list");
+    }
+    catch (const std::invalid_argument& e)
+    {
+        pass(test + "didn't use a default callback list");
+    }
 
     try
     {
