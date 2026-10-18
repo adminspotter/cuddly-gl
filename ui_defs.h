@@ -212,7 +212,7 @@ namespace ui
 
     namespace repeat
     {
-        const GLuint initial = 1, secondary = 2;
+        const GLuint delay = 1, rate = 2;
     }
 
     namespace transform

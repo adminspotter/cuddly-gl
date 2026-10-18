@@ -438,8 +438,8 @@ be set but will be ignored.
   * `ui::size::all` (`GLuint`)
   * `ui::size::max_width` (`GLuint`)
 * `ui::element::repeat`
-  * `ui::repeat::initial` (`GLuint`)
-  * `ui::repeat::secondary` (`GLuint`)
+  * `ui::repeat::delay` (`GLuint`)
+  * `ui::repeat::rate` (`GLuint`)
 * `ui::element::string`
   * `ui::string::selection` (`std::string`)
 

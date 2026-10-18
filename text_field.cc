@@ -86,9 +86,9 @@ int ui::text_field::get_repeat(GLuint t, GLuint *v) const
 {
     switch (t)
     {
-      case ui::repeat::initial:    return this->get_initial_repeat(v);
-      case ui::repeat::secondary:  return this->get_secondary_repeat(v);
-      default:                     return 1;
+      case ui::repeat::delay:  return this->get_repeat_delay(v);
+      case ui::repeat::rate:   return this->get_repeat_rate(v);
+      default:                 return 1;
     }
 }
 
@@ -96,9 +96,9 @@ void ui::text_field::set_repeat(GLuint t, GLuint v)
 {
     switch (t)
     {
-      case ui::repeat::initial:    this->set_initial_repeat(v);    break;
-      case ui::repeat::secondary:  this->set_secondary_repeat(v);  break;
-      default:                                                     return;
+      case ui::repeat::delay:  this->set_repeat_delay(v);  break;
+      case ui::repeat::rate:   this->set_repeat_rate(v);   break;
+      default:                                             return;
     }
 }
 
@@ -229,7 +229,7 @@ void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
         t->apply_key(kcd);
         ui::key_call_data *nkcd = new ui::key_call_data;
         memcpy(nkcd, call, sizeof(ui::key_call_data));
-        t->add_timeout(std::chrono::milliseconds(t->repeat_initial),
+        t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
                        ui::text_field::key_timeout,
                        nkcd);
     }
@@ -262,7 +262,7 @@ void ui::text_field::key_timeout(ui::active *a, void *client)
 
         ui::key_call_data *kcd = (ui::key_call_data *)client;
         t->apply_key(kcd);
-        t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
+        t->add_timeout(std::chrono::milliseconds(t->repeat_rate),
                        ui::text_field::key_timeout,
                        kcd);
         t->repeat_mutex.unlock();
@@ -297,26 +297,26 @@ void ui::text_field::set_cursor_blink(GLuint v)
 }
 
 /* Repeat rates are also in milliseconds. */
-int ui::text_field::get_initial_repeat(GLuint *v) const
-{
-    *v = this->repeat_initial;
-    return 0;
-}
-
-void ui::text_field::set_initial_repeat(GLuint v)
-{
-    this->repeat_initial = v;
-}
-
-int ui::text_field::get_secondary_repeat(GLuint *v) const
+int ui::text_field::get_repeat_delay(GLuint *v) const
 {
     *v = this->repeat_delay;
     return 0;
 }
 
-void ui::text_field::set_secondary_repeat(GLuint v)
+void ui::text_field::set_repeat_delay(GLuint v)
 {
     this->repeat_delay = v;
+}
+
+int ui::text_field::get_repeat_rate(GLuint *v) const
+{
+    *v = this->repeat_rate;
+    return 0;
+}
+
+void ui::text_field::set_repeat_rate(GLuint v)
+{
+    this->repeat_rate = v;
 }
 
 void ui::text_field::set_selection_string(void)
@@ -643,8 +643,8 @@ void ui::text_field::init(ui::composite *c)
     this->cursor_visible = true;
     this->cursor_active = false;
     this->cursor_element_count = 0;
-    this->repeat_initial = 350;
-    this->repeat_delay = 150;
+    this->repeat_delay = 350;
+    this->repeat_rate = 150;
     this->selecting = false;
 
     this->parent->get(ui::element::attribute,

@@ -92,10 +92,10 @@ Inherited from [ui::widget](ui-widget.md):
 * **ui::element::repeat** - how quickly character repeat starts, and
   how often it repeats.  Rates are in milliseconds.
 
-  | Subtype                   | Data type |
-  | ------------------------- | --------- |
-  | **ui::repeat::initial**   | GLuint    |
-  | **ui::repeat::secondary** | GLuint    |
+  | Subtype               | Data type | Notes                           |
+  | --------------------- | --------- | ------------------------------- |
+  | **ui::repeat::delay** | GLuint    | Delay before repeat starts      |
+  | **ui::repeat::rate**  | GLuint    | Rate at which character repeats |
 
 * **ui::element::size** - additional subtype to set maximum width in
   character cells, instead of pixels.
@@ -191,8 +191,6 @@ and `ui::active`.
 
 The `focus_hook` is a terribly hacky mechanism.  Better would be a
 more general method to add class-wide creation hooks.
-
-`ui::repeat::secondary` is not a great name.
 
 ## RELATED ##
 
