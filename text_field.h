@@ -41,7 +41,7 @@ namespace ui
     {
       protected:
         GLuint cursor_pos, blink, max_length;
-        GLuint repeat_initial, repeat_delay;
+        GLuint repeat_delay, repeat_rate;
         GLuint cursor_vao, cursor_vbo, cursor_ebo, cursor_element_count;
         std::vector<GLuint> positions;
         int img_offset;
@@ -80,10 +80,10 @@ namespace ui
         void set_cursor_pos(GLuint);
         int get_cursor_blink(GLuint *) const;
         void set_cursor_blink(GLuint);
-        int get_initial_repeat(GLuint *) const;
-        void set_initial_repeat(GLuint);
-        int get_secondary_repeat(GLuint *) const;
-        void set_secondary_repeat(GLuint);
+        int get_repeat_delay(GLuint *) const;
+        void set_repeat_delay(GLuint);
+        int get_repeat_rate(GLuint *) const;
+        void set_repeat_rate(GLuint);
         void set_selection_string(void);
         void apply_key(const ui::key_call_data *);
         void reset_cursor(void);
