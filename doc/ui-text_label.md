@@ -36,16 +36,16 @@ the text label is deleted, or _shared_, which will not be deleted
 upon text label deletion.  The subtype argument for the font to
 **set()** determines whether the font is owned or shared.
 
+The `ui::text_label` can be used directly, but is intended primarily
+to layer functionality for cleaner inheritance.  The
+[`ui::label`](ui-label.md)(3) is a more capable widget, which includes
+all of the functionality of the text label.
+
 The `ui::text_label` is a subclass of [`ui::active`](ui-active.md)(3),
 so it has all of the usual event handling available.  The text label
 could be made to act like a button, though the
 [`ui::button`](ui-button.md)(3) has more typical button behaviours,
 and would be a more appropriate choice.
-
-The `ui::text_label` can be used directly, but is intended primarily
-to layer functionality in for cleaner inheritance.  The `ui::label` is
-a more capable widget, which includes all of the functionality from
-the text_label.
 
 ## METHODS ##
 
