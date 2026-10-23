@@ -75,7 +75,7 @@ namespace ui
         to_fptr timeout_func;
         void *timeout_arg;
 
-        std::list<cb_list_elem>& which_cb_list(GLuint);
+        virtual std::list<cb_list_elem>& which_cb_list(GLuint);
 
       public:
         active(GLuint, GLuint);
