@@ -79,14 +79,13 @@ void ui::pie_menu::set_size(GLuint t, float v)
  * pop us up under the right conditions.  The client data pointer
  * should point to us.
  */
-void ui::pie_menu::show(ui::active *a, void *call, void *client)
+void ui::pie_menu::show(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::pie_menu *pm = (ui::pie_menu *)client;
-    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
-    if (bcd->button == pm->popup_button && bcd->state == ui::mouse::down)
+    if (bcd.button == pm->popup_button && bcd.state == ui::mouse::down)
     {
-        glm::ivec2 new_loc(bcd->location);
+        glm::ivec2 new_loc(bcd.location);
         new_loc.x -= pm->dim.x / 2;
         new_loc.y -= pm->dim.y / 2;
         pm->set(ui::element::position, ui::position::all, new_loc,
@@ -99,12 +98,11 @@ void ui::pie_menu::show(ui::active *a, void *call, void *client)
  * menu.  This may be called from our parent, so we should use the
  * client data, which should always point to us.
  */
-void ui::pie_menu::hide(ui::active *a, void *call, void *client)
+void ui::pie_menu::hide(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::pie_menu *pm = (ui::pie_menu *)client;
-    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
-    if (bcd->button == pm->popup_button && bcd->state == ui::mouse::up)
+    if (bcd.button == pm->popup_button && bcd.state == ui::mouse::up)
         pm->set(ui::element::state, ui::state::visible, false);
 }
 
@@ -312,14 +310,13 @@ void ui::pie_menu::mouse_pos_callback(glm::ivec2& pos)
         if (this->old_child != w)
         {
             if (this->old_child != NULL)
-                this->old_child->call_callbacks(ui::callback::leave,
-                                                &call_data);
-            w->call_callbacks(ui::callback::enter, &call_data);
+                this->old_child->call_callbacks(ui::callback::leave, call_data);
+            w->call_callbacks(ui::callback::enter, call_data);
         }
-        w->call_callbacks(ui::callback::motion, &call_data);
+        w->call_callbacks(ui::callback::motion, call_data);
     }
     else if (this->old_child != NULL)
-        this->old_child->call_callbacks(ui::callback::leave, &call_data);
+        this->old_child->call_callbacks(ui::callback::leave, call_data);
 
     /* The composite's callbacks all search again at the end of
      * execution, in case the widget we worked on disappeared or was
@@ -339,12 +336,12 @@ void ui::pie_menu::mouse_btn_callback(ui::btn_call_data& call_data)
     ui::widget *w = this->which_child(call_data.location);
 
     if (w != NULL)
-        w->call_callbacks(which, &call_data);
+        w->call_callbacks(which, call_data);
 
     /* We'll have the hide callback in our list, which is likely
      * appropriate.
      */
-    this->call_callbacks(which, &call_data);
+    this->call_callbacks(which, call_data);
 }
 
 void ui::pie_menu::draw(GLuint trans_uniform, const glm::mat4& parent_trans)

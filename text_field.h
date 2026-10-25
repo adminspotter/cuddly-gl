@@ -68,12 +68,12 @@ namespace ui
         virtual int get_selection(GLuint, glm::uvec2 *) const;
         virtual void set_selection(GLuint, const glm::uvec2&);
 
-        static void focus_callback(ui::active *, void *, void *);
-        static void btn_down_callback(ui::active *, void *, void *);
-        static void btn_up_callback(ui::active *, void *, void *);
-        static void motion_callback(ui::active *, void *, void *);
-        static void key_down_callback(ui::active *, void *, void *);
-        static void key_up_callback(ui::active *, void *, void *);
+        static void focus_callback(ui::active *, ui::focus_call_data& , void *);
+        static void btn_down_callback(ui::active *, ui::btn_call_data&, void *);
+        static void btn_up_callback(ui::active *, ui::btn_call_data&, void *);
+        static void motion_callback(ui::active *, ui::mouse_call_data&, void *);
+        static void key_down_callback(ui::active *, ui::key_call_data&, void *);
+        static void key_up_callback(ui::active *, ui::key_call_data&, void *);
         static void key_timeout(ui::active *, void *);
 
         int get_cursor_pos(GLuint *) const;
@@ -85,7 +85,7 @@ namespace ui
         int get_repeat_rate(GLuint *) const;
         void set_repeat_rate(GLuint);
         void set_selection_string(void);
-        void apply_key(const ui::key_call_data *);
+        void apply_key(const ui::key_call_data&);
         void reset_cursor(void);
         void activate_cursor(void);
         void deactivate_cursor(void);

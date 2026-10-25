@@ -158,13 +158,15 @@ void ui::text_field::set_selection(GLuint t, const glm::uvec2& v)
     this->populate_buffers();
 }
 
-void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
+void ui::text_field::focus_callback(ui::active *a,
+                                    ui::focus_call_data& fcd,
+                                    void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
     if (t != NULL)
     {
-        if (((ui::focus_call_data *)call)->focus == true)
+        if (fcd.focus == true)
         {
             if (ui::text_field::focus_hook != NULL)
                 (*ui::text_field::focus_hook)(true);
@@ -179,16 +181,17 @@ void ui::text_field::focus_callback(ui::active *a, void *call, void *client)
     }
 }
 
-void ui::text_field::btn_down_callback(ui::active *a, void *call, void *client)
+void ui::text_field::btn_down_callback(ui::active *a,
+                                       ui::btn_call_data& bcd,
+                                       void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
-    if (t != NULL && bcd->button == ui::mouse::button0)
+    if (t != NULL && bcd.button == ui::mouse::button0)
     {
-        t->cursor_mouse_position(bcd->location);
+        t->cursor_mouse_position(bcd.location);
 
-        t->selecting = bcd->state == ui::mouse::down;
+        t->selecting = bcd.state == ui::mouse::down;
         t->select_start = t->cursor_pos;
         t->selection = std::u32string();
         t->generate_string_image();
@@ -196,46 +199,51 @@ void ui::text_field::btn_down_callback(ui::active *a, void *call, void *client)
     }
 }
 
-void ui::text_field::btn_up_callback(ui::active *a, void *call, void *client)
+void ui::text_field::btn_up_callback(ui::active *a,
+                                     ui::btn_call_data& bcd,
+                                     void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::btn_call_data *bcd = (ui::btn_call_data *)call;
 
-    if (t != NULL && bcd->button == ui::mouse::button0)
-        t->selecting = bcd->state == ui::mouse::down;
+    if (t != NULL && bcd.button == ui::mouse::button0)
+        t->selecting = bcd.state == ui::mouse::down;
 }
 
-void ui::text_field::motion_callback(ui::active *a, void *call, void *client)
+void ui::text_field::motion_callback(ui::active *a,
+                                     ui::mouse_call_data& mcd,
+                                     void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::mouse_call_data *mcd = (ui::mouse_call_data *)call;
 
     if (t != NULL && t->selecting)
     {
-        t->cursor_mouse_position(mcd->location);
+        t->cursor_mouse_position(mcd.location);
         t->set_selection_string();
         t->generate_string_image();
         t->populate_buffers();
     }
 }
 
-void ui::text_field::key_down_callback(ui::active *a, void *call, void *client)
+void ui::text_field::key_down_callback(ui::active *a,
+                                       ui::key_call_data& kcd,
+                                       void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
-    ui::key_call_data *kcd = (ui::key_call_data *)call;
 
     if (t != NULL)
     {
         t->apply_key(kcd);
         ui::key_call_data *nkcd = new ui::key_call_data;
-        memcpy(nkcd, call, sizeof(ui::key_call_data));
+        memcpy(nkcd, &kcd, sizeof(ui::key_call_data));
         t->add_timeout(std::chrono::milliseconds(t->repeat_delay),
                        ui::text_field::key_timeout,
                        nkcd);
     }
 }
 
-void ui::text_field::key_up_callback(ui::active *a, void *call, void *client)
+void ui::text_field::key_up_callback(ui::active *a,
+                                     ui::key_call_data& kcd,
+                                     void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
 
@@ -261,7 +269,7 @@ void ui::text_field::key_timeout(ui::active *a, void *client)
             return;
 
         ui::key_call_data *kcd = (ui::key_call_data *)client;
-        t->apply_key(kcd);
+        t->apply_key(*kcd);
         t->add_timeout(std::chrono::milliseconds(t->repeat_rate),
                        ui::text_field::key_timeout,
                        kcd);
@@ -327,15 +335,15 @@ void ui::text_field::set_selection_string(void)
                                                 - (int)this->cursor_pos));
 }
 
-void ui::text_field::apply_key(const ui::key_call_data *c)
+void ui::text_field::apply_key(const ui::key_call_data& c)
 {
-    if (c->character != 0)
-        this->insert_char(c->character);
+    if (c.character != 0)
+        this->insert_char(c.character);
     else
     {
-        bool select = c->mods & ui::key_mod::shift;
+        bool select = c.mods & ui::key_mod::shift;
 
-        switch (c->key)
+        switch (c.key)
         {
           case ui::key::l_arrow:  this->previous_char(select);   break;
           case ui::key::r_arrow:  this->next_char(select);       break;

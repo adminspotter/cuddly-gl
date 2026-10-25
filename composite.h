@@ -84,7 +84,7 @@ namespace ui
         void focus_next_child(void);
         void focus_previous_child(void);
 
-        static void focus_callback(ui::active *, void *, void *);
+        static void focus_callback(ui::active *, ui::focus_call_data&, void *);
 
         void init(composite *);
 

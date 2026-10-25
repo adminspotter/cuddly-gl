@@ -177,7 +177,7 @@ ui::vertex_buffer *ui::toggle::generate_points(void)
 }
 
 /* ARGSUSED */
-void ui::toggle::check(ui::active *a, void *call, void *client)
+void ui::toggle::check(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::toggle *t = dynamic_cast<ui::toggle *>(a);
 

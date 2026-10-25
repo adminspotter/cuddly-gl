@@ -28,18 +28,18 @@
 
 void error_callback(int, const char *);
 void create_image(int, int);
-void close_key_callback(ui::active *, void *, void *);
-void sensitivity_key_callback(ui::active *, void *, void *);
-void enter_callback(ui::active *, void *, void *);
-void leave_callback(ui::active *, void *, void *);
-void menu_callback(ui::active *, void *, void *);
-void reorient_callback(ui::active *, void *, void *);
-void print_widget_resources(ui::active *, void *, void *);
-void print_button_resources(ui::active *, void *, void *);
-void print_row_column_resources(ui::active *, void *, void *);
-void print_radio(ui::active *, void *, void *);
-void print_popup_resources(ui::active *, void *, void *);
-void print_selection(ui::active *, void *, void *);
+void close_key_callback(ui::active *, ui::key_call_data&, void *);
+void sensitivity_key_callback(ui::active *, ui::key_call_data&, void *);
+void enter_callback(ui::active *, ui::mouse_call_data&, void *);
+void leave_callback(ui::active *, ui::mouse_call_data&, void *);
+void menu_callback(ui::active *, ui::btn_call_data&, void *);
+void reorient_callback(ui::active *, ui::btn_call_data&, void *);
+void print_widget_resources(ui::active *, ui::btn_call_data&, void *);
+void print_button_resources(ui::active *, ui::btn_call_data&, void *);
+void print_row_column_resources(ui::active *, ui::btn_call_data&, void *);
+void print_radio(ui::active *, ui::btn_call_data&, void *);
+void print_popup_resources(ui::active *, ui::visible_call_data&, void *);
+void print_selection(ui::active *, ui::btn_call_data&, void *);
 
 ui::context *ctx;
 ui::widget *w1;
@@ -313,23 +313,22 @@ void create_image(int width, int height)
                        sizeof(unsigned char) * 4);
 }
 
-void close_key_callback(ui::active *a, void *call, void *client)
+void close_key_callback(ui::active *a, ui::key_call_data& kcd, void *client)
 {
-    ui::key_call_data *call_data = (ui::key_call_data *)call;
     GLFWwindow *w = (GLFWwindow *)client;
 
-    if (call_data->key == ui::key::esc && call_data->state == ui::key::down)
+    if (kcd.key == ui::key::esc && kcd.state == ui::key::down)
         glfwSetWindowShouldClose(w, GL_TRUE);
 }
 
 /* ARGSUSED */
-void sensitivity_key_callback(ui::active *a, void *call, void *client)
+void sensitivity_key_callback(ui::active *a,
+                              ui::key_call_data& kcd,
+                              void *client)
 {
-    ui::key_call_data *call_data = (ui::key_call_data *)call;
-
-    if (call_data->key == ui::key::s
-        && call_data->mods & ui::key_mod::shift
-        && call_data->state == ui::key::down)
+    if (kcd.key == ui::key::s
+        && kcd.mods & ui::key_mod::shift
+        && kcd.state == ui::key::down)
     {
         bool sensitive;
 
@@ -339,28 +338,27 @@ void sensitivity_key_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void enter_callback(ui::active *a, void *call, void *client)
+void enter_callback(ui::active *a, ui::mouse_call_data& mcd, void *client)
 {
     std::cout << "we're in " << (intptr_t)client << '!' << std::endl;
 }
 
 /* ARGSUSED */
-void leave_callback(ui::active *a, void *call, void *client)
+void leave_callback(ui::active *a, ui::mouse_call_data& mcd, void *client)
 {
     std::cout << "out of " << (intptr_t)client << ", baby!" << std::endl;
 }
 
-void menu_callback(ui::active *a, void *call, void *client)
+void menu_callback(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     std::cout << "menu sector " << (intptr_t)client << std::endl;
 }
 
-void reorient_callback(ui::active *a, void *call, void *client)
+void reorient_callback(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::row_column *r = dynamic_cast<ui::row_column *>(a);
-    ui::btn_call_data *call_data = (ui::btn_call_data *)call;
 
-    if (r != NULL && call_data->button == ui::mouse::button0)
+    if (r != NULL && bcd.button == ui::mouse::button0)
     {
         static glm::ivec2 grid(2, 4);
         static GLuint orient = ui::order::column;
@@ -378,7 +376,7 @@ void reorient_callback(ui::active *a, void *call, void *client)
 }
 
 /* ARGSUSED */
-void print_widget_resources(ui::active *a, void *call, void *client)
+void print_widget_resources(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     glm::ivec2 pos, size;
     glm::vec4 fg, bg;
@@ -416,7 +414,8 @@ void print_widget_resources(ui::active *a, void *call, void *client)
         std::cout << "visible" << std::endl;
 }
 
-void print_button_resources(ui::active *a, void *call, void *client)
+/* ARGSUSED */
+void print_button_resources(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     GLuint w, h;
     int x, y;
@@ -450,7 +449,10 @@ void print_button_resources(ui::active *a, void *call, void *client)
         std::cout << "visible" << std::endl;
 }
 
-void print_row_column_resources(ui::active *a, void *call, void *client)
+/* ARGSUSED */
+void print_row_column_resources(ui::active *a,
+                                ui::btn_call_data& bcd,
+                                void *client)
 {
     GLuint sx, sy, cx, cy, resize;
     float px, py;
@@ -479,7 +481,7 @@ void print_row_column_resources(ui::active *a, void *call, void *client)
     }
 }
 
-void print_radio(ui::active *a, void *call, void *client)
+void print_radio(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::widget *w = NULL;
     ui::radio_box<ui::row_column> *r
@@ -498,7 +500,9 @@ void print_radio(ui::active *a, void *call, void *client)
         std::cout << "is not a radio box" << std::endl;
 }
 
-void print_popup_resources(ui::active *a, void *call, void *client)
+void print_popup_resources(ui::active *a,
+                           ui::visible_call_data& vcd,
+                           void *client)
 {
     GLuint w, h, pop_button;
     float inner_pct;
@@ -523,7 +527,7 @@ void print_popup_resources(ui::active *a, void *call, void *client)
     std::cout << "visible " << visible << std::endl;
 }
 
-void print_selection(ui::active *a, void *call, void *client)
+void print_selection(ui::active *a, ui::btn_call_data& bcd, void *client)
 {
     ui::text_field *t = dynamic_cast<ui::text_field *>(a);
     std::string full_str, selection;

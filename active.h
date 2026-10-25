@@ -31,6 +31,8 @@
 
 #include <list>
 #include <chrono>
+#include <any>
+#include <stdexcept>
 
 #include "rect.h"
 
@@ -38,7 +40,72 @@ namespace ui
 {
     class active;
 
-    typedef void (*cb_fptr)(active *, void *, void *);
+    class cb_list_base
+    {
+      public:
+        typedef void (*cb_fptr_base_t)(ui::active *, std::any *, void *);
+
+        virtual void add(cb_fptr_base_t, void *) {};
+        virtual void remove(cb_fptr_base_t, void *) {};
+        virtual void call(ui::active *, std::any *) {};
+    };
+
+    template<typename call_data_t>
+    class cb_list : public cb_list_base
+    {
+      public:
+        typedef void (*cb_fptr_t)(ui::active *, call_data_t&, void *);
+
+      protected:
+        class cb_elem
+        {
+          public:
+            cb_fptr_t ptr;
+            void *client_data;
+
+            cb_elem(cb_fptr_t ptr, void *client_data)
+                {
+                    this->ptr = ptr;
+                    this->client_data = client_data;
+                };
+            ~cb_elem() {};
+            bool operator==(const cb_elem& p) const
+                {
+                    return (this->ptr == p.ptr
+                            && this->client_data == p.client_data);
+                };
+            void operator()(active *p, call_data_t& call_data)
+                {
+                    this->ptr(p, call_data, this->client_data);
+                };
+        };
+
+        std::list<cb_elem> _list;
+
+      public:
+        cb_list<call_data_t>() : _list() {};
+        ~cb_list<call_data_t>() {};
+
+        int size(void) const
+            {
+                return this->_list.size();
+            };
+
+        virtual void add(cb_fptr_t funcptr, void *client_data)
+            {
+                this->_list.push_back({funcptr, client_data});
+            };
+        virtual void remove(cb_fptr_t funcptr, void *client_data)
+            {
+                this->_list.remove({funcptr, client_data});
+            };
+        virtual void call(ui::active *a, call_data_t& call_data)
+            {
+                for (auto& cb : this->_list)
+                    cb(a, call_data);
+            };
+    };
+
     typedef void (*to_fptr)(active *, void *);
 
     typedef std::chrono::steady_clock to_time;
@@ -47,43 +114,59 @@ namespace ui
 
     static const to_point zero_time;
 
-    typedef struct cb_list_tag
-    {
-        cb_fptr ptr;
-        void *client_data;
-
-        bool operator==(const struct cb_list_tag& p) const
-            {
-                return (this->ptr == p.ptr
-                        && this->client_data == p.client_data);
-            };
-        void operator()(active *p, void *call_data)
-            {
-                this->ptr(p, call_data, this->client_data);
-            };
-    }
-    cb_list_elem;
-
     class active : public virtual rect
     {
       protected:
-        std::list<cb_list_elem> enter_cb, leave_cb, motion_cb;
-        std::list<cb_list_elem> btn_down_cb, btn_up_cb;
-        std::list<cb_list_elem> key_down_cb, key_up_cb;
-        std::list<cb_list_elem> resize_cb, focus_cb, visible_cb;
+        cb_list<mouse_call_data> enter_cb, leave_cb, motion_cb;
+        cb_list<btn_call_data> btn_down_cb, btn_up_cb;
+        cb_list<key_call_data> key_down_cb, key_up_cb;
+        cb_list<resize_call_data> resize_cb;
+        cb_list<focus_call_data> focus_cb;
+        cb_list<visible_call_data> visible_cb;
         to_point timeout;
         to_fptr timeout_func;
         void *timeout_arg;
 
-        virtual std::list<cb_list_elem>& which_cb_list(GLuint);
+        virtual cb_list_base *which_cb_list(GLuint);
 
       public:
         active(GLuint, GLuint);
         ~active();
 
-        virtual void add_callback(GLuint, cb_fptr, void *);
-        virtual void remove_callback(GLuint, cb_fptr, void *);
-        virtual void call_callbacks(GLuint, void *);
+        template<typename call_data_t>
+        void add_callback(GLuint cb_list_id,
+                          void (*funcptr)(active *, call_data_t&, void *),
+                          void *client_data)
+            {
+                auto list_ptr = dynamic_cast<cb_list<call_data_t> *>(
+                    this->which_cb_list(cb_list_id)
+                );
+                if (list_ptr == NULL)
+                    throw std::runtime_error("wrong call data type");
+                list_ptr->add(funcptr, client_data);
+            };
+        template<typename call_data_t>
+        void remove_callback(GLuint cb_list_id,
+                             void (*funcptr)(active *, call_data_t&, void *),
+                             void *client_data)
+            {
+                auto list_ptr = dynamic_cast<cb_list<call_data_t> *>(
+                    this->which_cb_list(cb_list_id)
+                );
+                if (list_ptr == NULL)
+                    throw std::runtime_error("wrong call data type");
+                list_ptr->remove(funcptr, client_data);
+            };
+        template<typename call_data_t>
+        void call_callbacks(GLuint cb_list_id, call_data_t& call_data)
+            {
+                auto list_ptr = dynamic_cast<cb_list<call_data_t> *>(
+                    this->which_cb_list(cb_list_id)
+                );
+                if (list_ptr == NULL)
+                    throw std::runtime_error("wrong call data type");
+                list_ptr->call(this, call_data);
+            };
 
         void add_timeout(to_until, to_fptr, void *);
         void remove_timeout(void);

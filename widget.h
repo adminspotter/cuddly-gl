@@ -91,7 +91,7 @@ namespace ui
         virtual void set_size(GLuint, GLuint) override;
         virtual void set_size(GLuint, const glm::ivec2&) override;
 
-        static void reposition(ui::active *, void *, void *);
+        static void reposition(ui::active *, ui::resize_call_data&, void *);
 
         virtual void recalculate_absolute_pos(void);
         virtual void recalculate_transformation_matrix(void);

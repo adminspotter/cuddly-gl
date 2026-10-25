@@ -97,7 +97,7 @@ void ui::composite::set_size(GLuint d, GLuint v)
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
     for (ui::widget *i : this->children)
-        i->call_callbacks(ui::callback::resize, &call_data);
+        i->call_callbacks(ui::callback::resize, call_data);
 }
 
 void ui::composite::set_size(GLuint d, const glm::ivec2& v)
@@ -109,7 +109,7 @@ void ui::composite::set_size(GLuint d, const glm::ivec2& v)
     this->regenerate_search_tree();
     call_data.new_size = this->dim;
     for (ui::widget *i : this->children)
-        i->call_callbacks(ui::callback::resize, &call_data);
+        i->call_callbacks(ui::callback::resize, call_data);
 }
 
 int ui::composite::get_pixel_size(GLuint t, float *v) const
@@ -224,7 +224,7 @@ void ui::composite::child_motion(ui::widget *w, GLuint type, glm::ivec2& pos)
     if (c != NULL)
         c->mouse_pos_callback(call_data.location);
     else
-        w->call_callbacks(type, &call_data);
+        w->call_callbacks(type, call_data);
 }
 
 void ui::composite::child_motion_focus(ui::widget *w, bool focus)
@@ -242,7 +242,7 @@ void ui::composite::child_motion_focus(ui::widget *w, bool focus)
                 this->parent->set(ui::element::child,
                                   ui::child::focused,
                                   dynamic_cast<ui::widget *>(this));
-            w->call_callbacks(ui::callback::focus, &fcd);
+            w->call_callbacks(ui::callback::focus, fcd);
         }
     }
 }
@@ -256,13 +256,13 @@ void ui::composite::focus_child(ui::composite::child_list::iterator new_focus)
         if (this->focused != this->children.end())
         {
             fcd.focus = false;
-            (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
+            (*this->focused)->call_callbacks(ui::callback::focus, fcd);
         }
         this->focused = new_focus;
         if (this->focused != this->children.end())
         {
             fcd.focus = true;
-            (*this->focused)->call_callbacks(ui::callback::focus, &fcd);
+            (*this->focused)->call_callbacks(ui::callback::focus, fcd);
         }
     }
 }
@@ -287,11 +287,13 @@ void ui::composite::focus_previous_child(void)
     this->focus_child(new_focus);
 }
 
-void ui::composite::focus_callback(ui::active *a, void *call, void *client)
+void ui::composite::focus_callback(ui::active *a,
+                                   ui::focus_call_data& fcd,
+                                   void *client)
 {
     ui::composite *c = dynamic_cast<ui::composite *>(a);
 
-    if (c != NULL && ((ui::focus_call_data *)call)->focus == false)
+    if (c != NULL && fcd.focus == false)
         c->set_focused_child(NULL);
 }
 
@@ -435,7 +437,7 @@ void ui::composite::mouse_pos_callback(glm::ivec2& pos)
             this->child_motion_focus(this->old_child, false);
             this->child_motion(this->old_child, ui::callback::leave, pos);
         }
-        this->call_callbacks(ui::callback::motion, &call_data);
+        this->call_callbacks(ui::callback::motion, call_data);
     }
 
     /* w might no longer exist at this position.  Let's search again,
@@ -473,10 +475,10 @@ void ui::composite::mouse_btn_callback(ui::btn_call_data& call_data)
         if (c != NULL)
             c->mouse_btn_callback(call_data);
         else
-            w->call_callbacks(which, &call_data);
+            w->call_callbacks(which, call_data);
     }
     else
-        this->call_callbacks(which, &call_data);
+        this->call_callbacks(which, call_data);
 }
 
 void ui::composite::key_callback(int key, uint32_t c, int state, int mods)
@@ -519,8 +521,8 @@ void ui::composite::key_callback(ui::key_call_data& call_data)
         if (c != NULL)
             c->key_callback(call_data);
         else
-            (*this->focused)->call_callbacks(which, &call_data);
+            (*this->focused)->call_callbacks(which, call_data);
     }
     else
-        this->call_callbacks(which, &call_data);
+        this->call_callbacks(which, call_data);
 }

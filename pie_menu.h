@@ -45,8 +45,8 @@ namespace ui
         virtual int get_size(GLuint, float *) const;
         virtual void set_size(GLuint, float);
 
-        static void show(ui::active *, void *, void *);
-        static void hide(ui::active *, void *, void *);
+        static void show(ui::active *, ui::btn_call_data&, void *);
+        static void hide(ui::active *, ui::btn_call_data&, void *);
 
         virtual void set_desired_size(void) override;
 

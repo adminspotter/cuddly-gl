@@ -56,13 +56,15 @@ namespace ui
         void arm(void);
         void disarm(void);
 
-        static void enter_callback(ui::active *, void *, void *);
-        static void leave_callback(ui::active *, void *, void *);
-        static void focus_callback(ui::active *, void *, void *);
-        static void mouse_down_callback(ui::active *, void *, void *);
-        static void mouse_up_callback(ui::active *, void *, void *);
-        static void key_down_callback(ui::active *, void *, void *);
-        static void key_up_callback(ui::active *, void *, void *);
+        static void enter_callback(ui::active *, ui::mouse_call_data&, void *);
+        static void leave_callback(ui::active *, ui::mouse_call_data&, void *);
+        static void focus_callback(ui::active *, ui::focus_call_data&, void *);
+        static void mouse_down_callback(ui::active *,
+                                        ui::btn_call_data&,
+                                        void *);
+        static void mouse_up_callback(ui::active *, ui::btn_call_data&, void *);
+        static void key_down_callback(ui::active *, ui::key_call_data&, void *);
+        static void key_up_callback(ui::active *, ui::key_call_data&, void *);
 
         void init(ui::composite *);
 

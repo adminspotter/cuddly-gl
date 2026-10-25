@@ -47,12 +47,19 @@ to some event.  Events which the `ui::active` recognizes are *enter*,
 *leave*, *motion*, *btn_down*, *btn_up*, *key_down*, *key_up*,
 *resize*, *focus*, and *visible*.
 
+Callback functions do not have a typedef, but they do have a
+consistent call structure:
+
+```cpp
+void (*)(ui::active *active, call_data_type& call_data, void *client_data)
+```
+
 Callback functions receive a *call_data* argument, which contains data
 relevant to the individual event.  For example, a *motion* event will
 receive the location of the event, and a *btn_down* event will receive
 the location, which mouse button was operated, the new state of that
 button, and which modifier keys were pressed during the event.  See
-the TYPES section for individual event types.
+the CALLBACK TYPES section for individual event types.
 
 Callback functions also receive a *client_data* argument, which is an
 arbitrary piece of data provided when a function is added to a
@@ -67,14 +74,6 @@ invocations of the same function, with varying, or even the same,
 *client_data* arguments.
 
 ## CALLBACK TYPES ##
-
-* `ui::cb_fptr`
-
-  A function pointer for a callback function.
-
-  ```cpp
-  void (*cb_fptr)(ui::active *a, void *call_data, void *client_data)
-  ```
 
 * `ui::callback`
 
@@ -266,32 +265,39 @@ mappings to the underlying types, but with shorter names.
 
 ## METHODS ##
 
-* **add_callback(GLuint _list_, ui::cb_fptr _func_ptr_, void \*_client_data_)**
+* **add_callback(GLuint _list_, _fptr_type_ _func_ptr_, void \*_client_data_)**
 
   Adds a callback to the provided _list_.  The _list_ argument is an
-  element from the `ui::callback` namespace.
+  element from the `ui::callback` namespace.  The _func_ptr_ argument
+  is a function pointer as described in CALLBACK_LISTS.
+  _add_callback_ forces the correct _fptr_type_, and will throw an
+  exception if the function pointer does not match _list_'s expected
+  type.
 
   The _client_data_ argument is saved as-is; if _client_data_ is a
   pointer to something, whatever is at the address at call time is
   what is available to the callback function.
 
-* **remove_callback(GLuint _list_, ui::cbfptr _func_ptr_, void \*_client_data_)**
+* **remove_callback(GLuint _list_, _fptr_type_ _func_ptr_, void \*_client_data_)**
 
   Removes a callback to the provided _list_ which has the provided
   _client_data_.
 
   If a given _func_ptr_/_client_data_ pair are contained in a callback
   list more than once, a call to `remove_callback` will remove the
-  *first* instance.
+  *first* instance.  As with **add_callback** above, a function
+  pointer mismatch with the list in question will result in an
+  exception.
 
   If no matching callback is found in a list, the list will be
   unchanged.
 
-* **call_callbacks(GLuint _list_, void \*_call_data_)**
+* **call_callbacks(GLuint _list_, _call_data_type_ \*_call_data_)**
 
   Calls the callbacks in the provided _list_, passing _call_data_ in
   the second argument to each.  The _list_ argument is an element from
-  the `ui::callback` namespace.
+  the `ui::callback` namespace.  As with the methods above, a
+  mismatched _list_ and _call_data_ type will result in an exception.
 
   This is the method which is used internally by the event-handling
   mechanism to trigger a set of callbacks.
