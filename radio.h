@@ -88,7 +88,9 @@ namespace ui
                     T::set_child(t, v);
             };
 
-        static void radio_selection(ui::active *a, void *call, void *client)
+        static void radio_selection(ui::active *a,
+                                    ui::btn_call_data& bcd,
+                                    void *client)
             {
                 ui::toggle *t = dynamic_cast<ui::toggle *>(a);
 

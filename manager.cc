@@ -185,7 +185,7 @@ void ui::manager::set_desired_size(void)
     if (this->dim != old_sz)
     {
         ui::resize_call_data call_data = { this->dim };
-        this->call_callbacks(ui::callback::resize, &call_data);
+        this->call_callbacks(ui::callback::resize, call_data);
     }
     this->dirty = false;
     this->regenerate_search_tree();

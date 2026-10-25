@@ -26,26 +26,28 @@
  *
  */
 
+#include <stdexcept>
+
 #include "active.h"
 
 const ui::to_point zero_time(std::chrono::seconds(0));
 
-std::list<ui::cb_list_elem>& ui::active::which_cb_list(GLuint which)
+ui::cb_list_base *ui::active::which_cb_list(GLuint which)
 {
     switch (which)
     {
-      case ui::callback::enter:     return this->enter_cb;
-      case ui::callback::leave:     return this->leave_cb;
-      default:
-      case ui::callback::btn_down:  return this->btn_down_cb;
-      case ui::callback::btn_up:    return this->btn_up_cb;
-      case ui::callback::motion:    return this->motion_cb;
-      case ui::callback::key_down:  return this->key_down_cb;
-      case ui::callback::key_up:    return this->key_up_cb;
-      case ui::callback::resize:    return this->resize_cb;
-      case ui::callback::focus:     return this->focus_cb;
-      case ui::callback::visible:   return this->visible_cb;
+      case ui::callback::enter:     return &this->enter_cb;
+      case ui::callback::leave:     return &this->leave_cb;
+      case ui::callback::btn_down:  return &this->btn_down_cb;
+      case ui::callback::btn_up:    return &this->btn_up_cb;
+      case ui::callback::motion:    return &this->motion_cb;
+      case ui::callback::key_down:  return &this->key_down_cb;
+      case ui::callback::key_up:    return &this->key_up_cb;
+      case ui::callback::resize:    return &this->resize_cb;
+      case ui::callback::focus:     return &this->focus_cb;
+      case ui::callback::visible:   return &this->visible_cb;
     }
+    throw std::invalid_argument("invalid callback list");
 }
 
 ui::active::active(GLuint w, GLuint h)
@@ -60,35 +62,6 @@ ui::active::active(GLuint w, GLuint h)
 
 ui::active::~active()
 {
-}
-
-void ui::active::add_callback(GLuint cb_list,
-                              ui::cb_fptr funcptr,
-                              void *client)
-{
-    std::list<ui::cb_list_elem>& l = this->which_cb_list(cb_list);
-    cb_list_elem new_elem = {funcptr, client};
-
-    l.push_back(new_elem);
-}
-
-void ui::active::remove_callback(GLuint cb_list,
-                                 ui::cb_fptr funcptr,
-                                 void *client)
-{
-    std::list<ui::cb_list_elem>& l = this->which_cb_list(cb_list);
-    cb_list_elem old_elem = {funcptr, client};
-
-    l.remove(old_elem);
-}
-
-void ui::active::call_callbacks(GLuint cb_list, void *call_data)
-{
-    std::list<ui::cb_list_elem>& l = this->which_cb_list(cb_list);
-    std::list<ui::cb_list_elem>::iterator i;
-
-    for (i = l.begin(); i != l.end(); ++i)
-        (*i)(this, call_data);
 }
 
 void ui::active::add_timeout(ui::to_until until, ui::to_fptr fp, void *a)

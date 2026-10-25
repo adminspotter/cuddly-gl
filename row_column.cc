@@ -143,7 +143,7 @@ void ui::row_column::set_desired_size(void)
     if (this->dim != old_sz)
     {
         ui::resize_call_data call_data = { this->dim };
-        this->call_callbacks(ui::callback::resize, &call_data);
+        this->call_callbacks(ui::callback::resize, call_data);
     }
     this->ui::composite::parent->move_child(this);
     this->populate_buffers();

@@ -53,7 +53,7 @@ namespace ui
         virtual void calculate_widget_size(void) override;
         virtual vertex_buffer *generate_points(void) override;
 
-        static void check(ui::active *, void *, void *);
+        static void check(ui::active *, ui::btn_call_data&, void *);
 
         void init(ui::composite *);
 

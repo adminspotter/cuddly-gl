@@ -295,7 +295,7 @@ void ui::widget::set_state(GLuint t, bool v)
 
         this->visible = v;
         this->parent->move_child(this);
-        this->call_callbacks(ui::callback::visible, &vcd);
+        this->call_callbacks(ui::callback::visible, vcd);
     }
 }
 
@@ -375,7 +375,9 @@ void ui::widget::set_size(GLuint t, const glm::ivec2& v)
     this->parent->move_child(this);
 }
 
-void ui::widget::reposition(ui::active *a, void *call, void *client)
+void ui::widget::reposition(ui::active *a,
+                            ui::resize_call_data& rcd,
+                            void *client)
 {
     ui::widget *w = dynamic_cast<ui::widget *>(a);
 

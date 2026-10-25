@@ -87,7 +87,9 @@ void ui::armable::disarm(void)
     this->set(ui::element::state, ui::state::armed, false);
 }
 
-void ui::armable::enter_callback(ui::active *a, void *call, void *client)
+void ui::armable::enter_callback(ui::active *a,
+                                 ui::mouse_call_data& mcd,
+                                 void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
@@ -95,7 +97,9 @@ void ui::armable::enter_callback(ui::active *a, void *call, void *client)
         b->activate();
 }
 
-void ui::armable::leave_callback(ui::active *a, void *call, void *client)
+void ui::armable::leave_callback(ui::active *a,
+                                 ui::mouse_call_data& mcd,
+                                 void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
@@ -103,20 +107,24 @@ void ui::armable::leave_callback(ui::active *a, void *call, void *client)
         b->deactivate();
 }
 
-void ui::armable::focus_callback(ui::active *a, void *call, void *client)
+void ui::armable::focus_callback(ui::active *a,
+                                 ui::focus_call_data& fcd,
+                                 void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
     if (b != NULL)
     {
-        if (((ui::focus_call_data *)call)->focus == true)
+        if (fcd.focus == true)
             b->activate();
         else
             b->deactivate();
     }
 }
 
-void ui::armable::mouse_down_callback(ui::active *a, void *call, void *client)
+void ui::armable::mouse_down_callback(ui::active *a,
+                                      ui::btn_call_data& bcd,
+                                      void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
@@ -124,7 +132,9 @@ void ui::armable::mouse_down_callback(ui::active *a, void *call, void *client)
         b->arm();
 }
 
-void ui::armable::mouse_up_callback(ui::active *a, void *call, void *client)
+void ui::armable::mouse_up_callback(ui::active *a,
+                                    ui::btn_call_data& bcd,
+                                    void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
@@ -132,35 +142,31 @@ void ui::armable::mouse_up_callback(ui::active *a, void *call, void *client)
         b->disarm();
 }
 
-void ui::armable::key_down_callback(ui::active *a, void *call, void *client)
+void ui::armable::key_down_callback(ui::active *a,
+                                    ui::key_call_data& kcd,
+                                    void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
-    if (b != NULL)
+    if (b != NULL && (kcd.key == ui::key::space || kcd.character == ' '))
     {
-        ui::key_call_data *kcd = (ui::key_call_data *)call;
-        if (kcd->key == ui::key::space || kcd->character == ' ')
-        {
-            ui::btn_call_data bcd
-                = {kcd->location, ui::mouse::button0, ui::mouse::down, 0};
-            b->call_callbacks(ui::callback::btn_down, &bcd);
-        }
+        ui::btn_call_data bcd
+            = {kcd.location, ui::mouse::button0, ui::mouse::down, 0};
+        b->call_callbacks(ui::callback::btn_down, bcd);
     }
 }
 
-void ui::armable::key_up_callback(ui::active *a, void *call, void *client)
+void ui::armable::key_up_callback(ui::active *a,
+                                  ui::key_call_data& kcd,
+                                  void *client)
 {
     ui::armable *b = dynamic_cast<ui::armable *>(a);
 
-    if (b != NULL)
+    if (b != NULL && (kcd.key == ui::key::space || kcd.character == ' '))
     {
-        ui::key_call_data *kcd = (ui::key_call_data *)call;
-        if (kcd->key == ui::key::space || kcd->character == ' ')
-        {
-            ui::btn_call_data bcd
-                = {kcd->location, ui::mouse::button0, ui::mouse::up, 0};
-            b->call_callbacks(ui::callback::btn_up, &bcd);
-        }
+        ui::btn_call_data bcd
+            = {kcd.location, ui::mouse::button0, ui::mouse::up, 0};
+        b->call_callbacks(ui::callback::btn_up, bcd);
     }
 }
 
