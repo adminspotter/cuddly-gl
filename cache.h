@@ -32,7 +32,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <pthread.h>
 
 #include <cstdint>
 #include <algorithm>
@@ -46,6 +45,10 @@
 #include <iomanip>
 #include <stdexcept>
 #include <chrono>
+
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 template <typename T>
 struct noop_cleanup
@@ -85,12 +88,15 @@ class BasicCache
 
     typename _bct::_bcom_t _bc_map;
     std::string type;
-    pthread_t prune_thread;
+    std::thread prune_thread;
+    bool exit_flag;
+    std::mutex exit_mutex;
+    std::condition_variable exit_cond;
 
-    static void *prune_worker(void *arg)
+    static void prune_worker(_bct *bc)
         {
-            _bct *bc = reinterpret_cast<_bct *>(arg);
             _bc_tpoint limit;
+            std::chrono::seconds sleep_timeout(_bct::PRUNE_INTERVAL);
             std::chrono::seconds obj_lifetime(_bct::PRUNE_LIFETIME);
             typename _bct::_bcom_t::iterator i;
             std::vector<typename _bct::_bcom_t::iterator> old_elems;
@@ -98,7 +104,14 @@ class BasicCache
 
             for (;;)
             {
-                sleep(_bct::PRUNE_INTERVAL);
+                {
+                    std::unique_lock lock(bc->exit_mutex);
+                    if (bc->exit_flag)
+                        break;
+                    if (bc->exit_cond.wait_for(lock, sleep_timeout)
+                        != std::cv_status::timeout)
+                        continue;
+                }
                 limit = _bc_time::now() - obj_lifetime;
                 old_elems.clear();
                 for (i = bc->_bc_map.begin(); i != bc->_bc_map.end(); ++i)
@@ -122,48 +135,21 @@ class BasicCache
 
   public:
     explicit BasicCache(const std::string& type_name)
-        : _bc_map(), type(type_name)
+        : _bc_map(), type(type_name), exit_mutex(), exit_cond()
         {
-            int ret;
-
-            if ((ret = pthread_create(&(this->prune_thread),
-                                      NULL,
-                                      this->prune_worker,
-                                      (void *)this)) != 0)
-            {
-                std::ostringstream s;
-                char err[128];
-
-                strerror_r(ret, err, sizeof(err));
-                s << "Couldn't start " << this->type
-                  << " reaper thread: " << err << " (" << ret << ")";
-                throw std::runtime_error(s.str());
-            }
+            this->exit_flag = false;
+            this->prune_thread = std::thread(this->prune_worker, this);
         };
     ~BasicCache()
         {
-            int ret;
             typename _bct::_bcom_t::iterator i;
 
-            if ((ret = pthread_cancel(this->prune_thread)) != 0)
             {
-                char err[128];
-
-                strerror_r(ret, err, sizeof(err));
-                std::clog << "Couldn't cancel " << this->type
-                          << " reaper thread: "
-                          << err << " (" << ret << ")" << std::endl;
+                std::unique_lock lock(this->exit_mutex);
+                this->exit_flag = true;
             }
-            sleep(0);
-            if ((ret = pthread_join(this->prune_thread, NULL)) != 0)
-            {
-                char err[128];
-
-                strerror_r(ret, err, sizeof(err));
-                std::clog << "Couldn't reap " << this->type
-                          << " reaper thread: "
-                          << err << " (" << ret << ")" << std::endl;
-            }
+            this->exit_cond.notify_all();
+            this->prune_thread.join();
 
             typename _bct::clean_func_type cleanup_func = bc_cleanup();
 
