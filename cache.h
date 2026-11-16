@@ -87,7 +87,6 @@ class BasicCache
     const static int PRUNE_LIFETIME = 1200;
 
     typename _bct::_bcom_t _bc_map;
-    std::string type;
     std::thread prune_thread;
     bool exit_flag;
     std::mutex exit_mutex;
@@ -113,7 +112,6 @@ class BasicCache
                         continue;
                 }
                 limit = _bc_time::now() - obj_lifetime;
-                old_elems.clear();
                 for (i = bc->_bc_map.begin(); i != bc->_bc_map.end(); ++i)
                     if (i->first != 0LL && i->second.lastused >= limit)
                         old_elems.push_back(i);
@@ -126,16 +124,14 @@ class BasicCache
                         cleanup_func((*j)->second);
                         bc->_bc_map.erase(*j);
                     }
-                    std::clog << "Removed " << old_elems.size()
-                              << " entities from " << bc->type
-                              << " cache" << std::endl;
+                    old_elems.clear();
                 }
             }
         };
 
   public:
-    explicit BasicCache(const std::string& type_name)
-        : _bc_map(), type(type_name), exit_mutex(), exit_cond()
+    BasicCache()
+        : _bc_map(), exit_mutex(), exit_cond()
         {
             this->exit_flag = false;
             this->prune_thread = std::thread(this->prune_worker, this);

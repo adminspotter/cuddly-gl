@@ -19,7 +19,7 @@ std::vector<std::string> paths =
 int main(int argc, char **argv)
 {
     int i, j;
-    ui::font_set f(font_names[0]);
+    ui::font_set f;
     std::string s("Howdy שלום");
     std::u32string str(ui::utf8tou32str(s));
 

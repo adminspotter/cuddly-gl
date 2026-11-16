@@ -123,7 +123,7 @@ namespace ui
                          const glm::uvec2& = {0, 0});
 
       public:
-        explicit base_font(std::string&);
+        base_font();
         virtual ~base_font();
 
         void max_cell_size(int&, int&);
@@ -166,7 +166,7 @@ namespace ui
         virtual int line_height(void) override;
 
       public:
-        explicit font_set(std::string&);
+        font_set();
         virtual ~font_set();
 
         font_set& operator<<(font_spec&);

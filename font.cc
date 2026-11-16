@@ -335,8 +335,8 @@ ui::image ui::base_font::render(const std::vector<bidi::mirror_t>& str,
     return img;
 }
 
-ui::base_font::base_font(std::string& name)
-    : glyphs(name + " glyphs")
+ui::base_font::base_font()
+    : glyphs()
 {
     this->bbox_w = this->bbox_a = this->bbox_d = 0;
 }
@@ -497,7 +497,7 @@ int ui::font::line_height(void)
 }
 
 ui::font::font(std::string& font_name, int pixel_size, ui::search_paths& paths)
-    : ui::base_font(font_name)
+    : ui::base_font()
 {
     this->face = ui::base_font::init_face(font_name, pixel_size, paths);
     ui::base_font::get_max_glyph_box(this->face,
@@ -525,8 +525,8 @@ int ui::font_set::line_height(void)
     return this->faces[0]->size->metrics.height >> 6;
 }
 
-ui::font_set::font_set(std::string& set_name)
-    : ui::base_font(set_name), faces()
+ui::font_set::font_set()
+    : ui::base_font(), faces()
 {
 }
 
