@@ -698,8 +698,7 @@ ui::font f("a.ttf", 10, paths);
 ```
 
 The `ui::font_set` has a somewhat different interface.  The
-constructor takes a string, which is the "name" of the font set.  The
-name is only used for error reporting and debugging information.
+constructor takes no arguments, and sets up no individual fonts.
 Adding fonts to the font set uses the injection operator (`<<`), and
 expects `std::tuple` objects.
 
@@ -716,7 +715,7 @@ ui::search_paths paths =
     "/other-fonts",
     ...
 };
-ui::font_set f("standard set");
+ui::font_set f();
 
 for (std::string i : fonts)
 {

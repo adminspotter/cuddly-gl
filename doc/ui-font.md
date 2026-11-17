@@ -22,7 +22,7 @@ img = f->render_string(howdy, fg_color, bg_color);
 #include <functional>
 
 std::u32string bye = ui::utf8tou32str("bye!");
-ui::font_set *fs = new ui::font_set(name);
+ui::font_set *fs = new ui::font_set();
 
 ui::font_set::font_spec spec = std::make_tuple(std::ref(font_fname),
                                                size,
@@ -102,11 +102,9 @@ strings, and mixed-direction strings will all be rendered correctly.
   _str_ is passed through the Unicode BIDI algorithm and rendered into
   a `ui::image`, which is returned to the caller.
 
-* **ui::font_set(std::string& _name_)**
+* **ui::font_set()**
 
-  Create a `ui::font_set` object with the name _name_.  This name is
-  used only by the object's internal cache, when evicting unused
-  glyphs.
+  Create a `ui::font_set` object.
 
 * **operator<<(ui::font_spec& _spec_)**
 
