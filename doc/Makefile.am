@@ -51,12 +51,18 @@ install-data-local:
 	do \
 	  $(INSTALL_DATA) $$man $(mandir)/man3/$$(echo $$man | sed -e 's/-/::/g') ;\
 	done
+	ln -f -s ui::font.3 $(mandir)/man3/ui::base_font.3
+	ln -f -s ui::font.3 $(mandir)/man3/ui::font_set.3
+	ln -f -s ui::utf8tou32str.3 $(mandir)/man3/ui::u32strtoutf8.3
 
 uninstall-local:
 	for man in $(MANPAGES) ;\
 	do \
 	  rm -f $(mandir)/man3/$$(echo $$man | sed -e 's/-/::/g') ;\
 	done
+	rm -f $(mandir)/man3/ui::base_font.3
+	rm -f $(mandir)/man3/ui::font_set.3
+	rm -f $(mandir)/man3/ui::u32strtoutf8.3
 
 clean-local:
 	rm -f $(MANPAGES)
